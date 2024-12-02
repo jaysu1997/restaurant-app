@@ -17,7 +17,14 @@ import {
 
 import { IoCloseSharp } from "react-icons/io5";
 
-function FieldArray({ register, control, errors, isUpserting, inventoryData }) {
+function FieldArray({
+  register,
+  control,
+  errors,
+  isUpserting,
+  inventoryData,
+  handleCreateNewItems,
+}) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "customize",
@@ -50,6 +57,7 @@ function FieldArray({ register, control, errors, isUpserting, inventoryData }) {
             <NestedInput
               type="text"
               placeholder="請輸入細項標題(例如:冰/熱)"
+              autoComplete="off"
               {...register(`customize.${index}.title`, {
                 required: "此欄位不能空白",
               })}
@@ -129,6 +137,7 @@ function FieldArray({ register, control, errors, isUpserting, inventoryData }) {
             register={register}
             nestedIndex={index}
             inventoryData={inventoryData}
+            handleCreateNewItems={handleCreateNewItems}
           />
         </SubRow>
       ))}

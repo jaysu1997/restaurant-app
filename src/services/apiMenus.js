@@ -1,4 +1,4 @@
-import { getInventoryApi, upsertInventoryApi } from "./apiInventory.js";
+import { upsertInventoryApi } from "./apiInventory.js";
 import supabase from "./supabase.js";
 
 // 取得所有menu數據
@@ -29,7 +29,7 @@ export async function getSpecifiedMenuApi(id) {
 export async function upsertMenuApi(menuData) {
   const { data, error } = await supabase
     .from("menus")
-    .upsert(menuData)
+    .upsert(menuData.data)
     .select();
 
   // 重複新增相同名稱餐點的Error(name必須是獨一無二)
@@ -43,21 +43,8 @@ export async function upsertMenuApi(menuData) {
     throw new Error("Menu數據更新失敗");
   }
 
-  // 取得stocks表單中現有的全部食材
-  // const existStocksData = await getInventoryApi();
-
-  // 只留下stocks表單中尚未存在的食材
-  // const newStockData = menuData.ingredients
-  //   .filter(
-  //     (ing) => existStocksData.findIndex((e) => e.name === ing.name) === -1
-  //   )
-  //   .map((ing) => ({
-  //     name: ing.name,
-  //     dishes: menuData.name,
-  //   }));
-
   // 將輸入的食材新增到stocks表單中
-  // await upsertInventoryApi(newStockData);
+  await upsertInventoryApi(menuData.newIngredients);
 
   return data;
 }

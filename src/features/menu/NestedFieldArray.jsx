@@ -18,6 +18,7 @@ function NestedFieldArray({
   register,
   nestedIndex,
   inventoryData = [],
+  handleCreateNewItems,
 }) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -42,9 +43,12 @@ function NestedFieldArray({
               type="text"
               autoComplete="off"
               placeholder="請輸入選項名稱"
-              {...register(`customize.${nestedIndex}.options.${index}.name`, {
-                required: "此欄位不能空白",
-              })}
+              {...register(
+                `customize.${nestedIndex}.options.${index}.optionLabel`,
+                {
+                  required: "此欄位不能空白",
+                }
+              )}
             />
           </Fieldset>
 
@@ -90,16 +94,19 @@ function NestedFieldArray({
                     }),
                   }}
                   inputId={`ingredients-${index}`}
-                  formatCreateLabel={(inputValue) => `新增: ${inputValue}`}
+                  formatCreateLabel={(inputValue) => `新增食材: ${inputValue}`}
                   options={[
                     {
                       label: "無額外食材消耗",
-                      value: "無額外食材消耗",
+                      value: "",
                     },
                     ...inventoryData,
                   ]}
                   isClearable
                   placeholder="可新增 / 選擇食材"
+                  onCreateOption={(optionValue) => {
+                    handleCreateNewItems(optionValue, field.name);
+                  }}
                 />
               )}
             />
@@ -136,7 +143,7 @@ function NestedFieldArray({
               value: "無額外食材消耗",
             },
             extraPrice: "",
-            name: "",
+            optionLabel: "",
             quantity: 0,
           })
         }

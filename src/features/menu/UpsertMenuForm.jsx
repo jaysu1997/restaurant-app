@@ -26,13 +26,19 @@ import {
   CancelButton,
   SubmitButton,
   Description,
+  Highlight,
 } from "../../ui/FormTable";
 
 import { IoCloseSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
+import LoadingDotMini from "../../ui/LoadingDotMini";
+import { useState } from "react";
+import { MacScrollbar } from "mac-scrollbar";
 
 function UpsertMenuForm({ onCloseModal, menu }) {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [newItems, setNewItems] = useState(new Set());
 
   const {
     register,
@@ -40,6 +46,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     control,
     reset,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: menu || {
@@ -56,12 +63,28 @@ function UpsertMenuForm({ onCloseModal, menu }) {
 
   const { inventoryData, isPending } = useGetInventory();
 
+  function handleCreateNewItems(data, fieldName) {
+    setValue(fieldName, { label: data, value: data });
+    setNewItems(() => newItems.add(data));
+  }
+
   function onSubmit(data) {
     console.log(data);
+
+    const newIngredients = [...newItems].map((item) => ({
+      label: item,
+      value: item,
+    }));
+
     const { ingredients, customize } = data;
     const customizeNoOptions = customize?.findIndex(
       (cus) => cus.options.length === 0
     );
+
+    if (!navigator.onLine) {
+      toast.error("目前網路無法使用，請稍後再試。");
+      return;
+    }
 
     // 不能沒有備料數據
     if (ingredients.length === 0) {
@@ -74,21 +97,22 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       return;
     }
 
-    console.log("re");
-
-    upsert(data, {
-      onSuccess: (data) => {
-        console.log("成功");
-        reset();
-        onCloseModal?.();
-        searchParams.delete("name");
-        searchParams.delete("category");
-        setSearchParams(searchParams);
-      },
-      onError: (error) => {
-        console.log("上傳失敗");
-      },
-    });
+    upsert(
+      { data, newIngredients },
+      {
+        onSuccess: (data) => {
+          console.log("成功");
+          reset();
+          onCloseModal?.();
+          searchParams.delete("name");
+          searchParams.delete("category");
+          setSearchParams(searchParams);
+        },
+        onError: (error) => {
+          console.log("上傳失敗");
+        },
+      }
+    );
   }
 
   function onError(error) {
@@ -104,13 +128,16 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
       {/* <Description>
-        <span>欄位說明：</span>
+        <span>表單說明：</span>
         <span>
-          *標記的欄位必須填寫，其他欄位則可以根據需求選填(但輸入框不可以)。
+          <Highlight>*</Highlight>標記的是必填欄位，必須完成填寫。
         </span>
-      </Description> */}
+      </Description>
+
       <Row>
-        <Title htmlFor="name">名稱</Title>
+        <Title htmlFor="name">
+          名稱<Highlight>*</Highlight>
+        </Title>
         <Input
           type="text"
           id="name"
@@ -213,10 +240,15 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                           minHeight: "2rem",
                         }),
                       }}
-                      formatCreateLabel={(inputValue) => `新增: ${inputValue}`}
+                      formatCreateLabel={(inputValue) =>
+                        `新增食材: ${inputValue}`
+                      }
                       options={inventoryData}
                       isClearable
                       placeholder="可新增 / 選擇食材"
+                      onCreateOption={(optionValue) => {
+                        handleCreateNewItems(optionValue, field.name);
+                      }}
                     />
                   )}
                 />
@@ -248,21 +280,27 @@ function UpsertMenuForm({ onCloseModal, menu }) {
         >
           新增備料
         </AddButton>
-      </Row>
+      </Row> */}
 
       <Row>
         <FieldArray
           control={control}
           register={register}
           inventoryData={inventoryData}
+          handleCreateNewItems={handleCreateNewItems}
         />
       </Row>
 
       <Footer>
         <ButtonGroup>
-          <CancelButton type="reset">取消</CancelButton>
-          <SubmitButton type="submit">儲存</SubmitButton>
+          <CancelButton type="reset" disabled={isUpserting}>
+            取消
+          </CancelButton>
+          <SubmitButton type="submit" disabled={isUpserting}>
+            {isUpserting ? <LoadingDotMini /> : "儲存"}
+          </SubmitButton>
         </ButtonGroup>
+        {/* <div style={{ height: "1.6rem" }}></div> */}
       </Footer>
     </Form>
   );

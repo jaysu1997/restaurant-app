@@ -3,7 +3,6 @@ import CreatableSelect from "react-select/creatable";
 import styled from "styled-components";
 import useGetInventory from "../features/inventory/useGetInventory";
 import LoadingSpinner from "../ui/LoadingSpinner";
-import toast from "react-hot-toast";
 
 const Form = styled.form`
   display: flex;

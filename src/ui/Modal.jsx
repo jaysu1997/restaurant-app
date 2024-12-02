@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { IoMdCloseCircle } from "react-icons/io";
+import { MacScrollbar } from "mac-scrollbar";
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -13,23 +15,24 @@ const Overlay = styled.div`
   left: 0;
   transition: all 0.5s;
   backdrop-filter: blur(2px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyleModal = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: grid;
   grid-template-columns: auto;
   max-width: 56rem;
 
-  overflow: auto;
   transition: all 0.5s;
   background-color: #fafaf9;
-  border-radius: 5px;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
-  max-height: 85dvh;
+  border-radius: 15px;
+  /* max-height: 85dvh; */
+  overflow: hidden;
 `;
 
 const Button = styled.button`
@@ -41,6 +44,9 @@ const Button = styled.button`
   width: 3.2rem;
   height: 3.2rem;
   justify-self: end;
+
+  position: sticky;
+  top: 0;
 
   & svg {
     width: 3.2rem;
@@ -75,7 +81,19 @@ function Modal({ children, onCloseModal }) {
         <Button onClick={() => onCloseModal()}>
           <IoMdCloseCircle />
         </Button>
-        {children}
+        <OverlayScrollbarsComponent
+          options={{
+            scrollbars: {
+              autoHide: "scroll", // 滾動條自動隱藏
+              clickScrolling: true, // 點擊滾動條時可滾動
+              dragScrolling: true, // 支援拖動滾動
+              autoHideDelay: 1000,
+            },
+          }}
+          style={{ height: "85dvh" }}
+        >
+          {children}
+        </OverlayScrollbarsComponent>
       </StyleModal>
     </Overlay>,
     document.body

@@ -15,6 +15,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import "overlayscrollbars/overlayscrollbars.css";
+import { useEffect } from "react";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -27,20 +31,34 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
+
       <GlobalStyles />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<Homepage />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/menu" element={<Menus />} />
-            <Route path="/inventory" element={<Inventory />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/staff" element={<Staff />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+
+      <OverlayScrollbarsComponent
+        options={{
+          scrollbars: {
+            autoHide: "scroll", // 滾動條自動隱藏
+            clickScrolling: true, // 點擊滾動條時可滾動
+            dragScrolling: true, // 支援拖動滾動
+            autoHideDelay: 1000,
+          },
+        }}
+        style={{ height: "100vh" }} // 設定容器高度
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<Homepage />} />
+              <Route path="/order" element={<Order />} />
+              <Route path="/bookings" element={<Bookings />} />
+              <Route path="/menu" element={<Menus />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/staff" element={<Staff />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </OverlayScrollbarsComponent>
 
       <Toaster
         position="top-center"

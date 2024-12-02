@@ -4,18 +4,24 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   max-width: 32rem;
-  padding: 2.4rem;
+  padding: 1.6rem 3.2rem;
   gap: 1.6rem;
   color: rgba(0, 0, 0, 0.6);
   font-weight: 600;
   width: 95dvw;
   background-color: #fafaf9;
+  /* max-height: 80dvh; */
+  /* overflow: auto; */
 `;
 
 export const Description = styled.header`
   display: flex;
   flex-direction: column;
   font-size: 1.4rem;
+`;
+
+export const Highlight = styled.span`
+  color: red;
 `;
 
 export const Row = styled.div`
