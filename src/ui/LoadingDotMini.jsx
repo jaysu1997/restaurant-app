@@ -1,3 +1,5 @@
+// 小型loading動畫
+
 import styled, { keyframes } from "styled-components";
 
 const dotsAnimation = keyframes`

@@ -4,13 +4,15 @@ import styled from "styled-components";
 import useGetMenus from "../features/menu/useGetMenus.js";
 import Heading from "../ui/Heading.jsx";
 import MenusDataCard from "../features/menu/MenusDataCard.jsx";
-import UpsertButton from "../ui/UpsertButton.jsx";
 import LoadingSpinner from "../ui/LoadingSpinner.jsx";
 import { MacScrollbar } from "mac-scrollbar";
 import { useSearchParams } from "react-router-dom";
 import Operation from "../ui/Operation.jsx";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu/UpsertMenuForm.jsx";
+import Button from "../ui/Button.jsx";
+import Modal from "../ui/Modal.jsx";
+import { BsFileEarmarkPlus } from "react-icons/bs";
 
 const Container = styled.div`
   display: grid;
@@ -28,6 +30,7 @@ const Container = styled.div`
 const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
+  justify-content: space-between;
 `;
 
 const Span = styled.span`
@@ -75,12 +78,13 @@ function Menus() {
       <Heading>菜單設定</Heading>
 
       <ToolBar>
-        {/* 新增餐點按鈕 */}
-        <UpsertButton openModal={openModal} setOpenModal={setOpenModal}>
-          <UpsertMenuForm onCloseModal={() => setOpenModal(false)} />
-        </UpsertButton>
         {/* 搜尋和搜尋功能 */}
         <Operation menusData={menusData} />
+        {/* 新增餐點按鈕 */}
+        <Button $buttonStyle="upsert" onClick={() => setOpenModal(true)}>
+          <BsFileEarmarkPlus />
+          <span>新增數據</span>
+        </Button>
       </ToolBar>
 
       <MacScrollbar>
@@ -94,6 +98,12 @@ function Menus() {
           )}
         </Container>
       </MacScrollbar>
+
+      {openModal && (
+        <Modal onCloseModal={() => setOpenModal(false)}>
+          <UpsertMenuForm onCloseModal={() => setOpenModal(false)} />
+        </Modal>
+      )}
     </>
   );
 }

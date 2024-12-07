@@ -14,10 +14,15 @@ export async function getInventoryApi() {
 
 // 新增食材數據
 export async function upsertInventoryApi(stockData) {
-  const { error } = await supabase.from("inventory").upsert(stockData).select();
+  const { data, error } = await supabase
+    .from("inventory")
+    .upsert(stockData)
+    .select();
 
   if (error) {
     console.log(error);
     throw new Error("庫存數據新增失敗");
   }
+
+  return data;
 }

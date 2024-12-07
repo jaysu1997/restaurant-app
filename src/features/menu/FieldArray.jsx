@@ -1,27 +1,17 @@
-import { Controller, useFieldArray } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
-import Select from "react-select";
-import {
-  Title,
-  SubRow,
-  NestedInput,
-  Legend,
-  Fieldset,
-  SubTitle,
-  SubHeader,
-  Label,
-  RemoveButton,
-  Span,
-  AddButton,
-} from "../../ui/FormTable";
 
 import { IoCloseSharp } from "react-icons/io5";
+import Button from "../../ui/Button";
+import InputField from "../../ui/FormInputField";
+import FormRow from "../../ui/FormRow";
+import FormTypography from "../../ui/FormTypography";
+import ControlledSelect from "../../ui/ControlledSelect";
 
 function FieldArray({
   register,
   control,
-  errors,
-  isUpserting,
+  disabled,
   inventoryData,
   handleCreateNewItems,
 }) {
@@ -32,105 +22,81 @@ function FieldArray({
 
   return (
     <>
-      <Title>自訂附加細項</Title>
-      <Span>
+      <FormTypography $titleStyle="title">自訂附加細項</FormTypography>
+      <FormTypography $titleStyle="description">
         &#8251;
         此欄位用來自訂本餐點可供客人調整的各種細項。(例如：餐點份量、附餐選擇、餐點加料等等)。
-      </Span>
-      <Span>
+      </FormTypography>
+      <FormTypography $titleStyle="description">
         &#8251;
-        此欄位的細目和選項可根據需求進行新增/刪除，但不能留下空白輸入框。
-      </Span>
+        此欄位的細目和選項可根據需求進行新增/刪除，但不能留下沒輸入任何內容的空白輸入框。
+      </FormTypography>
 
       {fields.map((fields, index) => (
-        <SubRow key={fields.id}>
-          <SubHeader>
-            <SubTitle>自訂細項 {index + 1}.</SubTitle>
+        <FormRow $formRowStyle="sub" key={fields.id}>
+          <FormRow $formRowStyle="subHeader">
+            <FormTypography $titleStyle="subTitle">
+              自訂細項 {index + 1}.
+            </FormTypography>
 
-            <RemoveButton type="button" onClick={() => remove(index)}>
+            <Button
+              $buttonStyle="remove"
+              type="button"
+              onClick={() => remove(index)}
+            >
               <IoCloseSharp />
-            </RemoveButton>
-          </SubHeader>
+            </Button>
+          </FormRow>
 
-          <Fieldset>
-            <Legend>細項標題</Legend>
-            <NestedInput
-              type="text"
-              placeholder="請輸入細項標題(例如:冰/熱)"
-              autoComplete="off"
-              {...register(`customize.${index}.title`, {
-                required: "此欄位不能空白",
-              })}
-            />
-          </Fieldset>
+          <InputField
+            legendValue="細項標題"
+            type="text"
+            placeholder="請輸入細項標題(例如:冰/熱)"
+            autoComplete="off"
+            {...register(`customize.${index}.title`, {
+              required: "此欄位不能空白",
+            })}
+          />
 
-          <Fieldset>
-            <Legend>此細項是否必填</Legend>
-            <Controller
+          <InputField legendValue="此細項是否必填">
+            <ControlledSelect
               name={`customize.${index}.required`}
               control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  styles={{
-                    control: (baseStyles) => ({
-                      ...baseStyles,
-                      border: "none",
-                      backgroundColor: "inherit",
-                      boxShadow: "none",
-                      fontSize: "1.4rem",
-                      minHeight: "2rem",
-                    }),
-                  }}
-                  options={[
-                    {
-                      label: `是(此細項為"必填")`,
-                      value: true,
-                    },
-                    {
-                      label: `否(此細項為"選填")`,
-                      value: false,
-                    },
-                  ]}
-                  isSearchable={false}
-                />
-              )}
+              rules={{ required: "此欄位不能空白" }}
+              options={[
+                {
+                  label: `是("必填")`,
+                  value: true,
+                },
+                {
+                  label: `否("選填")`,
+                  value: false,
+                },
+              ]}
+              creatable={false}
+              disabled={disabled}
             />
-          </Fieldset>
+          </InputField>
 
-          <Fieldset>
-            <Legend>此細項填寫規則</Legend>
-            <Controller
+          <InputField legendValue="此細項填寫規則">
+            <ControlledSelect
               name={`customize.${index}.choice`}
               control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  styles={{
-                    control: (baseStyles) => ({
-                      ...baseStyles,
-                      border: "none",
-                      backgroundColor: "inherit",
-                      boxShadow: "none",
-                      fontSize: "1.4rem",
-                      minHeight: "2rem",
-                    }),
-                  }}
-                  options={[
-                    {
-                      label: `此細項只能"單選"`,
-                      value: "radio",
-                    },
-                    {
-                      label: `此細項可以"多選"`,
-                      value: "checkbox",
-                    },
-                  ]}
-                  isSearchable={false}
-                />
-              )}
+              rules={{ required: "此欄位不能空白" }}
+              options={[
+                {
+                  label: `只能"單選"`,
+                  value: "radio",
+                },
+                {
+                  label: `可以"多選"`,
+                  value: "checkbox",
+                },
+              ]}
+              creatable={false}
+              disabled={disabled}
             />
-          </Fieldset>
+          </InputField>
 
           <NestedFieldArray
             control={control}
@@ -138,27 +104,41 @@ function FieldArray({
             nestedIndex={index}
             inventoryData={inventoryData}
             handleCreateNewItems={handleCreateNewItems}
+            disabled={disabled}
           />
-        </SubRow>
+        </FormRow>
       ))}
 
-      <AddButton
+      <Button
+        $buttonStyle="add"
         type="button"
         onClick={() =>
           append({
+            title: "",
             required: {
-              label: `是(此細項為"必填")`,
+              label: `是("必填")`,
               value: true,
             },
             choice: {
-              label: `此細項只能"單選"`,
+              label: `只能"單選"`,
               value: "radio",
             },
+            options: [
+              {
+                ingredientName: {
+                  label: "無額外食材消耗",
+                  value: "",
+                },
+                extraPrice: "",
+                optionLabel: "",
+                quantity: 0,
+              },
+            ],
           })
         }
       >
         新增自訂細項
-      </AddButton>
+      </Button>
     </>
   );
 }

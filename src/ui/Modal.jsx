@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { IoMdCloseCircle } from "react-icons/io";
-import { MacScrollbar } from "mac-scrollbar";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 const Overlay = styled.div`
@@ -26,13 +25,15 @@ const StyleModal = styled.div`
   display: grid;
   grid-template-columns: auto;
   max-width: 56rem;
+  margin: 0 0.6rem 0 0.6rem;
 
   transition: all 0.5s;
   background-color: #fafaf9;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
   border-radius: 15px;
-  /* max-height: 85dvh; */
   overflow: hidden;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Button = styled.button`
@@ -47,11 +48,16 @@ const Button = styled.button`
 
   position: sticky;
   top: 0;
+  color: #334155;
 
   & svg {
     width: 3.2rem;
     height: 3.2rem;
-    color: #334155;
+  }
+
+  &:hover,
+  &:active {
+    color: #64748b;
   }
 `;
 
@@ -90,7 +96,7 @@ function Modal({ children, onCloseModal }) {
               autoHideDelay: 1000,
             },
           }}
-          style={{ height: "85dvh" }}
+          style={{ maxHeight: "80dvh" }}
         >
           {children}
         </OverlayScrollbarsComponent>

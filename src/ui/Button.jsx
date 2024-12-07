@@ -1,0 +1,113 @@
+// 按鈕UI元件
+
+import styled, { css } from "styled-components";
+
+const type = {
+  submit: css`
+    width: 6.4rem;
+    height: 3.2rem;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    background-color: #1d4ed8;
+    color: #fff;
+    box-shadow: 0 0 10px 1px rgba(96, 165, 250, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      background-color: #3b82f6;
+    }
+  `,
+  cancel: css`
+    width: 6.4rem;
+    height: 3.2rem;
+    border-radius: 999px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: inherit;
+    color: rgba(0, 0, 0, 0.75);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  `,
+  remove: css`
+    width: fit-content;
+    height: fit-content;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: #b91c1c;
+    color: #f8fafc;
+    padding: 0.1rem;
+
+    & svg {
+      font-size: 1.6rem;
+    }
+
+    &:hover {
+      background-color: #dc2626;
+      transform: scale(1.1);
+    }
+  `,
+  add: css`
+    grid-column: 1 / -1;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 10px;
+    border: none;
+    background-color: #059669;
+    color: #f8fafc;
+    padding: 0.4rem 0.8rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+
+    & svg {
+      font-size: 1.4rem;
+    }
+
+    &:hover {
+      box-shadow: 0px 0px 10px 1px rgba(5, 150, 105, 0.35);
+    }
+  `,
+  upsert: css`
+    background-color: #fff;
+    border: 1px solid #3b82f6;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    height: 3.6rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: #3b82f6;
+    gap: 0.2rem;
+    transition: all 0.5s;
+
+    & svg {
+      height: 2rem;
+      width: 2rem;
+    }
+
+    &:hover {
+      background-color: #3b82f6;
+      color: #fff;
+    }
+  `,
+};
+
+const Button = styled.button`
+  ${({ $buttonStyle = "cancel" }) => type[$buttonStyle]}
+`;
+
+export default Button;

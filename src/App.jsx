@@ -17,7 +17,6 @@ import { Toaster } from "react-hot-toast";
 
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import "overlayscrollbars/overlayscrollbars.css";
-import { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,13 +36,13 @@ export default function App() {
       <OverlayScrollbarsComponent
         options={{
           scrollbars: {
-            autoHide: "scroll", // 滾動條自動隱藏
-            clickScrolling: true, // 點擊滾動條時可滾動
-            dragScrolling: true, // 支援拖動滾動
+            autoHide: "scroll",
+            clickScrolling: true,
+            dragScrolling: true,
             autoHideDelay: 1000,
           },
         }}
-        style={{ height: "100vh" }} // 設定容器高度
+        style={{ height: "100vh" }}
       >
         <BrowserRouter>
           <Routes>
@@ -51,7 +50,7 @@ export default function App() {
               <Route index element={<Homepage />} />
               <Route path="/order" element={<Order />} />
               <Route path="/bookings" element={<Bookings />} />
-              <Route path="/menu" element={<Menus />} />
+              <Route path="/menus" element={<Menus />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/statistics" element={<Statistics />} />
               <Route path="/staff" element={<Staff />} />

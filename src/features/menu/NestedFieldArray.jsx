@@ -1,17 +1,10 @@
-import { Controller, useFieldArray } from "react-hook-form";
-import CreatableSelect from "react-select/creatable";
-import {
-  AddButton,
-  Fieldset,
-  Legend,
-  NestedInput,
-  NestedRow,
-  NestedTitle,
-  RemoveButton,
-  SubHeader,
-} from "../../ui/FormTable";
-
+import { useFieldArray } from "react-hook-form";
 import { IoCloseSharp } from "react-icons/io5";
+import Button from "../../ui/Button";
+import { InputField } from "../../ui/FormInputField";
+import FormRow from "../../ui/FormRow";
+import FormTypography from "../../ui/FormTypography";
+import ControlledSelect from "../../ui/ControlledSelect";
 
 function NestedFieldArray({
   control,
@@ -19,6 +12,7 @@ function NestedFieldArray({
   nestedIndex,
   inventoryData = [],
   handleCreateNewItems,
+  disabled,
 }) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -28,128 +22,104 @@ function NestedFieldArray({
   return (
     <>
       {fields.map((fields, index) => (
-        <NestedRow key={fields.id}>
-          <SubHeader>
-            <NestedTitle>選項設定 - {index + 1}</NestedTitle>
+        <FormRow $formRowStyle="nested" key={fields.id}>
+          <FormRow $formRowStyle="subHeader">
+            <FormTypography $titleStyle="nestedTitle">
+              選項設定 - {index + 1}
+            </FormTypography>
 
-            <RemoveButton type="button" onClick={() => remove(index)}>
-              <IoCloseSharp />
-            </RemoveButton>
-          </SubHeader>
+            {index !== 0 && (
+              <Button
+                $buttonStyle="remove"
+                type="button"
+                onClick={() => remove(index)}
+              >
+                <IoCloseSharp />
+              </Button>
+            )}
+          </FormRow>
 
-          <Fieldset>
-            <Legend>選項名稱設定</Legend>
-            <NestedInput
-              type="text"
-              autoComplete="off"
-              placeholder="請輸入選項名稱"
-              {...register(
-                `customize.${nestedIndex}.options.${index}.optionLabel`,
-                {
-                  required: "此欄位不能空白",
-                }
-              )}
-            />
-          </Fieldset>
-
-          <Fieldset>
-            <Legend>選項額外加價</Legend>
-            <NestedInput
-              type="number"
-              autoComplete="off"
-              onWheel={(e) => {
-                // 禁用number input默認的滾輪改變value功能
-                e.target.blur();
-              }}
-              placeholder="請輸入選項加價"
-              {...register(
-                `customize.${nestedIndex}.options.${index}.extraPrice`,
-                {
-                  required: "此欄位不能空白",
-                  valueAsNumber: true,
-                }
-              )}
-            />
-          </Fieldset>
-
-          <Fieldset>
-            <Legend>額外消耗食材</Legend>
-            <Controller
-              name={`customize.${nestedIndex}.options.${index}.ingredientName`}
-              rules={{
+          <InputField
+            legendValue="選項名稱設定"
+            type="text"
+            autoComplete="off"
+            placeholder="請輸入選項名稱"
+            {...register(
+              `customize.${nestedIndex}.options.${index}.optionLabel`,
+              {
                 required: "此欄位不能空白",
-              }}
-              control={control}
-              render={({ field }) => (
-                <CreatableSelect
-                  {...field}
-                  styles={{
-                    control: (baseStyles) => ({
-                      ...baseStyles,
-                      border: "none",
-                      backgroundColor: "inherit",
-                      boxShadow: "none",
-                      fontSize: "1.4rem",
-                      minHeight: "2rem",
-                    }),
-                  }}
-                  inputId={`ingredients-${index}`}
-                  formatCreateLabel={(inputValue) => `新增食材: ${inputValue}`}
-                  options={[
-                    {
-                      label: "無額外食材消耗",
-                      value: "",
-                    },
-                    ...inventoryData,
-                  ]}
-                  isClearable
-                  placeholder="可新增 / 選擇食材"
-                  onCreateOption={(optionValue) => {
-                    handleCreateNewItems(optionValue, field.name);
-                  }}
-                />
-              )}
-            />
-          </Fieldset>
+              }
+            )}
+          />
 
-          <Fieldset>
-            <Legend>食材消耗數量</Legend>
-            <NestedInput
-              type="number"
-              autoComplete="off"
-              onWheel={(e) => {
-                // 禁用number input默認的滾輪改變value功能
-                e.target.blur();
-              }}
-              placeholder="請輸入備料數量"
-              {...register(
-                `customize.${nestedIndex}.options.${index}.quantity`,
+          <InputField
+            legendValue="選項額外加價"
+            type="number"
+            autoComplete="off"
+            onWheel={(e) => {
+              e.target.blur();
+            }}
+            placeholder="請輸入選項加價"
+            {...register(
+              `customize.${nestedIndex}.options.${index}.extraPrice`,
+              {
+                required: "此欄位不能空白",
+                valueAsNumber: true,
+              }
+            )}
+          />
+
+          <InputField legendValue="額外消耗食材">
+            <ControlledSelect
+              name={`customize.${nestedIndex}.options.${index}.ingredientName`}
+              control={control}
+              rules={{ required: "此欄位不能空白" }}
+              options={[
                 {
-                  required: "此欄位不能空白",
-                  valueAsNumber: true,
-                }
-              )}
+                  label: "無額外食材消耗",
+                  value: "",
+                },
+                ...inventoryData,
+              ]}
+              handleCreateNewItems={handleCreateNewItems}
+              creatable={true}
+              disabled={disabled}
             />
-          </Fieldset>
-        </NestedRow>
+          </InputField>
+
+          <InputField
+            legendValue="食材消耗數量"
+            type="number"
+            autoComplete="off"
+            onWheel={(e) => {
+              e.target.blur();
+            }}
+            placeholder="請輸入備料數量"
+            {...register(`customize.${nestedIndex}.options.${index}.quantity`, {
+              required: "此欄位不能空白",
+              valueAsNumber: true,
+            })}
+          />
+        </FormRow>
       ))}
 
-      <AddButton
+      <Button
+        $buttonStyle="add"
         type="button"
         onClick={() =>
           append({
+            optionLabel: "",
+            extraPrice: "",
             ingredientName: {
               label: "無額外食材消耗",
-              value: "無額外食材消耗",
+              value: "",
             },
-            extraPrice: "",
-            optionLabel: "",
             quantity: 0,
           })
         }
       >
         新增選項
-      </AddButton>
+      </Button>
     </>
   );
 }

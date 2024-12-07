@@ -1,3 +1,5 @@
+// 各個頁面標題
+
 import styled from "styled-components";
 
 const Heading = styled.h1`

@@ -87,7 +87,7 @@ function Nav() {
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/menu">
+          <StyleNavLink to="/menus">
             <BiFoodMenu />
             <span>菜單設定</span>
           </StyleNavLink>

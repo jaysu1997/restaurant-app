@@ -18,7 +18,7 @@ const GlobalStyles = createGlobalStyle`
   body{
     font-family: "Noto Sans TC", sans-serif;
     font-optical-sizing: auto;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 1.6rem; 
     color: #1f2937;
     position: relative;
@@ -29,6 +29,11 @@ const GlobalStyles = createGlobalStyle`
 
   img{
     max-width: 100%;
+  }
+
+  button{
+    cursor: pointer;
+    transition: all 0.3s;
   }
 `;
 

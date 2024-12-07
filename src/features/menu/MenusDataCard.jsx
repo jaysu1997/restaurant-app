@@ -91,13 +91,12 @@ function MenusDataCard({ menu }) {
   const [openEditModal, setOpenEditModal] = useState(false);
 
   // 菜單數據
-  const { id, name, category, price, discount, ingredients, options } = menu;
+  const { id, name, category, price, discount, ingredients, customize } = menu;
 
   // 成份
-  const ingredient = ingredients.map((i) => `${i.label1}${i.label2}份`);
+  const ingredientArray = ingredients.map((i) => i.name.label);
 
-  // 選項
-  const optionsArr = [];
+  const customizeArray = customize?.map((c) => c.title);
 
   return (
     <>
@@ -119,14 +118,14 @@ function MenusDataCard({ menu }) {
           <TableBody>{discount || <FiMinus />}</TableBody>
         </OneColumns>
         <TwoColumns>
-          <TableHead>選項</TableHead>
-          <TableBody>{optionsArr.join(", ") || <FiMinus />}</TableBody>
+          <TableHead>食材</TableHead>
+          <MacScrollbar trackStyle={trackStyle} thumbStyle={thumbStyle}>
+            <TableBody>{ingredientArray.join(", ")}</TableBody>
+          </MacScrollbar>
         </TwoColumns>
         <TwoColumns>
-          <TableHead>成份</TableHead>
-          <MacScrollbar trackStyle={trackStyle} thumbStyle={thumbStyle}>
-            <TableBody>{ingredient.join(", ")}</TableBody>
-          </MacScrollbar>
+          <TableHead>細項</TableHead>
+          <TableBody>{customizeArray?.join(", ") || <FiMinus />}</TableBody>
         </TwoColumns>
 
         <Footer>
