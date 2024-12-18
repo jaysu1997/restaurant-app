@@ -18,7 +18,6 @@ const Input = styled.input`
 const Fieldset = styled.fieldset`
   width: 100%;
   height: min-content;
-
   border-radius: 6px;
   border: 2px solid rgba(0, 0, 0, 0.6);
   display: flex;

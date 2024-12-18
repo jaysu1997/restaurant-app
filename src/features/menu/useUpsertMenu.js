@@ -13,7 +13,6 @@ function useUpsertMenu() {
   } = useMutation({
     mutationFn: upsertMenuApi,
     onSuccess: () => {
-      toast.success("餐點數據新增成功");
       queryClient.invalidateQueries({ queryKey: ["menus"] });
     },
     onError: (error) => {

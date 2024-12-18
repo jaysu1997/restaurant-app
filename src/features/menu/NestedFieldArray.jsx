@@ -25,7 +25,7 @@ function NestedFieldArray({
         <FormRow $formRowStyle="nested" key={fields.id}>
           <FormRow $formRowStyle="subHeader">
             <FormTypography $titleStyle="nestedTitle">
-              選項設定 - {index + 1}
+              選項 - {index + 1}
             </FormTypography>
 
             {index !== 0 && (

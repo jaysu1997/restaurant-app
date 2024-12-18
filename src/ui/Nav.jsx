@@ -95,7 +95,7 @@ function Nav() {
         <li>
           <StyleNavLink to="/inventory">
             <BiFridge />
-            <span>備料管理</span>
+            <span>庫存管理</span>
           </StyleNavLink>
         </li>
         <li>

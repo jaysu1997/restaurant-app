@@ -17,6 +17,8 @@ const Body = styled.div`
   width: 100vw;
   display: flex;
   gap: 6rem;
+
+  /* 高度 = 100dvh - Header(6.4) - gap(3.4) */
   height: calc(100dvh - 10rem);
 `;
 
@@ -29,7 +31,7 @@ const Main = styled.main`
   gap: 2.4rem;
   height: 100%;
   overflow: auto;
-  padding-bottom: 3.6rem;
+  /* padding-bottom: 3.6rem; */
 
   flex-grow: 1;
 `;

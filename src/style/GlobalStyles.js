@@ -22,9 +22,11 @@ const GlobalStyles = createGlobalStyle`
     font-size: 1.6rem; 
     color: #1f2937;
     position: relative;
-
-    background-color: #f8fafc;  
+    /* background-color: #f8fafc; */
+    background-color: #ffffff;
     min-height: 100dvh;
+    
+
   }
 
   img{
@@ -33,7 +35,7 @@ const GlobalStyles = createGlobalStyle`
 
   button{
     cursor: pointer;
-    transition: all 0.3s;
+    /* transition: all 0.3s; */
   }
 `;
 

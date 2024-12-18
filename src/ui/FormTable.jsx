@@ -11,7 +11,6 @@ export const Form = styled.form`
   color: rgba(0, 0, 0, 0.6);
   font-weight: 600;
   font-size: 1.4rem;
-  background-color: #fafaf9;
   transition: all 0.3s;
 
   @media (min-width: 768px) {

@@ -2,7 +2,7 @@
 
 import { useFieldArray, useForm } from "react-hook-form";
 import useUpsertMenu from "./useUpsertMenu";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import FieldArray from "./FieldArray";
@@ -17,6 +17,7 @@ import FormRow from "../../ui/FormRow";
 import InputField from "../../ui/FormInputField";
 import FormTypography from "../../ui/FormTypography";
 import ControlledSelect from "../../ui/ControlledSelect";
+
 const formFieldData = [
   {
     title: "名稱",
@@ -44,19 +45,19 @@ const formFieldData = [
 function UpsertMenuForm({ onCloseModal, menu }) {
   const [newItems, setNewItems] = useState(new Set());
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const { upsert, isUpserting } = useUpsertMenu();
   const { inventoryData, isPending } = useGetInventory();
 
-  const { register, handleSubmit, control, reset, setValue, getValues } =
-    useForm({
-      mode: "onSubmit",
-      reValidateMode: "onSubmit",
-      disabled: isUpserting,
-      defaultValues: menu || {
-        ingredients: [{ quantity: "" }],
-      },
-    });
+  const { register, handleSubmit, control, setValue, getValues } = useForm({
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+    disabled: isUpserting,
+    defaultValues: menu || {
+      ingredients: [{ quantity: "" }],
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -89,24 +90,26 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       { data, newIngredients },
       {
         onSuccess: (data) => {
-          console.log("成功");
-          reset();
+          menu
+            ? toast.success("餐點設定更新成功")
+            : toast.success("餐點設定新增成功");
           onCloseModal?.();
-          navigate("/menus");
+          pathname === "menus" && navigate("/menus");
         },
         onError: (error) => {
           console.log("上傳失敗");
-          console.log(error);
         },
       }
     );
   }
 
   function onError(error) {
-    console.log(error);
-    console.log("失敗");
+    const errorMessage =
+      error?.discount?.type === "validate" && "折扣不能超過定價";
+
     toast.error(
-      "餐點數據提交失敗！請確認是否所有必填欄位都已確實填寫，以及選填欄位是否有輸入框是空白的。"
+      errorMessage ||
+        "餐點數據提交失敗！請確認是否所有必填欄位都已確實填寫，以及選填欄位是否有輸入框是空白的。"
     );
   }
 
@@ -140,7 +143,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                 validate: data.validateValue
                   ? (value) =>
                       Number(value) <= Number(getValues("price")) ||
-                      toast.error("折扣不能超過定價")
+                      "折扣不能超過定價"
                   : undefined,
               })}
             />

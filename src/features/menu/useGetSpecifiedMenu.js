@@ -1,4 +1,4 @@
-// 取得指定id的menu數據
+// 取得指定id的menu數據(這個好像根本沒用到)
 import { useQuery } from "@tanstack/react-query";
 import { getSpecifiedMenuApi } from "../../services/apiMenus";
 
@@ -8,7 +8,7 @@ function useGetSpecifiedMenu() {
     isPending,
     error,
   } = useQuery({
-    queryKey: ["menus"],
+    queryKey: ["specifiedmenu"],
     queryFn: getSpecifiedMenuApi,
   });
 

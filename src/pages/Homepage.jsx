@@ -1,5 +1,7 @@
+import styled from "styled-components";
+
 function Homepage() {
-  return <div></div>;
+  return;
 }
 
 export default Homepage;

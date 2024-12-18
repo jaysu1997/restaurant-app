@@ -13,7 +13,7 @@ const type = {
     border: none;
     background-color: #1d4ed8;
     color: #fff;
-    box-shadow: 0 0 10px 1px rgba(96, 165, 250, 0.6);
+    box-shadow: 0 0px 15px 2px rgba(96, 165, 250, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,7 +92,6 @@ const type = {
     align-items: center;
     color: #3b82f6;
     gap: 0.2rem;
-    transition: all 0.5s;
 
     & svg {
       height: 2rem;
@@ -104,10 +103,34 @@ const type = {
       color: #fff;
     }
   `,
+  confirm: css`
+    width: 6.4rem;
+    height: 3.2rem;
+    border-radius: 999px;
+    box-shadow: 0px 2px 20px 2px rgba(220, 38, 38, 0.3);
+    font-size: 1.4rem;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    border: none;
+    color: #eef2ff;
+    font-weight: 600;
+    background-color: #b91c1c;
+
+    &:not(:disabled):hover {
+      background-color: #dc2626;
+    }
+  `,
 };
 
 const Button = styled.button`
   ${({ $buttonStyle = "cancel" }) => type[$buttonStyle]}
+
+  transition: all 0.5s;
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: opacity(0.5);
+  }
 `;
 
 export default Button;

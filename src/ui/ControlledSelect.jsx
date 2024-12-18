@@ -16,7 +16,7 @@ const selectStyle = {
   }),
   menuList: (baseStyles) => ({
     ...baseStyles,
-    maxHeight: "40dvh",
+    maxHeight: "30dvh",
     overflowY: "auto",
   }),
 };

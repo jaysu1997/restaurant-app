@@ -24,7 +24,7 @@ const type = {
     }
   `,
   sub: css`
-    background-color: #f5f5f4;
+    background-color: #fafaf9;
     border: 1px dashed #d6d3d1;
     border-radius: 6px;
     gap: 1.4rem;

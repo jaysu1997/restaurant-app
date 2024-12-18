@@ -14,8 +14,8 @@ const type = {
     color: red;
   `,
   title: css`
-    font-size: 2.4rem;
-    font-weight: 700;
+    font-size: 2.2rem;
+    font-weight: 600;
     color: #333333;
     margin-bottom: 1.2rem;
   `,

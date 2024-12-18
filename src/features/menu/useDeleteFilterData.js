@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteMenuApi } from "../../services/apiMenus";
+import { deleteFilterDataApi } from "../../services/apiMenus";
 import toast from "react-hot-toast";
 
-function useDeleteMenu() {
+function useDeleteFilterDate() {
   const queryClient = useQueryClient();
 
   const {
-    mutate: deleteMenu,
-    isPending: menuDeleting,
+    mutate: deleteFilterData,
+    isPending: filterDataDeleting,
     error: deleteError,
   } = useMutation({
-    mutationFn: (id) => deleteMenuApi(id),
+    mutationFn: (name) => deleteFilterDataApi(name),
     onSuccess: () => {
       toast.success("數據刪除成功");
       queryClient.invalidateQueries({ queryKey: ["menus"] });
@@ -20,7 +20,7 @@ function useDeleteMenu() {
     },
   });
 
-  return { deleteMenu, menuDeleting, deleteError };
+  return { deleteFilterData, filterDataDeleting, deleteError };
 }
 
-export default useDeleteMenu;
+export default useDeleteFilterDate;

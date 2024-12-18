@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import Filter from "./Filter";
 import SearchField from "./SearchField";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const StyleOperation = styled.div`
@@ -17,15 +17,15 @@ const Select = styled.select`
 `;
 
 function Operation({ menusData }) {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [feature, setFeature] = useState("filter");
+  // 取得當前的pathname
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   // 切換數據篩選方式時，清除舊有的所有篩選條件(顯示所有數據)
   function handleChange(e) {
     setFeature(e.target.value);
-    searchParams.delete("category");
-    searchParams.delete("name");
-    setSearchParams(searchParams);
+    navigate(pathname);
   }
 
   return (

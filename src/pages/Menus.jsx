@@ -5,7 +5,6 @@ import useGetMenus from "../features/menu/useGetMenus.js";
 import Heading from "../ui/Heading.jsx";
 import MenusDataCard from "../features/menu/MenusDataCard.jsx";
 import LoadingSpinner from "../ui/LoadingSpinner.jsx";
-import { MacScrollbar } from "mac-scrollbar";
 import { useSearchParams } from "react-router-dom";
 import Operation from "../ui/Operation.jsx";
 import { useState } from "react";
@@ -13,17 +12,14 @@ import UpsertMenuForm from "../features/menu/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 const Container = styled.div`
   display: grid;
   max-width: 120rem;
   grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-between;
-  gap: 3rem;
-
-  max-height: 100dvh;
-  overflow: auto;
-  scrollbar-gutter: stable;
+  gap: 4rem;
   padding: 1rem;
 `;
 
@@ -33,14 +29,9 @@ const ToolBar = styled.div`
   justify-content: space-between;
 `;
 
-const Span = styled.span`
-  grid-column: 1 / 3;
-`;
-
 function Menus() {
   const { menusData, isPending } = useGetMenus();
   const [searchParams] = useSearchParams();
-
   const [openModal, setOpenModal] = useState(false);
 
   // 從supabase取得數據中
@@ -83,21 +74,30 @@ function Menus() {
         {/* 新增餐點按鈕 */}
         <Button $buttonStyle="upsert" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
-          <span>新增數據</span>
+          <span>新增餐點</span>
         </Button>
       </ToolBar>
 
-      <MacScrollbar>
+      <OverlayScrollbarsComponent
+        options={{
+          scrollbars: {
+            autoHide: "leave",
+            clickScrolling: true,
+            dragScrolling: true,
+            autoHideDelay: 1000,
+          },
+        }}
+      >
         <Container>
           {displayMenusData.length === 0 ? (
-            <Span>沒有相關數據</Span>
+            <span>沒有相關數據</span>
           ) : (
             displayMenusData.map((menu) => (
               <MenusDataCard menu={menu} key={menu.id} />
             ))
           )}
         </Container>
-      </MacScrollbar>
+      </OverlayScrollbarsComponent>
 
       {openModal && (
         <Modal onCloseModal={() => setOpenModal(false)}>
