@@ -1,3 +1,5 @@
+// 刪除指定食材數據
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInventoryApi } from "../../services/apiInventory";
 import toast from "react-hot-toast";
@@ -10,7 +12,7 @@ function useDeleteInventory() {
     isPending: inventoryDeleting,
     error: deleteError,
   } = useMutation({
-    mutationFn: (id) => deleteInventoryApi(id),
+    mutationFn: ({ id, name }) => deleteInventoryApi({ id, name }),
     onSuccess: () => {
       toast.success("數據刪除成功");
       queryClient.invalidateQueries({ queryKey: ["inventory"] });

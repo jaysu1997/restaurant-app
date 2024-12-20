@@ -1,3 +1,5 @@
+// 用來展示數據的卡片ui
+
 import styled from "styled-components";
 import { TbEdit, TbTrashX } from "react-icons/tb";
 
@@ -75,7 +77,7 @@ const Button = styled.button`
   }
 `;
 
-function DataCard({ handleEditButton, handleDeleteButton, dataFormat }) {
+function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
   return (
     <Card>
       {dataFormat.map((data) => (
@@ -97,4 +99,4 @@ function DataCard({ handleEditButton, handleDeleteButton, dataFormat }) {
   );
 }
 
-export default DataCard;
+export default DataDisplayCard;

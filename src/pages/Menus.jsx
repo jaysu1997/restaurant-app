@@ -81,7 +81,7 @@ function Menus() {
       <OverlayScrollbarsComponent
         options={{
           scrollbars: {
-            autoHide: "leave",
+            autoHide: "scroll",
             clickScrolling: true,
             dragScrolling: true,
             autoHideDelay: 1000,
@@ -90,7 +90,7 @@ function Menus() {
       >
         <Container>
           {displayMenusData.length === 0 ? (
-            <span>沒有相關數據</span>
+            <span>沒有任何數據</span>
           ) : (
             displayMenusData.map((menu) => (
               <MenusDataCard menu={menu} key={menu.id} />
@@ -100,7 +100,10 @@ function Menus() {
       </OverlayScrollbarsComponent>
 
       {openModal && (
-        <Modal onCloseModal={() => setOpenModal(false)}>
+        <Modal
+          modalHeader="餐點設定表單"
+          onCloseModal={() => setOpenModal(false)}
+        >
           <UpsertMenuForm onCloseModal={() => setOpenModal(false)} />
         </Modal>
       )}

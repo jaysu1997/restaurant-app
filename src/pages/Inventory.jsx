@@ -10,6 +10,8 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import useGetInventory from "../features/inventory/useGetInventory";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
+import Modal from "../ui/Modal";
+import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 
 const ToolBar = styled.div`
   display: flex;
@@ -49,7 +51,7 @@ function Inventory() {
       <OverlayScrollbarsComponent
         options={{
           scrollbars: {
-            autoHide: "leave", // 滾動條自動隱藏
+            autoHide: "scroll", // 滾動條自動隱藏
             clickScrolling: true, // 點擊滾動條時可滾動
             dragScrolling: true, // 支援拖動滾動
             autoHideDelay: 1000,
@@ -58,7 +60,7 @@ function Inventory() {
       >
         <Container>
           {inventoryData.length === 0 ? (
-            <span>沒有相關數據</span>
+            <span>沒有任何數據</span>
           ) : (
             inventoryData.map((inventory) => (
               <InventoryDataCard inventory={inventory} key={inventory.id} />
@@ -66,6 +68,15 @@ function Inventory() {
           )}
         </Container>
       </OverlayScrollbarsComponent>
+
+      {openModal && (
+        <Modal
+          modalHeader="食材新增表單"
+          onCloseModal={() => setOpenModal(false)}
+        >
+          <UpsertInventoryForm onCloseModal={() => setOpenModal(false)} />
+        </Modal>
+      )}
     </>
   );
 }

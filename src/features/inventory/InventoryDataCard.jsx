@@ -1,11 +1,11 @@
 import { useState } from "react";
-import DataCard from "../../ui/DataCard";
+import DataDisplayCard from "../../ui/DataDisplayCard";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import UpsertInventoryForm from "./UpsertInventoryForm";
 
 function InventoryDataCard({ inventory }) {
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const { id, label, value, quantity } = inventory;
 
@@ -16,32 +16,41 @@ function InventoryDataCard({ inventory }) {
 
   return (
     <>
-      <DataCard
-        handleEditButton={() => setOpenEditModal(true)}
-        handleDeleteButton={() => setOpenDeleteModal(true)}
+      <DataDisplayCard
+        handleEditButton={() => setOpenModal("edit")}
+        handleDeleteButton={() => setOpenModal("delete")}
         dataFormat={inventoryDataFormat}
       />
       {/* 編輯指定菜單數據的彈出視窗 */}
-      {openEditModal && (
-        <Modal onCloseModal={() => setOpenEditModal(false)}>
-          {/* <UpsertMenuForm
-            onCloseModal={() => setOpenEditModal(false)}
-            menu={menu}
-          /> */}
+      {openModal === "edit" && (
+        <Modal
+          modalHeader="食材更新表單"
+          onCloseModal={() => setOpenModal(false)}
+        >
+          <UpsertInventoryForm
+            onCloseModal={() => setOpenModal(false)}
+            inventory={inventory}
+          />
         </Modal>
       )}
       {/* 刪除指定菜單數據的彈出視窗 */}
-      {openDeleteModal && (
+      {openModal === "delete" && (
         <Modal
           headerColor="#991b1b"
           modalHeader="確認刪除"
-          onCloseModal={() => setOpenDeleteModal(false)}
+          onCloseModal={() => setOpenModal(false)}
         >
           <ConfirmDelete
-            onCloseModal={() => setOpenDeleteModal(false)}
+            onCloseModal={() => setOpenModal(false)}
             name={label}
             id={id}
             tableName="inventory"
+            render={() => (
+              <p>
+                請確認是否要刪除食材：<span>{label}</span>
+                ，以及各個餐點中所有使用此食材的備料和選項。
+              </p>
+            )}
           />
         </Modal>
       )}

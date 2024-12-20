@@ -2,11 +2,11 @@
 
 import styled from "styled-components";
 
-export const Form = styled.form`
+const FormTable = styled.form`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   max-width: 32rem;
-  padding: 1.2rem 2.4rem;
+  padding: 2.4rem 2.4rem 1.2rem;
   gap: 1.6rem;
   color: rgba(0, 0, 0, 0.6);
   font-weight: 600;
@@ -18,3 +18,5 @@ export const Form = styled.form`
     max-width: 56rem;
   }
 `;
+
+export default FormTable;

@@ -54,7 +54,7 @@ function FieldArray({
             placeholder="請輸入細項標題(例如:冰/熱)"
             autoComplete="off"
             {...register(`customize.${index}.title`, {
-              required: "此欄位不能空白",
+              required: "細項標題不能空白",
             })}
           />
 

@@ -5,7 +5,7 @@ import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import UpsertMenuForm from "./UpsertMenuForm";
 import { FiMinus } from "react-icons/fi";
-import DataCard from "../../ui/DataCard";
+import DataDisplayCard from "../../ui/DataDisplayCard";
 
 function MenusDataCard({ menu }) {
   // 開關Modal
@@ -16,12 +16,13 @@ function MenusDataCard({ menu }) {
 
   // 所有成份
   const ingredientArray = ingredients?.map(
-    (ingredient) => ingredient.name.label
+    (ingredient) => ingredient.ingredientName.label
   );
 
   // 所有自訂附加項目
   const customizeArray = customize?.map((custom) => custom.title);
 
+  // 卡片展示格式
   const menuDataFormat = [
     { head: "名稱", body: name, twoColumns: false },
     { head: "分類", body: category, twoColumns: false },
@@ -37,7 +38,7 @@ function MenusDataCard({ menu }) {
 
   return (
     <>
-      <DataCard
+      <DataDisplayCard
         handleEditButton={() => setOpenModal("edit")}
         handleDeleteButton={() => setOpenModal("delete")}
         dataFormat={menuDataFormat}
@@ -68,6 +69,12 @@ function MenusDataCard({ menu }) {
             id={id}
             tableName="menus"
             onCloseModal={() => setOpenModal(false)}
+            render={() => (
+              <p>
+                請確認是否要刪除餐點：<span>{`「${name}」`}</span>
+                ，以及該餐點的所有設定。
+              </p>
+            )}
           />
         </Modal>
       )}

@@ -65,8 +65,10 @@ export async function deleteMenuApi(id) {
   return null;
 }
 
+// 根據輸入的食材名稱，取得所有備料和選項有使用指定食材的餐點
 export async function getFilterDataApi(ingredientName) {
-  const { data, error } = await supabase.rpc("filter_menus_by_ingredient", {
+  // 在supabase中設定的sql(如果餐點中的備料或選項有使用指定食材，就數據獲取範圍內)
+  const { data, error } = await supabase.rpc("get_menus_using_ingredient", {
     ingredient_name: `${ingredientName}`,
   });
 
@@ -77,7 +79,7 @@ export async function getFilterDataApi(ingredientName) {
   return data;
 }
 
-// 試看看
+// 刪除全部有使用指定食材的備料和選項
 export async function deleteFilterDataApi(ingredientName) {
   const { data, error } = await supabase.rpc("remove_ingredient_from_menus", {
     ingredient_name: `${ingredientName}`,
@@ -87,16 +89,14 @@ export async function deleteFilterDataApi(ingredientName) {
     console.error("Error:", error);
   }
 
-  console.log(data);
-
   return data;
 }
 
-// 這個還沒有測試過
+// 這個還沒有測試過(編輯)
 export async function updateIngredientApi(ingredientName, newIngredientName) {
   // 呼叫自定義的 SQL 函數來更新食材名稱
   const { data, error } = await supabase.rpc("update_ingredient_in_menus", {
-    ingredient_name: ingredientName,
+    old_ingredient_name: ingredientName,
     new_ingredient_name: newIngredientName,
   });
 

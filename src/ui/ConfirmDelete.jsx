@@ -2,14 +2,15 @@ import styled from "styled-components";
 import useDeleteMenu from "../features/menu/useDeleteMenu";
 import useDeleteInventory from "../features/inventory/useDeleteInventory";
 import Button from "./Button";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import Modal from "./Modal";
+
 import toast from "react-hot-toast";
 import useGetFilterMenuData from "../features/menu/useGetFilterData";
-import useDeleteFilterDate from "../features/menu/useDeleteFilterData";
 import UpsertMenuForm from "../features/menu/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import LoadingSpinner from "./LoadingSpinner";
 
 const StyleConfirmModal = styled.div`
   max-width: 36rem;
@@ -39,7 +40,7 @@ const Accordion = styled.div`
 
 const AccordionTitle = styled.button`
   width: 100%;
-  height: fit-content;
+  height: 3.6rem;
   border: none;
   display: flex;
   justify-content: start;
@@ -49,6 +50,7 @@ const AccordionTitle = styled.button`
   background-color: #f9fafb;
   transition: background-color 0.3s;
   font-size: 1.4rem;
+  line-height: 1.4;
 
   border-bottom: ${({ $collapse }) =>
     $collapse ? "1px solid #dddddd" : "none"};
@@ -74,14 +76,18 @@ const AccordionContent = styled.div`
   line-height: 1.6;
   font-size: 1.4rem;
 
-  & span {
+  & span[tabindex="0"] {
     color: #3b82f6;
     cursor: pointer;
   }
 
-  & span:hover {
+  & span[tabindex="0"]:hover {
     color: #2563eb;
     text-decoration: underline;
+  }
+
+  & span[tabindex="0"]:focus {
+    outline: 2px solid #007bff;
   }
 `;
 
@@ -112,50 +118,28 @@ const ButtonRow = styled.div`
   gap: 0.6rem;
 `;
 
-function ConfirmDelete({ onCloseModal, name, id, tableName }) {
+function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
   const [confirm, setConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [menuData, setMenuData] = useState(false);
 
+  const { filterMenuData, isPending } = useGetFilterMenuData(name);
   const { deleteMenu, menuDeleting } = useDeleteMenu();
   const { deleteInventory, inventoryDeleting } = useDeleteInventory();
-  const { filterMenuData, isPending } = useGetFilterMenuData(name);
-  const { deleteFilterData, filterDataDeleting } = useDeleteFilterDate();
 
-  useEffect(
-    function () {
-      if (filterMenuData?.length === 0) setConfirm(true);
-    },
-    [filterMenuData?.length]
-  );
+  if (isPending) return <LoadingSpinner />;
 
-  if (isPending) return;
-
-  function handleDelete(id) {
-    tableName === "menus" ? deleteMenu(id) : deleteInventory(id);
-    tableName === "inventory" && deleteFilterData(name);
+  function handleDelete(id, name) {
+    tableName === "menus" ? deleteMenu(id) : deleteInventory({ id, name });
     onCloseModal();
   }
 
   return (
     <>
       <StyleConfirmModal>
-        <Content>
-          {tableName === "menus" ? (
-            <p>
-              請確認是否要刪除
-              <span>{`「${name}」`}</span>
-              ，以及該餐點的所有設定。
-            </p>
-          ) : (
-            <p>
-              請確認是否要刪除食材：<span>{name}</span>
-              ，以及各個餐點中所有使用此食材的備料和選項。
-            </p>
-          )}
-        </Content>
+        <Content>{render()}</Content>
 
-        {tableName === "inventory" && filterMenuData.length !== 0 && (
+        {tableName === "inventory" && (
           <Accordion>
             <AccordionTitle
               $collapse={isOpen}
@@ -176,12 +160,22 @@ function ConfirmDelete({ onCloseModal, name, id, tableName }) {
               style={{ maxHeight: "10rem" }}
             >
               <AccordionContent $collapse={isOpen}>
-                {filterMenuData.map((menu, index) => (
-                  <Fragment key={menu.id}>
-                    <span onClick={() => setMenuData(menu)}>{menu.name}</span>
-                    {index < filterMenuData.length - 1 ? "、" : "。"}
-                  </Fragment>
-                ))}
+                {filterMenuData.length !== 0 ? (
+                  filterMenuData.map((menu, index) => (
+                    <Fragment key={menu.id}>
+                      <span
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => setMenuData(menu)}
+                      >
+                        {menu.name}
+                      </span>
+                      {index < filterMenuData.length - 1 ? "、" : "。"}
+                    </Fragment>
+                  ))
+                ) : (
+                  <span>無</span>
+                )}
               </AccordionContent>
             </OverlayScrollbarsComponent>
           </Accordion>
@@ -203,7 +197,7 @@ function ConfirmDelete({ onCloseModal, name, id, tableName }) {
           </Button>
           <Button
             $buttonStyle="confirm"
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete(id, name)}
             disabled={confirm === false || menuDeleting || inventoryDeleting}
           >
             刪除

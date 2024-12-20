@@ -7,15 +7,25 @@ import styled from "styled-components";
 
 const StyleSearchField = styled.form`
   display: flex;
-  gap: 0.6rem;
+  border: 1px solid black;
+  height: 3.6rem;
+
+  & input,
+  & input:focus {
+    border: none;
+    outline: none;
+    padding: 0 0.6rem;
+    height: 100%;
+  }
 
   & button {
-    padding: 0.6rem;
     width: 3.6rem;
-    height: 3.6rem;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: none;
+    outline: 1px solid black;
   }
 
   & button svg {

@@ -1,9 +1,10 @@
-// 新增or更新單筆menu數據
+// 新增or更新庫存食材
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { upsertMenuApi } from "../../services/apiMenus";
+import { upsertInventoryApi } from "../../services/apiInventory";
 import toast from "react-hot-toast";
 
-function useUpsertMenu() {
+function useUpsertInventory() {
   const queryClient = useQueryClient();
 
   const {
@@ -11,10 +12,11 @@ function useUpsertMenu() {
     isPending: isUpserting,
     error: upsertError,
   } = useMutation({
-    mutationFn: upsertMenuApi,
+    mutationFn: upsertInventoryApi,
     onSuccess: () => {
-      // 這種用法好像並沒有在文檔中看到，但可以同時將多個queryKey無效
-      queryClient.invalidateQueries(["filterMenuData", "menus"]);
+      queryClient.invalidateQueries({
+        queryKey: ["inventory"],
+      });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -24,4 +26,4 @@ function useUpsertMenu() {
   return { upsert, isUpserting, upsertError };
 }
 
-export default useUpsertMenu;
+export default useUpsertInventory;

@@ -21,14 +21,14 @@ function NestedFieldArray({
 
   return (
     <>
-      {fields.map((fields, index) => (
-        <FormRow $formRowStyle="nested" key={fields.id}>
+      {fields.map((field, index) => (
+        <FormRow $formRowStyle="nested" key={field.id}>
           <FormRow $formRowStyle="subHeader">
             <FormTypography $titleStyle="nestedTitle">
               選項 - {index + 1}
             </FormTypography>
 
-            {index !== 0 && (
+            {fields.length - 1 !== 0 && (
               <Button
                 $buttonStyle="remove"
                 type="button"
@@ -47,7 +47,7 @@ function NestedFieldArray({
             {...register(
               `customize.${nestedIndex}.options.${index}.optionLabel`,
               {
-                required: "此欄位不能空白",
+                required: "選項名稱不能空白",
               }
             )}
           />
@@ -63,8 +63,12 @@ function NestedFieldArray({
             {...register(
               `customize.${nestedIndex}.options.${index}.extraPrice`,
               {
-                required: "此欄位不能空白",
+                required: "選項額外加價不能空白",
                 valueAsNumber: true,
+                min: {
+                  value: 0,
+                  message: `加價不能為負數`,
+                },
               }
             )}
           />
@@ -73,7 +77,7 @@ function NestedFieldArray({
             <ControlledSelect
               name={`customize.${nestedIndex}.options.${index}.ingredientName`}
               control={control}
-              rules={{ required: "此欄位不能空白" }}
+              rules={{ required: "額外消耗食材不能空白" }}
               options={[
                 {
                   label: "無額外食材消耗",
@@ -96,8 +100,12 @@ function NestedFieldArray({
             }}
             placeholder="請輸入備料數量"
             {...register(`customize.${nestedIndex}.options.${index}.quantity`, {
-              required: "此欄位不能空白",
+              required: "食材消耗數量不能空白",
               valueAsNumber: true,
+              min: {
+                value: 0,
+                message: `使用數量不能為負數`,
+              },
             })}
           />
         </FormRow>
