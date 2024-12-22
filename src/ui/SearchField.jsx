@@ -1,65 +1,97 @@
 // 菜單餐點關鍵字搜尋功能
 
 import { useState } from "react";
-import { BsSearch } from "react-icons/bs";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import { IoSearch, IoCloseCircleSharp } from "react-icons/io5";
 
-const StyleSearchField = styled.form`
-  display: flex;
-  border: 1px solid black;
+const StyleSearchField = styled.div`
+  border: none;
+  outline: 1px solid #c6c6c6;
   height: 3.6rem;
+  width: 24rem;
+  border-radius: 50px;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 
-  & input,
-  & input:focus {
+  & input {
     border: none;
     outline: none;
-    padding: 0 0.6rem;
     height: 100%;
+    width: 100%;
   }
 
-  & button {
-    width: 3.6rem;
-    height: 100%;
+  & button,
+  & div {
     display: flex;
     justify-content: center;
     align-items: center;
     border: none;
-    outline: 1px solid black;
+    padding: 0 1.2rem;
+    background-color: transparent;
+    width: fit-content;
+    height: 100%;
   }
 
-  & button svg {
-    height: 2rem;
-    width: 2rem;
+  & svg {
+    width: 2.4rem;
+    height: 2.4rem;
   }
 `;
 
 function SearchField() {
-  // React Router提供的searchParams功能
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isComposing, setIsComposing] = useState(false);
   const [keyWord, setKeyWord] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    searchParams.delete("category");
-    searchParams.set("name", keyWord || "all");
+  function handleInputChange(e) {
+    const value = e.target.value;
+    setKeyWord(value);
+
+    // 如果不是組合輸入，立即更新 searchParams
+    if (!isComposing) {
+      updateSearchParams(value);
+    }
+  }
+
+  function updateSearchParams(value) {
+    searchParams.set("name", value || "all");
     setSearchParams(searchParams);
-    setKeyWord("");
   }
 
   return (
-    <StyleSearchField onSubmit={handleSubmit}>
+    <StyleSearchField>
+      <div>
+        <IoSearch />
+      </div>
+
       <input
         type="text"
         name="keyword"
+        placeholder="搜尋名稱"
         value={keyWord}
-        placeholder="請輸入關鍵字"
-        required
-        onChange={(e) => setKeyWord(e.target.value)}
+        // 組合輸入不會馬上觸發onChange執行(中文)
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={(e) => {
+          setIsComposing(false);
+          updateSearchParams(e.target.value);
+        }}
+        onChange={handleInputChange}
       />
-      <button>
-        <BsSearch />
-      </button>
+
+      {keyWord && (
+        <button
+          type="button"
+          onClick={() => {
+            setKeyWord("");
+            updateSearchParams("");
+          }}
+        >
+          <IoCloseCircleSharp />
+        </button>
+      )}
     </StyleSearchField>
   );
 }

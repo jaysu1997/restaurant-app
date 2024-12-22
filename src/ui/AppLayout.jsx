@@ -28,7 +28,7 @@ const Main = styled.main`
   margin-left: auto;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
+  gap: 1.6rem;
   height: 100%;
   overflow: auto;
   /* padding-bottom: 3.6rem; */

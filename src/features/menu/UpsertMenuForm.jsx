@@ -1,8 +1,8 @@
 // 用來新增或更新單筆menu數據的表單
 
-import { get, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import useUpsertMenu from "./useUpsertMenu";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import FieldArray from "./FieldArray";
@@ -46,7 +46,7 @@ const formFieldData = [
 
 function UpsertMenuForm({ onCloseModal, menu }) {
   const [newItems, setNewItems] = useState(new Set());
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { pathname } = useLocation();
 
   const { upsert, isUpserting } = useUpsertMenu();
@@ -99,10 +99,10 @@ function UpsertMenuForm({ onCloseModal, menu }) {
           ? toast.success("餐點設定更新成功")
           : toast.success("餐點設定新增成功");
         onCloseModal?.();
-        pathname === "menus" && navigate("/menus");
+        pathname === "/menus" && setSearchParams({});
       },
       onError: (error) => {
-        console.log("上傳失敗");
+        console.log("上傳失敗", error);
         // 確保在上傳supabase失敗後，各個欄位的值不會被清空
         reset(getValues());
       },

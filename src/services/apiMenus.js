@@ -10,8 +10,6 @@ export async function getMenusApi() {
     throw new Error("Menus數據獲取失敗");
   }
 
-  // console.log(data);
-
   return data;
 }
 
@@ -92,8 +90,8 @@ export async function deleteFilterDataApi(ingredientName) {
   return data;
 }
 
-// 這個還沒有測試過(編輯)
-export async function updateIngredientApi(ingredientName, newIngredientName) {
+// 更新所有有使用指定食材的備料和選項
+export async function updateFilterDataApi(ingredientName, newIngredientName) {
   // 呼叫自定義的 SQL 函數來更新食材名稱
   const { data, error } = await supabase.rpc("update_ingredient_in_menus", {
     old_ingredient_name: ingredientName,
@@ -105,6 +103,5 @@ export async function updateIngredientApi(ingredientName, newIngredientName) {
     return null; // 返回 null 表示更新失敗
   }
 
-  console.log("Ingredient updated successfully:", data);
   return data; // 返回更新後的數據
 }

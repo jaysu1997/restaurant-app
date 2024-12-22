@@ -12,11 +12,13 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import Modal from "../ui/Modal";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
+import { useSearchParams } from "react-router-dom";
 
 const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
   justify-content: space-between;
+  padding: 1.6rem 1rem;
 `;
 
 const Container = styled.div`
@@ -29,12 +31,22 @@ const Container = styled.div`
 `;
 
 function Inventory() {
-  //  備料的部分需要注意可能會和新增餐點時設定的名字不同，或許之後要在新增餐點時設定驗證
   const [openModal, setOpenModal] = useState(false);
-
+  const [searchParams] = useSearchParams();
   const { inventoryData, isPending } = useGetInventory();
 
   if (isPending) return <LoadingSpinner />;
+
+  const keyWord = searchParams.get("name");
+
+  // 要展示的數據
+  let displayInventoryData = inventoryData;
+
+  if (keyWord && keyWord !== "all") {
+    displayInventoryData = inventoryData.filter((inventory) =>
+      inventory.label.includes(keyWord)
+    );
+  }
 
   return (
     <>
@@ -59,10 +71,10 @@ function Inventory() {
         }}
       >
         <Container>
-          {inventoryData.length === 0 ? (
+          {displayInventoryData.length === 0 ? (
             <span>沒有任何數據</span>
           ) : (
-            inventoryData.map((inventory) => (
+            displayInventoryData.map((inventory) => (
               <InventoryDataCard inventory={inventory} key={inventory.id} />
             ))
           )}

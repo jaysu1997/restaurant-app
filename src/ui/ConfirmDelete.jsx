@@ -11,6 +11,7 @@ import UpsertMenuForm from "../features/menu/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import LoadingSpinner from "./LoadingSpinner";
+import { useSearchParams } from "react-router-dom";
 
 const StyleConfirmModal = styled.div`
   max-width: 36rem;
@@ -119,6 +120,7 @@ const ButtonRow = styled.div`
 `;
 
 function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [confirm, setConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [menuData, setMenuData] = useState(false);
@@ -132,6 +134,7 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
   function handleDelete(id, name) {
     tableName === "menus" ? deleteMenu(id) : deleteInventory({ id, name });
     onCloseModal();
+    setSearchParams({});
   }
 
   return (

@@ -1,4 +1,4 @@
-import { deleteFilterDataApi, updateIngredientApi } from "./apiMenus";
+import { deleteFilterDataApi, updateFilterDataApi } from "./apiMenus";
 import supabase from "./supabase";
 
 // 取得stocks中的所有食材數據
@@ -13,7 +13,7 @@ export async function getInventoryApi() {
   return data;
 }
 
-// 新增/更新食材數據
+// 新增or更新食材數據
 export async function upsertInventoryApi(inventoryData) {
   const { data, error } = await supabase
     .from("inventory")
@@ -25,8 +25,9 @@ export async function upsertInventoryApi(inventoryData) {
     throw new Error("庫存數據新增失敗");
   }
 
+  // 所有使用此食材的備料和選項也會同步更新名稱
   if (inventoryData.edit) {
-    await updateIngredientApi(inventoryData.edit.old, inventoryData.edit.new);
+    await updateFilterDataApi(inventoryData.edit.old, inventoryData.edit.new);
   }
 
   return data;

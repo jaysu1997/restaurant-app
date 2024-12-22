@@ -7,6 +7,7 @@ import Button from "../../ui/Button";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import useUpsertInventory from "./useUpsertInventory";
 import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
 
 const formFieldData = [
   {
@@ -22,10 +23,11 @@ const formFieldData = [
 ];
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, getValues, reset } = useForm({
     defaultValues: inventory,
   });
   const { upsert, isUpserting } = useUpsertInventory();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function onSubmit(data) {
     const edit = inventory ? { old: inventory.label, new: data.label } : null;
@@ -48,9 +50,11 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
           ? toast.success("餐點設定更新成功")
           : toast.success("餐點設定新增成功");
         onCloseModal?.();
+        setSearchParams({});
       },
       onError: (error) => {
         toast.error("設定失敗");
+        reset(getValues());
       },
     });
   }
