@@ -44,7 +44,7 @@ const StyleSearchField = styled.div`
 function SearchField() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isComposing, setIsComposing] = useState(false);
-  const [keyWord, setKeyWord] = useState("");
+  const [keyWord, setKeyWord] = useState(searchParams.get("name") || "");
 
   function handleInputChange(e) {
     const value = e.target.value;

@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
 const StyleShoppingList = styled.aside`
+  grid-row: 1 / -1;
+  grid-column: 2 / 3;
   background-color: cadetblue;
-  width: 100dvw;
+  height: 100%;
 `;
 
 function ShoppingList({ shoppingCart }) {

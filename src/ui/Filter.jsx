@@ -1,51 +1,55 @@
 // 菜單設定的數據篩選器
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import styled from "styled-components";
+import Select from "react-select";
+import { clear } from "../features/order/orderSlice";
 
-const Select = styled.select`
-  height: 3.6rem;
-  font-size: 1.4rem;
-`;
-
-function Filter({ menusData }) {
-  const [optionValue, setOptionValue] = useState("");
-
-  // React Router提供的searchParams功能
+function Filter({ dataArray, field, selectTitle }) {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  // 如果在使用搜尋功能，就將filter的value轉回初始狀態
-  useEffect(
-    function () {
-      if (!searchParams.get("category")) setOptionValue("");
-    },
-    [searchParams]
+  const [optionValue, setOptionValue] = useState(
+    JSON.parse(searchParams.get(field)) || ""
   );
 
   // 使用Set()過濾重複的分類
-  const categorys = [...new Set(menusData.map((menu) => menu.category))];
+  const categoryList = [...new Set(dataArray.map((data) => data.category))];
+
+  const options = {
+    quantity: [
+      { label: "數量 < 100", value: "100" },
+      { label: "數量 < 50", value: "50" },
+      { label: "數量 < 10", value: "10" },
+      { label: "數量 = 0", value: "1" },
+    ],
+    category: categoryList.map((category) => ({
+      label: category,
+      value: category,
+    })),
+  };
 
   // 根據選擇的option值來改變URL的searchParams
   function handleFilter(e) {
-    setOptionValue(e.target.value);
-    searchParams.delete("name");
-    searchParams.set("category", e.target.value || "all");
+    setOptionValue(e);
+    searchParams.set(field, JSON.stringify(e) || "all");
     setSearchParams(searchParams);
   }
 
   return (
-    <div>
-      <Select value={optionValue} onChange={handleFilter}>
-        <option value="">請選擇分類</option>
-        <option value="all">全部</option>
-        {categorys &&
-          categorys.map((opt) => (
-            <option value={opt} key={opt}>
-              {opt}
-            </option>
-          ))}
-      </Select>
-    </div>
+    <Select
+      options={[{ label: "不限", value: "all" }, ...options[field]]}
+      value={optionValue}
+      onChange={handleFilter}
+      placeholder={selectTitle}
+      isSearchable={false}
+      styles={{
+        control: (baseStyles) => ({
+          ...baseStyles,
+          height: "3.6rem",
+          minHeight: "3.6rem",
+          width: "14rem",
+          fontSize: "1.4rem",
+        }),
+      }}
+    />
   );
 }
 

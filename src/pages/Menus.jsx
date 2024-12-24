@@ -6,19 +6,27 @@ import Heading from "../ui/Heading.jsx";
 import MenusDataCard from "../features/menu/MenusDataCard.jsx";
 import LoadingSpinner from "../ui/LoadingSpinner.jsx";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UpsertMenuForm from "../features/menu/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import SearchField from "../ui/SearchField.jsx";
+import StyledOverlayScrollbars from "../ui/StyledOverlayScrollbars.jsx";
+import Filter from "../ui/Filter.jsx";
 
 const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
   justify-content: space-between;
   padding: 1.6rem 1rem;
+`;
+
+const Operator = styled.div`
+  display: flex;
+  gap: 1.6rem;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Container = styled.div`
@@ -32,19 +40,28 @@ const Container = styled.div`
 
 function Menus() {
   const [openModal, setOpenModal] = useState(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { menusData, isPending } = useGetMenus();
 
   // 從supabase取得數據中
   if (isPending) return <LoadingSpinner />;
 
-  const keyWord = searchParams.get("name");
+  const nameKeyWord = searchParams.get("name");
+  const categoryKeyWord = JSON.parse(searchParams.get("category"));
 
   // 要展示的數據
   let displayMenusData = menusData;
 
-  if (keyWord && keyWord !== "all") {
-    displayMenusData = menusData.filter((menu) => menu.name.includes(keyWord));
+  if (nameKeyWord && nameKeyWord !== "all") {
+    displayMenusData = menusData.filter((menu) =>
+      menu.name.includes(nameKeyWord)
+    );
+  }
+
+  if (categoryKeyWord && categoryKeyWord.value !== "all") {
+    displayMenusData = displayMenusData.filter(
+      (menu) => menu.category === categoryKeyWord.value
+    );
   }
 
   return (
@@ -52,25 +69,16 @@ function Menus() {
       <Heading>菜單設定</Heading>
 
       <ToolBar>
-        {/* 搜尋和搜尋功能 */}
+        <Filter dataArray={menusData} field="category" selectTitle="餐點分類" />
         <SearchField />
-        {/* 新增餐點按鈕 */}
+
         <Button $buttonStyle="upsert" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
           <span>新增餐點</span>
         </Button>
       </ToolBar>
 
-      <OverlayScrollbarsComponent
-        options={{
-          scrollbars: {
-            autoHide: "scroll",
-            clickScrolling: true,
-            dragScrolling: true,
-            autoHideDelay: 1000,
-          },
-        }}
-      >
+      <StyledOverlayScrollbars style={{ maxHeight: "100%" }} autoHide="scroll">
         <Container>
           {displayMenusData.length === 0 ? (
             <span>沒有任何數據</span>
@@ -80,7 +88,7 @@ function Menus() {
             ))
           )}
         </Container>
-      </OverlayScrollbarsComponent>
+      </StyledOverlayScrollbars>
 
       {openModal && (
         <Modal

@@ -31,7 +31,6 @@ const Main = styled.main`
   gap: 1.6rem;
   height: 100%;
   overflow: auto;
-  /* padding-bottom: 3.6rem; */
 
   flex-grow: 1;
 `;

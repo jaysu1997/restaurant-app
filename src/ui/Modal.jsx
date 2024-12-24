@@ -1,9 +1,7 @@
 import styled from "styled-components";
-import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { IoIosClose } from "react-icons/io";
-
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
 const Overlay = styled.div`
   position: fixed;
@@ -123,19 +121,12 @@ function Modal({
             <IoIosClose />
           </Button>
         </Header>
-        <OverlayScrollbarsComponent
-          options={{
-            scrollbars: {
-              autoHide: "scroll", // 滾動條自動隱藏
-              clickScrolling: true, // 點擊滾動條時可滾動
-              dragScrolling: true, // 支援拖動滾動
-              autoHideDelay: 1000,
-            },
-          }}
+        <StyledOverlayScrollbars
           style={{ maxHeight: "80dvh" }}
+          autoHide="scroll"
         >
           {children}
-        </OverlayScrollbarsComponent>
+        </StyledOverlayScrollbars>
       </StyleModal>
     </Overlay>,
     document.body

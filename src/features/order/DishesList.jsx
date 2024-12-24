@@ -3,13 +3,6 @@ import styled, { css } from "styled-components";
 import Modal from "../../ui/Modal";
 import DishOrderForm from "./DishOrderForm";
 
-const StyleDishesList = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  padding: 1rem;
-`;
-
 const Card = styled.div`
   display: flex;
   flex-direction: column;
@@ -19,7 +12,7 @@ const Card = styled.div`
   max-width: 24rem;
   border-radius: 5px;
   border: none;
-  box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.15);
   transition: all 0.3s;
 
   &:hover {
@@ -31,7 +24,7 @@ const Card = styled.div`
 const rowStyle = {
   head: css`
     color: #1f2937;
-    font-size: 2rem;
+    font-weight: 500;
   `,
   price: css`
     color: #dc2626;
@@ -50,31 +43,31 @@ const Row = styled.div`
 `;
 
 // 食材清單
-const ingredientsList = (ings) => ings.map((ing) => ing.label1).join(", ");
+const ingredientsList = (ings) =>
+  ings.map((ing) => ing.ingredientName.label).join(", ");
 
-function DishesList({ dishes }) {
+function DishesList({ dish }) {
   const [openModal, setOpenModal] = useState(false);
 
-  const [dishData] = dishes.filter((dish) => dish.id === openModal);
+  console.log(dish);
+
+  // const [dishData] = dishes.filter((dish) => dish.id === openModal);
 
   return (
     <>
-      <StyleDishesList>
-        {dishes.map((dish) => (
-          <Card key={dish.id} onClick={() => setOpenModal(dish.id)}>
-            <Row type="head">{dish.name}</Row>
-            <Row type="price">
-              <span>$ </span>
-              {dish.price - dish.discount}
-            </Row>
-            <Row type="ingredients">{ingredientsList(dish.ingredients)}</Row>
-          </Card>
-        ))}
-      </StyleDishesList>
+      <Card key={dish.id} onClick={() => setOpenModal(dish.id)}>
+        <Row type="head">{dish.name}</Row>
+        <Row type="price">
+          <span>$ </span>
+          {dish.price - dish.discount}
+        </Row>
+        <Row type="ingredients">abc</Row>
+        {/* <Row type="ingredients">{ingredientsList(dish.ingredients)}</Row> */}
+      </Card>
 
       {openModal && (
         <Modal onCloseModal={() => setOpenModal(false)}>
-          <DishOrderForm dishData={dishData} />
+          {/* <DishOrderForm dishData={dishData} /> */}
         </Modal>
       )}
     </>

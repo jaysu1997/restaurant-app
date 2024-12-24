@@ -4,14 +4,12 @@ import useDeleteInventory from "../features/inventory/useDeleteInventory";
 import Button from "./Button";
 import { Fragment, useState } from "react";
 import Modal from "./Modal";
-
-import toast from "react-hot-toast";
 import useGetFilterMenuData from "../features/menu/useGetFilterData";
 import UpsertMenuForm from "../features/menu/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import LoadingSpinner from "./LoadingSpinner";
 import { useSearchParams } from "react-router-dom";
+import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
 const StyleConfirmModal = styled.div`
   max-width: 36rem;
@@ -151,16 +149,10 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
               <RiArrowRightSLine />
               <span>查看使用{name}的餐點</span>
             </AccordionTitle>
-            <OverlayScrollbarsComponent
-              options={{
-                scrollbars: {
-                  autoHide: "leave",
-                  clickScrolling: true,
-                  dragScrolling: true,
-                  autoHideDelay: 1000,
-                },
-              }}
+
+            <StyledOverlayScrollbars
               style={{ maxHeight: "10rem" }}
+              autoHide="leave"
             >
               <AccordionContent $collapse={isOpen}>
                 {filterMenuData.length !== 0 ? (
@@ -180,7 +172,7 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
                   <span>無</span>
                 )}
               </AccordionContent>
-            </OverlayScrollbarsComponent>
+            </StyledOverlayScrollbars>
           </Accordion>
         )}
 

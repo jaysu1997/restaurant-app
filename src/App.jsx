@@ -2,8 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import GlobalStyles from "./style/GlobalStyles";
 import AppLayout from "./ui/AppLayout";
 
-import "mac-scrollbar/dist/mac-scrollbar.css";
-
 import Homepage from "./pages/Homepage";
 import Order from "./pages/Order";
 import Bookings from "./pages/Bookings";
@@ -14,8 +12,7 @@ import Staff from "./pages/Staff";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
-
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +22,7 @@ const queryClient = new QueryClient({
   },
 });
 
+// 或許可以加入自訂餐廳名稱，字體顏色，logo的功能
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -32,17 +30,7 @@ export default function App() {
 
       <GlobalStyles />
 
-      <OverlayScrollbarsComponent
-        options={{
-          scrollbars: {
-            autoHide: "scroll",
-            clickScrolling: true,
-            dragScrolling: true,
-            autoHideDelay: 1000,
-          },
-        }}
-        style={{ height: "100vh" }}
-      >
+      <StyledOverlayScrollbars style={{ height: "100vh" }} autoHide="scroll">
         <BrowserRouter>
           <Routes>
             <Route element={<AppLayout />}>
@@ -56,7 +44,7 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-      </OverlayScrollbarsComponent>
+      </StyledOverlayScrollbars>
 
       <Toaster
         position="top-center"

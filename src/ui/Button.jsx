@@ -92,6 +92,8 @@ const type = {
     align-items: center;
     color: #3b82f6;
     gap: 0.2rem;
+    width: fit-content;
+    border-radius: 50px;
 
     & svg {
       height: 2rem;

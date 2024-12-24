@@ -6,17 +6,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useSearchParams } from "react-router-dom";
 
 const StyleSwiper = styled(Swiper)`
-  max-width: 100%;
+  grid-column: 1 / 2;
+  max-width: 96rem;
   width: 100%;
   box-sizing: border-box;
-  min-height: 3.2rem;
+  max-height: 3.2rem;
   /* padding: 0 4rem; */
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`
   background-color: #262626;
   color: #fafafa;
-
   min-height: 3.2rem;
   display: flex;
   justify-content: center;
