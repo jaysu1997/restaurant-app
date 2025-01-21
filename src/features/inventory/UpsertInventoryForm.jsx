@@ -6,8 +6,8 @@ import InputField from "../../ui/FormInputField";
 import Button from "../../ui/Button";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import useUpsertInventory from "./useUpsertInventory";
-import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 const formFieldData = [
   {
@@ -17,7 +17,7 @@ const formFieldData = [
   },
   {
     title: "庫存數量",
-    inputName: "quantity",
+    inputName: "remainingQuantity",
     inputType: "number",
   },
 ];
@@ -40,28 +40,43 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
 
     // 當網路離線時會跳出錯誤訊息，並終止提交表單動作
     if (!navigator.onLine) {
-      toast.error("目前網路無法使用，請稍後再試。");
+      StyledHotToast({
+        type: "error",
+        title: "庫存食材設定失敗",
+        content: "目前網路無法使用，請稍後再試。",
+      });
       return;
     }
 
     upsert(inventoryData, {
       onSuccess: (data) => {
         inventory
-          ? toast.success("餐點設定更新成功")
-          : toast.success("餐點設定新增成功");
+          ? StyledHotToast({
+              type: "success",
+              title: "庫存食材設定更新成功",
+            })
+          : StyledHotToast({
+              type: "success",
+              title: "庫存食材設定新增成功",
+            });
         onCloseModal?.();
         setSearchParams({});
       },
       onError: (error) => {
-        toast.error("設定失敗");
         reset(getValues());
       },
     });
   }
 
   function onError(error) {
-    Object.values(error).forEach((error) => {
-      toast.error(error.message); // 錯誤訊息來自於 `register` 的 `message`
+    const toastMessage = `${Object.values(error)
+      .map((err) => err.message)
+      .join("， ")}。`;
+
+    StyledHotToast({
+      type: "error",
+      title: "庫存食材設定失敗",
+      content: toastMessage,
     });
   }
 
@@ -84,10 +99,6 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
             legendValue=""
             type={data.inputType}
             id={data.inputName}
-            autoComplete="off"
-            onWheel={
-              data.inputType === "number" ? (e) => e.target.blur() : undefined
-            }
             placeholder={`請輸入餐點${data.title}`}
             {...register(`${data.inputName}`, {
               required: `${data.title}欄位必須填寫`,

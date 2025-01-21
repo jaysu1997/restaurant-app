@@ -6,13 +6,16 @@ import styled from "styled-components";
 const Input = styled.input`
   width: 100%;
   background-color: #ffffff;
-  border-radius: 6px;
   font-size: 1.4rem;
   font-weight: 400;
-  padding: 0 1rem;
+  padding: 0 0.8rem;
   border: none;
-  outline: none;
   height: 3.6rem;
+  border-radius: 6px;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const Fieldset = styled.fieldset`
@@ -21,10 +24,12 @@ const Fieldset = styled.fieldset`
   border-radius: 6px;
   border: 2px solid rgba(0, 0, 0, 0.6);
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   background-color: #ffffff;
 
   &:focus-within {
+    border: none;
     border: 2px solid #3b82f6;
   }
 
@@ -36,7 +41,7 @@ const Fieldset = styled.fieldset`
 const Legend = styled.legend`
   font-size: 1.4rem;
   padding: 0;
-  margin-left: 1rem;
+  margin-left: 0.8rem;
   color: rgba(0, 0, 0, 0.6);
 `;
 

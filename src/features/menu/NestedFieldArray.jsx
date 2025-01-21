@@ -13,6 +13,7 @@ function NestedFieldArray({
   inventoryData = [],
   handleCreateNewItems,
   disabled,
+  getValues,
 }) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -42,7 +43,6 @@ function NestedFieldArray({
           <InputField
             legendValue="選項名稱設定"
             type="text"
-            autoComplete="off"
             placeholder="請輸入選項名稱"
             {...register(
               `customize.${nestedIndex}.options.${index}.optionLabel`,
@@ -55,10 +55,6 @@ function NestedFieldArray({
           <InputField
             legendValue="選項額外加價"
             type="number"
-            autoComplete="off"
-            onWheel={(e) => {
-              e.target.blur();
-            }}
             placeholder="請輸入選項加價"
             {...register(
               `customize.${nestedIndex}.options.${index}.extraPrice`,
@@ -80,7 +76,7 @@ function NestedFieldArray({
               rules={{ required: "額外消耗食材不能空白" }}
               options={[
                 {
-                  label: "無額外食材消耗",
+                  label: "無",
                   value: "",
                 },
                 ...inventoryData,
@@ -94,7 +90,6 @@ function NestedFieldArray({
           <InputField
             legendValue="食材消耗數量"
             type="number"
-            autoComplete="off"
             onWheel={(e) => {
               e.target.blur();
             }}
@@ -102,9 +97,17 @@ function NestedFieldArray({
             {...register(`customize.${nestedIndex}.options.${index}.quantity`, {
               required: "食材消耗數量不能空白",
               valueAsNumber: true,
-              min: {
-                value: 0,
-                message: `使用數量不能為負數`,
+              validate: (value) => {
+                // 如果有使用額外消耗食材就不能將消耗量設為0
+                const ingredient = getValues(
+                  `customize.${nestedIndex}.options.${index}.ingredientName`
+                )?.value;
+
+                if (ingredient === "") {
+                  return value < 0 ? "食材消耗數量不能少於0" : true;
+                } else {
+                  return value < 1 ? "食材消耗數量不能少於1" : true;
+                }
               },
             })}
           />
@@ -119,7 +122,7 @@ function NestedFieldArray({
             optionLabel: "",
             extraPrice: "",
             ingredientName: {
-              label: "無額外食材消耗",
+              label: "無",
               value: "",
             },
             quantity: 0,

@@ -2,18 +2,18 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { IoIosClose } from "react-icons/io";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
+import { useEffect, useRef } from "react";
 
 const Overlay = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 10;
   background-color: rgba(0, 0, 0, 0.2);
   top: 0;
   left: 0;
   transition: all 0.5s;
   backdrop-filter: blur(2px);
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,7 +39,7 @@ const StyleModal = styled.div`
 const Header = styled.header`
   display: flex;
   border-bottom: 1px solid #e5e7eb;
-  padding: 1.2rem 2.4rem;
+  padding: 0.8rem 1.6rem;
   justify-content: space-between;
   align-items: center;
   font-size: 2.4rem;
@@ -64,7 +64,7 @@ const Button = styled.button`
   align-items: center;
   position: relative;
 
-  & svg {
+  svg {
     width: 2.8rem;
     height: 2.8rem;
   }

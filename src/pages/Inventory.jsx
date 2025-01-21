@@ -49,9 +49,9 @@ function Inventory() {
     );
   }
 
-  if (quantityKeyWord && quantityKeyWord.value !== "all") {
+  if (quantityKeyWord && quantityKeyWord.value !== "") {
     displayInventoryData = displayInventoryData.filter(
-      (inventory) => inventory.quantity < quantityKeyWord.value
+      (inventory) => inventory.remainingQuantity < quantityKeyWord.value
     );
   }
 
@@ -60,11 +60,7 @@ function Inventory() {
       <Heading>備料管理</Heading>
 
       <ToolBar>
-        <Filter
-          dataArray={inventoryData}
-          field="quantity"
-          selectTitle="剩餘數量"
-        />
+        <Filter dataArray={inventoryData} field="quantity" selectTitle="數量" />
         <SearchField />
         <Button $buttonStyle="upsert" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
@@ -72,7 +68,10 @@ function Inventory() {
         </Button>
       </ToolBar>
 
-      <StyledOverlayScrollbars style={{ maxHeight: "100%" }} autoHide={scroll}>
+      <StyledOverlayScrollbars
+        style={{ maxHeight: "100dvh" }}
+        autoHide={scroll}
+      >
         <Container>
           {displayInventoryData.length === 0 ? (
             <span>沒有任何數據</span>

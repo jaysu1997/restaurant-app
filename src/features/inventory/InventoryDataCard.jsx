@@ -7,11 +7,11 @@ import UpsertInventoryForm from "./UpsertInventoryForm";
 function InventoryDataCard({ inventory }) {
   const [openModal, setOpenModal] = useState(false);
 
-  const { id, label, value, quantity } = inventory;
+  const { id, label, value, remainingQuantity } = inventory;
 
   const inventoryDataFormat = [
     { head: "名稱", body: label, twoColumns: true },
-    { head: "數量", body: `${quantity || 0} 份`, twoColumns: true },
+    { head: "數量", body: `${remainingQuantity || 0} 份`, twoColumns: true },
   ];
 
   return (

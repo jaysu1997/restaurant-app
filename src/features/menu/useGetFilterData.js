@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getFilterDataApi } from "../../services/apiMenus";
+import { getFilterDataApi } from "../../services/apiInventory";
 
 function useGetFilterMenuData(name) {
   const {

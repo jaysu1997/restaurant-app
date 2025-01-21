@@ -1,6 +1,6 @@
 // 菜單餐點關鍵字搜尋功能
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { IoSearch, IoCloseCircleSharp } from "react-icons/io5";
@@ -15,29 +15,29 @@ const StyleSearchField = styled.div`
   overflow: hidden;
   display: flex;
   align-items: center;
+`;
 
-  & input {
-    border: none;
-    outline: none;
-    height: 100%;
-    width: 100%;
-  }
+const Input = styled.input`
+  border: none;
+  outline: none;
+  height: 100%;
+  width: 100%;
+  font-size: 1.4rem;
+`;
 
-  & button,
-  & div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    padding: 0 1.2rem;
-    background-color: transparent;
-    width: fit-content;
-    height: 100%;
-  }
+const Button = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  padding: 0 1.2rem;
+  background-color: transparent;
+  width: fit-content;
+  height: 100%;
 
   & svg {
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 2.2rem;
+    height: 2.2rem;
   }
 `;
 
@@ -46,6 +46,22 @@ function SearchField() {
   const [isComposing, setIsComposing] = useState(false);
   const [keyWord, setKeyWord] = useState(searchParams.get("name") || "");
 
+  // 根據searchParams來更新搜尋框內的關鍵字
+  useEffect(
+    function () {
+      const searchKey = searchParams.get("name");
+      setKeyWord(searchKey || "");
+    },
+    [searchParams]
+  );
+
+  // 用來更新searchParams
+  function updateSearchParams(value) {
+    searchParams.set("name", value || "");
+    setSearchParams(searchParams);
+  }
+
+  // 如果是組合字體(例如中文)就不會馬上觸發搜尋功能，要等到選完字才觸發
   function handleInputChange(e) {
     const value = e.target.value;
     setKeyWord(value);
@@ -56,18 +72,13 @@ function SearchField() {
     }
   }
 
-  function updateSearchParams(value) {
-    searchParams.set("name", value || "all");
-    setSearchParams(searchParams);
-  }
-
   return (
     <StyleSearchField>
-      <div>
+      <Button role="icon">
         <IoSearch />
-      </div>
+      </Button>
 
-      <input
+      <Input
         type="text"
         name="keyword"
         placeholder="搜尋名稱"
@@ -82,7 +93,8 @@ function SearchField() {
       />
 
       {keyWord && (
-        <button
+        <Button
+          as="button"
           type="button"
           onClick={() => {
             setKeyWord("");
@@ -90,7 +102,7 @@ function SearchField() {
           }}
         >
           <IoCloseCircleSharp />
-        </button>
+        </Button>
       )}
     </StyleSearchField>
   );

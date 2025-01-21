@@ -2,7 +2,11 @@
 
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-function StyledOverlayScrollbars({ children, autoHide, style = {} }) {
+function StyledOverlayScrollbars({
+  children,
+  autoHide = "scroll",
+  style = {},
+}) {
   return (
     <OverlayScrollbarsComponent
       options={{

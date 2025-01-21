@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertInventoryApi } from "../../services/apiInventory";
-import toast from "react-hot-toast";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 function useUpsertInventory() {
   const queryClient = useQueryClient();
@@ -19,7 +19,11 @@ function useUpsertInventory() {
       });
     },
     onError: (error) => {
-      toast.error(error.message);
+      StyledHotToast({
+        type: "error",
+        title: "庫存食材設定失敗",
+        content: error.message,
+      });
     },
   });
 

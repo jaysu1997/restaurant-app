@@ -5,6 +5,10 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 const selectStyle = {
+  container: (baseStyles) => ({
+    ...baseStyles,
+    width: "100%",
+  }),
   control: (baseStyles) => ({
     ...baseStyles,
     border: "none",

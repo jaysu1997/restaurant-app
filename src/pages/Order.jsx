@@ -3,12 +3,14 @@ import SwiperBar from "../features/order/SwiperBar";
 import Heading from "../ui/Heading";
 import useGetMenus from "../features/menu/useGetMenus";
 import LoadingSpinner from "../ui/LoadingSpinner";
-import DishesList from "../features/order/DishesList";
-import { MacScrollbar } from "mac-scrollbar";
+import DishCard from "../features/order/DishCard";
 import { useSearchParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import ShoppingList from "../features/order/ShoppingList";
 import StyledOverlayScrollbars from "../ui/StyledOverlayScrollbars";
+import { useEffect } from "react";
+import { useOrder } from "../context/OrderContext";
+import useGetInventory from "../features/inventory/useGetInventory";
+import StyledHotToast from "../ui/StyledHotToast";
 
 const Container = styled.div`
   max-width: 120rem;
@@ -28,12 +30,33 @@ const Menus = styled.div`
   padding: 1.6rem;
 `;
 
-// MacScrollbar需要移除
 function Order() {
   // 取得所有菜單數據
   const { menusData, isPending } = useGetMenus();
+  const { state, dispatch } = useOrder();
   const [searchParams] = useSearchParams();
-  const shoppingCart = useSelector((state) => state.order.shoppingCart);
+  const { inventoryData, error, isError, isSuccess } = useGetInventory();
+
+  // 先下載庫存數據，並存入useReducer中
+  useEffect(
+    function () {
+      if (isSuccess) {
+        dispatch({
+          type: "inventory/remainingQuantity",
+          payload: inventoryData,
+        });
+      }
+
+      if (isError) {
+        StyledHotToast({
+          type: "error",
+          title: "庫存數據獲取失敗",
+          content: error,
+        });
+      }
+    },
+    [isSuccess, isError, dispatch, inventoryData, error]
+  );
 
   if (isPending) return <LoadingSpinner />;
 
@@ -57,20 +80,22 @@ function Order() {
 
       <Container>
         <SwiperBar categorys={categorys} />
-        <StyledOverlayScrollbars autoHide="scroll" style={{ height: "100%" }}>
+        <StyledOverlayScrollbars
+          autoHide="scroll"
+          style={{
+            maxHeight: "100dvh",
+            gridRow: "2 / -1",
+            gridColumn: "1 / 2",
+          }}
+        >
           <Menus>
             {dishes.map((dish) => (
-              <DishesList dish={dish} key={dish.id} />
+              <DishCard dish={dish} key={dish.id} />
             ))}
           </Menus>
         </StyledOverlayScrollbars>
 
-        <StyledOverlayScrollbars
-          autoHide="scroll"
-          style={{ gridRow: "1 / -1", gridColumn: "2 / 3" }}
-        >
-          <ShoppingList shoppingCart={shoppingCart} />
-        </StyledOverlayScrollbars>
+        <ShoppingList />
       </Container>
     </>
   );

@@ -12,7 +12,8 @@ import Staff from "./pages/Staff";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
-import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
+import { useEffect } from "react";
+import { OrderProvider } from "./context/OrderContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,13 +25,33 @@ const queryClient = new QueryClient({
 
 // 或許可以加入自訂餐廳名稱，字體顏色，logo的功能
 export default function App() {
+  // 全域禁用number input的預設滾輪事件
+  useEffect(() => {
+    // 當滾輪事件是發生在number input上時，移除焦點
+    const handleWheel = (e) => {
+      if (
+        document.activeElement.type === "number" &&
+        document.activeElement === e.target
+      ) {
+        e.target.blur(); // 移除焦點
+      }
+    };
+
+    // 添加全域滾輪事件監聽
+    window.addEventListener("wheel", handleWheel, { passive: false });
+
+    // 清除監聽器
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-
       <GlobalStyles />
 
-      <StyledOverlayScrollbars style={{ height: "100vh" }} autoHide="scroll">
+      <OrderProvider>
         <BrowserRouter>
           <Routes>
             <Route element={<AppLayout />}>
@@ -44,16 +65,34 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-      </StyledOverlayScrollbars>
+      </OrderProvider>
 
       <Toaster
         position="top-center"
         reverseOrder={true}
         gutter={10}
         toastOptions={{
-          duration: 3000,
           style: {
             fontSize: "1.6rem",
+            width: "32rem",
+            maxWidth: "95dvw",
+          },
+          icon: null,
+          success: {
+            style: {
+              backgroundColor: "#f0fdf4",
+              borderLeft: "1rem solid #22c55e",
+              borderRadius: "5px",
+            },
+            duration: 2000,
+          },
+          error: {
+            style: {
+              backgroundColor: "#fff1f2",
+              borderLeft: "1rem solid #e11d48",
+              borderRadius: "5px",
+            },
+            duration: 3000,
           },
         }}
       />

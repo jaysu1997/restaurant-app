@@ -37,7 +37,7 @@ export async function upsertMenuApi(menuData) {
   // 重複新增相同名稱餐點的Error(name必須是獨一無二)
   if (error && error.code === "23505") {
     console.log(error);
-    throw new Error("餐點設定失敗(此餐點名稱已經存在)");
+    throw new Error(`${menuData.data.name}已存在。`);
   }
 
   if (error) {
@@ -61,47 +61,4 @@ export async function deleteMenuApi(id) {
   }
 
   return null;
-}
-
-// 根據輸入的食材名稱，取得所有備料和選項有使用指定食材的餐點
-export async function getFilterDataApi(ingredientName) {
-  // 在supabase中設定的sql(如果餐點中的備料或選項有使用指定食材，就數據獲取範圍內)
-  const { data, error } = await supabase.rpc("get_menus_using_ingredient", {
-    ingredient_name: `${ingredientName}`,
-  });
-
-  if (error) {
-    console.error("Error:", error);
-  }
-
-  return data;
-}
-
-// 刪除全部有使用指定食材的備料和選項
-export async function deleteFilterDataApi(ingredientName) {
-  const { data, error } = await supabase.rpc("remove_ingredient_from_menus", {
-    ingredient_name: `${ingredientName}`,
-  });
-
-  if (error) {
-    console.error("Error:", error);
-  }
-
-  return data;
-}
-
-// 更新所有有使用指定食材的備料和選項
-export async function updateFilterDataApi(ingredientName, newIngredientName) {
-  // 呼叫自定義的 SQL 函數來更新食材名稱
-  const { data, error } = await supabase.rpc("update_ingredient_in_menus", {
-    old_ingredient_name: ingredientName,
-    new_ingredient_name: newIngredientName,
-  });
-
-  if (error) {
-    console.error("Error updating ingredient:", error.message);
-    return null; // 返回 null 表示更新失敗
-  }
-
-  return data; // 返回更新後的數據
 }

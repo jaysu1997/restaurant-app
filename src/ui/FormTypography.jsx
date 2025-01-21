@@ -17,7 +17,7 @@ const type = {
     font-size: 2.2rem;
     font-weight: 600;
     color: #333333;
-    margin-bottom: 1.2rem;
+    /* margin-bottom: 1.2rem; */
   `,
   subTitle: css`
     color: #6366f1;

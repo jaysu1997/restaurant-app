@@ -16,7 +16,7 @@ const Button = styled.button`
   font-weight: 600;
   color: #eef2ff;
 
-  & img {
+  img {
     display: block;
     width: 3.6rem;
     height: 3.6rem;

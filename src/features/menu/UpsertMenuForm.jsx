@@ -2,7 +2,7 @@
 
 import { useFieldArray, useForm } from "react-hook-form";
 import useUpsertMenu from "./useUpsertMenu";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import FieldArray from "./FieldArray";
@@ -10,13 +10,13 @@ import { useState } from "react";
 
 import FormTable from "../../ui/FormTable";
 import { IoCloseSharp } from "react-icons/io5";
-import toast from "react-hot-toast";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
 import InputField from "../../ui/FormInputField";
 import FormTypography from "../../ui/FormTypography";
 import ControlledSelect from "../../ui/ControlledSelect";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 const formFieldData = [
   {
@@ -76,6 +76,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   }
 
   function onSubmit(data) {
+    console.log(data);
     // 新的食材物件
     const newIngredients = {
       ingredientData: [...newItems].map((item) => ({
@@ -88,7 +89,12 @@ function UpsertMenuForm({ onCloseModal, menu }) {
 
     // 當網路離線時會跳出錯誤訊息，並終止提交表單動作
     if (!navigator.onLine) {
-      toast.error("目前網路無法使用，請稍後再試。");
+      StyledHotToast({
+        type: "error",
+        title: "餐點設定失敗",
+        content: "目前網路無法使用，請稍後再試。",
+      });
+
       return;
     }
 
@@ -96,8 +102,14 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     upsert(menuData, {
       onSuccess: (data) => {
         menu
-          ? toast.success("餐點設定更新成功")
-          : toast.success("餐點設定新增成功");
+          ? StyledHotToast({
+              type: "success",
+              title: "餐點設定更新成功",
+            })
+          : StyledHotToast({
+              type: "success",
+              title: "餐點設定新增成功",
+            });
         onCloseModal?.();
         pathname === "/menus" && setSearchParams({});
       },
@@ -110,8 +122,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   }
 
   function onError(error) {
-    console.log(error);
-
     // 透過遍歷取得所有錯誤訊息
     const getAllMessages = (errors) => {
       return Object.keys(errors).flatMap((key) => {
@@ -126,9 +136,11 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       });
     };
 
-    const allMessages = getAllMessages(error);
-
-    toast.error(allMessages.join(", "));
+    StyledHotToast({
+      type: "error",
+      title: "餐點設定失敗",
+      content: `${getAllMessages(error).join("， ")}。`,
+    });
   }
 
   return (
@@ -150,10 +162,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
             legendValue=""
             type={data.inputType}
             id={data.inputName}
-            autoComplete="off"
-            onWheel={
-              data.inputType === "number" ? (e) => e.target.blur() : undefined
-            }
             placeholder={`請輸入餐點${data.title}`}
             {...register(`${data.inputName}`, {
               required: `${data.title}欄位必須填寫`,
@@ -219,16 +227,12 @@ function UpsertMenuForm({ onCloseModal, menu }) {
               <InputField
                 legendValue="使用數量"
                 type="number"
-                autoComplete="off"
-                onWheel={(e) => {
-                  e.target.blur();
-                }}
                 placeholder="請輸入食材使用數量"
                 {...register(`ingredients.${index}.quantity`, {
                   required: "使用數量不能空白",
                   min: {
-                    value: 0,
-                    message: `使用數量不能為負數`,
+                    value: 1,
+                    message: `使用數量不能少於1`,
                   },
                   valueAsNumber: true,
                 })}
@@ -253,6 +257,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
           inventoryData={inventoryData}
           handleCreateNewItems={handleCreateNewItems}
           disabled={isUpserting}
+          getValues={getValues}
         />
       </FormRow>
 

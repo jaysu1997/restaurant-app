@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import Nav from "./Nav";
+import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
 const StyleAppLayout = styled.div`
   display: grid;
@@ -30,23 +31,24 @@ const Main = styled.main`
   flex-direction: column;
   gap: 1.6rem;
   height: 100%;
-  overflow: auto;
-
+  /* overflow: auto; */
   flex-grow: 1;
 `;
 
 function AppLayout() {
   return (
     <>
-      <StyleAppLayout>
-        <Header />
-        <Body>
-          <Nav />
-          <Main>
-            <Outlet />
-          </Main>
-        </Body>
-      </StyleAppLayout>
+      <StyledOverlayScrollbars style={{ height: "100dvh" }} autoHide="scroll">
+        <StyleAppLayout>
+          <Header />
+          <Body>
+            <Nav />
+            <Main>
+              <Outlet />
+            </Main>
+          </Body>
+        </StyleAppLayout>
+      </StyledOverlayScrollbars>
     </>
   );
 }

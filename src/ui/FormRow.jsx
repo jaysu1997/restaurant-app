@@ -12,6 +12,7 @@ const type = {
   `,
   twoColumn: css`
     border: 1px solid #d6d3d1;
+    /* background-color: #fafaf9; */
     border-radius: 6px;
     gap: 1.4rem;
     padding: 1.4rem;

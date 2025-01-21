@@ -1,8 +1,7 @@
 // 菜單設定的數據篩選器
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Select from "react-select";
-import { clear } from "../features/order/orderSlice";
 
 function Filter({ dataArray, field, selectTitle }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,9 +9,21 @@ function Filter({ dataArray, field, selectTitle }) {
     JSON.parse(searchParams.get(field)) || ""
   );
 
-  // 使用Set()過濾重複的分類
-  const categoryList = [...new Set(dataArray.map((data) => data.category))];
+  // 根據searchParams來更新篩選框內的選項
+  useEffect(
+    function () {
+      const filterKey = JSON.parse(searchParams.get(field));
+      setOptionValue(filterKey || "");
+    },
+    [searchParams, field]
+  );
 
+  // 餐點分類選項(使用Set()過濾重複的分類)
+  const categoryList = Array.from(
+    new Set(dataArray.map((data) => data.category))
+  );
+
+  // 備料食材數量選項
   const options = {
     quantity: [
       { label: "數量 < 100", value: "100" },
@@ -28,17 +39,19 @@ function Filter({ dataArray, field, selectTitle }) {
 
   // 根據選擇的option值來改變URL的searchParams
   function handleFilter(e) {
+    // react-select需要固定的物件格式才能順利使用選項，所以只好上傳物件數據
     setOptionValue(e);
-    searchParams.set(field, JSON.stringify(e) || "all");
+    // 物件不能直接當作searchParams，所以先轉成JSON格式
+    searchParams.set(field, JSON.stringify(e) || "");
     setSearchParams(searchParams);
   }
 
   return (
     <Select
-      options={[{ label: "不限", value: "all" }, ...options[field]]}
+      options={[{ label: "不篩選", value: "" }, ...options[field]]}
       value={optionValue}
       onChange={handleFilter}
-      placeholder={selectTitle}
+      placeholder={`篩選${selectTitle}`}
       isSearchable={false}
       styles={{
         control: (baseStyles) => ({

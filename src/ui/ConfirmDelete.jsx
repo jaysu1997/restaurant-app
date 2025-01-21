@@ -8,7 +8,6 @@ import useGetFilterMenuData from "../features/menu/useGetFilterData";
 import UpsertMenuForm from "../features/menu/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
 import LoadingSpinner from "./LoadingSpinner";
-import { useSearchParams } from "react-router-dom";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
 const StyleConfirmModal = styled.div`
@@ -16,7 +15,7 @@ const StyleConfirmModal = styled.div`
   display: flex;
   flex-direction: column;
 
-  padding: 1.2rem 2.4rem;
+  padding: 1.6rem;
   gap: 1.2rem;
   font-size: 1.6rem;
 `;
@@ -24,7 +23,7 @@ const StyleConfirmModal = styled.div`
 const Content = styled.div`
   font-size: 1.6rem;
 
-  & span {
+  span {
     font-weight: 600;
     color: #dc2626;
   }
@@ -54,7 +53,7 @@ const AccordionTitle = styled.button`
   border-bottom: ${({ $collapse }) =>
     $collapse ? "1px solid #dddddd" : "none"};
 
-  & svg {
+  svg {
     width: 1.4rem;
     height: 1.4rem;
     transition: transform 0.3s;
@@ -75,17 +74,17 @@ const AccordionContent = styled.div`
   line-height: 1.6;
   font-size: 1.4rem;
 
-  & span[tabindex="0"] {
+  span[tabindex="0"] {
     color: #3b82f6;
     cursor: pointer;
   }
 
-  & span[tabindex="0"]:hover {
+  span[tabindex="0"]:hover {
     color: #2563eb;
     text-decoration: underline;
   }
 
-  & span[tabindex="0"]:focus {
+  span[tabindex="0"]:focus {
     outline: 2px solid #007bff;
   }
 `;
@@ -99,13 +98,13 @@ const ConfirmCheckBox = styled.div`
   font-weight: 600;
   font-size: 1.4rem;
 
-  & input {
+  input {
     width: 1.6rem;
     height: 1.6rem;
     cursor: pointer;
   }
 
-  & label {
+  label {
     line-height: 1.6;
     cursor: pointer;
   }
@@ -118,7 +117,6 @@ const ButtonRow = styled.div`
 `;
 
 function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [confirm, setConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [menuData, setMenuData] = useState(false);
@@ -132,7 +130,6 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
   function handleDelete(id, name) {
     tableName === "menus" ? deleteMenu(id) : deleteInventory({ id, name });
     onCloseModal();
-    setSearchParams({});
   }
 
   return (
@@ -191,7 +188,7 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
             取消
           </Button>
           <Button
-            $buttonStyle="confirm"
+            $buttonStyle="confirmDelete"
             onClick={() => handleDelete(id, name)}
             disabled={confirm === false || menuDeleting || inventoryDeleting}
           >

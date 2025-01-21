@@ -5,14 +5,16 @@ import { getInventoryApi } from "../../services/apiInventory";
 function useGetInventory() {
   const {
     data: inventoryData,
-    isPending,
     error,
+    isPending,
+    isError,
+    isSuccess,
   } = useQuery({
     queryKey: ["inventory"],
     queryFn: getInventoryApi,
   });
 
-  return { inventoryData, isPending, error };
+  return { inventoryData, isPending, error, isError, isSuccess };
 }
 
 export default useGetInventory;

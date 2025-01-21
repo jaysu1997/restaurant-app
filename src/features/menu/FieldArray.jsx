@@ -1,4 +1,4 @@
-import { useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
 
 import { IoCloseSharp } from "react-icons/io5";
@@ -6,7 +6,7 @@ import Button from "../../ui/Button";
 import InputField from "../../ui/FormInputField";
 import FormRow from "../../ui/FormRow";
 import FormTypography from "../../ui/FormTypography";
-import ControlledSelect from "../../ui/ControlledSelect";
+import OptionSetting from "../../ui/SwitchOptionSetting";
 
 function FieldArray({
   register,
@@ -14,6 +14,7 @@ function FieldArray({
   disabled,
   inventoryData,
   handleCreateNewItems,
+  getValues,
 }) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -48,55 +49,21 @@ function FieldArray({
             </Button>
           </FormRow>
 
+          <OptionSetting control={control} fieldIndex={index} />
+
+          <input
+            style={{ display: "none" }}
+            {...register(`customize.${index}.id`, { value: index })}
+          />
+
           <InputField
             legendValue="細項標題"
             type="text"
             placeholder="請輸入細項標題(例如:冰/熱)"
-            autoComplete="off"
             {...register(`customize.${index}.title`, {
               required: "細項標題不能空白",
             })}
           />
-
-          <InputField legendValue="此細項是否必填">
-            <ControlledSelect
-              name={`customize.${index}.required`}
-              control={control}
-              rules={{ required: "此欄位不能空白" }}
-              options={[
-                {
-                  label: `是("必填")`,
-                  value: true,
-                },
-                {
-                  label: `否("選填")`,
-                  value: false,
-                },
-              ]}
-              creatable={false}
-              disabled={disabled}
-            />
-          </InputField>
-
-          <InputField legendValue="此細項填寫規則">
-            <ControlledSelect
-              name={`customize.${index}.choice`}
-              control={control}
-              rules={{ required: "此欄位不能空白" }}
-              options={[
-                {
-                  label: `只能"單選"`,
-                  value: "radio",
-                },
-                {
-                  label: `可以"多選"`,
-                  value: "checkbox",
-                },
-              ]}
-              creatable={false}
-              disabled={disabled}
-            />
-          </InputField>
 
           <NestedFieldArray
             control={control}
@@ -105,6 +72,7 @@ function FieldArray({
             inventoryData={inventoryData}
             handleCreateNewItems={handleCreateNewItems}
             disabled={disabled}
+            getValues={getValues}
           />
         </FormRow>
       ))}
@@ -126,7 +94,7 @@ function FieldArray({
             options: [
               {
                 ingredientName: {
-                  label: "無額外食材消耗",
+                  label: "無",
                   value: "",
                 },
                 extraPrice: "",

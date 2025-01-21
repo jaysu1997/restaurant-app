@@ -37,7 +37,7 @@ const StyleNavLink = styled(NavLink)`
   padding: 1rem 2rem;
   border-radius: 10px;
 
-  & svg {
+  svg {
     color: #475569;
     width: 2rem;
     height: 2rem;

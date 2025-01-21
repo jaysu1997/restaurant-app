@@ -24,9 +24,7 @@ const GlobalStyles = createGlobalStyle`
     position: relative;
     /* background-color: #f8fafc; */
     background-color: #ffffff;
-    min-height: 100dvh;
-    
-
+    min-height: 100dvh;  
   }
 
   img{
@@ -35,7 +33,26 @@ const GlobalStyles = createGlobalStyle`
 
   button{
     cursor: pointer;
-    /* transition: all 0.3s; */
+  }
+
+  /* 移除number input的預設上下按鈕 */
+  /* 適用於 Chrome、Edge、Opera */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* 隱藏按鈕 */
+    margin: 0; /* 移除額外的預設邊距 */
+  }
+
+/* 適用於 Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield; /* 讓 Firefox 的 number 表現為普通文字框 */
+  }
+
+  /* 消除input autocomplete的淡藍色背景 */
+  input:is(:-webkit-autofill, :autofill) {
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+    box-shadow: 0 0 0 1000px white inset;
+    -webkit-text-fill-color: #000; /* 設置文字顏色 */
   }
 `;
 

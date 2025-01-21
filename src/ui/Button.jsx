@@ -50,7 +50,7 @@ const type = {
     color: #f8fafc;
     padding: 0.1rem;
 
-    & svg {
+    svg {
       font-size: 1.6rem;
     }
 
@@ -71,7 +71,7 @@ const type = {
     font-weight: 600;
     font-size: 1.2rem;
 
-    & svg {
+    svg {
       font-size: 1.4rem;
     }
 
@@ -95,7 +95,7 @@ const type = {
     width: fit-content;
     border-radius: 50px;
 
-    & svg {
+    svg {
       height: 2rem;
       width: 2rem;
     }
@@ -105,7 +105,7 @@ const type = {
       color: #fff;
     }
   `,
-  confirm: css`
+  confirmDelete: css`
     width: 6.4rem;
     height: 3.2rem;
     border-radius: 999px;

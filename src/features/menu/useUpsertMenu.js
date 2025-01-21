@@ -1,7 +1,8 @@
 // 新增or更新單筆menu數據
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertMenuApi } from "../../services/apiMenus";
-import toast from "react-hot-toast";
+
+import StyledHotToast from "../../ui/StyledHotToast";
 
 function useUpsertMenu() {
   const queryClient = useQueryClient();
@@ -17,7 +18,11 @@ function useUpsertMenu() {
       queryClient.invalidateQueries(["filterMenuData", "menus"]);
     },
     onError: (error) => {
-      toast.error(error.message);
+      StyledHotToast({
+        type: "error",
+        title: "餐點設定失敗",
+        content: error.message,
+      });
     },
   });
 
