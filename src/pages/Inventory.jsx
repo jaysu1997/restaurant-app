@@ -21,10 +21,10 @@ const ToolBar = styled.div`
   justify-content: space-between;
 `;
 
-const Container = styled.div`
+const Container = styled.ul`
   display: grid;
-  max-width: 120rem;
-  grid-template-columns: repeat(6, 1fr);
+  max-width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
   padding: 1rem;
@@ -62,7 +62,7 @@ function Inventory() {
       <ToolBar>
         <Filter dataArray={inventoryData} field="quantity" selectTitle="數量" />
         <SearchField />
-        <Button $buttonStyle="upsert" onClick={() => setOpenModal(true)}>
+        <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
           <span>新增食材</span>
         </Button>

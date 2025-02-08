@@ -39,7 +39,6 @@ const Accordion = styled.div`
 const AccordionTitle = styled.button`
   width: 100%;
   height: 3.6rem;
-  border: none;
   display: flex;
   justify-content: start;
   align-items: center;

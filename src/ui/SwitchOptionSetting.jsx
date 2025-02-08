@@ -32,12 +32,9 @@ const Option = styled.button`
   width: 4.1rem;
   height: 2.4rem;
   font-size: 1.2rem;
-  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.3s;
-  border: none;
   color: ${(props) => (props.$isActive ? "#fff" : "#000")};
   opacity: ${(props) => (props.$isActive ? "1" : "0.35")};
 `;

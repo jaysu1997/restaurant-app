@@ -22,10 +22,11 @@ const ToolBar = styled.div`
   padding: 1.6rem 1rem;
 `;
 
-const Container = styled.div`
+const Container = styled.ul`
   display: grid;
-  max-width: 120rem;
-  grid-template-columns: 1fr 1fr 1fr;
+  max-width: 100%;
+  /* width: 100%; */
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
   padding: 1rem;
@@ -65,7 +66,7 @@ function Menus() {
         <Filter dataArray={menusData} field="category" selectTitle="分類" />
         <SearchField />
 
-        <Button $buttonStyle="upsert" onClick={() => setOpenModal(true)}>
+        <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
           <span>新增餐點</span>
         </Button>

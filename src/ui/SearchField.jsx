@@ -6,38 +6,39 @@ import styled from "styled-components";
 import { IoSearch, IoCloseCircleSharp } from "react-icons/io5";
 
 const StyleSearchField = styled.div`
-  border: none;
-  outline: 1px solid #c6c6c6;
   height: 3.6rem;
   width: 24rem;
   border-radius: 50px;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+  background-color: #dedede;
+  /* box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2); */
   overflow: hidden;
   display: flex;
   align-items: center;
 `;
 
 const Input = styled.input`
-  border: none;
-  outline: none;
   height: 100%;
   width: 100%;
   font-size: 1.4rem;
+  background-color: transparent;
+
+  &::placeholder {
+    color: #57534e;
+    font-weight: 600;
+  }
 `;
 
-const Button = styled.div`
+const Icon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: none;
   padding: 0 1.2rem;
-  background-color: transparent;
   width: fit-content;
   height: 100%;
 
   & svg {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 1.8rem;
+    height: 1.8rem;
   }
 `;
 
@@ -74,9 +75,9 @@ function SearchField() {
 
   return (
     <StyleSearchField>
-      <Button role="icon">
+      <Icon>
         <IoSearch />
-      </Button>
+      </Icon>
 
       <Input
         type="text"
@@ -93,7 +94,8 @@ function SearchField() {
       />
 
       {keyWord && (
-        <Button
+        <Icon
+          role="clearFieldButton"
           as="button"
           type="button"
           onClick={() => {
@@ -102,7 +104,7 @@ function SearchField() {
           }}
         >
           <IoCloseCircleSharp />
-        </Button>
+        </Icon>
       )}
     </StyleSearchField>
   );

@@ -10,7 +10,6 @@ const type = {
     font-size: 1.4rem;
     font-weight: 600;
     padding: 0.6rem 1.2rem;
-    border: none;
     background-color: #1d4ed8;
     color: #fff;
     box-shadow: 0 0px 15px 2px rgba(96, 165, 250, 0.5);
@@ -30,7 +29,6 @@ const type = {
     font-weight: 600;
     padding: 0.6rem 1.2rem;
     border: 1px solid rgba(0, 0, 0, 0.15);
-    background-color: inherit;
     color: rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 
@@ -39,24 +37,22 @@ const type = {
     }
   `,
   remove: css`
-    width: fit-content;
-    height: fit-content;
-    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none;
-    background-color: #b91c1c;
-    color: #f8fafc;
-    padding: 0.1rem;
+    border-radius: 50%;
+    width: fit-content;
+    height: fit-content;
+    padding: 0.6rem;
+    color: #4b5563;
 
     svg {
-      font-size: 1.6rem;
+      height: 1.4rem;
+      width: 1.4rem;
     }
 
     &:hover {
-      background-color: #dc2626;
-      transform: scale(1.1);
+      background-color: #e5e7eb;
     }
   `,
   add: css`
@@ -64,7 +60,6 @@ const type = {
     width: fit-content;
     height: fit-content;
     border-radius: 10px;
-    border: none;
     background-color: #059669;
     color: #f8fafc;
     padding: 0.4rem 0.8rem;
@@ -79,12 +74,11 @@ const type = {
       box-shadow: 0px 0px 10px 1px rgba(5, 150, 105, 0.35);
     }
   `,
-  upsert: css`
+  createNewItem: css`
     background-color: #fff;
     border: 1px solid #3b82f6;
     font-size: 1.4rem;
     font-weight: 600;
-    cursor: pointer;
     padding: 0.4rem 0.8rem;
     height: 3.6rem;
     display: flex;
@@ -112,8 +106,6 @@ const type = {
     box-shadow: 0px 2px 20px 2px rgba(220, 38, 38, 0.3);
     font-size: 1.4rem;
     padding: 0.6rem 1.2rem;
-    cursor: pointer;
-    border: none;
     color: #eef2ff;
     font-weight: 600;
     background-color: #b91c1c;
@@ -126,13 +118,6 @@ const type = {
 
 const Button = styled.button`
   ${({ $buttonStyle = "cancel" }) => type[$buttonStyle]}
-
-  transition: all 0.5s;
-
-  &:disabled {
-    cursor: not-allowed;
-    filter: opacity(0.5);
-  }
 `;
 
 export default Button;

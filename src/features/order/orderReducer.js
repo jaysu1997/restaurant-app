@@ -1,77 +1,11 @@
 // 單筆訂單數據
 
-// 統計餐點需要消耗的食材總量
-function calcConsumptions(ingredients, servings = 1, state) {
-  // 總食材消耗數據
-  const consumptionsMap = new Map();
-
-  function setConsumptionsMap(name, perServing, total) {
-    consumptionsMap.set(name, {
-      total: consumptionsMap.has(name)
-        ? consumptionsMap.get(name).total + total
-        : total,
-      perServing,
-    });
-  }
-
-  // 餐點本身的消耗
-  ingredients.forEach((ing) => {
-    const name = ing.ingredientName.value;
-    const perServing = ing.quantity;
-    const total = perServing * servings;
-
-    setConsumptionsMap(name, perServing, total);
-  });
-
-  // 額外細項增加的消耗
-  state.tempArray.forEach((obj) => {
-    if (obj.length === 0 || obj.detail.length === 0) return;
-
-    obj.detail.forEach((option) => {
-      const name = option.ingredientName;
-      const perServing = option.quantity;
-      const total = perServing * servings;
-
-      if (name === "") return;
-      setConsumptionsMap(name, perServing, total);
-    });
-  });
-
-  return consumptionsMap;
-}
-
-// 檢查庫存剩餘數量是否充足
-function compareInventory(originalConsumptionsMap, consumptionsMap, state) {
-  const result = [];
-
-  // 如果是更新點餐數據，先把之前消耗的食材加回庫存
-  if (originalConsumptionsMap) {
-    originalConsumptionsMap.forEach((value, key) => {
-      state.inventoryMap.set(key, state.inventoryMap.get(key) + value.total);
-    });
-  }
-
-  // 檢查庫存剩餘食材是否能夠滿足點餐的總消耗需求
-  consumptionsMap.forEach((value, key) => {
-    if (state.inventoryMap.get(key) < value.total) {
-      // 剩餘食材能夠供應的最大餐點份數
-      const maxCapacity = Math.floor(
-        state.inventoryMap.get(key) / value.perServing
-      );
-
-      result.push({ name: key, maxCapacity });
-    }
-  });
-
-  return result;
-}
-
 export const initialState = {
   // 存放訂單所有餐點數據
   orderList: [],
   // 臨時存放單一餐點細項選擇數據
   tempArray: [],
-  totalConsumptions: new Map(),
+  totalConsumption: new Map(),
   inventoryMap: new Map(),
 };
 
@@ -89,9 +23,12 @@ export function reducer(state, action) {
 
       // 如果在點餐途中有發生庫存數據更新會自動重新獲取數據，所以要先減掉在orderList中已經使用的食材數量
       if (state.orderList.length !== 0) {
-        state.orderList.forEach((dish) => {
-          dish.consumptionsMap.forEach((value, key) => {
-            newInventoryMap.set(key, newInventoryMap.get(key) - value.total);
+        state.orderList.forEach((order) => {
+          order.consumptionMap.forEach((value, key) => {
+            newInventoryMap.set(
+              key,
+              newInventoryMap.get(key) - value * order.servings
+            );
           });
         });
       }
@@ -147,39 +84,36 @@ export function reducer(state, action) {
       );
       return { ...state, tempArray: [...newStateArray] };
     }
-    // 計算本次點餐食材總消耗以及庫存是否充足
-    case "compare/inventory": {
-      const {
-        ingredients,
-        servings,
-        originalConsumptionsMap = new Map(),
-      } = action.payload;
-      // 取得餐點食材總消耗與庫存比對結果
-      const consumptionsMap = calcConsumptions(ingredients, servings, state);
-
-      const result = compareInventory(
-        originalConsumptionsMap,
-        consumptionsMap,
-        state
-      );
-
-      return { consumptionsMap, result };
-    }
     // 將餐點數據新增到orderList中
     case "order/insert": {
+      const orderData = action.payload;
+
       const newState = structuredClone(state);
+
+      // 每一份餐點的總金額(餐點本身 + 額外選項)
+      const costPerServing =
+        state.tempArray.reduce((acc, cur) => {
+          if (cur.detail.length === 0) return acc;
+
+          cur.detail.forEach((detail) => {
+            acc += detail.extraPrice;
+          });
+
+          return acc;
+        }, orderData.salePrice) || orderData.salePrice;
 
       newState.orderList.push({
         orderId: state.orderList.length,
-        ...action.payload,
+        ...orderData,
         customizeDetail: state.tempArray,
+        costPerServing,
       });
 
       // 將庫存食材 - 本次餐點所需食材
-      action.payload.consumptionsMap.forEach((value, key) => {
+      orderData.consumptionMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
-          key,
-          newState.inventoryMap.get(key) - value.total
+          name,
+          newState.inventoryMap.get(name) - quantity * orderData.servings
         );
       });
 
@@ -188,21 +122,87 @@ export function reducer(state, action) {
     }
     // 編輯餐點數據
     case "order/update": {
+      const { originalConsumption, ...orderData } = action.payload;
       const newState = structuredClone(state);
 
       // 更新數據
-      newState.orderList[action.payload.orderId] = action.payload;
+      newState.orderList[orderData.orderId] = orderData;
+      newState.orderList[orderData.orderId].customizeDetail = state.tempArray;
+
+      // 先把原本消耗的所有食材加回庫存
+      originalConsumption.consumption.forEach((quantity, name) => {
+        newState.inventoryMap.set(
+          name,
+          newState.inventoryMap.get(name) +
+            quantity * originalConsumption.servings
+        );
+      });
 
       // 將庫存食材 - 本次餐點所需食材
-      action.payload.consumptionsMap.forEach((value, key) => {
+      orderData.consumptionMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
-          key,
-          newState.inventoryMap.get(key) - value.total
+          name,
+          newState.inventoryMap.get(name) - quantity * orderData.servings
         );
       });
 
       console.log(newState);
       return newState;
+    }
+    // 刪除指定餐點
+    case "order/remove": {
+      const newState = structuredClone(state);
+      const orderConsumption =
+        newState.orderList[action.payload].consumptionMap;
+      const orderServings = newState.orderList[action.payload].servings;
+
+      // 把原本消耗的食材補回庫存
+      orderConsumption.forEach((quantity, name) => {
+        newState.inventoryMap.set(
+          name,
+          newState.inventoryMap.get(name) + quantity * orderServings
+        );
+      });
+
+      // 將指定餐點從點餐列表中移除
+      newState.orderList.splice(action.payload, 1);
+      // 記得修改在指定餐點之後的餐點orderId，避免更新餐點份數時出錯
+      newState.orderList.map((order) => {
+        if (order.orderId < action.payload) {
+          return order;
+        }
+
+        order.orderId -= 1;
+        return order;
+      });
+
+      return newState;
+    }
+    // 更新餐點份數
+    case "serving/update": {
+      const { orderId, servings } = action.payload;
+
+      const orderData = state.orderList[orderId];
+      const servingsDiff = servings - orderData.servings;
+
+      const newState = structuredClone(state);
+
+      // 更新庫存剩餘存量(可增可減)
+      orderData.consumptionMap.forEach((quantity, name) => {
+        newState.inventoryMap.set(
+          name,
+          newState.inventoryMap.get(name) - quantity * servingsDiff
+        );
+      });
+
+      // 更新餐點份數
+      newState.orderList[orderId].servings = servings;
+
+      return newState;
+    }
+    // 清空整個orderList數據
+    case "orderList/clear": {
+      return initialState;
     }
 
     default:

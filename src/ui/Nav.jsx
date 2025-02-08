@@ -12,11 +12,13 @@ import {
 } from "react-icons/bi";
 
 const StyleNav = styled.nav`
-  border: 1px solid #9ca3af;
+  border: 1px solid #dcdcdc;
   border-radius: 10px;
   height: min-content;
   min-width: 18rem;
-  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  /* box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2); */
+  margin-top: 6.2rem;
 `;
 
 const NavList = styled.ul`
@@ -81,7 +83,7 @@ function Nav() {
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/bookings">
+          <StyleNavLink to="/order-management">
             <BiEdit />
             <span>訂單管理</span>
           </StyleNavLink>
@@ -99,7 +101,7 @@ function Nav() {
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/statistics">
+          <StyleNavLink to="/analytics">
             <BiBarChartSquare />
             <span>營業數據</span>
           </StyleNavLink>

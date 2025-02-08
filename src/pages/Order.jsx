@@ -5,7 +5,7 @@ import useGetMenus from "../features/menu/useGetMenus";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import DishCard from "../features/order/DishCard";
 import { useSearchParams } from "react-router-dom";
-import ShoppingList from "../features/order/ShoppingList";
+import ShoppingCart from "../features/order/ShoppingCart";
 import StyledOverlayScrollbars from "../ui/StyledOverlayScrollbars";
 import { useEffect } from "react";
 import { useOrder } from "../context/OrderContext";
@@ -15,17 +15,17 @@ import StyledHotToast from "../ui/StyledHotToast";
 const Container = styled.div`
   max-width: 120rem;
   display: grid;
-  grid-template-columns: minmax(0, 96rem) 1fr;
+  grid-template-columns: minmax(0, 96rem) 21.6rem;
   grid-template-rows: 3.2rem 1fr;
   gap: 2.4rem;
   height: 100dvh;
 `;
 
-const Menus = styled.div`
+const Menus = styled.ul`
   max-width: 100%;
   max-height: 100%;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
   padding: 1.6rem;
 `;
@@ -95,7 +95,7 @@ function Order() {
           </Menus>
         </StyledOverlayScrollbars>
 
-        <ShoppingList />
+        <ShoppingCart inventoryData={inventoryData} />
       </Container>
     </>
   );

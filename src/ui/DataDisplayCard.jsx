@@ -3,23 +3,20 @@
 import styled from "styled-components";
 import { TbEdit, TbTrashX } from "react-icons/tb";
 
-const Card = styled.div`
-  max-width: 40rem;
+const Card = styled.li`
   display: grid;
+  width: 100%;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(5, auto);
   border-radius: 10px;
   overflow: hidden;
-  border: none;
-  outline: 1px solid #94a3b8;
-
+  outline: 2px solid #dcdcdc;
   background-color: #f9fafb;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); */
     outline: 2px solid #93c5fd;
   }
 `;
@@ -29,7 +26,7 @@ const TableRow = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   white-space: nowrap;
-  border-bottom: 1px solid #94a3b8;
+  border-bottom: 1px solid #dcdcdc;
 `;
 
 const TableHead = styled.div`
@@ -55,19 +52,15 @@ const Button = styled.button`
   width: 100%;
   background-color: #f9fafb;
   color: ${(props) => props.$fontColor};
-  border: none;
   padding: 0.6rem 1.2rem;
   font-size: 1.4rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  outline: 1px solid #94a3b8;
+  outline: 1px solid #dcdcdc;
 
   &:hover {
-    /* background-color: #e5e7eb; */
     background-color: #f0f9ff;
   }
 

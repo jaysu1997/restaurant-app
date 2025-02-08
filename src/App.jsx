@@ -4,10 +4,10 @@ import AppLayout from "./ui/AppLayout";
 
 import Homepage from "./pages/Homepage";
 import Order from "./pages/Order";
-import Bookings from "./pages/Bookings";
+import OrderManagement from "./pages/OrderManagement";
 import Menus from "./pages/Menus";
 import Inventory from "./pages/Inventory";
-import Statistics from "./pages/Statistics";
+import Analytics from "./pages/Analytics";
 import Staff from "./pages/Staff";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -57,10 +57,10 @@ export default function App() {
             <Route element={<AppLayout />}>
               <Route index element={<Homepage />} />
               <Route path="/order" element={<Order />} />
-              <Route path="/bookings" element={<Bookings />} />
+              <Route path="/order-management" element={<OrderManagement />} />
               <Route path="/menus" element={<Menus />} />
               <Route path="/inventory" element={<Inventory />} />
-              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/analytics" element={<Analytics />} />
               <Route path="/staff" element={<Staff />} />
             </Route>
           </Routes>

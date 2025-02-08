@@ -4,7 +4,7 @@ import styled from "styled-components";
 import User from "./User";
 
 const StyleHeader = styled.header`
-  border-bottom: 1px solid #9ca3af;
+  border-bottom: 1px solid #dcdcdc;
   padding: 0.15rem 0;
 `;
 

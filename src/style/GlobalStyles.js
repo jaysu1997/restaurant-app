@@ -1,10 +1,10 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
-  *{
+  * {
     box-sizing: border-box;
     padding: 0;
-    margin: 0;  
+    margin: 0;      
   }
 
   *:disabled {
@@ -12,27 +12,54 @@ const GlobalStyles = createGlobalStyle`
   }
   
   html {
-    font-size: 62.5%;
+    font-size: 62.5%;    
   }
 
-  body{
+  body {
     font-family: "Noto Sans TC", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-size: 1.6rem; 
     color: #1f2937;
     position: relative;
-    /* background-color: #f8fafc; */
+    /* background-color: #f9fafb; */
     background-color: #ffffff;
-    min-height: 100dvh;  
+    min-height: 100dvh;
   }
 
-  img{
+  img {
     max-width: 100%;
   }
 
-  button{
+  button {
     cursor: pointer;
+    background-color: transparent;
+    border: none;
+    transition: all 0.3s;
+
+    &:disabled {
+    opacity: 0.5;
+  }
+
+  }
+
+  li {
+    list-style: none;
+  }
+
+  textarea {
+    resize: none;
+    height: 6.4rem;
+    border: 1px solid #cacaca;
+    border-radius: 5px;
+    padding: 0.3rem 0.6rem;
+    font-size: 1.4rem;
+    line-height: 1.4;
+  }
+
+  input {
+    outline: none;
+    border: none;
   }
 
   /* 移除number input的預設上下按鈕 */

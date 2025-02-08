@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { ImRadioChecked, ImRadioUnchecked } from "react-icons/im";
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { useOrder } from "../../context/OrderContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const colorStyle = {
   background: {
@@ -26,7 +26,6 @@ const Customize = styled.section`
   display: flex;
   flex-direction: column;
   border: 1px solid #cacaca;
-  /* outline: 1px solid #f87171; */
   padding: 1.2rem;
   border-radius: 10px;
   background-color: ${(props) => props.$colorStyle};
@@ -46,7 +45,6 @@ const Title = styled.h3`
   letter-spacing: 0.1rem;
 `;
 
-// 顏色需要調整
 const RequiredLabel = styled.span`
   text-align: center;
   font-size: 1.2rem;
@@ -56,7 +54,6 @@ const RequiredLabel = styled.span`
   border-radius: 50px;
   padding: 0.2rem 0.8rem;
   font-weight: 400;
-  /* transition: all 0.2s; */
 `;
 
 const ChoiceLabel = styled.span`
@@ -123,8 +120,20 @@ const StyledOption = styled.label`
   }
 `;
 
-function CustomizeArea({ type, customizeData, customizeIndex, register }) {
-  const [isAnswered, setIsAnswered] = useState(type);
+// 自訂選項區塊
+function CustomizeArea({
+  type,
+  customizeData,
+  customizeIndex,
+  register,
+  edit = false,
+}) {
+  const [isAnswered, setIsAnswered] = useState(edit ? "isAnswered" : type);
+
+  const inputType =
+    customizeData.choice === "單選" && type === "required"
+      ? "radio"
+      : "checkbox";
 
   return (
     <Customize
@@ -142,7 +151,9 @@ function CustomizeArea({ type, customizeData, customizeIndex, register }) {
             : "選填"}
         </RequiredLabel>
       </Heading>
-      <ChoiceLabel>{type === "optional" ? "多選" : "單選"}</ChoiceLabel>
+      <ChoiceLabel>
+        {inputType === "checkbox" ? "可以多選" : "只能單選"}
+      </ChoiceLabel>
       <OptionsArea>
         {customizeData.options.map((optionData, optionIndex) => (
           <Option
@@ -150,7 +161,7 @@ function CustomizeArea({ type, customizeData, customizeIndex, register }) {
             setIsAnswered={setIsAnswered}
             type={type}
             optionData={optionData}
-            customizeData={customizeData}
+            inputType={inputType}
             customizeIndex={customizeIndex}
             register={register}
             key={optionIndex}
@@ -163,25 +174,20 @@ function CustomizeArea({ type, customizeData, customizeIndex, register }) {
 
 export default CustomizeArea;
 
+// 單一選項ui
 function Option({
   type,
   optionData,
-  customizeData,
+  inputType,
   customizeIndex,
   register,
   isAnswered,
   setIsAnswered,
 }) {
-  const { dispatch } = useOrder();
-
-  const inputType =
-    customizeData.choice === "單選" && customizeData.required === "必填"
-      ? "radio"
-      : "checkbox";
+  const { state, dispatch } = useOrder();
 
   const payload = {
     customizeId: `${type}${customizeIndex + 1}`,
-    customizeTitle: customizeData.title,
     optionLabel: optionData.optionLabel,
     extraPrice: optionData.extraPrice,
     ingredientName: optionData.ingredientName.value,
@@ -198,17 +204,30 @@ function Option({
       setIsAnswered("isAnswered");
     }
 
-    if (inputType === "checkbox") {
-      if (e.target.checked) {
-        dispatch({
-          type: "multiple/choice/insert",
-          payload,
-        });
-      } else {
-        dispatch({
-          type: "multiple/choice/delete",
-          payload,
-        });
+    if (inputType === "checkbox" && e.target.checked) {
+      dispatch({
+        type: "multiple/choice/insert",
+        payload,
+      });
+
+      type === "required" && setIsAnswered("isAnswered");
+    }
+
+    if (inputType === "checkbox" && !e.target.checked) {
+      dispatch({
+        type: "multiple/choice/delete",
+        payload,
+      });
+
+      // 如果此多選項目是必填，則在沒有輸入任何值的情況下，整體樣式需回復成未填寫狀態
+      if (type === "required") {
+        const tempArrayIndex = state.tempArray.findIndex(
+          (customize) =>
+            customize.customizeId === `${type}${customizeIndex + 1}`
+        );
+
+        state.tempArray[tempArrayIndex].detail.length === 1 &&
+          setIsAnswered("required");
       }
     }
   }

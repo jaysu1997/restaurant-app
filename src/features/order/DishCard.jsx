@@ -3,25 +3,27 @@ import styled from "styled-components";
 import Modal from "../../ui/Modal";
 import OrderForm from "./OrderForm";
 
+const StyledDishCard = styled.li`
+  list-style: none;
+  max-width: 100%;
+`;
+
 const Card = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f9fafb;
   gap: 0.2rem;
   padding: 0.6rem;
-  max-width: 24rem;
+  width: 100%;
   border-radius: 5px;
-  border: none;
+  border: 1px solid #dcdcdc;
   transition: all 0.3s;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
-  outline: 2px solid #dcdcdc;
 
   &:hover {
     background-color: #d1fae5;
-    /* transform: scale(1.02); */
-    outline: 2px solid #93c5fd;
   }
 `;
 
@@ -41,7 +43,7 @@ function DishCard({ dish }) {
     .join(", ");
 
   return (
-    <>
+    <StyledDishCard>
       <Card key={dish.id} onClick={() => setOpenModal(dish.id)}>
         <Row $fontColor="#1f2937" $fontWeight="500">
           {dish.name}
@@ -54,11 +56,15 @@ function DishCard({ dish }) {
       </Card>
 
       {openModal && (
-        <Modal modalHeader={dish.name} onCloseModal={() => setOpenModal(false)}>
+        <Modal
+          modalHeader={dish.name}
+          maxWidth={36}
+          onCloseModal={() => setOpenModal(false)}
+        >
           <OrderForm dishData={dish} onCloseModal={() => setOpenModal(false)} />
         </Modal>
       )}
-    </>
+    </StyledDishCard>
   );
 }
 

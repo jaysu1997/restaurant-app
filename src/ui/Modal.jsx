@@ -12,7 +12,6 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   top: 0;
   left: 0;
-  transition: all 0.5s;
   backdrop-filter: blur(2px);
   display: flex;
   justify-content: center;
@@ -23,11 +22,9 @@ const StyleModal = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  max-width: 56rem;
+  max-width: ${({ $maxWidth }) => `${$maxWidth}rem`};
   margin: 0 0.6rem;
-  transition: all 0.5s;
-  /* background-color: #fafaf9; */
-  background-color: #ffffff;
+  background-color: #fff;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
   border-radius: 15px;
   overflow: hidden;
@@ -42,20 +39,24 @@ const Header = styled.header`
   padding: 0.8rem 1.6rem;
   justify-content: space-between;
   align-items: center;
-  font-size: 2.4rem;
-  font-weight: 700;
-  color: #374151;
   z-index: 1;
-  color: ${(props) => props.$textColor};
+  width: 100%;
+  overflow: hidden;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
   background-color: #fafaf9;
+  gap: 1.2rem;
+`;
+
+const Title = styled.h2`
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: ${(props) => props.$textColor || "#374151"};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Button = styled.button`
-  background: none;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
   width: 2.8rem;
   height: 2.8rem;
   color: #334155;
@@ -93,6 +94,7 @@ function Modal({
   onCloseModal,
   modalHeader = "表單",
   headerColor = "inherit",
+  maxWidth = 56,
 }) {
   // const ref = useRef();
 
@@ -114,9 +116,10 @@ function Modal({
 
   return createPortal(
     <Overlay>
-      <StyleModal>
-        <Header $textColor={headerColor}>
-          {modalHeader}
+      <StyleModal $maxWidth={maxWidth}>
+        <Header>
+          <Title $textColor={headerColor}>{modalHeader}</Title>
+
           <Button onClick={onCloseModal}>
             <IoIosClose />
           </Button>

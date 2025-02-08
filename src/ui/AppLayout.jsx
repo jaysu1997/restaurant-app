@@ -25,13 +25,12 @@ const Body = styled.div`
 
 const Main = styled.main`
   max-width: 120rem;
-  width: 100%;
+  /* width: 100%; */
   margin-left: auto;
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
   height: 100%;
-  /* overflow: auto; */
   flex-grow: 1;
 `;
 

@@ -1,4 +1,4 @@
-import { Controller, useFieldArray } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
 
 import { IoCloseSharp } from "react-icons/io5";
@@ -6,7 +6,7 @@ import Button from "../../ui/Button";
 import InputField from "../../ui/FormInputField";
 import FormRow from "../../ui/FormRow";
 import FormTypography from "../../ui/FormTypography";
-import OptionSetting from "../../ui/SwitchOptionSetting";
+import SwitchOptionSetting from "../../ui/SwitchOptionSetting";
 
 function FieldArray({
   register,
@@ -26,11 +26,11 @@ function FieldArray({
       <FormTypography $titleStyle="title">自訂附加細項</FormTypography>
       <FormTypography $titleStyle="description">
         &#8251;
-        此欄位用來自訂本餐點可供客人調整的各種細項。(例如：餐點份量、附餐選擇、餐點加料等等)。
+        此欄位用來自訂本餐點可供客人調整的各種餐點細項。(例如：餐點份量、附餐選擇、餐點加料等等)。
       </FormTypography>
       <FormTypography $titleStyle="description">
         &#8251;
-        此欄位的細目和選項可根據需求進行新增/刪除，但不能留下沒輸入任何內容的空白輸入框。
+        此欄位的細項和選項都可根據需求進行新增/刪除，但不能留下沒輸入任何內容的空白輸入框。
       </FormTypography>
 
       {fields.map((fields, index) => (
@@ -49,7 +49,7 @@ function FieldArray({
             </Button>
           </FormRow>
 
-          <OptionSetting control={control} fieldIndex={index} />
+          <SwitchOptionSetting control={control} fieldIndex={index} />
 
           <input
             style={{ display: "none" }}
@@ -83,14 +83,8 @@ function FieldArray({
         onClick={() =>
           append({
             title: "",
-            required: {
-              label: `是("必填")`,
-              value: true,
-            },
-            choice: {
-              label: `只能"單選"`,
-              value: "radio",
-            },
+            required: "選填",
+            choice: "多選",
             options: [
               {
                 ingredientName: {

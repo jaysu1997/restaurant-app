@@ -11,7 +11,6 @@ const StyleSwiper = styled(Swiper)`
   width: 100%;
   box-sizing: border-box;
   max-height: 3.2rem;
-  /* padding: 0 4rem; */
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`

@@ -12,7 +12,6 @@ const FormTable = styled.form`
   font-weight: 600;
   font-size: 1.4rem;
   transition: all 0.3s;
-  background-color: transparent;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
