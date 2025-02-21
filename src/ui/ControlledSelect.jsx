@@ -12,7 +12,6 @@ const selectStyle = {
   control: (baseStyles) => ({
     ...baseStyles,
     border: "none",
-    backgroundColor: "inherit",
     boxShadow: "none",
     fontSize: "1.4rem",
     minHeight: "2rem",
@@ -46,6 +45,7 @@ function ControlledSelect({
           options={options}
           isClearable
           isDisabled={disabled}
+          menuPlacement="auto"
           placeholder="可新增/選擇食材"
           onCreateOption={(optionValue) => {
             handleCreateNewItems(optionValue, field.name);
@@ -54,10 +54,13 @@ function ControlledSelect({
       ) : (
         <Select
           {...field}
-          styles={selectStyle}
+          maxMenuHeight={300}
           options={options}
           isSearchable={false}
-          isDisabled={disabled}
+          menuPlacement="top"
+          menuPortalTarget={document.body}
+          menuShouldBlockScroll
+          placeholder={name === "tableNumber" ? "選擇桌號" : "選擇取餐時間"}
         />
       )}
     </>

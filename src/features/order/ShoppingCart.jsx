@@ -5,13 +5,15 @@ import CartItem from "./CartItem";
 import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GrClear } from "react-icons/gr";
+import { useForm } from "react-hook-form";
+import OrderInfoField from "./OrderInfoField";
+import useCreateOrder from "./useCreateOrder";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
   grid-row: 1 / -1;
   border: 1px solid #dcdcdc;
   background-color: #f9fafb;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   border-radius: 6px;
@@ -20,6 +22,7 @@ const StyledShoppingCart = styled.aside`
   height: fit-content;
   position: relative;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 `;
 
 const Header = styled.header`
@@ -29,8 +32,6 @@ const Header = styled.header`
   border-bottom: 1px solid #dcdcdc;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
   z-index: 1;
-  gap: 0.6rem;
-  font-weight: 600;
 
   h4 {
     font-size: 3.2rem;
@@ -42,7 +43,7 @@ const ShoppingList = styled.ul`
   display: flex;
   flex-direction: column;
   padding: 0 1.6rem;
-  height: 32rem;
+  height: 40rem;
 `;
 
 const Row = styled.div`
@@ -50,7 +51,6 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  gap: 0.6rem;
 `;
 
 const ClearAllButton = styled.button`
@@ -58,7 +58,6 @@ const ClearAllButton = styled.button`
   border: 1px solid #e63946;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.2rem;
   background-color: transparent;
   border-radius: 15px;
@@ -77,26 +76,11 @@ const ClearAllButton = styled.button`
   }
 `;
 
-const OrderListNote = styled.div`
-  padding: 1.6rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-
-  h5 {
-    font-size: 1.4rem;
-  }
-
-  textarea {
-    width: 100%;
-    height: 6.4rem;
-  }
-`;
-
 const Footer = styled.footer`
   display: flex;
   flex-direction: column;
   border-top: 1px solid #dcdcdc;
+  background-color: #f9fafb;
   align-items: center;
   justify-content: center;
   position: sticky;
@@ -223,11 +207,19 @@ function ToggleSwitch({ setDineOption }) {
 }
 
 function ShoppingCart({ inventoryData }) {
+  const { mutate } = useCreateOrder();
+
   const {
     state: { orderList },
     dispatch,
   } = useOrder();
 
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { isValid, errors },
+  } = useForm();
   const [dineOption, setDineOption] = useState("內用");
 
   const { totalQuantity, totalCost } = orderList.reduce(
@@ -239,6 +231,33 @@ function ShoppingCart({ inventoryData }) {
     },
     { totalQuantity: 0, totalCost: 0 }
   );
+
+  function onSubmit(data) {
+    const totalConsumptionMap = orderList.reduce((acc, order) => {
+      order.consumptionMap.forEach((quantity, name) => {
+        const curQuantity = acc.get(name) || 0;
+        acc.set(name, curQuantity + quantity * order.servings);
+      });
+
+      return acc;
+    }, new Map());
+
+    const orderListData = {
+      orderType: dineOption,
+      orderList,
+      totalConsumption: Object.fromEntries(totalConsumptionMap),
+      ...data,
+      tableNumber: dineOption === "內用" ? data.tableNumber.value : null,
+      pickupTime: dineOption === "外帶" ? data.pickupTime.value : null,
+    };
+
+    mutate(orderListData);
+  }
+
+  function onError(error) {
+    // console.log(error);
+    console.log(Object.values(error).map((value) => value.message));
+  }
 
   return (
     <StyledShoppingCart>
@@ -276,10 +295,11 @@ function ShoppingCart({ inventoryData }) {
                 <CartItem key={order.uniqueId} order={order} />
               ))}
 
-              <OrderListNote>
-                <h5>訂單備註：</h5>
-                <textarea maxLength="50" placeholder="備註內容最多50個字" />
-              </OrderListNote>
+              <OrderInfoField
+                register={register}
+                control={control}
+                dineOption={dineOption}
+              />
             </>
           )}
         </ShoppingList>
@@ -293,8 +313,14 @@ function ShoppingCart({ inventoryData }) {
           <span>{`${totalQuantity}份餐點`}</span>
           <TotalPrice>{`$ ${totalCost}`}</TotalPrice>
         </Row>
+
         <Row>
-          <SubmitButton disabled={orderList.length === 0}>提交</SubmitButton>
+          <SubmitButton
+            disabled={orderList.length === 0 || !isValid}
+            onClick={handleSubmit(onSubmit, onError)}
+          >
+            提交
+          </SubmitButton>
         </Row>
       </Footer>
     </StyledShoppingCart>

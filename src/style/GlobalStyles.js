@@ -25,6 +25,7 @@ const GlobalStyles = createGlobalStyle`
     /* background-color: #f9fafb; */
     background-color: #ffffff;
     min-height: 100dvh;
+    /* overflow: hidden; */
   }
 
   img {
@@ -75,12 +76,12 @@ const GlobalStyles = createGlobalStyle`
     -moz-appearance: textfield; /* 讓 Firefox 的 number 表現為普通文字框 */
   }
 
-  /* 消除input autocomplete的淡藍色背景 */
-  input:is(:-webkit-autofill, :autofill) {
-    -webkit-box-shadow: 0 0 0 1000px white inset;
-    box-shadow: 0 0 0 1000px white inset;
-    -webkit-text-fill-color: #000; /* 設置文字顏色 */
-  }
+  /* 將input auto-fill時預設的淡藍色背景改成全白 */
+  input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: inherit !important;
+}
 `;
 
 export default GlobalStyles;

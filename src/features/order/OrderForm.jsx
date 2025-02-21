@@ -150,8 +150,6 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
 
     // 庫存充足
     if (result.length === 0) {
-      StyledHotToast({ type: "success", title: "點餐成功" });
-
       const orderData = {
         ...dishData,
         salePrice: price - discount,
@@ -165,7 +163,10 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
         type: edit ? "order/update" : "order/insert",
         payload: edit ? { ...orderData, originalConsumption } : orderData,
       });
+
       onCloseModal();
+
+      StyledHotToast({ type: "success", title: "點餐成功" });
     } else {
       // 庫存不足
       StyledHotToast({

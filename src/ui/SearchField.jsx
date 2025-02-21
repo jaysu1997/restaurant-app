@@ -20,7 +20,7 @@ const Input = styled.input`
   height: 100%;
   width: 100%;
   font-size: 1.4rem;
-  background-color: transparent;
+  background-color: #dedede;
 
   &::placeholder {
     color: #57534e;
@@ -82,6 +82,7 @@ function SearchField() {
       <Input
         type="text"
         name="keyword"
+        autoComplete="off"
         placeholder="搜尋名稱"
         value={keyWord}
         // 組合輸入不會馬上觸發onChange執行(中文)

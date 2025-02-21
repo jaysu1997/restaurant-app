@@ -79,14 +79,14 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   function onSubmit(data) {
     console.log(data);
     // 新的食材物件
-    const newIngredients = {
-      ingredientData: [...newItems].map((item) => ({
+
+    const menuData = {
+      data,
+      newIngredients: [...newItems].map((item) => ({
         label: item,
         value: item,
       })),
     };
-
-    const menuData = { data, newIngredients };
 
     // 當網路離線時會跳出錯誤訊息，並終止提交表單動作
     if (!navigator.onLine) {

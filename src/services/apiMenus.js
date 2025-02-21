@@ -1,4 +1,4 @@
-import { upsertInventoryApi } from "./apiInventory.js";
+import { createInventoryApi } from "./apiInventory.js";
 import supabase from "./supabase.js";
 
 // 取得所有menu數據
@@ -45,8 +45,13 @@ export async function upsertMenuApi(menuData) {
     throw new Error("餐點設定失敗");
   }
 
-  // 將輸入的食材新增到stocks表單中
-  await upsertInventoryApi(menuData.newIngredients);
+  try {
+    // 將輸入的食材新增到stocks表單中
+    await createInventoryApi(menuData.newIngredients);
+  } catch (inventoryError) {
+    console.log(inventoryError);
+    throw new Error("餐點已建立，但食材新增失敗", inventoryError);
+  }
 
   return data;
 }

@@ -111,9 +111,11 @@ function ServingsControl({ servings, setServings, size = "sm", order }) {
             <h4>庫存食材不足：</h4>
             <ul>
               {result.map((ingredient, index) => (
-                <li key={index}>{`${ingredient.name}最多只能供應${
-                  ingredient.maxCapacity + prevServingsRef.current
-                }份餐點`}</li>
+                <li key={index}>
+                  {ingredient.maxCapacity === 0
+                    ? `${ingredient.name}已用完`
+                    : `${ingredient.name}不足（最多供應${ingredient.maxCapacity}份）`}
+                </li>
               ))}
             </ul>
           </>

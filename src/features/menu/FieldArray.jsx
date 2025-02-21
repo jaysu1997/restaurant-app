@@ -1,12 +1,11 @@
 import { useFieldArray } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
-
 import { IoCloseSharp } from "react-icons/io5";
 import Button from "../../ui/Button";
 import InputField from "../../ui/FormInputField";
 import FormRow from "../../ui/FormRow";
 import FormTypography from "../../ui/FormTypography";
-import SwitchOptionSetting from "../../ui/SwitchOptionSetting";
+import ControlledSwitch from "../../ui/ControlledSwitch";
 
 function FieldArray({
   register,
@@ -49,13 +48,6 @@ function FieldArray({
             </Button>
           </FormRow>
 
-          <SwitchOptionSetting control={control} fieldIndex={index} />
-
-          <input
-            style={{ display: "none" }}
-            {...register(`customize.${index}.id`, { value: index })}
-          />
-
           <InputField
             legendValue="細項標題"
             type="text"
@@ -63,6 +55,13 @@ function FieldArray({
             {...register(`customize.${index}.title`, {
               required: "細項標題不能空白",
             })}
+          />
+
+          <ControlledSwitch control={control} fieldIndex={index} />
+
+          <input
+            hidden
+            {...register(`customize.${index}.id`, { value: index })}
           />
 
           <NestedFieldArray

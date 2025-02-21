@@ -12,7 +12,7 @@ function useDeleteInventory() {
     isPending: inventoryDeleting,
     error: deleteError,
   } = useMutation({
-    mutationFn: ({ id, name }) => deleteInventoryApi({ id, name }),
+    mutationFn: deleteInventoryApi,
     onSuccess: () => {
       StyledHotToast({
         type: "success",

@@ -5,8 +5,9 @@ export const initialState = {
   orderList: [],
   // 臨時存放單一餐點細項選擇數據
   tempArray: [],
-  totalConsumption: new Map(),
   inventoryMap: new Map(),
+  // 這個可能不需要
+  // totalConsumption: new Map(),
 };
 
 export function reducer(state, action) {
@@ -181,10 +182,8 @@ export function reducer(state, action) {
     // 更新餐點份數
     case "serving/update": {
       const { orderId, servings } = action.payload;
-
       const orderData = state.orderList[orderId];
       const servingsDiff = servings - orderData.servings;
-
       const newState = structuredClone(state);
 
       // 更新庫存剩餘存量(可增可減)
@@ -202,6 +201,8 @@ export function reducer(state, action) {
     }
     // 清空整個orderList數據
     case "orderList/clear": {
+      console.log(initialState);
+
       return initialState;
     }
 

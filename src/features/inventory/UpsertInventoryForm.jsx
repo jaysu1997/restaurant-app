@@ -30,12 +30,10 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   function onSubmit(data) {
-    const edit = inventory ? { old: inventory.label, new: data.label } : null;
-
     // 增加value(配合react-select的格式)
     const inventoryData = {
-      ingredientData: { ...data, value: data.label },
-      edit,
+      ...data,
+      value: data.label,
     };
 
     // 當網路離線時會跳出錯誤訊息，並終止提交表單動作

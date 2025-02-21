@@ -126,8 +126,8 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
 
   if (isPending) return <LoadingSpinner />;
 
-  function handleDelete(id, name) {
-    tableName === "menus" ? deleteMenu(id) : deleteInventory({ id, name });
+  function handleDelete(id) {
+    tableName === "menus" ? deleteMenu(id) : deleteInventory(id);
     onCloseModal();
   }
 
@@ -188,7 +188,7 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
           </Button>
           <Button
             $buttonStyle="confirmDelete"
-            onClick={() => handleDelete(id, name)}
+            onClick={() => handleDelete(id)}
             disabled={confirm === false || menuDeleting || inventoryDeleting}
           >
             刪除

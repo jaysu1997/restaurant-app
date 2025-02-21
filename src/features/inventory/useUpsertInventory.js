@@ -1,7 +1,10 @@
 // 新增or更新庫存食材
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { upsertInventoryApi } from "../../services/apiInventory";
+import {
+  createInventoryApi,
+  updateInventoryApi,
+} from "../../services/apiInventory";
 import StyledHotToast from "../../ui/StyledHotToast";
 
 function useUpsertInventory() {
@@ -12,13 +15,19 @@ function useUpsertInventory() {
     isPending: isUpserting,
     error: upsertError,
   } = useMutation({
-    mutationFn: upsertInventoryApi,
+    mutationFn: (inventoryData) => {
+      // 有id就是更新，沒有則是新增
+      return inventoryData.id
+        ? updateInventoryApi(inventoryData)
+        : createInventoryApi(inventoryData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["inventory"],
       });
     },
     onError: (error) => {
+      console.log(error);
       StyledHotToast({
         type: "error",
         title: "庫存食材設定失敗",

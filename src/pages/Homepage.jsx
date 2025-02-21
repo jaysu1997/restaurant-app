@@ -1,6 +1,4 @@
 function Homepage() {
-  const now = Date.now();
-
   return;
 }
 
