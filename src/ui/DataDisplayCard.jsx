@@ -33,7 +33,7 @@ const TableHead = styled.div`
   background-color: #e2e8f0;
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   font-weight: 600;
   font-size: 1.4rem;
   padding: 0.8rem;

@@ -67,7 +67,7 @@ function CartItem({ order }) {
     }, [])
     .join(", ");
 
-  const itemTotleCost = order.costPerServing * order.servings;
+  const itemTotalPrice = order.itemTotalPrice * order.servings;
 
   return (
     <>
@@ -89,7 +89,7 @@ function CartItem({ order }) {
               onClick={() => {
                 dispatch({
                   type: "order/remove",
-                  payload: order.orderId,
+                  payload: order.itemId,
                 });
               }}
             >
@@ -112,7 +112,7 @@ function CartItem({ order }) {
           {customizeChoices.length === 0 && !order.note && <Row />}
 
           <Row>
-            <OrderPrice>$ {itemTotleCost}</OrderPrice>
+            <OrderPrice>$ {itemTotalPrice}</OrderPrice>
             <ServingsControl
               servings={servings}
               setServings={setServings}

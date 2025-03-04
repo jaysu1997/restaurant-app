@@ -67,6 +67,7 @@ const StyleNavLink = styled(NavLink)`
 `;
 
 function Nav() {
+  // return;
   return (
     <StyleNav>
       <NavList>
@@ -77,19 +78,19 @@ function Nav() {
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/order">
+          <StyleNavLink to="/menu">
             <BiFork />
             <span>點餐系統</span>
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/order-management">
+          <StyleNavLink to="/orders">
             <BiEdit />
             <span>訂單管理</span>
           </StyleNavLink>
         </li>
         <li>
-          <StyleNavLink to="/menus">
+          <StyleNavLink to="/menu-manage">
             <BiFoodMenu />
             <span>菜單設定</span>
           </StyleNavLink>

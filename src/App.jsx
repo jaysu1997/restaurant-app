@@ -2,9 +2,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import GlobalStyles from "./style/GlobalStyles";
 import AppLayout from "./ui/AppLayout";
 import Homepage from "./pages/Homepage";
-import Order from "./pages/Order";
-import OrderManagement from "./pages/OrderManagement";
-import Menus from "./pages/Menus";
+import Menu from "./pages/Menu";
+import Orders from "./pages/Orders";
+import MenuManage from "./pages/MenuManage";
 import Inventory from "./pages/Inventory";
 import Analytics from "./pages/Analytics";
 import Staff from "./pages/Staff";
@@ -55,9 +55,9 @@ export default function App() {
           <Routes>
             <Route element={<AppLayout />}>
               <Route index element={<Homepage />} />
-              <Route path="/order" element={<Order />} />
-              <Route path="/order-management" element={<OrderManagement />} />
-              <Route path="/menus" element={<Menus />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/menu-manage" element={<MenuManage />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/staff" element={<Staff />} />

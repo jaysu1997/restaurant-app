@@ -73,7 +73,7 @@ function ServingsControl({ servings, setServings, size = "sm", order }) {
 
     if (servings - prevServingsRef.current > 0) {
       result = compareInventory({
-        consumptionMap: order.consumptionMap,
+        ingredientUsageMap: order.ingredientUsageMap,
         servings: servings - prevServingsRef.current,
         inventoryMap: new Map(state.inventoryMap),
       });
@@ -90,7 +90,7 @@ function ServingsControl({ servings, setServings, size = "sm", order }) {
         type: "serving/update",
         payload: {
           servings,
-          orderId: order.orderId,
+          itemId: order.itemId,
         },
       });
 
@@ -138,9 +138,9 @@ function ServingsControl({ servings, setServings, size = "sm", order }) {
       <CountInputField
         type="number"
         $size={size}
-        value={servings}
+        value={servings.toString()}
         onChange={(e) => {
-          setServings(e.target.value);
+          setServings(Number(e.target.value));
         }}
         onBlur={() =>
           handleServingsChange(Math.max(1, Number(servings)), order)

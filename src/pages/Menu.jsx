@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import SwiperBar from "../features/order/SwiperBar";
+import SwiperBar from "../features/menu/SwiperBar";
 import Heading from "../ui/Heading";
-import useGetMenus from "../features/menu/useGetMenus";
+import useGetMenus from "../features/menu-manage/useGetMenus";
 import LoadingSpinner from "../ui/LoadingSpinner";
-import DishCard from "../features/order/DishCard";
+import DishCard from "../features/menu/DishCard";
 import { useSearchParams } from "react-router-dom";
-import ShoppingCart from "../features/order/ShoppingCart";
+import ShoppingCart from "../features/menu/ShoppingCart";
 import StyledOverlayScrollbars from "../ui/StyledOverlayScrollbars";
 import { useEffect } from "react";
 import { useOrder } from "../context/OrderContext";
@@ -18,22 +18,23 @@ const Container = styled.div`
   grid-template-columns: minmax(0, 96rem) 21.6rem;
   grid-template-rows: 3.2rem 1fr;
   gap: 2.4rem;
-  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
 `;
 
 const Menus = styled.ul`
   max-width: 100%;
-  max-height: 100%;
+  min-height: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
   padding: 1.6rem;
 `;
 
-function Order() {
+function Menu() {
   // 取得所有菜單數據
   const { menusData, isPending } = useGetMenus();
-  const { state, dispatch } = useOrder();
+  const { dispatch } = useOrder();
   const [searchParams] = useSearchParams();
   const { inventoryData, error, isError, isSuccess } = useGetInventory();
 
@@ -60,10 +61,6 @@ function Order() {
 
   if (isPending) return <LoadingSpinner />;
 
-  // 這裡還需要再做修改(如果沒有任何數據)
-  if (!menusData || menusData.length === 0)
-    return <span>請到餐點設定頁面新增餐點</span>;
-
   // 使用Set()過濾重複的分類
   const categorys = [...new Set(menusData.map((menu) => menu.category))];
   // 篩選要呈現的餐點類別
@@ -89,9 +86,11 @@ function Order() {
           }}
         >
           <Menus>
-            {dishes.map((dish) => (
-              <DishCard dish={dish} key={dish.id} />
-            ))}
+            {!menusData || menusData.length === 0 ? (
+              <span>請到餐點設定頁面新增餐點</span>
+            ) : (
+              dishes.map((dish) => <DishCard dish={dish} key={dish.id} />)
+            )}
           </Menus>
         </StyledOverlayScrollbars>
 
@@ -101,4 +100,4 @@ function Order() {
   );
 }
 
-export default Order;
+export default Menu;

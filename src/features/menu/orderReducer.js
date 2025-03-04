@@ -2,12 +2,10 @@
 
 export const initialState = {
   // 存放訂單所有餐點數據
-  orderList: [],
+  order: [],
   // 臨時存放單一餐點細項選擇數據
   tempArray: [],
   inventoryMap: new Map(),
-  // 這個可能不需要
-  // totalConsumption: new Map(),
 };
 
 export function reducer(state, action) {
@@ -22,10 +20,10 @@ export function reducer(state, action) {
         newInventoryMap.set(name, remainingQuantity);
       });
 
-      // 如果在點餐途中有發生庫存數據更新會自動重新獲取數據，所以要先減掉在orderList中已經使用的食材數量
-      if (state.orderList.length !== 0) {
-        state.orderList.forEach((order) => {
-          order.consumptionMap.forEach((value, key) => {
+      // 如果在點餐途中有發生庫存數據更新會自動重新獲取數據，所以要先減掉在order中已經使用的食材數量
+      if (state.order.length !== 0) {
+        state.order.forEach((order) => {
+          order.ingredientUsageMap.forEach((value, key) => {
             newInventoryMap.set(
               key,
               newInventoryMap.get(key) - value * order.servings
@@ -37,7 +35,7 @@ export function reducer(state, action) {
       return { ...state, inventoryMap: newInventoryMap };
     }
     // tempArray初始化
-    case "init/tempArray/consumptionPerDish": {
+    case "init/tempArray/coustomize": {
       return { ...state, tempArray: [...action.payload] };
     }
     // 單選選項新增
@@ -85,33 +83,20 @@ export function reducer(state, action) {
       );
       return { ...state, tempArray: [...newStateArray] };
     }
-    // 將餐點數據新增到orderList中
+    // 將餐點數據新增到order中
     case "order/insert": {
       const orderData = action.payload;
 
       const newState = structuredClone(state);
 
-      // 每一份餐點的總金額(餐點本身 + 額外選項)
-      const costPerServing =
-        state.tempArray.reduce((acc, cur) => {
-          if (cur.detail.length === 0) return acc;
-
-          cur.detail.forEach((detail) => {
-            acc += detail.extraPrice;
-          });
-
-          return acc;
-        }, orderData.salePrice) || orderData.salePrice;
-
-      newState.orderList.push({
-        orderId: state.orderList.length,
+      newState.order.push({
+        itemId: state.order.length,
         ...orderData,
         customizeDetail: state.tempArray,
-        costPerServing,
       });
 
       // 將庫存食材 - 本次餐點所需食材
-      orderData.consumptionMap.forEach((quantity, name) => {
+      orderData.ingredientUsageMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
           name,
           newState.inventoryMap.get(name) - quantity * orderData.servings
@@ -123,24 +108,24 @@ export function reducer(state, action) {
     }
     // 編輯餐點數據
     case "order/update": {
-      const { originalConsumption, ...orderData } = action.payload;
+      const { previousIngredientsUsage, ...orderData } = action.payload;
       const newState = structuredClone(state);
 
       // 更新數據
-      newState.orderList[orderData.orderId] = orderData;
-      newState.orderList[orderData.orderId].customizeDetail = state.tempArray;
+      newState.order[orderData.itemId] = orderData;
+      newState.order[orderData.itemId].customizeDetail = state.tempArray;
 
       // 先把原本消耗的所有食材加回庫存
-      originalConsumption.consumption.forEach((quantity, name) => {
+      previousIngredientsUsage.usageMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
           name,
           newState.inventoryMap.get(name) +
-            quantity * originalConsumption.servings
+            quantity * previousIngredientsUsage.servings
         );
       });
 
       // 將庫存食材 - 本次餐點所需食材
-      orderData.consumptionMap.forEach((quantity, name) => {
+      orderData.ingredientUsageMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
           name,
           newState.inventoryMap.get(name) - quantity * orderData.servings
@@ -153,12 +138,12 @@ export function reducer(state, action) {
     // 刪除指定餐點
     case "order/remove": {
       const newState = structuredClone(state);
-      const orderConsumption =
-        newState.orderList[action.payload].consumptionMap;
-      const orderServings = newState.orderList[action.payload].servings;
+      const orderIngredientUsage =
+        newState.order[action.payload].ingredientUsageMap;
+      const orderServings = newState.order[action.payload].servings;
 
       // 把原本消耗的食材補回庫存
-      orderConsumption.forEach((quantity, name) => {
+      orderIngredientUsage.forEach((quantity, name) => {
         newState.inventoryMap.set(
           name,
           newState.inventoryMap.get(name) + quantity * orderServings
@@ -166,14 +151,14 @@ export function reducer(state, action) {
       });
 
       // 將指定餐點從點餐列表中移除
-      newState.orderList.splice(action.payload, 1);
-      // 記得修改在指定餐點之後的餐點orderId，避免更新餐點份數時出錯
-      newState.orderList.map((order) => {
-        if (order.orderId < action.payload) {
+      newState.order.splice(action.payload, 1);
+      // 記得修改在指定餐點之後的餐點itemId，避免更新餐點份數時出錯
+      newState.order.map((order) => {
+        if (order.itemId < action.payload) {
           return order;
         }
 
-        order.orderId -= 1;
+        order.itemId -= 1;
         return order;
       });
 
@@ -181,13 +166,13 @@ export function reducer(state, action) {
     }
     // 更新餐點份數
     case "serving/update": {
-      const { orderId, servings } = action.payload;
-      const orderData = state.orderList[orderId];
+      const { itemId, servings } = action.payload;
+      const orderData = state.order[itemId];
       const servingsDiff = servings - orderData.servings;
       const newState = structuredClone(state);
 
       // 更新庫存剩餘存量(可增可減)
-      orderData.consumptionMap.forEach((quantity, name) => {
+      orderData.ingredientUsageMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
           name,
           newState.inventoryMap.get(name) - quantity * servingsDiff
@@ -195,14 +180,12 @@ export function reducer(state, action) {
       });
 
       // 更新餐點份數
-      newState.orderList[orderId].servings = servings;
+      newState.order[itemId].servings = servings;
 
       return newState;
     }
-    // 清空整個orderList數據
-    case "orderList/clear": {
-      console.log(initialState);
-
+    // 清空整個order數據
+    case "order/clear": {
       return initialState;
     }
 

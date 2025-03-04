@@ -48,6 +48,7 @@ function ControlledSelect({
           menuPlacement="auto"
           placeholder="可新增/選擇食材"
           onCreateOption={(optionValue) => {
+            console.log(optionValue);
             handleCreateNewItems(optionValue, field.name);
           }}
         />

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { IoIosClose } from "react-icons/io";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
-import { useEffect, useRef } from "react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -96,24 +95,6 @@ function Modal({
   headerColor = "inherit",
   maxWidth = 56,
 }) {
-  // const ref = useRef();
-
-  // useEffect(
-  //   function () {
-  //     function handleClick(e) {
-  //       if (ref.current && !ref.current.contains(e.target)) {
-  //         onCloseModal();
-  //         e.stopPropagation();
-  //       }
-  //     }
-
-  //     document.addEventListener("click", handleClick, true);
-
-  //     return () => document.removeEventListener("click", handleClick, true);
-  //   },
-  //   [onCloseModal]
-  // );
-
   return createPortal(
     <Overlay>
       <StyleModal $maxWidth={maxWidth}>

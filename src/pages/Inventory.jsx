@@ -27,7 +27,7 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  padding: 1rem;
+  padding: 1.6rem;
 `;
 
 function Inventory() {
@@ -57,11 +57,11 @@ function Inventory() {
 
   return (
     <>
-      <Heading>備料管理</Heading>
+      <Heading>庫存管理</Heading>
 
       <ToolBar>
         <Filter dataArray={inventoryData} field="quantity" selectTitle="數量" />
-        <SearchField />
+        <SearchField placeholder="搜尋食材名稱" />
         <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
           <span>新增食材</span>

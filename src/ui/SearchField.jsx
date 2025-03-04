@@ -42,7 +42,7 @@ const Icon = styled.div`
   }
 `;
 
-function SearchField() {
+function SearchField({ placeholder = "搜尋名稱" }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isComposing, setIsComposing] = useState(false);
   const [keyWord, setKeyWord] = useState(searchParams.get("name") || "");
@@ -83,7 +83,7 @@ function SearchField() {
         type="text"
         name="keyword"
         autoComplete="off"
-        placeholder="搜尋名稱"
+        placeholder={placeholder}
         value={keyWord}
         // 組合輸入不會馬上觸發onChange執行(中文)
         onCompositionStart={() => setIsComposing(true)}

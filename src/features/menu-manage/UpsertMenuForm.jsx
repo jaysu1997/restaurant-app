@@ -7,10 +7,8 @@ import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import FieldArray from "./FieldArray";
 import { useState } from "react";
-
 import FormTable from "../../ui/FormTable";
 import { IoCloseSharp } from "react-icons/io5";
-
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
@@ -71,21 +69,30 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   // 當<CreatableSelect />建立新選項時執行
   function handleCreateNewItems(data, fieldName) {
     // 把新的選項值設置到react hook form的指定欄位中
-    setValue(fieldName, { label: data, value: data });
+    setValue(fieldName, { label: data, value: data, new: true });
     // 將新選項值投入到Set中(用來避免重複新增新的選項值)
-    setNewItems((newItems) => newItems.add(data));
+    // setNewItems((newItems) => newItems.add(data));
   }
 
   function onSubmit(data) {
-    console.log(data);
-    // 新的食材物件
+    // 新的食材數據(要順便新增到inventory中)
+    const newIngredients = data.ingredients.reduce(
+      (acc, curIngredient) => {
+        const curIngredientData = curIngredient.ingredientName;
+        const curIngredientName = curIngredient.ingredientName.label;
+
+        if (curIngredientData.new && !acc.set.has(curIngredientName)) {
+          acc.set.add(curIngredientName);
+          acc.arr.push({ label: curIngredientName, value: curIngredientName });
+        }
+        return acc;
+      },
+      { set: new Set(), arr: [] }
+    );
 
     const menuData = {
       data,
-      newIngredients: [...newItems].map((item) => ({
-        label: item,
-        value: item,
-      })),
+      newIngredients: newIngredients.arr,
     };
 
     // 當網路離線時會跳出錯誤訊息，並終止提交表單動作
@@ -123,7 +130,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   }
 
   function onError(error) {
-    // 透過遍歷取得所有錯誤訊息
+    // 透過反覆遍歷取得所有錯誤訊息
     const getAllMessages = (errors) => {
       return Object.keys(errors).flatMap((key) => {
         const error = errors[key];

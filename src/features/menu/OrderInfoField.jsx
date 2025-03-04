@@ -32,6 +32,7 @@ const StyledPaidSection = styled.div`
   justify-content: space-around;
 `;
 
+// 取餐時間選項生成
 function generatePickupTimes(startTime, endTime) {
   const result = [];
   const now = new Date();
@@ -67,6 +68,7 @@ function generatePickupTimes(startTime, endTime) {
   return result;
 }
 
+// 內用桌號選項生成
 function generateTableNumbers(count) {
   return Array.from({ length: count }, (_, i) => ({
     label: String(i + 1),
@@ -107,7 +109,7 @@ function OrderInfoField({ register, dineOption, control }) {
           <input
             type="radio"
             id="yes"
-            value={true}
+            value="已付款"
             {...register("paid", { required: "請選擇付款狀態" })}
           />
           <span>已付款</span>
@@ -116,7 +118,7 @@ function OrderInfoField({ register, dineOption, control }) {
           <input
             type="radio"
             id="no"
-            value={false}
+            value="未付款"
             {...register("paid", { required: "請選擇付款狀態" })}
           />
           <span>未付款</span>

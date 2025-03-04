@@ -67,6 +67,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   }
 
   function onError(error) {
+    // 所有的error訊息
     const toastMessage = `${Object.values(error)
       .map((err) => err.message)
       .join("， ")}。`;

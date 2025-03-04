@@ -81,7 +81,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
   const { price, discount, ingredients, customize } = dishData;
 
   const [servings, setServings] = useState(dishData.servings || 1);
-  const { state, dispatch, calcConsumption, compareInventory } = useOrder();
+  const { state, dispatch, calcIngredientUsage, compareInventory } = useOrder();
 
   // 必填細項與選填細項
   const customizeOption = customize.reduce(
@@ -117,7 +117,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
   // 初始化useReducer的tempArray(自訂細項的詳細數據)
   useEffect(() => {
     dispatch({
-      type: "init/tempArray/consumptionPerDish",
+      type: "init/tempArray/coustomize",
       payload: customizeOptionRef.current,
     });
   }, [dispatch]);
@@ -133,35 +133,43 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
 
   function onSubmit(data) {
     // 先計算食材總消耗與庫存剩餘比對
-    const consumptionMap = calcConsumption(ingredients, state);
+    const ingredientUsageMap = calcIngredientUsage(ingredients, state);
 
     // 餐點原本的食材消耗(在編輯餐點狀態會需要用到)
-    const originalConsumption = edit && {
-      consumption: dishData.consumptionMap,
+    const previousIngredientsUsage = edit && {
+      usageMap: dishData.ingredientUsageMap,
       servings: dishData.servings,
     };
 
     const result = compareInventory({
-      consumptionMap,
+      ingredientUsageMap,
       servings,
       inventoryMap: new Map(state.inventoryMap),
-      originalConsumption,
+      previousIngredientsUsage,
     });
 
     // 庫存充足
     if (result.length === 0) {
+      // 每份餐點的售價(本身 + 額外選項)
+      const itemTotalPrice = state.tempArray.reduce((acc, cur) => {
+        const extraPriceTotal = cur.detail.reduce(
+          (sum, customizeData) => sum + customizeData.extraPrice,
+          0
+        );
+        return acc + extraPriceTotal;
+      }, price - discount);
+
       const orderData = {
-        ...dishData,
-        salePrice: price - discount,
         ...data,
-        consumptionMap,
+        itemTotalPrice,
+        ingredientUsageMap,
         servings,
         uniqueId: crypto.randomUUID() || `${Date.now()}-${Math.random()}`,
       };
 
       dispatch({
         type: edit ? "order/update" : "order/insert",
-        payload: edit ? { ...orderData, originalConsumption } : orderData,
+        payload: edit ? { ...orderData, previousIngredientsUsage } : orderData,
       });
 
       onCloseModal();

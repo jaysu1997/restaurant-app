@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import useDeleteMenu from "../features/menu/useDeleteMenu";
+import useDeleteMenu from "../features/menu-manage/useDeleteMenu";
 import useDeleteInventory from "../features/inventory/useDeleteInventory";
 import Button from "./Button";
 import { Fragment, useState } from "react";
 import Modal from "./Modal";
-import useGetFilterMenuData from "../features/menu/useGetFilterData";
-import UpsertMenuForm from "../features/menu/UpsertMenuForm";
+import useGetFilterMenuData from "../features/menu-manage/useGetFilterData";
+import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
 import LoadingSpinner from "./LoadingSpinner";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
@@ -40,7 +40,7 @@ const AccordionTitle = styled.button`
   width: 100%;
   height: 3.6rem;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   padding: 0.8rem 1.2rem;
   gap: 0.4rem;
@@ -111,7 +111,7 @@ const ConfirmCheckBox = styled.div`
 
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 0.6rem;
 `;
 

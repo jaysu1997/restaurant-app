@@ -52,7 +52,7 @@ const RequiredLabel = styled.span`
   background-color: ${(props) => props.$colorStyle.background};
   color: ${(props) => props.$colorStyle.font};
   border-radius: 50px;
-  padding: 0.2rem 0.8rem;
+  padding: 0.4rem 1rem;
   font-weight: 400;
 `;
 

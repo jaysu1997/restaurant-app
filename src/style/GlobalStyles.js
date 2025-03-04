@@ -4,7 +4,7 @@ const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
     padding: 0;
-    margin: 0;      
+    margin: 0;
   }
 
   *:disabled {
@@ -23,9 +23,11 @@ const GlobalStyles = createGlobalStyle`
     color: #1f2937;
     position: relative;
     /* background-color: #f9fafb; */
+
+    /* 這是twitch的背景色 */
+    /* background-color: #f7f7f8; */
     background-color: #ffffff;
     min-height: 100dvh;
-    /* overflow: hidden; */
   }
 
   img {
@@ -40,8 +42,7 @@ const GlobalStyles = createGlobalStyle`
 
     &:disabled {
     opacity: 0.5;
-  }
-
+    }
   }
 
   li {
@@ -67,13 +68,13 @@ const GlobalStyles = createGlobalStyle`
   /* 適用於 Chrome、Edge、Opera */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none; /* 隱藏按鈕 */
-    margin: 0; /* 移除額外的預設邊距 */
+    -webkit-appearance: none; 
+    margin: 0; 
   }
 
 /* 適用於 Firefox */
   input[type="number"] {
-    -moz-appearance: textfield; /* 讓 Firefox 的 number 表現為普通文字框 */
+    -moz-appearance: textfield; 
   }
 
   /* 將input auto-fill時預設的淡藍色背景改成全白 */

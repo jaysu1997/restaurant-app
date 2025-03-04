@@ -18,8 +18,7 @@ const StyledShoppingCart = styled.aside`
   flex-direction: column;
   border-radius: 6px;
   font-size: 1.4rem;
-  max-height: calc(100dvh - 16.2rem);
-  height: fit-content;
+  max-height: clamp(0rem, calc(100dvh - 16.2rem), 64.8rem);
   position: relative;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -167,7 +166,8 @@ const Slider = styled.span`
 `;
 
 const EmptyShoppingCart = styled.div`
-  height: 100%;
+  flex: 1;
+  max-height: 40rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -207,10 +207,8 @@ function ToggleSwitch({ setDineOption }) {
 }
 
 function ShoppingCart({ inventoryData }) {
-  const { mutate } = useCreateOrder();
-
   const {
-    state: { orderList },
+    state: { order },
     dispatch,
   } = useOrder();
 
@@ -218,14 +216,18 @@ function ShoppingCart({ inventoryData }) {
     register,
     handleSubmit,
     control,
-    formState: { isValid, errors },
+    formState: { isValid },
+    reset,
   } = useForm();
+
+  const { createOrder } = useCreateOrder(reset);
+
   const [dineOption, setDineOption] = useState("內用");
 
-  const { totalQuantity, totalCost } = orderList.reduce(
+  const { totalQuantity, totalCost } = order.reduce(
     (acc, cur) => {
       acc.totalQuantity += cur.servings;
-      acc.totalCost += cur.servings * cur.costPerServing;
+      acc.totalCost += cur.servings * cur.itemTotalPrice;
 
       return acc;
     },
@@ -233,8 +235,9 @@ function ShoppingCart({ inventoryData }) {
   );
 
   function onSubmit(data) {
-    const totalConsumptionMap = orderList.reduce((acc, order) => {
-      order.consumptionMap.forEach((quantity, name) => {
+    // 計算訂單的食材總共使用量
+    const totalIngredientUsageMap = order.reduce((acc, order) => {
+      order.ingredientUsageMap.forEach((quantity, name) => {
         const curQuantity = acc.get(name) || 0;
         acc.set(name, curQuantity + quantity * order.servings);
       });
@@ -242,20 +245,19 @@ function ShoppingCart({ inventoryData }) {
       return acc;
     }, new Map());
 
-    const orderListData = {
+    const orderData = {
       orderType: dineOption,
-      orderList,
-      totalConsumption: Object.fromEntries(totalConsumptionMap),
+      order,
+      totalIngredientUsage: Object.fromEntries(totalIngredientUsageMap),
       ...data,
       tableNumber: dineOption === "內用" ? data.tableNumber.value : null,
       pickupTime: dineOption === "外帶" ? data.pickupTime.value : null,
     };
 
-    mutate(orderListData);
+    createOrder(orderData);
   }
 
   function onError(error) {
-    // console.log(error);
     console.log(Object.values(error).map((value) => value.message));
   }
 
@@ -265,14 +267,15 @@ function ShoppingCart({ inventoryData }) {
         <h4>購物車</h4>
         <Row>
           <ToggleSwitch setDineOption={setDineOption} />
-          {orderList.length !== 0 && (
+          {order.length !== 0 && (
             <ClearAllButton
               onClick={() => {
-                dispatch({ type: "orderList/clear" });
+                dispatch({ type: "order/clear" });
                 dispatch({
                   type: "inventory/remainingQuantity",
                   payload: inventoryData,
                 });
+                reset();
               }}
             >
               <GrClear />
@@ -282,16 +285,19 @@ function ShoppingCart({ inventoryData }) {
         </Row>
       </Header>
 
-      <StyledOverlayScrollbars style={{ maxHeight: "100%" }} autoHide="scroll">
-        <ShoppingList>
-          {orderList.length === 0 ? (
-            <EmptyShoppingCart>
-              <FaShoppingCart />
-              <span>開始選擇美味的餐點吧！</span>
-            </EmptyShoppingCart>
-          ) : (
+      {order.length === 0 ? (
+        <EmptyShoppingCart>
+          <FaShoppingCart />
+          <span>開始選擇美味的餐點吧！</span>
+        </EmptyShoppingCart>
+      ) : (
+        <StyledOverlayScrollbars
+          style={{ maxHeight: "100%" }}
+          autoHide="scroll"
+        >
+          <ShoppingList>
             <>
-              {orderList.map((order) => (
+              {order.map((order) => (
                 <CartItem key={order.uniqueId} order={order} />
               ))}
 
@@ -301,9 +307,9 @@ function ShoppingCart({ inventoryData }) {
                 dineOption={dineOption}
               />
             </>
-          )}
-        </ShoppingList>
-      </StyledOverlayScrollbars>
+          </ShoppingList>
+        </StyledOverlayScrollbars>
+      )}
 
       <Footer>
         <Row>
@@ -316,7 +322,7 @@ function ShoppingCart({ inventoryData }) {
 
         <Row>
           <SubmitButton
-            disabled={orderList.length === 0 || !isValid}
+            disabled={order.length === 0 || !isValid}
             onClick={handleSubmit(onSubmit, onError)}
           >
             提交

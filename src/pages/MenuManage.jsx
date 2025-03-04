@@ -1,13 +1,13 @@
 // 菜單設定頁面
 
 import styled from "styled-components";
-import useGetMenus from "../features/menu/useGetMenus.js";
+import useGetMenus from "../features/menu-manage/useGetMenus.js";
 import Heading from "../ui/Heading.jsx";
-import MenusDataCard from "../features/menu/MenusDataCard.jsx";
+import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import LoadingSpinner from "../ui/LoadingSpinner.jsx";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import UpsertMenuForm from "../features/menu/UpsertMenuForm.jsx";
+import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
@@ -29,10 +29,10 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  padding: 1rem;
+  padding: 1.6rem;
 `;
 
-function Menus() {
+function MenuManage() {
   const [openModal, setOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { menusData, isPending } = useGetMenus();
@@ -64,7 +64,7 @@ function Menus() {
 
       <ToolBar>
         <Filter dataArray={menusData} field="category" selectTitle="分類" />
-        <SearchField />
+        <SearchField placeholder="搜尋餐點名稱" />
 
         <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
@@ -99,4 +99,4 @@ function Menus() {
   );
 }
 
-export default Menus;
+export default MenuManage;
