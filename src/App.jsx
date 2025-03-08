@@ -26,6 +26,8 @@ const queryClient = new QueryClient({
 export default function App() {
   // 全域禁用number input的預設滾輪事件
   useEffect(() => {
+    console.log("wheel");
+
     // 當滾輪事件是發生在number input上時，移除焦點
     const handleWheel = (e) => {
       if (

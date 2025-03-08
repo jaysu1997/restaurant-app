@@ -15,7 +15,7 @@ const Body = styled.div`
   margin: 0 auto;
   max-width: 144rem;
   /* 這裡如果設計100%會導致swiper無法具備RWD */
-  width: 100vw;
+  width: 100dvw;
   display: flex;
   gap: 6rem;
 

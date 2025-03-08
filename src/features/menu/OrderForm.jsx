@@ -204,7 +204,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <StyledOverlayScrollbars>
+      <StyledOverlayScrollbars style={{ maxHeight: "100%" }} autoHide="scroll">
         <Container>
           <Price>$ {price - discount}</Price>
 

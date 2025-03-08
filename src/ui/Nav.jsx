@@ -67,7 +67,6 @@ const StyleNavLink = styled(NavLink)`
 `;
 
 function Nav() {
-  // return;
   return (
     <StyleNav>
       <NavList>

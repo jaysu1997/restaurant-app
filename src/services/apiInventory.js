@@ -2,7 +2,10 @@ import supabase from "./supabase";
 
 // 取得stocks中的所有食材數據
 export async function getInventoryApi() {
-  const { data, error } = await supabase.from("inventory").select();
+  const { data, error } = await supabase
+    .from("inventory")
+    .select()
+    .order("remainingQuantity", { ascending: true });
 
   if (error) {
     console.log(error);

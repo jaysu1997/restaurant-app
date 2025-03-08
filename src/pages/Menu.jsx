@@ -14,17 +14,17 @@ import StyledHotToast from "../ui/StyledHotToast";
 
 const Container = styled.div`
   max-width: 120rem;
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(0, 96rem) 21.6rem;
   grid-template-rows: 3.2rem 1fr;
   gap: 2.4rem;
-  max-height: 100dvh;
+  /* max-height: 100dvh; */
   overflow: hidden;
 `;
 
 const Menus = styled.ul`
   max-width: 100%;
-  min-height: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
