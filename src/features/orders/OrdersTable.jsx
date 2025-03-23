@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import useGetOrders from "./useGetOrders";
 import LoadingSpinner from "../../ui/LoadingSpinner";
-import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
 import { useEffect, useRef, useState } from "react";
 import OrderRow from "./OrderRow";
+import Pagination from "../../ui/Pagination";
+import usePagination from "./usePagination";
 
 const OrderContainer = styled.div`
   max-width: 95dvw;
@@ -13,7 +13,6 @@ const OrderContainer = styled.div`
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
-  margin: 0 auto;
 
   @media (max-width: 768px) {
     border: none;
@@ -51,7 +50,7 @@ const OrderBody = styled.section`
 `;
 
 function OrdersTable() {
-  const { ordersData, isPending } = useGetOrders();
+  const { ordersData, curPage, maxPage, isPending } = usePagination();
   const [isOpen, setIsOpen] = useState(false);
   const tableRef = useRef(null);
   const activeMenuRef = useRef(null);
@@ -100,6 +99,10 @@ function OrdersTable() {
     return <LoadingSpinner />;
   }
 
+  if (ordersData.length === 0) {
+    return <span>沒有任何數據</span>;
+  }
+
   return (
     <>
       <OrderContainer ref={tableRef}>
@@ -107,27 +110,26 @@ function OrdersTable() {
           <div></div>
           <div>取餐號碼</div>
           <div>建立時間</div>
-          <div>付款狀態</div>
-          <div>消費金額</div>
           <div>訂單狀態</div>
+          <div>消費金額</div>
+          <div>付款狀態</div>
           <div></div>
         </OrderHeader>
 
-        <StyledOverlayScrollbars style={{ maxHeight: "100%" }}>
-          <OrderBody>
-            {ordersData.map((orderData) => (
-              <OrderRow
-                orderData={orderData}
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                tableRef={tableRef}
-                activeMenuRef={activeMenuRef}
-                key={orderData.id}
-              />
-            ))}
-          </OrderBody>
-        </StyledOverlayScrollbars>
+        <OrderBody>
+          {ordersData.map((orderData) => (
+            <OrderRow
+              orderData={orderData}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              tableRef={tableRef}
+              activeMenuRef={activeMenuRef}
+              key={orderData.id}
+            />
+          ))}
+        </OrderBody>
       </OrderContainer>
+      <Pagination curPage={Number(curPage)} maxPage={Number(maxPage)} />
     </>
   );
 }

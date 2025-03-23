@@ -11,7 +11,7 @@ function useCreateOrder(reset) {
 
   const {
     mutate: createOrder,
-    isPending,
+    isPending: orderCreating,
     error,
   } = useMutation({
     mutationFn: createOrderApi,
@@ -36,7 +36,7 @@ function useCreateOrder(reset) {
     },
   });
 
-  return { createOrder, isPending, error };
+  return { createOrder, orderCreating, error };
 }
 
 export default useCreateOrder;

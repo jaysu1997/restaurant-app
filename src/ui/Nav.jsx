@@ -10,15 +10,18 @@ import {
   BiFridge,
   BiUserPlus,
 } from "react-icons/bi";
+import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
 const StyleNav = styled.nav`
   border: 1px solid #dcdcdc;
   border-radius: 10px;
-  height: min-content;
   min-width: 18rem;
   background-color: #fff;
-  /* box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2); */
   margin-top: 6.2rem;
+  position: sticky;
+  top: 16.2rem;
+  height: fit-content;
+  max-height: calc(100dvh - 16.2rem);
 `;
 
 const NavList = styled.ul`
@@ -26,7 +29,6 @@ const NavList = styled.ul`
   flex-direction: column;
   align-items: center;
   gap: 1.4rem;
-  list-style: none;
   padding: 1.4rem;
 `;
 
@@ -69,50 +71,52 @@ const StyleNavLink = styled(NavLink)`
 function Nav() {
   return (
     <StyleNav>
-      <NavList>
-        <li>
-          <StyleNavLink to="/">
-            <BiChalkboard />
-            <span>總覽頁面</span>
-          </StyleNavLink>
-        </li>
-        <li>
-          <StyleNavLink to="/menu">
-            <BiFork />
-            <span>點餐系統</span>
-          </StyleNavLink>
-        </li>
-        <li>
-          <StyleNavLink to="/orders">
-            <BiEdit />
-            <span>訂單管理</span>
-          </StyleNavLink>
-        </li>
-        <li>
-          <StyleNavLink to="/menu-manage">
-            <BiFoodMenu />
-            <span>菜單設定</span>
-          </StyleNavLink>
-        </li>
-        <li>
-          <StyleNavLink to="/inventory">
-            <BiFridge />
-            <span>庫存管理</span>
-          </StyleNavLink>
-        </li>
-        <li>
-          <StyleNavLink to="/analytics">
-            <BiBarChartSquare />
-            <span>營業數據</span>
-          </StyleNavLink>
-        </li>
-        <li>
-          <StyleNavLink to="staff">
-            <BiUserPlus />
-            <span>員工管理</span>
-          </StyleNavLink>
-        </li>
-      </NavList>
+      <StyledOverlayScrollbars style={{ maxHeight: "inherit" }}>
+        <NavList>
+          <li>
+            <StyleNavLink to="/">
+              <BiChalkboard />
+              <span>總覽頁面</span>
+            </StyleNavLink>
+          </li>
+          <li>
+            <StyleNavLink to="/menu">
+              <BiFork />
+              <span>點餐系統</span>
+            </StyleNavLink>
+          </li>
+          <li>
+            <StyleNavLink to="/orders">
+              <BiEdit />
+              <span>訂單管理</span>
+            </StyleNavLink>
+          </li>
+          <li>
+            <StyleNavLink to="/menu-manage">
+              <BiFoodMenu />
+              <span>菜單設定</span>
+            </StyleNavLink>
+          </li>
+          <li>
+            <StyleNavLink to="/inventory">
+              <BiFridge />
+              <span>庫存管理</span>
+            </StyleNavLink>
+          </li>
+          <li>
+            <StyleNavLink to="/analytics">
+              <BiBarChartSquare />
+              <span>營業數據</span>
+            </StyleNavLink>
+          </li>
+          <li>
+            <StyleNavLink to="staff">
+              <BiUserPlus />
+              <span>員工管理</span>
+            </StyleNavLink>
+          </li>
+        </NavList>
+      </StyledOverlayScrollbars>
     </StyleNav>
   );
 }

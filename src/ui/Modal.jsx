@@ -105,10 +105,7 @@ function Modal({
             <IoIosClose />
           </Button>
         </Header>
-        <StyledOverlayScrollbars
-          style={{ maxHeight: "80dvh" }}
-          autoHide="scroll"
-        >
+        <StyledOverlayScrollbars style={{ maxHeight: "80dvh" }}>
           {children}
         </StyledOverlayScrollbars>
       </StyleModal>

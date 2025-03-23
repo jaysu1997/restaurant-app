@@ -18,7 +18,6 @@ const Card = styled.div`
   border-radius: 5px;
   border: 1px solid #dcdcdc;
   transition: all 0.3s;
-  overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
 

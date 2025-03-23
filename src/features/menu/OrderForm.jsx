@@ -70,15 +70,11 @@ const AddToCartButton = styled.button`
     width: 2rem;
     height: 2rem;
   }
-
-  &:disabled {
-    opacity: 0.5;
-  }
 `;
 
 function OrderForm({ dishData, onCloseModal, edit = false }) {
   // 當前餐點數據
-  const { price, discount, ingredients, customize } = dishData;
+  const { id, price, discount, ingredients, customize } = dishData;
 
   const [servings, setServings] = useState(dishData.servings || 1);
   const { state, dispatch, calcIngredientUsage, compareInventory } = useOrder();
@@ -164,7 +160,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
         itemTotalPrice,
         ingredientUsageMap,
         servings,
-        uniqueId: crypto.randomUUID() || `${Date.now()}-${Math.random()}`,
+        uniqueId: `${id}-${state.dishId}`,
       };
 
       dispatch({

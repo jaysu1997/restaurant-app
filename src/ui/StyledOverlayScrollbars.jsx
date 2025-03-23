@@ -1,12 +1,12 @@
 // OverlayScrollbarsComponent
 
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import { OverlayScrollbars, ClickScrollPlugin } from "overlayscrollbars";
+import "overlayscrollbars/overlayscrollbars.css";
 
-function StyledOverlayScrollbars({
-  children,
-  autoHide = "scroll",
-  style = {},
-}) {
+OverlayScrollbars.plugin(ClickScrollPlugin);
+
+function StyledOverlayScrollbars({ children, autoHide = "never", style = {} }) {
   return (
     <OverlayScrollbarsComponent
       options={{
@@ -15,9 +15,11 @@ function StyledOverlayScrollbars({
           clickScrolling: true,
           dragScrolling: true,
           autoHideDelay: 1000,
+          clickScroll: true,
         },
       }}
       style={style}
+      defer
     >
       {children}
     </OverlayScrollbarsComponent>

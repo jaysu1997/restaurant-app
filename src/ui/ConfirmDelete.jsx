@@ -146,10 +146,7 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
               <span>查看使用{name}的餐點</span>
             </AccordionTitle>
 
-            <StyledOverlayScrollbars
-              style={{ maxHeight: "10rem" }}
-              autoHide="leave"
-            >
+            <StyledOverlayScrollbars style={{ maxHeight: "10rem" }}>
               <AccordionContent $collapse={isOpen}>
                 {filterMenuData.length !== 0 ? (
                   filterMenuData.map((menu, index) => (

@@ -6,6 +6,7 @@ export const initialState = {
   // 臨時存放單一餐點細項選擇數據
   tempArray: [],
   inventoryMap: new Map(),
+  dishId: 1,
 };
 
 export function reducer(state, action) {
@@ -83,7 +84,7 @@ export function reducer(state, action) {
       );
       return { ...state, tempArray: [...newStateArray] };
     }
-    // 將餐點數據新增到order中
+    // 新增餐點
     case "order/insert": {
       const orderData = action.payload;
 
@@ -102,6 +103,8 @@ export function reducer(state, action) {
           newState.inventoryMap.get(name) - quantity * orderData.servings
         );
       });
+
+      state.dishId++;
 
       console.log(newState);
       return newState;

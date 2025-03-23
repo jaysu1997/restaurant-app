@@ -11,13 +11,12 @@ import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import Modal from "../ui/Modal";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
-import StyledOverlayScrollbars from "../ui/StyledOverlayScrollbars";
 import Filter from "../ui/Filter";
 
 const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
-  padding: 1.6rem 1rem;
+  padding: 1rem;
   justify-content: space-between;
 `;
 
@@ -30,37 +29,62 @@ const Container = styled.ul`
   padding: 1.6rem;
 `;
 
+function filterData(inventoryData, nameKeyWord, quantityKeyWord) {
+  let displayData = inventoryData;
+
+  if (nameKeyWord && nameKeyWord !== "") {
+    displayData = inventoryData.filter((inventory) =>
+      inventory.label.includes(nameKeyWord)
+    );
+  }
+
+  if (quantityKeyWord && quantityKeyWord !== "all") {
+    displayData = displayData.filter(
+      (inventory) => inventory.remainingQuantity <= Number(quantityKeyWord)
+    );
+  }
+
+  return displayData;
+}
+
 function Inventory() {
   const [openModal, setOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { inventoryData, isPending } = useGetInventory();
 
-  if (isPending) return <LoadingSpinner />;
+  if (isPending)
+    return (
+      <>
+        <Heading>庫存管理</Heading>
+        <LoadingSpinner />
+      </>
+    );
 
   const nameKeyWord = searchParams.get("name");
-  const quantityKeyWord = JSON.parse(searchParams.get("quantity"));
+  const quantityKeyWord = searchParams.get("quantity");
 
   // 要展示的數據
-  let displayInventoryData = inventoryData;
+  const displayInventoryData = filterData(
+    inventoryData,
+    nameKeyWord,
+    quantityKeyWord
+  );
 
-  if (nameKeyWord && nameKeyWord !== "all") {
-    displayInventoryData = inventoryData.filter((inventory) =>
-      inventory.label.includes(nameKeyWord)
-    );
-  }
-
-  if (quantityKeyWord && quantityKeyWord.value !== "") {
-    displayInventoryData = displayInventoryData.filter(
-      (inventory) => inventory.remainingQuantity < quantityKeyWord.value
-    );
-  }
+  // 篩選選項(Filter需要)
+  const options = [
+    { label: "不篩選", value: "all" },
+    { label: "庫存低於100", value: 100 },
+    { label: "庫存低於50", value: 50 },
+    { label: "庫存低於10", value: 10 },
+    { label: "庫存已耗盡", value: 0 },
+  ];
 
   return (
     <>
       <Heading>庫存管理</Heading>
 
       <ToolBar>
-        <Filter dataArray={inventoryData} field="quantity" selectTitle="數量" />
+        <Filter optionsArray={options} field="quantity" selectTitle="數量" />
         <SearchField placeholder="搜尋食材名稱" />
         <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
           <BsFileEarmarkPlus />
@@ -68,20 +92,15 @@ function Inventory() {
         </Button>
       </ToolBar>
 
-      <StyledOverlayScrollbars
-        style={{ maxHeight: "100dvh" }}
-        autoHide={scroll}
-      >
-        <Container>
-          {displayInventoryData.length === 0 ? (
-            <span>沒有任何數據</span>
-          ) : (
-            displayInventoryData.map((inventory) => (
-              <InventoryDataCard inventory={inventory} key={inventory.id} />
-            ))
-          )}
-        </Container>
-      </StyledOverlayScrollbars>
+      <Container>
+        {displayInventoryData.length === 0 ? (
+          <span>沒有任何數據</span>
+        ) : (
+          displayInventoryData.map((inventory) => (
+            <InventoryDataCard inventory={inventory} key={inventory.id} />
+          ))
+        )}
+      </Container>
 
       {openModal && (
         <Modal

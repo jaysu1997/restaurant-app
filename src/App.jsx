@@ -13,6 +13,10 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { OrderProvider } from "./context/OrderContext";
+import Order from "./pages/Order";
+import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
+import PageNotFound from "./pages/PageNotFound";
+import Test from "./pages/Test";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,8 +30,6 @@ const queryClient = new QueryClient({
 export default function App() {
   // 全域禁用number input的預設滾輪事件
   useEffect(() => {
-    console.log("wheel");
-
     // 當滾輪事件是發生在number input上時，移除焦點
     const handleWheel = (e) => {
       if (
@@ -35,6 +37,7 @@ export default function App() {
         document.activeElement === e.target
       ) {
         e.target.blur(); // 移除焦點
+        e.preventDefault(); // 阻止滾輪改變 input 值
       }
     };
 
@@ -55,15 +58,24 @@ export default function App() {
       <OrderProvider>
         <BrowserRouter>
           <Routes>
-            <Route element={<AppLayout />}>
+            <Route
+              element={
+                <StyledOverlayScrollbars style={{ maxHeight: "100dvh" }}>
+                  <AppLayout />
+                </StyledOverlayScrollbars>
+              }
+            >
               <Route index element={<Homepage />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/orders/:orderId" element={<Order />} />
               <Route path="/menu-manage" element={<MenuManage />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/staff" element={<Staff />} />
             </Route>
+            <Route path="*" element={<PageNotFound />} />
+            <Route path="test" element={<Test />} />
           </Routes>
         </BrowserRouter>
       </OrderProvider>

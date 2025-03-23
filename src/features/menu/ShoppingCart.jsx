@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import useCreateOrder from "./useCreateOrder";
 
+import LoadingDotMini from "../../ui/LoadingDotMini";
+
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
   grid-row: 1 / -1;
@@ -19,7 +21,9 @@ const StyledShoppingCart = styled.aside`
   border-radius: 6px;
   font-size: 1.4rem;
   max-height: clamp(0rem, calc(100dvh - 16.2rem), 64.8rem);
-  position: relative;
+  height: 100dvh;
+  position: sticky;
+  top: 16.2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 `;
@@ -83,6 +87,7 @@ const Footer = styled.footer`
   align-items: center;
   justify-content: center;
   position: sticky;
+  width: 100%;
   z-index: 1;
   bottom: 0;
   padding: 1.6rem;
@@ -116,10 +121,6 @@ const SubmitButton = styled.button`
   svg {
     width: 2rem;
     height: 2rem;
-  }
-
-  &:disabled {
-    opacity: 0.5;
   }
 `;
 
@@ -220,7 +221,7 @@ function ShoppingCart({ inventoryData }) {
     reset,
   } = useForm();
 
-  const { createOrder } = useCreateOrder(reset);
+  const { createOrder, orderCreating } = useCreateOrder(reset);
 
   const [dineOption, setDineOption] = useState("內用");
 
@@ -291,10 +292,7 @@ function ShoppingCart({ inventoryData }) {
           <span>開始選擇美味的餐點吧！</span>
         </EmptyShoppingCart>
       ) : (
-        <StyledOverlayScrollbars
-          style={{ maxHeight: "100%" }}
-          autoHide="scroll"
-        >
+        <StyledOverlayScrollbars>
           <ShoppingList>
             <>
               {order.map((order) => (
@@ -325,7 +323,7 @@ function ShoppingCart({ inventoryData }) {
             disabled={order.length === 0 || !isValid}
             onClick={handleSubmit(onSubmit, onError)}
           >
-            提交
+            {orderCreating ? <LoadingDotMini /> : "提交"}
           </SubmitButton>
         </Row>
       </Footer>

@@ -1,11 +1,15 @@
 // 網站頂部
-
 import styled from "styled-components";
 import User from "./User";
 
 const StyleHeader = styled.header`
+  width: 100%;
   border-bottom: 1px solid #dcdcdc;
-  padding: 0.15rem 0;
+  height: 6.4rem;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 999;
 `;
 
 const HeaderContainer = styled.div`
@@ -14,6 +18,7 @@ const HeaderContainer = styled.div`
   max-width: 144rem;
   justify-content: space-between;
   align-items: center;
+  height: 100%;
 `;
 
 const LogoStyle = styled.div`

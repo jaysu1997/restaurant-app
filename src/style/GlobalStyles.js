@@ -10,6 +10,8 @@ const GlobalStyles = createGlobalStyle`
   *:disabled {
     cursor: not-allowed;
   }
+
+ 
   
   html {
     font-size: 62.5%;    
@@ -21,12 +23,9 @@ const GlobalStyles = createGlobalStyle`
     font-weight: 400;
     font-size: 1.6rem; 
     color: #1f2937;
-    position: relative;
-    /* background-color: #f9fafb; */
-
     /* 這是twitch的背景色 */
     /* background-color: #f7f7f8; */
-    background-color: #ffffff;
+    background-color: #fff;
     min-height: 100dvh;
   }
 

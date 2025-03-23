@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit2, FiTrash } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const MenuContainer = styled.div`
   position: relative;
@@ -27,7 +28,6 @@ const ToggleButton = styled.button`
 
 const Menu = styled.ul`
   position: fixed;
-
   top: ${(props) => props.$position.y}px;
   right: ${(props) => props.$position.x}px;
   background: #fff;
@@ -77,6 +77,7 @@ function OrderDropdownMenu({
 }) {
   const [position, setPosition] = useState(null);
   const toggleRef = useRef(null);
+  const navigate = useNavigate();
 
   function handleToggle(e) {
     e.stopPropagation();
@@ -111,7 +112,7 @@ function OrderDropdownMenu({
           <MenuItem>
             <button
               onClick={() => {
-                console.log("檢視");
+                navigate(`/orders/${orderId}`);
                 setIsOpen(false);
               }}
             >

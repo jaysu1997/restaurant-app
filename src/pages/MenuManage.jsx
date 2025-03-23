@@ -12,58 +12,75 @@ import Button from "../ui/Button.jsx";
 import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import SearchField from "../ui/SearchField.jsx";
-import StyledOverlayScrollbars from "../ui/StyledOverlayScrollbars.jsx";
 import Filter from "../ui/Filter.jsx";
 
 const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
   justify-content: space-between;
-  padding: 1.6rem 1rem;
+  padding: 1rem;
 `;
 
 const Container = styled.ul`
   display: grid;
   max-width: 100%;
-  /* width: 100%; */
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
   padding: 1.6rem;
 `;
 
+function filterData(menusData, nameKeyWord, categoryKeyWord) {
+  let displayData = menusData;
+
+  // 關鍵字篩選
+  if (nameKeyWord && nameKeyWord !== "") {
+    displayData = menusData.filter((menu) => menu.name.includes(nameKeyWord));
+  }
+  // 餐點分類篩選
+  if (categoryKeyWord && categoryKeyWord !== "all") {
+    displayData = displayData.filter(
+      (menu) => menu.category === categoryKeyWord
+    );
+  }
+
+  return displayData;
+}
+
 function MenuManage() {
   const [openModal, setOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { menusData, isPending } = useGetMenus();
 
-  // 從supabase取得數據中
-  if (isPending) return <LoadingSpinner />;
+  if (isPending) {
+    return (
+      <>
+        <Heading>菜單設定</Heading>
+        <LoadingSpinner />
+      </>
+    );
+  }
 
   const nameKeyWord = searchParams.get("name");
-  const categoryKeyWord = JSON.parse(searchParams.get("category"));
+  const categoryKeyWord = searchParams.get("category");
 
   // 要展示的數據
-  let displayMenusData = menusData;
+  const displayMenusData = filterData(menusData, nameKeyWord, categoryKeyWord);
 
-  if (nameKeyWord && nameKeyWord !== "") {
-    displayMenusData = menusData.filter((menu) =>
-      menu.name.includes(nameKeyWord)
-    );
-  }
-
-  if (categoryKeyWord && categoryKeyWord.value !== "") {
-    displayMenusData = displayMenusData.filter(
-      (menu) => menu.category === categoryKeyWord.value
-    );
-  }
+  // 篩選選項(Filter需要)
+  const options = [
+    { label: "不篩選", value: "all" },
+    ...Array.from(new Set(menusData.map((data) => data.category))).map(
+      (category) => ({ label: category, value: category })
+    ),
+  ];
 
   return (
     <>
       <Heading>菜單設定</Heading>
 
       <ToolBar>
-        <Filter dataArray={menusData} field="category" selectTitle="分類" />
+        <Filter optionsArray={options} field="category" selectTitle="分類" />
         <SearchField placeholder="搜尋餐點名稱" />
 
         <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
@@ -72,20 +89,15 @@ function MenuManage() {
         </Button>
       </ToolBar>
 
-      <StyledOverlayScrollbars
-        style={{ maxHeight: "100dvh" }}
-        autoHide="scroll"
-      >
-        <Container>
-          {displayMenusData.length === 0 ? (
-            <span>沒有任何數據</span>
-          ) : (
-            displayMenusData.map((menu) => (
-              <MenusDataCard menu={menu} key={menu.id} />
-            ))
-          )}
-        </Container>
-      </StyledOverlayScrollbars>
+      <Container>
+        {displayMenusData.length === 0 ? (
+          <span>沒有任何數據</span>
+        ) : (
+          displayMenusData.map((menu) => (
+            <MenusDataCard menu={menu} key={menu.id} />
+          ))
+        )}
+      </Container>
 
       {openModal && (
         <Modal

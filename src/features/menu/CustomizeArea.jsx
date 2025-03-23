@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { ImRadioChecked, ImRadioUnchecked } from "react-icons/im";
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { useOrder } from "../../context/OrderContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const colorStyle = {
   background: {

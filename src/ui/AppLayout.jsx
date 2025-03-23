@@ -2,13 +2,11 @@ import styled from "styled-components";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import Nav from "./Nav";
-import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
 const StyleAppLayout = styled.div`
   display: grid;
   grid-template-rows: 6.4rem 1fr;
   gap: 3.6rem;
-  max-height: 100dvh;
 `;
 
 const Body = styled.div`
@@ -18,37 +16,27 @@ const Body = styled.div`
   width: 100dvw;
   display: flex;
   gap: 6rem;
-
-  /* 高度 = 100dvh - Header(6.4) - gap(3.4) */
-  height: calc(100dvh - 10rem);
 `;
 
 const Main = styled.main`
   max-width: 120rem;
-  /* width: 100%; */
-  margin-left: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  height: 100%;
-  flex-grow: 1;
 `;
 
 function AppLayout() {
   return (
-    <>
-      <StyledOverlayScrollbars style={{ height: "100dvh" }} autoHide="scroll">
-        <StyleAppLayout>
-          <Header />
-          <Body>
-            <Nav />
-            <Main>
-              <Outlet />
-            </Main>
-          </Body>
-        </StyleAppLayout>
-      </StyledOverlayScrollbars>
-    </>
+    <StyleAppLayout id="top">
+      <Header />
+      <Body>
+        <Nav />
+        <Main>
+          <Outlet />
+        </Main>
+      </Body>
+    </StyleAppLayout>
   );
 }
 

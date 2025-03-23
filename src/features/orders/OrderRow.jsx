@@ -14,7 +14,7 @@ const StyledOrderRow = styled.div`
   border-top: 1px solid #f3f4f6;
 
   &:hover {
-    background-color: #eff6ff;
+    background-color: #f0f9ff;
   }
 
   @media (max-width: 768px) {
@@ -30,11 +30,11 @@ const StyledOrderRow = styled.div`
       "paid paid";
 
     border: none;
-    background-color: #f4f4f5;
+    background-color: #f5f5f5;
     border-radius: 6px;
 
     &:hover {
-      background-color: #f4f4f5;
+      background-color: #f5f5f5;
     }
 
     div {
