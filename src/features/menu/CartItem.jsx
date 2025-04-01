@@ -2,10 +2,11 @@ import styled from "styled-components";
 import Button from "../../ui/Button";
 import ServingsControl from "../../ui/ServingsControl";
 import { useState } from "react";
-import { GoTrash } from "react-icons/go";
+import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import Modal from "../../ui/Modal";
 import OrderForm from "./OrderForm";
+import { summarizeMealChoices } from "../../utils/helpers";
 
 const Row = styled.div`
   display: flex;
@@ -28,7 +29,6 @@ const OrderCard = styled.div`
   flex-direction: column;
   gap: 1rem;
   font-size: 1.4rem;
-  cursor: pointer;
 `;
 
 const OrderName = styled.h4`
@@ -38,6 +38,11 @@ const OrderName = styled.h4`
   font-weight: 600;
 `;
 
+const OrderAction = styled.div`
+  display: flex;
+  gap: 0.2rem;
+`;
+
 const OrderCustomize = styled.p`
   font-size: 1.2rem;
 `;
@@ -45,6 +50,8 @@ const OrderCustomize = styled.p`
 const Note = styled.p`
   font-size: 1.2rem;
   color: #707070;
+  overflow-wrap: break-word;
+  width: 100%;
 `;
 
 const OrderPrice = styled.span`
@@ -56,45 +63,37 @@ function CartItem({ order }) {
   const [servings, setServings] = useState(order.servings || 1);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { dispatch } = useOrder();
-
-  const customizeChoices = order.customizeDetail
-    .reduce((acc, cur) => {
-      if (cur.detail.length === 0) return acc;
-
-      acc.push(cur.detail.map((detail) => detail.optionLabel));
-
-      return acc;
-    }, [])
-    .join(", ");
-
-  const itemTotalPrice = order.itemTotalPrice * order.servings;
+  const customizeChoices = summarizeMealChoices(order);
+  const dishTotalPrice = order.itemTotalPrice * order.servings;
 
   return (
     <>
-      <OrderCardWrapper
-        onClick={(e) => {
-          // 子元素中的按鈕和input有其他onClick功能，不能觸發開啟modal
-          if (e.target.closest("button") || e.target.closest("input")) {
-            return;
-          }
-
-          setIsOpenModal(true);
-        }}
-      >
+      <OrderCardWrapper>
         <OrderCard>
           <Row>
             <OrderName>{order.name}</OrderName>
-            <Button
-              $buttonStyle="remove"
-              onClick={() => {
-                dispatch({
-                  type: "order/remove",
-                  payload: order.itemId,
-                });
-              }}
-            >
-              <GoTrash />
-            </Button>
+            <OrderAction>
+              <Button
+                $buttonStyle="remove"
+                onClick={() => {
+                  setIsOpenModal(true);
+                }}
+              >
+                <GoPencil />
+              </Button>
+
+              <Button
+                $buttonStyle="remove"
+                onClick={() => {
+                  dispatch({
+                    type: "order/remove",
+                    payload: order.itemId,
+                  });
+                }}
+              >
+                <GoTrash />
+              </Button>
+            </OrderAction>
           </Row>
 
           {customizeChoices.length !== 0 && (
@@ -105,14 +104,14 @@ function CartItem({ order }) {
 
           {order.note && (
             <Row>
-              <Note>{`" ${order.note} "`}</Note>
+              <Note>{`"${order.note}"`}</Note>
             </Row>
           )}
 
           {customizeChoices.length === 0 && !order.note && <Row />}
 
           <Row>
-            <OrderPrice>$ {itemTotalPrice}</OrderPrice>
+            <OrderPrice>$ {dishTotalPrice}</OrderPrice>
             <ServingsControl
               servings={servings}
               setServings={setServings}
@@ -127,6 +126,7 @@ function CartItem({ order }) {
         <Modal
           onCloseModal={() => setIsOpenModal(false)}
           modalHeader={order.name}
+          maxWidth={36}
         >
           <OrderForm
             dishData={order}

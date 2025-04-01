@@ -5,12 +5,21 @@ export const initialState = {
   order: [],
   // 臨時存放單一餐點細項選擇數據
   tempArray: [],
+  // 存放食材庫存數據
   inventoryMap: new Map(),
+  // 個別餐點的ID
   dishId: 1,
+  curPage: "/menu",
 };
 
 export function reducer(state, action) {
   switch (action.type) {
+    case "curPage": {
+      // 避免訂單更新建立和訂單編輯互相影響(因為是同一個useReducer + context api)
+      const newState = action.payload === state.curPage ? state : initialState;
+
+      return { ...newState, curPage: action.payload };
+    }
     // 將所有的庫存數據暫時存放到state中
     case "inventory/remainingQuantity": {
       const newInventoryMap = new Map();
@@ -104,6 +113,7 @@ export function reducer(state, action) {
         );
       });
 
+      // 餐點ID
       state.dishId++;
 
       console.log(newState);

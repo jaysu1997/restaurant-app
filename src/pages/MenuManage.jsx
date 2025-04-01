@@ -18,7 +18,7 @@ const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem 0;
 `;
 
 const Container = styled.ul`
@@ -27,7 +27,7 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  padding: 1.6rem;
+  padding: 1.6rem 0;
 `;
 
 function filterData(menusData, nameKeyWord, categoryKeyWord) {
@@ -50,9 +50,9 @@ function filterData(menusData, nameKeyWord, categoryKeyWord) {
 function MenuManage() {
   const [openModal, setOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { menusData, isPending } = useGetMenus();
+  const { menusData, menusDataFetching } = useGetMenus();
 
-  if (isPending) {
+  if (menusDataFetching) {
     return (
       <>
         <Heading>菜單設定</Heading>

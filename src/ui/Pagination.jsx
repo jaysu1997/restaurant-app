@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
+import { scrollToTop } from "../utils/helpers";
 
 const StyledFooter = styled.footer`
   display: flex;
@@ -90,13 +91,7 @@ function Pagination({ curPage, maxPage }) {
     searchParams.set(key, value);
     setSearchParams(searchParams);
 
-    // 更改數據展示方式都會滾回頂部
-    const top = document.querySelector("#top");
-    top.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest",
-    });
+    scrollToTop();
   }
 
   return (

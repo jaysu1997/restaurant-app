@@ -10,7 +10,8 @@ const Card = styled.li`
   border-radius: 10px;
   overflow: hidden;
   outline: 2px solid #dcdcdc;
-  background-color: #f9fafb;
+  /* background-color: #f9fafb; */
+  background-color: #fff;
   /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
@@ -50,7 +51,8 @@ const TableBody = styled.div`
 
 const Button = styled.button`
   width: 100%;
-  background-color: #f9fafb;
+  /* background-color: #f9fafb; */
+  background-color: #fff;
   color: ${(props) => props.$fontColor};
   padding: 0.6rem 1.2rem;
   font-size: 1.4rem;

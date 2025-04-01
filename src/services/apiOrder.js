@@ -45,3 +45,18 @@ export async function getOrdersApi(page, itemsPerPage) {
   // 回傳訂單數據、當前分頁、最大分頁數
   return { ordersData, curPage, maxPage };
 }
+
+export async function getOrderApi(orderId) {
+  const { data, error } = await supabase
+    .from("orders")
+    .select()
+    .eq("id", orderId);
+
+  if (error) {
+    console.log(error);
+    throw new Error("取得訂單數據失敗");
+  }
+
+  // 回傳訂單數據、當前分頁、最大分頁數
+  return data[0];
+}

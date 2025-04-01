@@ -80,17 +80,17 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
   const { state, dispatch, calcIngredientUsage, compareInventory } = useOrder();
 
   // 必填細項與選填細項
-  const customizeOption = customize.reduce(
+  const { requiredField, optionalField, totalField } = customize.reduce(
     (acc, cus) => {
       if (cus.required === "必填") {
-        acc.allField.push({
+        acc.totalField.push({
           customizeId: `required${acc.requiredField.length + 1}`,
           customizeTitle: cus.title,
           detail: [],
         });
         acc.requiredField.push(cus);
       } else {
-        acc.allField.push({
+        acc.totalField.push({
           customizeId: `optional${acc.optionalField.length + 1}`,
           customizeTitle: cus.title,
           detail: [],
@@ -102,12 +102,12 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
     {
       requiredField: [],
       optionalField: [],
-      allField: [],
+      totalField: [],
     }
   );
 
   const customizeOptionRef = useRef(
-    edit ? dishData.customizeDetail : [...customizeOption.allField]
+    edit ? dishData.customizeDetail : [...totalField]
   );
 
   // 初始化useReducer的tempArray(自訂細項的詳細數據)
@@ -118,7 +118,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
     });
   }, [dispatch]);
 
-  // isValid + 設定required:true，可以設計出必填欄位都有填寫才行提交的功能
+  // isValid + 設定required:true，可以設計出必填欄位都有填寫才點擊提交按鈕的功能
   const {
     handleSubmit,
     register,
@@ -204,32 +204,28 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
         <Container>
           <Price>$ {price - discount}</Price>
 
-          {customizeOption.requiredField &&
-            customizeOption.requiredField.map(
-              (customizeData, customizeIndex) => (
-                <CustomizeArea
-                  type="required"
-                  edit={edit}
-                  customizeData={customizeData}
-                  customizeIndex={customizeIndex}
-                  register={register}
-                  key={customizeIndex}
-                />
-              )
-            )}
+          {requiredField &&
+            requiredField.map((customizeData) => (
+              <CustomizeArea
+                type="required"
+                edit={edit}
+                customizeData={customizeData}
+                customizeIndex={customizeData.id}
+                register={register}
+                key={customizeData.id}
+              />
+            ))}
 
-          {customizeOption.optionalField &&
-            customizeOption.optionalField.map(
-              (customizeData, customizeIndex) => (
-                <CustomizeArea
-                  type="optional"
-                  customizeData={customizeData}
-                  customizeIndex={customizeIndex}
-                  register={register}
-                  key={customizeIndex}
-                />
-              )
-            )}
+          {optionalField &&
+            optionalField.map((customizeData) => (
+              <CustomizeArea
+                type="optional"
+                customizeData={customizeData}
+                customizeIndex={customizeData.id}
+                register={register}
+                key={customizeData.id}
+              />
+            ))}
 
           <Title>餐點備註</Title>
           <textarea

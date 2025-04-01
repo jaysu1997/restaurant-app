@@ -1,7 +1,7 @@
 import OrdersTable from "../features/orders/OrdersTable";
 import Heading from "../ui/Heading";
 
-function OrderManagement() {
+function Orders() {
   return (
     <>
       <Heading>訂單管理</Heading>
@@ -10,4 +10,4 @@ function OrderManagement() {
   );
 }
 
-export default OrderManagement;
+export default Orders;

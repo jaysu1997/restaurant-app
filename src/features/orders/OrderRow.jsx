@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import Tag from "../../ui/Tag";
 import OrderDropdownMenu from "./OrderDropdownMenu";
+import {
+  calcOrderTotalPrice,
+  formatCreatedTime,
+  formatOrderNumber,
+} from "../../utils/helpers";
 
 const StyledOrderRow = styled.div`
   display: grid;
@@ -12,6 +17,7 @@ const StyledOrderRow = styled.div`
   gap: 0.8rem;
   padding: 1.6rem;
   border-top: 1px solid #f3f4f6;
+  background-color: #fff;
 
   &:hover {
     background-color: #f0f9ff;
@@ -28,9 +34,7 @@ const StyledOrderRow = styled.div`
       "totalPrice totalPrice"
       "status status"
       "paid paid";
-
     border: none;
-    background-color: #f5f5f5;
     border-radius: 6px;
 
     &:hover {
@@ -108,38 +112,6 @@ const OrderType = styled.span`
   color: ${(props) => (props.$orderType === "內用" ? "#1e88e5" : "#43a047")};
   font-weight: 700;
 `;
-
-function formatOrderNumber(orderNumber) {
-  return `# ${String(orderNumber).padStart(3, "0")}`;
-}
-
-// 將訂單建立時間格式化
-function formatCreatedTime(createdTime) {
-  const time = new Date(createdTime);
-
-  const formattedDate = time.toLocaleDateString("zh-TW", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const formattedTime = time.toLocaleTimeString("zh-TW", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  return `${formattedDate} ${formattedTime}`;
-}
-
-// 計算訂單總消費金額
-function calcOrderTotalPrice(orderData) {
-  return orderData.reduce((total, item) => {
-    total += item.itemTotalPrice * item.servings;
-
-    return total;
-  }, 0);
-}
 
 function OrderRow({ orderData, isOpen, setIsOpen, tableRef, activeMenuRef }) {
   return (

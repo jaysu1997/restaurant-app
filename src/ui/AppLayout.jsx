@@ -1,21 +1,19 @@
 import styled from "styled-components";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
-import Nav from "./Nav";
+import Navbar from "./Navbar";
+import { useOrder } from "../context/OrderContext";
 
 const StyleAppLayout = styled.div`
   display: grid;
   grid-template-rows: 6.4rem 1fr;
-  gap: 3.6rem;
+  grid-template-columns: auto 1fr;
+  min-height: 100dvh;
 `;
 
 const Body = styled.div`
-  margin: 0 auto;
-  max-width: 144rem;
-  /* 這裡如果設計100%會導致swiper無法具備RWD */
-  width: 100dvw;
-  display: flex;
-  gap: 6rem;
+  width: 100%;
+  margin-top: 3.6rem;
 `;
 
 const Main = styled.main`
@@ -24,14 +22,15 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+  margin: 0 auto;
 `;
 
 function AppLayout() {
   return (
     <StyleAppLayout id="top">
       <Header />
+      <Navbar />
       <Body>
-        <Nav />
         <Main>
           <Outlet />
         </Main>

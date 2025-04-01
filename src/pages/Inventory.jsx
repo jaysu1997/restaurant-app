@@ -16,7 +16,7 @@ import Filter from "../ui/Filter";
 const ToolBar = styled.div`
   display: flex;
   gap: 1.6rem;
-  padding: 1rem;
+  padding: 1rem 0;
   justify-content: space-between;
 `;
 
@@ -26,7 +26,7 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  padding: 1.6rem;
+  padding: 1.6rem 0;
 `;
 
 function filterData(inventoryData, nameKeyWord, quantityKeyWord) {
@@ -50,9 +50,9 @@ function filterData(inventoryData, nameKeyWord, quantityKeyWord) {
 function Inventory() {
   const [openModal, setOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { inventoryData, isPending } = useGetInventory();
+  const { inventoryData, inventoryDataFetching } = useGetInventory(false);
 
-  if (isPending)
+  if (inventoryDataFetching)
     return (
       <>
         <Heading>庫存管理</Heading>

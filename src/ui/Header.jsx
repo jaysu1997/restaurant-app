@@ -9,13 +9,13 @@ const StyleHeader = styled.header`
   background-color: #fff;
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1;
+  grid-column: 1 / -1;
+  padding: 0 2.4rem;
 `;
 
 const HeaderContainer = styled.div`
   display: flex;
-  margin: 0 auto;
-  max-width: 144rem;
   justify-content: space-between;
   align-items: center;
   height: 100%;
@@ -28,7 +28,7 @@ const LogoStyle = styled.div`
 
 const H1 = styled.h1`
   color: #ea580c;
-  font-size: 2.4rem;
+  font-size: 2rem;
 `;
 
 const Img = styled.img`

@@ -17,6 +17,7 @@ import Order from "./pages/Order";
 import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
 import Test from "./pages/Test";
+import OrderEdit from "./pages/OrderEdit";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -68,7 +69,8 @@ export default function App() {
               <Route index element={<Homepage />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/orders" element={<Orders />} />
-              <Route path="/orders/:orderId" element={<Order />} />
+              <Route path="/order/:orderId" element={<Order />} />
+              <Route path="/order-edit/:orderId" element={<OrderEdit />} />
               <Route path="/menu-manage" element={<MenuManage />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/analytics" element={<Analytics />} />

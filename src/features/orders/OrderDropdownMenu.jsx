@@ -112,7 +112,7 @@ function OrderDropdownMenu({
           <MenuItem>
             <button
               onClick={() => {
-                navigate(`/orders/${orderId}`);
+                navigate(`/order/${orderId}`);
                 setIsOpen(false);
               }}
             >

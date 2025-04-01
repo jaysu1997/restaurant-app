@@ -1,6 +1,7 @@
 // 購物車中下方的訂購訊息欄位
 import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
+import { generatePickupTimes, generateTableNumbers } from "../../utils/helpers";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -31,51 +32,8 @@ const StyledPaidSection = styled.div`
   justify-content: space-around;
 `;
 
-// 取餐時間選項生成
-function generatePickupTimes(startTime, endTime) {
-  const result = [];
-  const now = new Date();
-  now.setMinutes(now.getMinutes() + 20);
-
-  const parseTime = (timeStr) => timeStr.split(":").map(Number);
-
-  let [startH, startM] = parseTime(startTime);
-  const [endH, endM] = parseTime(endTime);
-  const [nowH, nowM] = [now.getHours(), now.getMinutes()];
-
-  if (startH < nowH || (startH === nowH && startM < nowM)) {
-    startH = nowH;
-    startM = Math.ceil(nowM / 5) * 5;
-  }
-
-  while (startH < endH || (startH === endH && startM <= endM)) {
-    result.push({
-      label: `${String(startH).padStart(2, "0")}:${String(startM).padStart(
-        2,
-        "0"
-      )}`,
-      value: `${String(startH).padStart(2, "0")}:${String(startM).padStart(
-        2,
-        "0"
-      )}`,
-    });
-
-    startM += 5;
-    if (startM >= 60) [startH, startM] = [startH + 1, 0];
-  }
-
-  return result;
-}
-
-// 內用桌號選項生成
-function generateTableNumbers(count) {
-  return Array.from({ length: count }, (_, i) => ({
-    label: String(i + 1),
-    value: String(i + 1),
-  }));
-}
-
 function OrderInfoField({ register, dineOption, control }) {
+  // 用餐方式的select選項
   const optionList =
     dineOption === "內用"
       ? generateTableNumbers(10)

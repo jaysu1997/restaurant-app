@@ -10,7 +10,9 @@ const OrderContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #e5e7eb;
+  /* border: 1px solid #e5e7eb; */
+  border: 1px solid #dcdcdc;
+
   border-radius: 8px;
   overflow: hidden;
 

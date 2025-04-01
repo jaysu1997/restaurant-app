@@ -11,7 +11,8 @@ const StyledDishCard = styled.li`
 const Card = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #f9fafb;
+  /* background-color: #f9fafb; */
+  background-color: #fff;
   gap: 0.2rem;
   padding: 0.6rem;
   width: 100%;

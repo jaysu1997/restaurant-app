@@ -186,6 +186,7 @@ function Option({
 }) {
   const { state, dispatch } = useOrder();
 
+  // 數據內容與格式
   const payload = {
     customizeId: `${type}${customizeIndex + 1}`,
     optionLabel: optionData.optionLabel,

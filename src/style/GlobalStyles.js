@@ -9,9 +9,7 @@ const GlobalStyles = createGlobalStyle`
 
   *:disabled {
     cursor: not-allowed;
-  }
-
- 
+  } 
   
   html {
     font-size: 62.5%;    
@@ -23,9 +21,7 @@ const GlobalStyles = createGlobalStyle`
     font-weight: 400;
     font-size: 1.6rem; 
     color: #1f2937;
-    /* 這是twitch的背景色 */
-    /* background-color: #f7f7f8; */
-    background-color: #fff;
+    background-color: #f9fafb;
     min-height: 100dvh;
   }
 
@@ -71,7 +67,7 @@ const GlobalStyles = createGlobalStyle`
     margin: 0; 
   }
 
-/* 適用於 Firefox */
+  /* 適用於 Firefox */
   input[type="number"] {
     -moz-appearance: textfield; 
   }
@@ -80,8 +76,12 @@ const GlobalStyles = createGlobalStyle`
   input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
   box-shadow: 0 0 0 1000px white inset !important;
-  -webkit-text-fill-color: inherit !important;
-}
+  -webkit-text-fill-color: inherit !important;  
+  }
+
+.emphasize{
+    color: #dc2626;
+  }
 `;
 
 export default GlobalStyles;

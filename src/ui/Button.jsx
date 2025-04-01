@@ -1,4 +1,4 @@
-// 按鈕UI元件
+// 按鈕UI元件(可能之後需要進行重新調整，目前重複使用的效果不佳)
 
 import styled, { css } from "styled-components";
 
@@ -81,12 +81,12 @@ const type = {
     font-weight: 600;
     padding: 0.4rem 0.8rem;
     height: 3.6rem;
+    width: fit-content;
+    gap: 0.2rem;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     color: #3b82f6;
-    gap: 0.2rem;
-    width: fit-content;
     border-radius: 50px;
 
     svg {

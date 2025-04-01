@@ -15,13 +15,15 @@ const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
   grid-row: 1 / -1;
   border: 1px solid #dcdcdc;
-  background-color: #f9fafb;
+  /* background-color: #f9fafb; */
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   border-radius: 6px;
   font-size: 1.4rem;
   max-height: clamp(0rem, calc(100dvh - 16.2rem), 64.8rem);
   height: 100dvh;
+
   position: sticky;
   top: 16.2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -83,7 +85,8 @@ const Footer = styled.footer`
   display: flex;
   flex-direction: column;
   border-top: 1px solid #dcdcdc;
-  background-color: #f9fafb;
+  /* background-color: #f9fafb; */
+  background-color: #fff;
   align-items: center;
   justify-content: center;
   position: sticky;
@@ -95,10 +98,6 @@ const Footer = styled.footer`
   gap: 1.2rem;
   font-size: 1.6rem;
   font-weight: 600;
-`;
-
-const TotalPrice = styled.span`
-  color: #dc2626;
 `;
 
 const SubmitButton = styled.button`
@@ -188,7 +187,7 @@ const EmptyShoppingCart = styled.div`
 
 function ToggleSwitch({ setDineOption }) {
   return (
-    <StyledToggleSwitch>
+    <StyledToggleSwitch $disabled={true}>
       <input
         type="checkbox"
         hidden
@@ -315,7 +314,7 @@ function ShoppingCart({ inventoryData }) {
         </Row>
         <Row>
           <span>{`${totalQuantity}份餐點`}</span>
-          <TotalPrice>{`$ ${totalCost}`}</TotalPrice>
+          <span className="emphasize">{`$ ${totalCost}`}</span>
         </Row>
 
         <Row>

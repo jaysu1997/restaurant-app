@@ -6,10 +6,7 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 import DishCard from "../features/menu/DishCard";
 import { useSearchParams } from "react-router-dom";
 import ShoppingCart from "../features/menu/ShoppingCart";
-import { useEffect } from "react";
-import { useOrder } from "../context/OrderContext";
 import useGetInventory from "../features/inventory/useGetInventory";
-import StyledHotToast from "../ui/StyledHotToast";
 
 const Container = styled.div`
   max-width: 120rem;
@@ -27,39 +24,17 @@ const Menus = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
-  padding: 1.6rem;
   height: fit-content;
+  padding: 1.6rem 0;
 `;
 
 function Menu() {
   // 取得所有菜單數據
-  const { menusData, isPending } = useGetMenus();
-  const { dispatch } = useOrder();
+  const { menusData, menusDataFetching } = useGetMenus();
+  const { inventoryData } = useGetInventory(true);
   const [searchParams] = useSearchParams();
-  const { inventoryData, error, isError, isSuccess } = useGetInventory();
 
-  // 先下載庫存數據，並存入useReducer中
-  useEffect(
-    function () {
-      if (isSuccess) {
-        dispatch({
-          type: "inventory/remainingQuantity",
-          payload: inventoryData,
-        });
-      }
-
-      if (isError) {
-        StyledHotToast({
-          type: "error",
-          title: "庫存數據獲取失敗",
-          content: error,
-        });
-      }
-    },
-    [isSuccess, isError, dispatch, inventoryData, error]
-  );
-
-  if (isPending)
+  if (menusDataFetching)
     return (
       <>
         <Heading>點餐系統</Heading>
