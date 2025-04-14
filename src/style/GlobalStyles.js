@@ -1,6 +1,7 @@
-import { createGlobalStyle } from "styled-components";
+// import { createGlobalStyle } from "styled-components";
+import * as styled from "styled-components";
 
-const GlobalStyles = createGlobalStyle`
+export const GlobalStyles = styled.createGlobalStyle`
   * {
     box-sizing: border-box;
     padding: 0;
@@ -9,17 +10,17 @@ const GlobalStyles = createGlobalStyle`
 
   *:disabled {
     cursor: not-allowed;
-  } 
-  
+  }
+
   html {
-    font-size: 62.5%;    
+    font-size: 62.5%;
   }
 
   body {
     font-family: "Noto Sans TC", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
-    font-size: 1.6rem; 
+    font-size: 1.6rem;
     color: #1f2937;
     background-color: #f9fafb;
     min-height: 100dvh;
@@ -36,7 +37,7 @@ const GlobalStyles = createGlobalStyle`
     transition: all 0.3s;
 
     &:disabled {
-    opacity: 0.5;
+      opacity: 0.5;
     }
   }
 
@@ -45,6 +46,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   textarea {
+    width: 100%;
     resize: none;
     height: 6.4rem;
     border: 1px solid #cacaca;
@@ -63,25 +65,23 @@ const GlobalStyles = createGlobalStyle`
   /* 適用於 Chrome、Edge、Opera */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none; 
-    margin: 0; 
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   /* 適用於 Firefox */
   input[type="number"] {
-    -moz-appearance: textfield; 
+    -moz-appearance: textfield;
   }
 
   /* 將input auto-fill時預設的淡藍色背景改成全白 */
   input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px white inset !important;
-  box-shadow: 0 0 0 1000px white inset !important;
-  -webkit-text-fill-color: inherit !important;  
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: inherit !important;
   }
 
-.emphasize{
+  .emphasize {
     color: #dc2626;
   }
 `;
-
-export default GlobalStyles;

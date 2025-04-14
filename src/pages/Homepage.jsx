@@ -1,6 +1,4 @@
 function Homepage() {
-  const m = new Map();
-
   return <div></div>;
 }
 

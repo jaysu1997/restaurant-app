@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import GlobalStyles from "./style/GlobalStyles";
+import { GlobalStyles } from "./style/GlobalStyles";
 import AppLayout from "./ui/AppLayout";
 import Homepage from "./pages/Homepage";
 import Menu from "./pages/Menu";
@@ -16,8 +16,8 @@ import { OrderProvider } from "./context/OrderContext";
 import Order from "./pages/Order";
 import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
+// 這個之後需要刪除
 import Test from "./pages/Test";
-import OrderEdit from "./pages/OrderEdit";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,7 +70,7 @@ export default function App() {
               <Route path="/menu" element={<Menu />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/order/:orderId" element={<Order />} />
-              <Route path="/order-edit/:orderId" element={<OrderEdit />} />
+              <Route path="/order-edit/:orderId" element={<Order />} />
               <Route path="/menu-manage" element={<MenuManage />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/analytics" element={<Analytics />} />

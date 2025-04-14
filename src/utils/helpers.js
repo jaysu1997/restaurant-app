@@ -22,7 +22,7 @@ export const formatOrderNumber = function (orderNumber) {
   return `# ${String(orderNumber).padStart(3, "0")}`;
 };
 
-// 該餐點的所有自訂細項選擇
+// 訂單單一餐點的所有自訂細項選擇彙整
 export const summarizeMealChoices = function (order) {
   return order.customizeDetail
     .reduce((acc, cur) => {
@@ -44,7 +44,7 @@ export const calcOrderTotalPrice = function (orderData) {
   }, 0);
 };
 
-// 計算訂單總消費金額
+// 計算訂單總份數
 export const calcOrderTotalItems = function (orderData) {
   return orderData.reduce((total, item) => {
     total += item.servings;
@@ -97,7 +97,7 @@ export const generateTableNumbers = function (count) {
   }));
 };
 
-// 滾動到頁面頂部功能
+// 滾動到頁面頂部功能(切換分頁時使用)
 export const scrollToTop = function () {
   const top = document.querySelector("#top");
   top.scrollIntoView({

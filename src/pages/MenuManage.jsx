@@ -13,6 +13,7 @@ import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import SearchField from "../ui/SearchField.jsx";
 import Filter from "../ui/Filter.jsx";
+import useGetInventory from "../features/inventory/useGetInventory.js";
 
 const ToolBar = styled.div`
   display: flex;

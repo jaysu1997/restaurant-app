@@ -2,10 +2,11 @@ import { useFieldArray } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
 import { IoCloseSharp } from "react-icons/io5";
 import Button from "../../ui/Button";
-import InputField from "../../ui/FormInputField";
 import FormRow from "../../ui/FormRow";
 import FormTypography from "../../ui/FormTypography";
 import ControlledSwitch from "../../ui/ControlledSwitch";
+import FormFieldset from "../../ui/FormFieldset";
+import ControlledInput from "../../ui/ControlledInput";
 
 function FieldArray({
   register,
@@ -32,8 +33,8 @@ function FieldArray({
         此欄位的細項和選項都可根據需求進行新增/刪除，但不能留下沒輸入任何內容的空白輸入框。
       </FormTypography>
 
-      {fields.map((fields, index) => (
-        <FormRow $formRowStyle="sub" key={fields.id}>
+      {fields.map((field, index) => (
+        <FormRow $formRowStyle="sub" key={field.id}>
           <FormRow $formRowStyle="subHeader">
             <FormTypography $titleStyle="subTitle">
               自訂細項 {index + 1}.
@@ -48,17 +49,21 @@ function FieldArray({
             </Button>
           </FormRow>
 
-          <InputField
-            legendValue="細項標題"
-            type="text"
-            placeholder="請輸入細項標題(例如:冰/熱)"
-            {...register(`customize.${index}.title`, {
-              required: "細項標題不能空白",
-            })}
-          />
+          <FormFieldset legendValue="細項標題">
+            <ControlledInput
+              type="text"
+              placeholder="請輸入細項標題(例如:加料)"
+              control={control}
+              name={`customize.${index}.title`}
+              rules={{
+                required: "細項標題不能空白",
+              }}
+            />
+          </FormFieldset>
 
           <ControlledSwitch control={control} fieldIndex={index} />
 
+          {/* 設定細項的id */}
           <input
             hidden
             {...register(`customize.${index}.id`, { value: index })}
@@ -92,7 +97,7 @@ function FieldArray({
                 },
                 extraPrice: "",
                 optionLabel: "",
-                quantity: 0,
+                quantity: "",
               },
             ],
           })

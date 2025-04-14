@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useOrder } from "../context/OrderContext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StyledHotToast from "./StyledHotToast";
 
 const Serving = styled.div`
@@ -54,12 +54,19 @@ const CountButton = styled.button`
   }
 `;
 
-function ServingsControl({ servings, setServings, size = "sm", order }) {
+function ServingsControl({
+  servings,
+  setServings,
+  size = "sm",
+  order = false,
+}) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { state, dispatch, compareInventory } = useOrder();
   const prevServingsRef = useRef(servings);
 
-  function handleServingsChange(servings, order = false) {
+  // 處理份數調整的函式
+  function handleServingsChange(servings, order) {
+    // 如果是在OrderForm上使用，不需要再次檢查庫存剩餘食材
     if (!order) {
       setServings(() => {
         prevServingsRef.current = servings;
@@ -69,11 +76,12 @@ function ServingsControl({ servings, setServings, size = "sm", order }) {
       return;
     }
 
+    // 以下是如果餐點已經新增到訂單中會觸發的功能(需要再次檢查庫存食材是否充足)
     let result = [];
 
     if (servings - prevServingsRef.current > 0) {
       result = compareInventory({
-        ingredientUsageMap: order.ingredientUsageMap,
+        ingredientsUsage: order.ingredientsUsage,
         servings: servings - prevServingsRef.current,
         inventoryMap: new Map(state.inventoryMap),
       });
@@ -87,10 +95,10 @@ function ServingsControl({ servings, setServings, size = "sm", order }) {
       });
 
       dispatch({
-        type: "serving/update",
+        type: "order/updateDishServings",
         payload: {
           servings,
-          itemId: order.itemId,
+          uniqueId: order.uniqueId,
         },
       });
 

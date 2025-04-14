@@ -7,9 +7,6 @@ import {
 import { FiMinus } from "react-icons/fi";
 import { GoTrash, GoPencil } from "react-icons/go";
 import Button from "../../ui/Button";
-import { useState } from "react";
-import Modal from "../../ui/Modal";
-import OrderForm from "../menu/OrderForm";
 import styled from "styled-components";
 
 const OrderDishesList = styled.ul`
@@ -54,7 +51,7 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-function OrderDishes({ data, isEdit }) {
+function OrderDishes({ dishData, isEdit, setOpenModal }) {
   return (
     <OrderDishesList>
       <OrderDishRow $isEdit={isEdit}>
@@ -66,58 +63,48 @@ function OrderDishes({ data, isEdit }) {
         <span>小計</span>
       </OrderDishRow>
 
-      {data.order.map((dish) => (
-        <OrderDishItem dishData={dish} isEdit={isEdit} key={dish.uniqueId} />
+      {dishData.map((dish) => (
+        <OrderDishItem
+          dishData={dish}
+          isEdit={isEdit}
+          key={dish.uniqueId}
+          setIsOpenModal={setOpenModal}
+        />
       ))}
 
       <OrderDishRow>
         <span>總計：</span>
-        <span>共{calcOrderTotalItems(data.order)}份</span>
+        <span>共{calcOrderTotalItems(dishData)}份</span>
         <span>/</span>
-        <span className="emphasize">$ {calcOrderTotalPrice(data.order)}</span>
+        <span className="emphasize">$ {calcOrderTotalPrice(dishData)}</span>
       </OrderDishRow>
     </OrderDishesList>
   );
 }
 
-function OrderDishItem({ dishData, isEdit }) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
+function OrderDishItem({ dishData, isEdit, setIsOpenModal }) {
   return (
-    <>
-      <OrderDishRow $isEdit={isEdit}>
-        {isEdit && (
-          <ButtonGroup>
-            <Button $buttonStyle="remove" onClick={() => setIsOpenModal(true)}>
-              <GoPencil />
-            </Button>
-            <Button $buttonStyle="remove">
-              <GoTrash />
-            </Button>
-          </ButtonGroup>
-        )}
-
-        <span>{dishData.name}</span>
-        <span>{summarizeMealChoices(dishData) || <FiMinus />}</span>
-        <span>{dishData.note || <FiMinus />}</span>
-        <span>{dishData.servings}份</span>
-        <span>$ {dishData.itemTotalPrice * dishData.servings}</span>
-      </OrderDishRow>
-
-      {isOpenModal && (
-        <Modal
-          onCloseModal={() => setIsOpenModal(false)}
-          modalHeader={dishData.name}
-          maxWidth={36}
-        >
-          <OrderForm
-            dishData={dishData}
-            onCloseModal={() => setIsOpenModal(false)}
-            edit={true}
-          />
-        </Modal>
+    <OrderDishRow $isEdit={isEdit}>
+      {isEdit && (
+        <ButtonGroup>
+          <Button
+            $buttonStyle="remove"
+            onClick={() => setIsOpenModal(dishData)}
+          >
+            <GoPencil />
+          </Button>
+          <Button $buttonStyle="remove">
+            <GoTrash />
+          </Button>
+        </ButtonGroup>
       )}
-    </>
+
+      <span>{dishData.name}</span>
+      <span>{summarizeMealChoices(dishData) || <FiMinus />}</span>
+      <span>{dishData.note || <FiMinus />}</span>
+      <span>{dishData.servings}份</span>
+      <span>$ {dishData.itemTotalPrice * dishData.servings}</span>
+    </OrderDishRow>
   );
 }
 

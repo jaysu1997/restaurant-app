@@ -7,6 +7,9 @@ import DishCard from "../features/menu/DishCard";
 import { useSearchParams } from "react-router-dom";
 import ShoppingCart from "../features/menu/ShoppingCart";
 import useGetInventory from "../features/inventory/useGetInventory";
+import { useState } from "react";
+import Modal from "../ui/Modal";
+import OrderForm from "../features/menu/OrderForm";
 
 const Container = styled.div`
   max-width: 120rem;
@@ -31,10 +34,12 @@ const Menus = styled.ul`
 function Menu() {
   // 取得所有菜單數據
   const { menusData, menusDataFetching } = useGetMenus();
-  const { inventoryData } = useGetInventory(true);
+  const { inventoryData, inventoryDataFetching } = useGetInventory(true);
   const [searchParams] = useSearchParams();
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedDish, setSelectedDish] = useState(null);
 
-  if (menusDataFetching)
+  if (menusDataFetching || inventoryDataFetching)
     return (
       <>
         <Heading>點餐系統</Heading>
@@ -64,7 +69,12 @@ function Menu() {
             <SwiperBar categorys={categorys} />
             <Menus>
               {dishes.map((dish) => (
-                <DishCard dish={dish} key={dish.id} />
+                <DishCard
+                  dish={dish}
+                  setOpenModal={setOpenModal}
+                  setSelectedDish={setSelectedDish}
+                  key={dish.id}
+                />
               ))}
             </Menus>
           </>
@@ -72,6 +82,20 @@ function Menu() {
 
         <ShoppingCart inventoryData={inventoryData} />
       </Container>
+
+      {openModal && (
+        <Modal
+          modalHeader={selectedDish.name}
+          maxWidth={36}
+          onCloseModal={() => setOpenModal(false)}
+          overlayScrollbar={false}
+        >
+          <OrderForm
+            dishData={selectedDish}
+            onCloseModal={() => setOpenModal(false)}
+          />
+        </Modal>
+      )}
     </>
   );
 }

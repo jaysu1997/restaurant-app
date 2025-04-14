@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { generatePickupTimes, generateTableNumbers } from "../../utils/helpers";
+import Note from "../../ui/Note";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -11,11 +12,6 @@ const StyledOrderInfoField = styled.div`
 
   h5 {
     font-size: 1.4rem;
-  }
-
-  textarea {
-    width: 100%;
-    height: 6.4rem;
   }
 
   label {
@@ -34,30 +30,27 @@ const StyledPaidSection = styled.div`
 
 function OrderInfoField({ register, dineOption, control }) {
   // 用餐方式的select選項
-  const optionList =
-    dineOption === "內用"
-      ? generateTableNumbers(10)
-      : generatePickupTimes("10:00", "24:00");
+  const optionList = dineOption
+    ? generatePickupTimes("10:00", "24:00")
+    : generateTableNumbers(10);
 
   return (
     <StyledOrderInfoField>
       <h5>訂單備註：</h5>
-      <textarea
-        maxLength="50"
-        placeholder="備註內容最多50個字"
-        {...register("note")}
-      />
+      <Note register={register} />
 
-      <h5>{dineOption === "外帶" ? "取餐時間：" : "內用桌號："}</h5>
+      <h5>{dineOption ? "取餐時間：" : "內用桌號："}</h5>
       <ControlledSelect
         options={optionList}
         control={control}
-        name={dineOption === "內用" ? "tableNumber" : "pickupTime"}
+        name={dineOption ? "pickupTime" : "tableNumber"}
         creatable={false}
+        placeholder={dineOption ? "選擇取餐時間" : "選擇桌號"}
+        menuPlacement="top"
         rules={{
-          required: dineOption === "內用" ? "請選取內用桌號" : "請選取取餐時間",
+          required: dineOption ? "請選擇取餐時間" : "請選擇內用桌號",
         }}
-        key={dineOption}
+        key={dineOption ? "外帶" : "內用"}
       />
 
       <h5>付款狀態：</h5>

@@ -26,15 +26,16 @@ function useGetInventory(orderCreating = true) {
     function () {
       // 如果不是在訂單編輯狀態，不需要使用useReducer
       if (!orderCreating) return;
-      // 根據當前頁面決定是否需要重置useReducer
+
+      // 如果是在點餐頁面和訂單編輯頁面來回切換的話需要重置useReducer的state，避免數據出問題
+      dispatch({
+        type: "page/setCurrent",
+        payload: pathname,
+      });
+
       if (isSuccess) {
         dispatch({
-          type: "curPage",
-          payload: pathname,
-        });
-
-        dispatch({
-          type: "inventory/remainingQuantity",
+          type: "inventory/setAll",
           payload: inventoryData,
         });
       }

@@ -123,7 +123,7 @@ function OrderDropdownMenu({
           <MenuItem>
             <button
               onClick={() => {
-                console.log("編輯");
+                navigate(`/order-edit/${orderId}`);
                 setIsOpen(false);
               }}
             >

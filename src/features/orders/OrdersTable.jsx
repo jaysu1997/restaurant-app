@@ -102,7 +102,7 @@ function OrdersTable() {
   }
 
   if (ordersData.length === 0) {
-    return <span>沒有任何數據</span>;
+    return <span>沒有任何訂單數據</span>;
   }
 
   return (

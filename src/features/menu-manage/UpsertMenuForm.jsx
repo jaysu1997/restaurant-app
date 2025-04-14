@@ -2,7 +2,6 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import useUpsertMenu from "./useUpsertMenu";
 import { useSearchParams } from "react-router-dom";
-import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import FieldArray from "./FieldArray";
 import FormTable from "../../ui/FormTable";
@@ -10,12 +9,13 @@ import { IoCloseSharp } from "react-icons/io5";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
-import InputField from "../../ui/FormInputField";
 import FormTypography from "../../ui/FormTypography";
 import ControlledSelect from "../../ui/ControlledSelect";
 import StyledHotToast from "../../ui/StyledHotToast";
 import { useRef } from "react";
-import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
+import FormFieldset from "../../ui/FormFieldset";
+import ControlledInput from "../../ui/ControlledInput";
+import useGetInventory from "../inventory/useGetInventory";
 
 const formFieldData = [
   {
@@ -44,9 +44,9 @@ const formFieldData = [
 ];
 
 function UpsertMenuForm({ onCloseModal, menu }) {
+  const { inventoryData, inventoryDataFetching } = useGetInventory(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const { upsert, isUpserting } = useUpsertMenu();
-  const { inventoryData, isPending } = useGetInventory(false);
   const newIngredientRef = useRef(new Map());
 
   const { register, handleSubmit, control, setValue, getValues, reset } =
@@ -55,7 +55,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       reValidateMode: "onSubmit",
       disabled: isUpserting,
       defaultValues: menu || {
-        ingredients: [{ quantity: "" }],
+        ingredients: [{ ingredientName: "", quantity: "" }],
       },
     });
 
@@ -75,7 +75,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     console.log(data);
 
     // 新的食材數據(要順便新增到inventory中)
-    function processNewIngredients(newIngredientsMap) {
+    function createNewIngredients(newIngredientsMap) {
       const newIngredientSet = new Set();
       const newIngredientsArr = [];
 
@@ -97,7 +97,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       return newIngredientsArr;
     }
 
-    const newIngredients = processNewIngredients(newIngredientRef.current);
+    const newIngredients = createNewIngredients(newIngredientRef.current);
 
     const menuData = {
       data,
@@ -160,33 +160,38 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     });
   }
 
+  if (inventoryDataFetching) {
+    return <LoadingSpinner />;
+  }
+
   return (
-    <StyledOverlayScrollbars style={{ maxHeight: "85dvh" }}>
-      <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
-        <FormTypography $titleStyle="description">
-          表單說明：
-          <FormTypography $titleStyle="highlight">*</FormTypography>
-          標記的是必填欄位，必須完成填寫。
-        </FormTypography>
+    <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
+      <FormTypography $titleStyle="description">
+        表單說明：
+        <FormTypography $titleStyle="highlight">*</FormTypography>
+        標記的是必填欄位，必須完成填寫。
+      </FormTypography>
 
-        {formFieldData.map((data) => (
-          <FormRow $formRowStyle="oneColumn" key={data.inputName}>
-            <FormTypography $titleStyle="title">
-              {data.title}
-              <FormTypography $titleStyle="highlight">*</FormTypography>
-            </FormTypography>
+      {formFieldData.map((data) => (
+        <FormRow $formRowStyle="oneColumn" key={data.inputName}>
+          <FormTypography $titleStyle="title">
+            {data.title}
+            <FormTypography $titleStyle="highlight">*</FormTypography>
+          </FormTypography>
 
-            <InputField
-              legendValue=""
+          <FormFieldset legendValue="">
+            <ControlledInput
               type={data.inputType}
               id={data.inputName}
               placeholder={`請輸入餐點${data.title}`}
-              {...register(`${data.inputName}`, {
+              control={control}
+              name={data.inputName}
+              rules={{
                 required: `${data.title}欄位必須填寫`,
                 min: data.min
                   ? {
                       value: 0,
-                      message: `折扣不能為負數`,
+                      message: `折扣和定價不能為負數`,
                     }
                   : undefined,
                 validate: data.validateValue
@@ -194,106 +199,112 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                       Number(value) <= Number(getValues("price")) ||
                       "折扣不能超過定價"
                   : undefined,
-              })}
+              }}
             />
+          </FormFieldset>
+        </FormRow>
+      ))}
+
+      <FormRow $formRowStyle="twoColumn">
+        <FormTypography $titleStyle="title">
+          備料
+          <FormTypography $titleStyle="highlight">*</FormTypography>
+        </FormTypography>
+        <FormTypography $titleStyle="description">
+          &#8251;
+          此欄位用來輸入本餐點需要使用到的食材以及對應數量，以便管理庫存。
+        </FormTypography>
+
+        {fields.map((field, index) => (
+          <FormRow $formRowStyle="sub" key={field.id}>
+            <FormRow $formRowStyle="subHeader">
+              <FormTypography $titleStyle="subTitle">
+                備料 {index + 1}.
+              </FormTypography>
+
+              {fields.length - 1 !== 0 && (
+                <Button
+                  $buttonStyle="remove"
+                  type="button"
+                  onClick={() => remove(index)}
+                >
+                  <IoCloseSharp />
+                </Button>
+              )}
+            </FormRow>
+
+            <FormFieldset legendValue="食材名稱">
+              <ControlledSelect
+                name={`ingredients.${index}.ingredientName`}
+                control={control}
+                rules={{ required: "食材名稱不能空白" }}
+                menuPlacement="auto"
+                options={inventoryData}
+                handleCreateNewItems={handleCreateNewItems}
+                creatable={true}
+                placeholder="可新增/選擇食材"
+                disabled={isUpserting}
+              />
+            </FormFieldset>
+
+            <FormFieldset legendValue="使用數量">
+              <ControlledInput
+                type="number"
+                placeholder="請輸入食材使用數量"
+                control={control}
+                name={`ingredients.${index}.quantity`}
+                rules={{
+                  required: "使用數量不能空白",
+                  min: {
+                    value: 1,
+                    message: `使用數量不能少於1`,
+                  },
+                  valueAsNumber: true,
+                }}
+              />
+            </FormFieldset>
           </FormRow>
         ))}
 
-        <FormRow $formRowStyle="twoColumn">
-          <FormTypography $titleStyle="title">
-            備料
-            <FormTypography $titleStyle="highlight">*</FormTypography>
-          </FormTypography>
-          <FormTypography $titleStyle="description">
-            &#8251;
-            此欄位用來輸入本餐點需要使用到的食材以及對應數量，以便管理庫存。
-          </FormTypography>
+        <Button
+          $buttonStyle="add"
+          type="button"
+          onClick={() =>
+            append({
+              ingredientName: "",
+              quantity: "",
+            })
+          }
+        >
+          新增備料
+        </Button>
+      </FormRow>
 
-          {fields.map((field, index) => {
-            if (isPending) return <LoadingSpinner key={field.id} />;
+      <FormRow $formRowStyle="twoColumn">
+        <FieldArray
+          control={control}
+          register={register}
+          inventoryData={inventoryData}
+          handleCreateNewItems={handleCreateNewItems}
+          disabled={isUpserting}
+          getValues={getValues}
+        />
+      </FormRow>
 
-            return (
-              <FormRow $formRowStyle="sub" key={field.id}>
-                <FormRow $formRowStyle="subHeader">
-                  <FormTypography $titleStyle="subTitle">
-                    備料 {index + 1}.
-                  </FormTypography>
-
-                  {fields.length - 1 !== 0 && (
-                    <Button
-                      $buttonStyle="remove"
-                      type="button"
-                      onClick={() => remove(index)}
-                    >
-                      <IoCloseSharp />
-                    </Button>
-                  )}
-                </FormRow>
-
-                <InputField legendValue="食材名稱">
-                  <ControlledSelect
-                    name={`ingredients.${index}.ingredientName`}
-                    control={control}
-                    rules={{ required: "食材名稱不能空白" }}
-                    options={inventoryData}
-                    handleCreateNewItems={handleCreateNewItems}
-                    creatable={true}
-                    disabled={isUpserting}
-                  />
-                </InputField>
-
-                <InputField
-                  legendValue="使用數量"
-                  type="number"
-                  placeholder="請輸入食材使用數量"
-                  {...register(`ingredients.${index}.quantity`, {
-                    required: "使用數量不能空白",
-                    min: {
-                      value: 1,
-                      message: `使用數量不能少於1`,
-                    },
-                    valueAsNumber: true,
-                  })}
-                />
-              </FormRow>
-            );
-          })}
-
-          <Button
-            $buttonStyle="add"
-            type="button"
-            onClick={() => append({ ingredientName: "", quantity: "" })}
-          >
-            新增備料
-          </Button>
-        </FormRow>
-
-        <FormRow $formRowStyle="twoColumn">
-          <FieldArray
-            control={control}
-            register={register}
-            inventoryData={inventoryData}
-            handleCreateNewItems={handleCreateNewItems}
-            disabled={isUpserting}
-            getValues={getValues}
-          />
-        </FormRow>
-
-        <FormRow $formRowStyle="footer">
-          <Button
-            $buttonStyle="cancel"
-            type="button"
-            disabled={isUpserting}
-            onClick={onCloseModal}
-          >
-            取消
-          </Button>
-          <Button $buttonStyle="submit" type="submit" disabled={isUpserting}>
-            {isUpserting ? <LoadingDotMini /> : "儲存"}
-          </Button>
-        </FormRow>
-      </FormTable>
-    </StyledOverlayScrollbars>
+      <FormRow $formRowStyle="footer">
+        <Button
+          $buttonStyle="cancel"
+          type="button"
+          disabled={isUpserting}
+          onClick={onCloseModal}
+        >
+          取消
+        </Button>
+        <Button $buttonStyle="submit" type="submit" disabled={isUpserting}>
+          {isUpserting ? <LoadingDotMini /> : "儲存"}
+        </Button>
+      </FormRow>
+    </FormTable>
   );
 }
 

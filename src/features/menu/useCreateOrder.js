@@ -22,7 +22,7 @@ function useCreateOrder(reset) {
         title: `取餐單號#${orderNumber}建立成功`,
       });
 
-      dispatch({ type: "order/clear" });
+      dispatch({ type: "order/reset" });
       reset();
 
       queryClient.invalidateQueries(["orders", "inventory"]);

@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { scrollToTop } from "../../utils/helpers";
 
 const Footer = styled.footer`
   display: flex;
@@ -32,7 +33,10 @@ function OrderOperation({ isEdit }) {
         $bgColor="#059669"
         $fontColor="#fff"
         $hoverBgColor="#047857"
-        onClick={() => navigate(`/order-edit/${orderId}`)}
+        onClick={() => {
+          navigate(`/order-edit/${orderId}`);
+          scrollToTop();
+        }}
       >
         編輯
       </Button>

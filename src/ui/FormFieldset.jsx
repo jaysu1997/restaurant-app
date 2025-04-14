@@ -1,17 +1,5 @@
-// 表單的輸入框ui元件
-
-import { forwardRef } from "react";
+// 表單的fieldset ui元件
 import styled from "styled-components";
-
-const Input = styled.input`
-  width: 100%;
-  background-color: #fff;
-  font-size: 1.4rem;
-  font-weight: 400;
-  padding: 0 0.8rem;
-  height: 3.6rem;
-  border-radius: 6px;
-`;
 
 const Fieldset = styled.fieldset`
   width: 100%;
@@ -39,18 +27,13 @@ const Legend = styled.legend`
   color: rgba(0, 0, 0, 0.6);
 `;
 
-// 需要藉由forwardRef解決error訊息
-export const InputField = forwardRef(function InputField(
-  { legendValue, children, ...restProps },
-  ref
-) {
-  // 有children就展示children，沒有則顯示Input
+function FormFieldset({ legendValue = "", children }) {
   return (
     <Fieldset>
       {legendValue && <Legend>{legendValue}</Legend>}
-      {children ? children : <Input {...restProps} ref={ref} />}
+      {children}
     </Fieldset>
   );
-});
+}
 
-export default InputField;
+export default FormFieldset;

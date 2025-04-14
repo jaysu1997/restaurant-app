@@ -2,12 +2,14 @@ import { useForm } from "react-hook-form";
 import FormTable from "../../ui/FormTable";
 import FormTypography from "../../ui/FormTypography";
 import FormRow from "../../ui/FormRow";
-import InputField from "../../ui/FormInputField";
+// import InputField from "../../ui/FormInputField";
 import Button from "../../ui/Button";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import useUpsertInventory from "./useUpsertInventory";
 import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui/StyledHotToast";
+import FormFieldset from "../../ui/FormFieldset";
+import ControlledInput from "../../ui/ControlledInput";
 
 const formFieldData = [
   {
@@ -23,7 +25,7 @@ const formFieldData = [
 ];
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
-  const { register, handleSubmit, getValues, reset } = useForm({
+  const { register, handleSubmit, getValues, reset, control } = useForm({
     defaultValues: inventory,
   });
   const { upsert, isUpserting } = useUpsertInventory();
@@ -94,19 +96,22 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
             <FormTypography $titleStyle="highlight">*</FormTypography>
           </FormTypography>
 
-          <InputField
-            legendValue=""
-            type={data.inputType}
-            id={data.inputName}
-            placeholder={`請輸入餐點${data.title}`}
-            {...register(`${data.inputName}`, {
-              required: `${data.title}欄位必須填寫`,
-              min: {
-                value: 0,
-                message: `${data.title}數量必須大於0`,
-              },
-            })}
-          />
+          <FormFieldset legendValue="">
+            <ControlledInput
+              type={data.inputType}
+              id={data.inputName}
+              placeholder={`請輸入餐點${data.title}`}
+              control={control}
+              name={data.inputName}
+              rules={{
+                required: `${data.title}欄位必須填寫`,
+                min: {
+                  value: 0,
+                  message: `${data.title}數量必須不得為負數`,
+                },
+              }}
+            />
+          </FormFieldset>
         </FormRow>
       ))}
 

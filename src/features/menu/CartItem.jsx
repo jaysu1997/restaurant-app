@@ -1,21 +1,12 @@
 import styled from "styled-components";
 import Button from "../../ui/Button";
 import ServingsControl from "../../ui/ServingsControl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import Modal from "../../ui/Modal";
 import OrderForm from "./OrderForm";
 import { summarizeMealChoices } from "../../utils/helpers";
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 1.8rem;
-  line-height: 1.8rem;
-`;
 
 const OrderCardWrapper = styled.li`
   list-style: none;
@@ -27,8 +18,18 @@ const OrderCard = styled.div`
   padding: 1.2rem 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 1rem;
   font-size: 1.4rem;
+  min-height: 10rem;
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  line-height: 1.8rem;
 `;
 
 const OrderName = styled.h4`
@@ -60,11 +61,22 @@ const OrderPrice = styled.span`
 `;
 
 function CartItem({ order }) {
-  const [servings, setServings] = useState(order.servings || 1);
+  const [servings, setServings] = useState(order.servings);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { dispatch } = useOrder();
   const customizeChoices = summarizeMealChoices(order);
   const dishTotalPrice = order.itemTotalPrice * order.servings;
+
+  // 確保在使用OrderForm更新份數時，此處數據也能同步更新(否則會因為數據不一致而出錯)
+  // useEffect(
+  //   function () {
+  //     if (order.servings !== servings) {
+  //       setServings(order.servings);
+  //       console.log("強制一致");
+  //     }
+  //   },
+  //   [order.servings, servings]
+  // );
 
   return (
     <>
@@ -86,8 +98,8 @@ function CartItem({ order }) {
                 $buttonStyle="remove"
                 onClick={() => {
                   dispatch({
-                    type: "order/remove",
-                    payload: order.itemId,
+                    type: "order/removeDish",
+                    payload: order.uniqueId,
                   });
                 }}
               >
@@ -107,8 +119,6 @@ function CartItem({ order }) {
               <Note>{`"${order.note}"`}</Note>
             </Row>
           )}
-
-          {customizeChoices.length === 0 && !order.note && <Row />}
 
           <Row>
             <OrderPrice>$ {dishTotalPrice}</OrderPrice>

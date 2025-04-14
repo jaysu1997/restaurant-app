@@ -1,4 +1,4 @@
-// 點餐功能
+// 點餐功能表單
 import { useForm } from "react-hook-form";
 import { TiShoppingCart } from "react-icons/ti";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import { useOrder } from "../../context/OrderContext";
 import StyledHotToast from "../../ui/StyledHotToast";
 import CustomizeArea from "./CustomizeArea";
 import ServingsControl from "../../ui/ServingsControl";
+import Note from "../../ui/Note";
 
 const Form = styled.form`
   display: flex;
@@ -39,6 +40,8 @@ const Title = styled.h3`
 
 const Footer = styled.footer`
   display: flex;
+  flex-shrink: 0;
+  height: 6.5rem;
   width: 100%;
   justify-content: space-between;
   align-items: center;
@@ -73,28 +76,36 @@ const AddToCartButton = styled.button`
 `;
 
 function OrderForm({ dishData, onCloseModal, edit = false }) {
+  const {
+    state,
+    dispatch,
+    calcingredientsUsage,
+    compareInventory,
+    generateDishItemId,
+  } = useOrder();
+
   // 當前餐點數據
-  const { id, price, discount, ingredients, customize } = dishData;
+  const {
+    price,
+    discount,
+    ingredients,
+    customize,
+    uniqueId = generateDishItemId(state.dishIdList),
+  } = dishData;
 
   const [servings, setServings] = useState(dishData.servings || 1);
-  const { state, dispatch, calcIngredientUsage, compareInventory } = useOrder();
 
   // 必填細項與選填細項
   const { requiredField, optionalField, totalField } = customize.reduce(
     (acc, cus) => {
+      acc.totalField.push({
+        customizeId: cus.id,
+        customizeTitle: cus.title,
+        detail: [],
+      });
       if (cus.required === "必填") {
-        acc.totalField.push({
-          customizeId: `required${acc.requiredField.length + 1}`,
-          customizeTitle: cus.title,
-          detail: [],
-        });
         acc.requiredField.push(cus);
       } else {
-        acc.totalField.push({
-          customizeId: `optional${acc.optionalField.length + 1}`,
-          customizeTitle: cus.title,
-          detail: [],
-        });
         acc.optionalField.push(cus);
       }
       return acc;
@@ -107,13 +118,13 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
   );
 
   const customizeOptionRef = useRef(
-    edit ? dishData.customizeDetail : [...totalField]
+    edit ? dishData.customizeDetail : totalField
   );
 
   // 初始化useReducer的tempArray(自訂細項的詳細數據)
   useEffect(() => {
     dispatch({
-      type: "init/tempArray/coustomize",
+      type: "tempArray/initCustomizeOptions",
       payload: customizeOptionRef.current,
     });
   }, [dispatch]);
@@ -129,16 +140,16 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
 
   function onSubmit(data) {
     // 先計算食材總消耗與庫存剩餘比對
-    const ingredientUsageMap = calcIngredientUsage(ingredients, state);
+    const ingredientsUsage = calcingredientsUsage(ingredients, state);
 
     // 餐點原本的食材消耗(在編輯餐點狀態會需要用到)
     const previousIngredientsUsage = edit && {
-      usageMap: dishData.ingredientUsageMap,
+      usageMap: dishData.ingredientsUsage,
       servings: dishData.servings,
     };
 
     const result = compareInventory({
-      ingredientUsageMap,
+      ingredientsUsage,
       servings,
       inventoryMap: new Map(state.inventoryMap),
       previousIngredientsUsage,
@@ -158,19 +169,22 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
       const orderData = {
         ...data,
         itemTotalPrice,
-        ingredientUsageMap,
+        ingredientsUsage,
         servings,
-        uniqueId: `${id}-${state.dishId}`,
+        uniqueId,
       };
 
       dispatch({
-        type: edit ? "order/update" : "order/insert",
+        type: edit ? "order/updateDish" : "order/addDish",
         payload: edit ? { ...orderData, previousIngredientsUsage } : orderData,
       });
 
       onCloseModal();
 
-      StyledHotToast({ type: "success", title: "點餐成功" });
+      StyledHotToast({
+        type: "success",
+        title: edit ? "更新成功" : "點餐成功",
+      });
     } else {
       // 庫存不足
       StyledHotToast({
@@ -200,7 +214,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <StyledOverlayScrollbars style={{ maxHeight: "100%" }} autoHide="scroll">
+      <StyledOverlayScrollbars style={{ maxHeight: "100%" }}>
         <Container>
           <Price>$ {price - discount}</Price>
 
@@ -228,11 +242,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
             ))}
 
           <Title>餐點備註</Title>
-          <textarea
-            maxLength="50"
-            placeholder="備註內容最多50個字"
-            {...register("note")}
-          />
+          <Note register={register} />
         </Container>
       </StyledOverlayScrollbars>
 
@@ -240,6 +250,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
         <ServingsControl
           servings={servings}
           setServings={setServings}
+          order={false}
           size="md"
         />
 

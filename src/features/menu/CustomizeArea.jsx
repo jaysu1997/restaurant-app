@@ -4,6 +4,7 @@ import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { useOrder } from "../../context/OrderContext";
 import { useState } from "react";
 
+// 不同選項要求和狀態的樣式設定
 const colorStyle = {
   background: {
     optional: "#fafaf9",
@@ -105,6 +106,11 @@ const StyledOption = styled.label`
     transition: opacity 0.2s, transform 0.5s;
   }
 
+  &:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
   input:checked ~ svg[role="checked"] {
     opacity: 1;
     transform: scale(1);
@@ -130,11 +136,6 @@ function CustomizeArea({
 }) {
   const [isAnswered, setIsAnswered] = useState(edit ? "isAnswered" : type);
 
-  const inputType =
-    customizeData.choice === "單選" && type === "required"
-      ? "radio"
-      : "checkbox";
-
   return (
     <Customize
       type={type}
@@ -152,7 +153,7 @@ function CustomizeArea({
         </RequiredLabel>
       </Heading>
       <ChoiceLabel>
-        {inputType === "checkbox" ? "可以多選" : "只能單選"}
+        {customizeData.choice === "單選" ? "只能單選" : "可以多選"}
       </ChoiceLabel>
       <OptionsArea>
         {customizeData.options.map((optionData, optionIndex) => (
@@ -160,8 +161,8 @@ function CustomizeArea({
             isAnswered={isAnswered}
             setIsAnswered={setIsAnswered}
             type={type}
+            mode={customizeData.choice}
             optionData={optionData}
-            inputType={inputType}
             customizeIndex={customizeIndex}
             register={register}
             key={optionIndex}
@@ -177,59 +178,81 @@ export default CustomizeArea;
 // 單一選項ui
 function Option({
   type,
+  mode,
   optionData,
-  inputType,
   customizeIndex,
   register,
   isAnswered,
   setIsAnswered,
 }) {
-  const { state, dispatch } = useOrder();
+  const {
+    state: { tempArray },
+    dispatch,
+  } = useOrder();
 
   // 數據內容與格式
   const payload = {
-    customizeId: `${type}${customizeIndex + 1}`,
+    customizeId: customizeIndex,
     optionLabel: optionData.optionLabel,
     extraPrice: optionData.extraPrice,
     ingredientName: optionData.ingredientName.value,
     quantity: optionData.quantity,
   };
 
+  // 當前是否被選中的選項
+  const checked = tempArray[customizeIndex]?.detail.some(
+    (option) => option.optionLabel === optionData.optionLabel
+  );
+
   function handleClick(e) {
-    if (inputType === "radio") {
+    // 單選新增
+    if (mode === "單選" && e.target.checked) {
       dispatch({
-        type: "single/choice/insert",
+        type: "tempArray/setSingleChoice",
         payload,
       });
-
-      setIsAnswered("isAnswered");
+      // 必填
+      type === "required" && setIsAnswered("isAnswered");
     }
 
-    if (inputType === "checkbox" && e.target.checked) {
+    // 單選刪除
+    if (mode === "單選" && !e.target.checked) {
       dispatch({
-        type: "multiple/choice/insert",
+        type: "tempArray/clearSingleChoice",
+        payload,
+      });
+      // 必填
+      type === "required" && setIsAnswered("required");
+    }
+
+    // 多選新增
+    if (mode === "多選" && e.target.checked) {
+      dispatch({
+        type: "tempArray/addMultipleChoice",
         payload,
       });
 
       type === "required" && setIsAnswered("isAnswered");
     }
 
-    if (inputType === "checkbox" && !e.target.checked) {
-      dispatch({
-        type: "multiple/choice/delete",
-        payload,
-      });
-
-      // 如果此多選項目是必填，則在沒有輸入任何值的情況下，整體樣式需回復成未填寫狀態
+    // 多選移除
+    if (mode === "多選" && !e.target.checked) {
+      // 如果此多選項目是必填，則在沒有選取任何值的情況下，整體樣式需恢復成未填寫狀態
       if (type === "required") {
-        const tempArrayIndex = state.tempArray.findIndex(
-          (customize) =>
-            customize.customizeId === `${type}${customizeIndex + 1}`
+        const tempArrayIndex = tempArray.findIndex(
+          (customize) => customize.customizeId === customizeIndex
         );
 
-        state.tempArray[tempArrayIndex].detail.length === 1 &&
+        // 當前選項長度為1，代表目前只有存在一個選項，被移除後就沒有選取任何值
+        tempArray[tempArrayIndex].detail.length === 1 &&
           setIsAnswered("required");
       }
+
+      // 移除選項
+      dispatch({
+        type: "tempArray/removeMultipleChoice",
+        payload,
+      });
     }
   }
 
@@ -240,26 +263,22 @@ function Option({
       htmlFor={optionData.optionLabel}
     >
       <input
-        type={inputType}
+        type="checkbox"
         id={optionData.optionLabel}
         value={optionData.optionLabel}
         onClick={handleClick}
+        disabled={
+          mode === "單選" &&
+          tempArray[customizeIndex]?.detail.length > 0 &&
+          !checked
+        }
         {...register(`customizeField.${type}.${customizeIndex}`, {
           required: type === "optional" ? false : true,
         })}
       />
 
-      {inputType === "checkbox" ? (
-        <ImCheckboxUnchecked role="unchecked" />
-      ) : (
-        <ImRadioUnchecked role="unchecked" />
-      )}
-
-      {inputType === "checkbox" ? (
-        <ImCheckboxChecked role="checked" />
-      ) : (
-        <ImRadioChecked role="checked" />
-      )}
+      <ImCheckboxUnchecked role="unchecked" />
+      <ImCheckboxChecked role="checked" />
 
       <span role="optionName">{optionData.optionLabel}</span>
       <span role="price">

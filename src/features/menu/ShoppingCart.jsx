@@ -2,20 +2,18 @@ import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
 import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
 import CartItem from "./CartItem";
-import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GrClear } from "react-icons/gr";
 import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import useCreateOrder from "./useCreateOrder";
-
 import LoadingDotMini from "../../ui/LoadingDotMini";
+import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
   grid-row: 1 / -1;
   border: 1px solid #dcdcdc;
-  /* background-color: #f9fafb; */
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -23,7 +21,6 @@ const StyledShoppingCart = styled.aside`
   font-size: 1.4rem;
   max-height: clamp(0rem, calc(100dvh - 16.2rem), 64.8rem);
   height: 100dvh;
-
   position: sticky;
   top: 16.2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -85,7 +82,6 @@ const Footer = styled.footer`
   display: flex;
   flex-direction: column;
   border-top: 1px solid #dcdcdc;
-  /* background-color: #f9fafb; */
   background-color: #fff;
   align-items: center;
   justify-content: center;
@@ -123,48 +119,6 @@ const SubmitButton = styled.button`
   }
 `;
 
-const StyledToggleSwitch = styled.label`
-  height: 3.2rem;
-  width: 9.6rem;
-  background-color: #d6d3d1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.3rem;
-  position: relative;
-  border-radius: 15px;
-  overflow: hidden;
-  cursor: pointer;
-
-  input:checked + span {
-    transform: translateX(4.5rem);
-  }
-`;
-
-const Option = styled.div`
-  height: 2.6rem;
-  width: 9rem;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 500;
-  font-size: 1.2rem;
-  line-height: 1.2;
-  z-index: 1;
-`;
-
-const Slider = styled.span`
-  position: absolute;
-  height: 2.6rem;
-  width: 4.5rem;
-  background-color: #fff;
-  border-radius: 15px;
-  top: 0.3rem;
-  left: 0.3rem;
-  transition: all 0.3s;
-`;
-
 const EmptyShoppingCart = styled.div`
   flex: 1;
   max-height: 40rem;
@@ -185,30 +139,9 @@ const EmptyShoppingCart = styled.div`
   }
 `;
 
-function ToggleSwitch({ setDineOption }) {
-  return (
-    <StyledToggleSwitch $disabled={true}>
-      <input
-        type="checkbox"
-        hidden
-        onChange={(e) =>
-          e.target.checked ? setDineOption("外帶") : setDineOption("內用")
-        }
-      />
-      <Slider />
-      <Option>
-        <span>內用</span>
-      </Option>
-      <Option>
-        <span>外帶</span>
-      </Option>
-    </StyledToggleSwitch>
-  );
-}
-
 function ShoppingCart({ inventoryData }) {
   const {
-    state: { order },
+    state: { order, curOrderPage },
     dispatch,
   } = useOrder();
 
@@ -216,13 +149,17 @@ function ShoppingCart({ inventoryData }) {
     register,
     handleSubmit,
     control,
-    formState: { isValid },
     reset,
+    watch,
+    formState: { isValid },
   } = useForm();
 
   const { createOrder, orderCreating } = useCreateOrder(reset);
 
-  const [dineOption, setDineOption] = useState("內用");
+  // 因為munu和edit-order共用相同useReducer，所以在切換頁面時可能出現ui渲染閃爍問題，因此增加判別條件解決閃爍(讓購物車ui只渲染點餐頁面的數據)
+  const isCreatingOrder = curOrderPage === "/menu";
+
+  const dineOption = watch("dineOption");
 
   const { totalQuantity, totalCost } = order.reduce(
     (acc, cur) => {
@@ -236,22 +173,27 @@ function ShoppingCart({ inventoryData }) {
 
   function onSubmit(data) {
     // 計算訂單的食材總共使用量
-    const totalIngredientUsageMap = order.reduce((acc, order) => {
-      order.ingredientUsageMap.forEach((quantity, name) => {
-        const curQuantity = acc.get(name) || 0;
-        acc.set(name, curQuantity + quantity * order.servings);
-      });
+    const totalIngredientsUsage = Object.fromEntries(
+      order.reduce((acc, order) => {
+        order.ingredientsUsage.forEach((quantity, name) => {
+          const curQuantity = acc.get(name) || 0;
+          acc.set(name, curQuantity + quantity * order.servings);
+        });
 
-      return acc;
-    }, new Map());
+        return acc;
+      }, new Map())
+    );
 
     const orderData = {
-      orderType: dineOption,
-      order,
-      totalIngredientUsage: Object.fromEntries(totalIngredientUsageMap),
+      orderType: dineOption ? "外帶" : "內用",
+      order: order.map((dish) => ({
+        ...dish,
+        ingredientsUsage: Object.fromEntries(dish.ingredientsUsage),
+      })),
+      totalIngredientsUsage,
       ...data,
-      tableNumber: dineOption === "內用" ? data.tableNumber.value : null,
-      pickupTime: dineOption === "外帶" ? data.pickupTime.value : null,
+      tableNumber: dineOption ? null : data.tableNumber.value,
+      pickupTime: dineOption ? data.pickupTime.value : null,
     };
 
     createOrder(orderData);
@@ -266,13 +208,13 @@ function ShoppingCart({ inventoryData }) {
       <Header>
         <h4>購物車</h4>
         <Row>
-          <ToggleSwitch setDineOption={setDineOption} />
-          {order.length !== 0 && (
+          <OrderTypeSwitch dineOption={dineOption} control={control} />
+          {order.length !== 0 && isCreatingOrder && (
             <ClearAllButton
               onClick={() => {
-                dispatch({ type: "order/clear" });
+                dispatch({ type: "order/reset" });
                 dispatch({
-                  type: "inventory/remainingQuantity",
+                  type: "inventory/setAll",
                   payload: inventoryData,
                 });
                 reset();
@@ -285,17 +227,12 @@ function ShoppingCart({ inventoryData }) {
         </Row>
       </Header>
 
-      {order.length === 0 ? (
-        <EmptyShoppingCart>
-          <FaShoppingCart />
-          <span>開始選擇美味的餐點吧！</span>
-        </EmptyShoppingCart>
-      ) : (
+      {order.length !== 0 && isCreatingOrder ? (
         <StyledOverlayScrollbars>
           <ShoppingList>
             <>
               {order.map((order) => (
-                <CartItem key={order.uniqueId} order={order} />
+                <CartItem order={order} key={order.uniqueId} />
               ))}
 
               <OrderInfoField
@@ -306,6 +243,11 @@ function ShoppingCart({ inventoryData }) {
             </>
           </ShoppingList>
         </StyledOverlayScrollbars>
+      ) : (
+        <EmptyShoppingCart>
+          <FaShoppingCart />
+          <span>開始選擇美味的餐點吧！</span>
+        </EmptyShoppingCart>
       )}
 
       <Footer>
@@ -313,8 +255,10 @@ function ShoppingCart({ inventoryData }) {
           <span>總計</span>
         </Row>
         <Row>
-          <span>{`${totalQuantity}份餐點`}</span>
-          <span className="emphasize">{`$ ${totalCost}`}</span>
+          <span>{`${isCreatingOrder ? totalQuantity : 0}份餐點`}</span>
+          <span className="emphasize">{`$ ${
+            isCreatingOrder ? totalCost : 0
+          }`}</span>
         </Row>
 
         <Row>

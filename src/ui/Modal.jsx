@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { IoIosClose } from "react-icons/io";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
-import { useEffect } from "react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -20,9 +19,10 @@ const Overlay = styled.div`
 
 const StyleModal = styled.div`
   position: fixed;
-  display: grid;
-  grid-template-columns: auto;
-  max-width: ${({ $maxWidth }) => `${$maxWidth}rem`};
+  display: flex;
+  flex-direction: column;
+  max-width: ${({ $maxWidth }) => `clamp(0px, ${$maxWidth}rem, 95dvw)`};
+  max-height: 90dvh;
   margin: 0 0.6rem;
   background-color: #fff;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
@@ -30,7 +30,7 @@ const StyleModal = styled.div`
   overflow: hidden;
   justify-content: center;
   align-items: center;
-  max-height: 95dvh;
+  width: 100%;
 `;
 
 const Header = styled.header`
@@ -38,6 +38,8 @@ const Header = styled.header`
   border-bottom: 1px solid #e5e7eb;
   padding: 0.8rem 1.6rem;
   justify-content: space-between;
+  height: 5.2rem;
+  flex-shrink: 0;
   align-items: center;
   z-index: 1;
   width: 100%;
@@ -95,6 +97,7 @@ function Modal({
   modalHeader = "表單",
   headerColor = "inherit",
   maxWidth = 56,
+  overlayScrollbar = true,
 }) {
   // 用來處理使用原生滾動軸時，打開Modal後出現body仍然可以滾動的問題
   // useEffect(() => {
@@ -114,12 +117,15 @@ function Modal({
       <StyleModal $maxWidth={maxWidth}>
         <Header>
           <Title $textColor={headerColor}>{modalHeader}</Title>
-
           <Button onClick={onCloseModal}>
             <IoIosClose />
           </Button>
         </Header>
-        {children}
+        {overlayScrollbar ? (
+          <StyledOverlayScrollbars>{children}</StyledOverlayScrollbars>
+        ) : (
+          children
+        )}
       </StyleModal>
     </Overlay>,
     document.body

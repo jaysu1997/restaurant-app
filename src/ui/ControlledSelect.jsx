@@ -1,5 +1,4 @@
 // 由React-Select提供的Select和CreatableSelect元件
-
 import { useController } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -13,8 +12,8 @@ const selectStyle = {
     ...baseStyles,
     border: "none",
     boxShadow: "none",
-    fontSize: "1.4rem",
-    minHeight: "2rem",
+    minHeight: "3.6rem",
+    height: "3.6rem",
     fontWeight: "400",
   }),
   menuList: (baseStyles) => ({
@@ -25,13 +24,15 @@ const selectStyle = {
 };
 
 function ControlledSelect({
-  creatable = true,
   name,
   control,
   rules,
   options,
   handleCreateNewItems,
   disabled,
+  creatable = true,
+  placeholder = null,
+  menuPlacement = "auto",
 }) {
   const { field } = useController({ name, control, rules });
 
@@ -45,8 +46,8 @@ function ControlledSelect({
           options={options}
           isClearable
           isDisabled={disabled}
-          menuPlacement="auto"
-          placeholder="可新增/選擇食材"
+          menuPlacement={menuPlacement}
+          placeholder={placeholder}
           onCreateOption={(optionValue) => {
             handleCreateNewItems(optionValue, field.name);
           }}
@@ -54,13 +55,13 @@ function ControlledSelect({
       ) : (
         <Select
           {...field}
-          maxMenuHeight={300}
-          options={options}
-          isSearchable={false}
-          menuPlacement="top"
+          maxMenuHeight={280}
           menuPortalTarget={document.body}
           menuShouldBlockScroll
-          placeholder={name === "tableNumber" ? "選擇桌號" : "選擇取餐時間"}
+          isSearchable={false}
+          options={options}
+          menuPlacement={menuPlacement}
+          placeholder={placeholder}
         />
       )}
     </>
