@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "../../ui/Button";
 import ServingsControl from "../../ui/ServingsControl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import Modal from "../../ui/Modal";
@@ -61,22 +61,11 @@ const OrderPrice = styled.span`
 `;
 
 function CartItem({ order }) {
-  const [servings, setServings] = useState(order.servings);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { dispatch } = useOrder();
   const customizeChoices = summarizeMealChoices(order);
-  const dishTotalPrice = order.itemTotalPrice * order.servings;
 
-  // 確保在使用OrderForm更新份數時，此處數據也能同步更新(否則會因為數據不一致而出錯)
-  // useEffect(
-  //   function () {
-  //     if (order.servings !== servings) {
-  //       setServings(order.servings);
-  //       console.log("強制一致");
-  //     }
-  //   },
-  //   [order.servings, servings]
-  // );
+  const dishTotalPrice = order.itemTotalPrice * order.servings;
 
   return (
     <>
@@ -122,12 +111,7 @@ function CartItem({ order }) {
 
           <Row>
             <OrderPrice>$ {dishTotalPrice}</OrderPrice>
-            <ServingsControl
-              servings={servings}
-              setServings={setServings}
-              type="sm"
-              order={order}
-            />
+            <ServingsControl type="sm" dishData={order} liveUpdate={true} />
           </Row>
         </OrderCard>
       </OrderCardWrapper>
@@ -141,7 +125,7 @@ function CartItem({ order }) {
           <OrderForm
             dishData={order}
             onCloseModal={() => setIsOpenModal(false)}
-            edit={true}
+            isEdit={true}
           />
         </Modal>
       )}

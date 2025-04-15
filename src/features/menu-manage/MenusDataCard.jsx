@@ -61,6 +61,7 @@ function MenusDataCard({ menu }) {
       {openModal === "delete" && (
         <Modal
           modalHeader="確認刪除"
+          maxWidth={36}
           headerColor="#991b1b"
           onCloseModal={() => setOpenModal(false)}
         >

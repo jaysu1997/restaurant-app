@@ -98,9 +98,8 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
 
           <FormFieldset legendValue="">
             <ControlledInput
-              type={data.inputType}
-              id={data.inputName}
               placeholder={`請輸入餐點${data.title}`}
+              type={data.inputType}
               control={control}
               name={data.inputName}
               rules={{

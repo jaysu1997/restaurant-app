@@ -92,6 +92,7 @@ function Menu() {
         >
           <OrderForm
             dishData={selectedDish}
+            isEdit={false}
             onCloseModal={() => setOpenModal(false)}
           />
         </Modal>

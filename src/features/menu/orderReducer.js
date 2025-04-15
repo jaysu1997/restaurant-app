@@ -140,6 +140,8 @@ export function reducer(state, action) {
       newState.order[dishIndex] = orderData;
       newState.order[dishIndex].customizeDetail = state.tempArray;
 
+      console.log("原先使用", previousIngredientsUsage.servings);
+
       // 先把原本消耗的所有食材加回庫存
       previousIngredientsUsage.usageMap.forEach((quantity, name) => {
         newState.inventoryMap.set(
@@ -148,6 +150,8 @@ export function reducer(state, action) {
             quantity * previousIngredientsUsage.servings
         );
       });
+
+      console.log("更新餐點", orderData.servings);
 
       // 將庫存食材 - 本次餐點所需食材
       orderData.ingredientsUsage.forEach((quantity, name) => {
@@ -220,6 +224,10 @@ export function reducer(state, action) {
       );
 
       return { ...state, order: orderData, previousTotalIngredientsUsage };
+    }
+    // 這個應該還需要修改
+    case "update/servings": {
+      return { ...state, tempServings: action.payload };
     }
 
     default:

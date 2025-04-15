@@ -214,7 +214,7 @@ function OrderSummaryEdit({ data, isEdit }) {
             <OrderForm
               dishData={openModal}
               onCloseModal={() => setOpenModal(false)}
-              edit={openModal.uniqueId ? true : false}
+              isEdit={openModal.uniqueId ? true : false}
             />
           )}
         </Modal>

@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useOrder } from "../context/OrderContext";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import StyledHotToast from "./StyledHotToast";
 
 const Serving = styled.div`
@@ -54,24 +54,17 @@ const CountButton = styled.button`
   }
 `;
 
-function ServingsControl({
-  servings,
-  setServings,
-  size = "sm",
-  order = false,
-}) {
+function ServingsControl({ size = "sm", dishData = {}, liveUpdate = false }) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const { state, dispatch, compareInventory } = useOrder();
-  const prevServingsRef = useRef(servings);
+  const prevServingsRef = useRef(state.tempServings);
 
   // 處理份數調整的函式
   function handleServingsChange(servings, order) {
     // 如果是在OrderForm上使用，不需要再次檢查庫存剩餘食材
-    if (!order) {
-      setServings(() => {
-        prevServingsRef.current = servings;
-        return servings;
-      });
+    if (!liveUpdate) {
+      prevServingsRef.current = servings;
+      dispatch({ type: "update/servings", payload: servings });
 
       return;
     }
@@ -89,10 +82,8 @@ function ServingsControl({
 
     // 庫存充足
     if (result.length === 0) {
-      setServings(() => {
-        prevServingsRef.current = servings;
-        return servings;
-      });
+      prevServingsRef.current = servings;
+      dispatch({ type: "update/servings", payload: servings });
 
       dispatch({
         type: "order/updateDishServings",
@@ -105,7 +96,7 @@ function ServingsControl({
       setButtonDisabled(false);
     } else {
       // 庫存不足
-      setServings(prevServingsRef.current);
+      dispatch({ type: "update/servings", payload: prevServingsRef.current });
 
       // 當前庫存無法再多製作1份餐點則禁用按鈕
       result.find((ingredients) => ingredients.maxCapacity === 0) &&
@@ -137,8 +128,8 @@ function ServingsControl({
       <CountButton
         type="button"
         $size={size}
-        disabled={servings <= 1}
-        onClick={() => handleServingsChange(servings - 1, order)}
+        disabled={state.tempServings <= 1}
+        onClick={() => handleServingsChange(state.tempServings - 1, dishData)}
       >
         <IoRemoveSharp />
       </CountButton>
@@ -146,12 +137,18 @@ function ServingsControl({
       <CountInputField
         type="number"
         $size={size}
-        value={servings.toString()}
+        value={state.tempServings}
         onChange={(e) => {
-          setServings(Number(e.target.value));
+          dispatch({
+            type: "update/servings",
+            payload: Number(e.target.value),
+          });
         }}
         onBlur={() =>
-          handleServingsChange(Math.max(1, Number(servings)), order)
+          handleServingsChange(
+            Math.max(1, Number(state.tempServings)),
+            dishData
+          )
         }
         min={1}
         max={99}
@@ -163,7 +160,7 @@ function ServingsControl({
         type="button"
         $size={size}
         disabled={buttonDisabled}
-        onClick={() => handleServingsChange(servings + 1, order)}
+        onClick={() => handleServingsChange(state.tempServings + 1, dishData)}
       >
         <IoAddSharp />
       </CountButton>

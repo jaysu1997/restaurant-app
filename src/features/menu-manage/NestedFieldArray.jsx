@@ -60,7 +60,6 @@ function NestedFieldArray({
               name={`customize.${nestedIndex}.options.${index}.extraPrice`}
               rules={{
                 required: "選項額外加價不能空白",
-                valueAsNumber: true,
                 min: {
                   value: 0,
                   message: `加價不能為負數`,
@@ -97,7 +96,6 @@ function NestedFieldArray({
               name={`customize.${nestedIndex}.options.${index}.quantity`}
               rules={{
                 required: "食材消耗數量不能空白",
-                valueAsNumber: true,
                 validate: (value) => {
                   // 如果有使用額外消耗食材就不能將消耗量設為0
                   const ingredient = getValues(

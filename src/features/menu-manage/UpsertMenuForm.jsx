@@ -55,6 +55,10 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       reValidateMode: "onSubmit",
       disabled: isUpserting,
       defaultValues: menu || {
+        name: "",
+        category: "",
+        price: "",
+        discount: "",
         ingredients: [{ ingredientName: "", quantity: "" }],
       },
     });
@@ -182,7 +186,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
           <FormFieldset legendValue="">
             <ControlledInput
               type={data.inputType}
-              id={data.inputName}
               placeholder={`請輸入餐點${data.title}`}
               control={control}
               name={data.inputName}
@@ -259,7 +262,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                     value: 1,
                     message: `使用數量不能少於1`,
                   },
-                  valueAsNumber: true,
                 }}
               />
             </FormFieldset>

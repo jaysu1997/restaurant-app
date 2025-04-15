@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { TiShoppingCart } from "react-icons/ti";
 import styled from "styled-components";
 import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useOrder } from "../../context/OrderContext";
 import StyledHotToast from "../../ui/StyledHotToast";
 import CustomizeArea from "./CustomizeArea";
@@ -75,7 +75,7 @@ const AddToCartButton = styled.button`
   }
 `;
 
-function OrderForm({ dishData, onCloseModal, edit = false }) {
+function OrderForm({ dishData, onCloseModal, isEdit = false }) {
   const {
     state,
     dispatch,
@@ -93,7 +93,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
     uniqueId = generateDishItemId(state.dishIdList),
   } = dishData;
 
-  const [servings, setServings] = useState(dishData.servings || 1);
+  console.log(dishData);
 
   // 必填細項與選填細項
   const { requiredField, optionalField, totalField } = customize.reduce(
@@ -118,7 +118,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
   );
 
   const customizeOptionRef = useRef(
-    edit ? dishData.customizeDetail : totalField
+    isEdit ? dishData.customizeDetail : totalField
   );
 
   // 初始化useReducer的tempArray(自訂細項的詳細數據)
@@ -143,14 +143,14 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
     const ingredientsUsage = calcingredientsUsage(ingredients, state);
 
     // 餐點原本的食材消耗(在編輯餐點狀態會需要用到)
-    const previousIngredientsUsage = edit && {
+    const previousIngredientsUsage = isEdit && {
       usageMap: dishData.ingredientsUsage,
       servings: dishData.servings,
     };
 
     const result = compareInventory({
       ingredientsUsage,
-      servings,
+      servings: state.tempServings,
       inventoryMap: new Map(state.inventoryMap),
       previousIngredientsUsage,
     });
@@ -170,20 +170,22 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
         ...data,
         itemTotalPrice,
         ingredientsUsage,
-        servings,
+        servings: state.tempServings,
         uniqueId,
       };
 
       dispatch({
-        type: edit ? "order/updateDish" : "order/addDish",
-        payload: edit ? { ...orderData, previousIngredientsUsage } : orderData,
+        type: isEdit ? "order/updateDish" : "order/addDish",
+        payload: isEdit
+          ? { ...orderData, previousIngredientsUsage }
+          : orderData,
       });
 
       onCloseModal();
 
       StyledHotToast({
         type: "success",
-        title: edit ? "更新成功" : "點餐成功",
+        title: isEdit ? "更新成功" : "點餐成功",
       });
     } else {
       // 庫存不足
@@ -222,7 +224,7 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
             requiredField.map((customizeData) => (
               <CustomizeArea
                 type="required"
-                edit={edit}
+                isEdit={isEdit}
                 customizeData={customizeData}
                 customizeIndex={customizeData.id}
                 register={register}
@@ -248,9 +250,8 @@ function OrderForm({ dishData, onCloseModal, edit = false }) {
 
       <Footer>
         <ServingsControl
-          servings={servings}
-          setServings={setServings}
-          order={false}
+          dishData={isEdit ? dishData : {}}
+          liveUpdate={false}
           size="md"
         />
 
