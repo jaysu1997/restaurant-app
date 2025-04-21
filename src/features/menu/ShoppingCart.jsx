@@ -23,7 +23,6 @@ const StyledShoppingCart = styled.aside`
   height: 100dvh;
   position: sticky;
   top: 16.2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 `;
 

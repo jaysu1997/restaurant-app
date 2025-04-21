@@ -23,29 +23,50 @@ const Button = styled.button`
   }
 `;
 
-function OrderOperation({ isEdit }) {
+function OrderOperation({ isEdit, handleSubmit }) {
   const navigate = useNavigate();
   const { orderId } = useParams();
 
   return (
     <Footer>
-      <Button
-        $bgColor="#059669"
-        $fontColor="#fff"
-        $hoverBgColor="#047857"
-        onClick={() => {
-          navigate(`/order-edit/${orderId}`);
-          scrollToTop();
-        }}
-      >
-        編輯
-      </Button>
+      {isEdit ? (
+        <Button
+          $bgColor="#059669"
+          $fontColor="#fff"
+          $hoverBgColor="#047857"
+          onClick={() => {
+            handleSubmit();
+            navigate(`/order-edit/${orderId}`);
+            scrollToTop();
+          }}
+        >
+          儲存
+        </Button>
+      ) : (
+        <Button
+          $bgColor="#059669"
+          $fontColor="#fff"
+          $hoverBgColor="#047857"
+          onClick={() => {
+            navigate(`/order-edit/${orderId}`);
+            scrollToTop();
+          }}
+        >
+          編輯
+        </Button>
+      )}
       <Button $bgColor="#dc2626" $fontColor="#fff" $hoverBgColor="#b91c1c">
         刪除
       </Button>
-      <Button $bgColor="#e7e5e4" $fontColor="#333" $hoverBgColor="#d6d3d1">
-        返回列表
-      </Button>
+      {isEdit ? (
+        <Button $bgColor="#e7e5e4" $fontColor="#333" $hoverBgColor="#d6d3d1">
+          取消更新
+        </Button>
+      ) : (
+        <Button $bgColor="#e7e5e4" $fontColor="#333" $hoverBgColor="#d6d3d1">
+          返回列表
+        </Button>
+      )}
     </Footer>
   );
 }

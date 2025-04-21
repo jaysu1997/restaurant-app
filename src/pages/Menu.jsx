@@ -36,7 +36,7 @@ function Menu() {
   const { menusData, menusDataFetching } = useGetMenus();
   const { inventoryData, inventoryDataFetching } = useGetInventory(true);
   const [searchParams] = useSearchParams();
-  const [openModal, setOpenModal] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedDish, setSelectedDish] = useState(null);
 
   if (menusDataFetching || inventoryDataFetching)
@@ -71,7 +71,7 @@ function Menu() {
               {dishes.map((dish) => (
                 <DishCard
                   dish={dish}
-                  setOpenModal={setOpenModal}
+                  setIsOpenModal={setIsOpenModal}
                   setSelectedDish={setSelectedDish}
                   key={dish.id}
                 />
@@ -83,17 +83,17 @@ function Menu() {
         <ShoppingCart inventoryData={inventoryData} />
       </Container>
 
-      {openModal && (
+      {isOpenModal && (
         <Modal
           modalHeader={selectedDish.name}
           maxWidth={36}
-          onCloseModal={() => setOpenModal(false)}
+          onCloseModal={() => setIsOpenModal(false)}
           overlayScrollbar={false}
         >
           <OrderForm
             dishData={selectedDish}
             isEdit={false}
-            onCloseModal={() => setOpenModal(false)}
+            onCloseModal={() => setIsOpenModal(false)}
           />
         </Modal>
       )}

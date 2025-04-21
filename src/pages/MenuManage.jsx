@@ -1,5 +1,4 @@
 // 菜單設定頁面
-
 import styled from "styled-components";
 import useGetMenus from "../features/menu-manage/useGetMenus.js";
 import Heading from "../ui/Heading.jsx";
@@ -13,7 +12,8 @@ import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import SearchField from "../ui/SearchField.jsx";
 import Filter from "../ui/Filter.jsx";
-import useGetInventory from "../features/inventory/useGetInventory.js";
+import ConfirmDelete from "../ui/ConfirmDelete.jsx";
+import useDeleteMenu from "../features/menu-manage/useDeleteMenu.js";
 
 const ToolBar = styled.div`
   display: flex;
@@ -49,9 +49,10 @@ function filterData(menusData, nameKeyWord, categoryKeyWord) {
 }
 
 function MenuManage() {
-  const [openModal, setOpenModal] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { menusData, menusDataFetching } = useGetMenus();
+  const { deleteMenu } = useDeleteMenu();
 
   if (menusDataFetching) {
     return (
@@ -84,7 +85,10 @@ function MenuManage() {
         <Filter optionsArray={options} field="category" selectTitle="分類" />
         <SearchField placeholder="搜尋餐點名稱" />
 
-        <Button $buttonStyle="createNewItem" onClick={() => setOpenModal(true)}>
+        <Button
+          $buttonStyle="createNewItem"
+          onClick={() => setIsOpenModal({ type: "create", data: null })}
+        >
           <BsFileEarmarkPlus />
           <span>新增餐點</span>
         </Button>
@@ -95,17 +99,43 @@ function MenuManage() {
           <span>沒有任何數據</span>
         ) : (
           displayMenusData.map((menu) => (
-            <MenusDataCard menu={menu} key={menu.id} />
+            <MenusDataCard
+              menu={menu}
+              setIsOpenModal={setIsOpenModal}
+              key={menu.id}
+            />
           ))
         )}
       </Container>
 
-      {openModal && (
+      {isOpenModal && (
         <Modal
-          modalHeader="餐點設定表單"
-          onCloseModal={() => setOpenModal(false)}
+          modalHeader={
+            isOpenModal.type === "delete" ? "確認刪除" : "餐點設定表單"
+          }
+          headerColor={isOpenModal.type === "delete" ? "#991b1b" : "inherit"}
+          maxWidth={isOpenModal.type === "delete" ? 36 : 56}
+          onCloseModal={() => setIsOpenModal(false)}
         >
-          <UpsertMenuForm onCloseModal={() => setOpenModal(false)} />
+          {isOpenModal.type === "delete" ? (
+            <ConfirmDelete
+              onCloseModal={() => setIsOpenModal(false)}
+              handleDelete={deleteMenu}
+              data={isOpenModal.data}
+              modalType="menus"
+              render={() => (
+                <p>
+                  請確認是否要刪除餐點：<span>{isOpenModal.data.name}</span>
+                  ，以及該餐點的所有設定。
+                </p>
+              )}
+            />
+          ) : (
+            <UpsertMenuForm
+              onCloseModal={() => setIsOpenModal(false)}
+              menu={isOpenModal.data}
+            />
+          )}
         </Modal>
       )}
     </>

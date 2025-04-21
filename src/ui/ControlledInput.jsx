@@ -21,7 +21,8 @@ function ControlledInput({ control, name, rules, type, placeholder }) {
       {...field}
       type={type}
       placeholder={placeholder}
-      value={field.value}
+      // 一開始沒獲得值會因為undefined而跳出非受控與受控元件切換的錯誤訊息，所以先加上一個空字串
+      value={field.value ?? ""}
       onChange={(e) => {
         const finalValue =
           type === "number" && e.target.value !== ""

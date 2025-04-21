@@ -1,18 +1,10 @@
-// 菜單設定數據表單(需要修改)
-
-import { useState } from "react";
-import Modal from "../../ui/Modal";
-import ConfirmDelete from "../../ui/ConfirmDelete";
-import UpsertMenuForm from "./UpsertMenuForm";
+// 菜單設定數據表單
 import { FiMinus } from "react-icons/fi";
 import DataDisplayCard from "../../ui/DataDisplayCard";
 
-function MenusDataCard({ menu }) {
-  // 開關Modal
-  const [openModal, setOpenModal] = useState(false);
-
+function MenusDataCard({ menu, setIsOpenModal }) {
   // 菜單數據
-  const { id, name, category, price, discount, ingredients, customize } = menu;
+  const { name, category, price, discount, ingredients, customize } = menu;
 
   // 所有成份
   const ingredientArray = ingredients?.map(
@@ -37,49 +29,11 @@ function MenusDataCard({ menu }) {
   ];
 
   return (
-    <>
-      <DataDisplayCard
-        handleEditButton={() => setOpenModal("edit")}
-        handleDeleteButton={() => setOpenModal("delete")}
-        dataFormat={menuDataFormat}
-      />
-
-      {/* 編輯指定菜單數據的彈出視窗 */}
-      {openModal === "edit" && (
-        <Modal
-          modalHeader="餐點設定表單"
-          onCloseModal={() => setOpenModal(false)}
-        >
-          <UpsertMenuForm
-            onCloseModal={() => setOpenModal(false)}
-            menu={menu}
-          />
-        </Modal>
-      )}
-
-      {/* 刪除指定菜單數據的彈出視窗 */}
-      {openModal === "delete" && (
-        <Modal
-          modalHeader="確認刪除"
-          maxWidth={36}
-          headerColor="#991b1b"
-          onCloseModal={() => setOpenModal(false)}
-        >
-          <ConfirmDelete
-            name={name}
-            id={id}
-            tableName="menus"
-            onCloseModal={() => setOpenModal(false)}
-            render={() => (
-              <p>
-                請確認是否要刪除餐點：<span>{`「${name}」`}</span>
-                ，以及該餐點的所有設定。
-              </p>
-            )}
-          />
-        </Modal>
-      )}
-    </>
+    <DataDisplayCard
+      handleEditButton={() => setIsOpenModal({ type: "edit", data: menu })}
+      handleDeleteButton={() => setIsOpenModal({ type: "delete", data: menu })}
+      dataFormat={menuDataFormat}
+    />
   );
 }
 

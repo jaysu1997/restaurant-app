@@ -1,4 +1,4 @@
-import { useFieldArray } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
 import { IoCloseSharp } from "react-icons/io5";
 import Button from "../../ui/Button";
@@ -8,14 +8,8 @@ import ControlledSwitch from "../../ui/ControlledSwitch";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
 
-function FieldArray({
-  register,
-  control,
-  disabled,
-  inventoryData,
-  handleCreateNewItems,
-  getValues,
-}) {
+function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
+  const { register, control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "customize",
@@ -66,17 +60,14 @@ function FieldArray({
           {/* 設定細項的id */}
           <input
             hidden
-            {...register(`customize.${index}.id`, { value: index })}
+            {...register(`customize.${index}.customizeId`, { value: index })}
           />
 
           <NestedFieldArray
-            control={control}
-            register={register}
             nestedIndex={index}
             inventoryData={inventoryData}
             handleCreateNewItems={handleCreateNewItems}
             disabled={disabled}
-            getValues={getValues}
           />
         </FormRow>
       ))}

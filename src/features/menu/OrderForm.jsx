@@ -3,12 +3,17 @@ import { useForm } from "react-hook-form";
 import { TiShoppingCart } from "react-icons/ti";
 import styled from "styled-components";
 import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useOrder } from "../../context/OrderContext";
 import StyledHotToast from "../../ui/StyledHotToast";
 import CustomizeArea from "./CustomizeArea";
 import ServingsControl from "../../ui/ServingsControl";
 import Note from "../../ui/Note";
+import {
+  calcIngredientsUsage,
+  compareInventory,
+  generateDishItemId,
+} from "../../utils/helpers";
 
 const Form = styled.form`
   display: flex;
@@ -76,13 +81,13 @@ const AddToCartButton = styled.button`
 `;
 
 function OrderForm({ dishData, onCloseModal, isEdit = false }) {
+  // 餐點編輯的相關功能
   const {
-    state,
+    state: { order, curDishCustomizeOption, inventoryMap },
     dispatch,
-    calcingredientsUsage,
-    compareInventory,
-    generateDishItemId,
   } = useOrder();
+
+  const [servings, setServings] = useState(dishData.servings || 1);
 
   // 當前餐點數據
   const {
@@ -90,23 +95,21 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     discount,
     ingredients,
     customize,
-    uniqueId = generateDishItemId(state.dishIdList),
+    uniqueId = generateDishItemId(order),
   } = dishData;
-
-  console.log(dishData);
 
   // 必填細項與選填細項
   const { requiredField, optionalField, totalField } = customize.reduce(
-    (acc, cus) => {
+    (acc, curCustomization) => {
       acc.totalField.push({
-        customizeId: cus.id,
-        customizeTitle: cus.title,
+        customizeId: curCustomization.customizeId,
+        customizeTitle: curCustomization.title,
         detail: [],
       });
-      if (cus.required === "必填") {
-        acc.requiredField.push(cus);
+      if (curCustomization.required === "必填") {
+        acc.requiredField.push(curCustomization);
       } else {
-        acc.optionalField.push(cus);
+        acc.optionalField.push(curCustomization);
       }
       return acc;
     },
@@ -117,14 +120,15 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     }
   );
 
+  // 用來存放初始化細項數據
   const customizeOptionRef = useRef(
     isEdit ? dishData.customizeDetail : totalField
   );
 
-  // 初始化useReducer的tempArray(自訂細項的詳細數據)
+  // 初始化useReducer的curDishCustomizeOption(自訂細項的詳細數據)
   useEffect(() => {
     dispatch({
-      type: "tempArray/initCustomizeOptions",
+      type: "orderForm/init",
       payload: customizeOptionRef.current,
     });
   }, [dispatch]);
@@ -140,7 +144,10 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
 
   function onSubmit(data) {
     // 先計算食材總消耗與庫存剩餘比對
-    const ingredientsUsage = calcingredientsUsage(ingredients, state);
+    const ingredientsUsage = calcIngredientsUsage(
+      ingredients,
+      curDishCustomizeOption
+    );
 
     // 餐點原本的食材消耗(在編輯餐點狀態會需要用到)
     const previousIngredientsUsage = isEdit && {
@@ -150,15 +157,15 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
 
     const result = compareInventory({
       ingredientsUsage,
-      servings: state.tempServings,
-      inventoryMap: new Map(state.inventoryMap),
+      servings,
+      inventoryMap: new Map(inventoryMap),
       previousIngredientsUsage,
     });
 
     // 庫存充足
     if (result.length === 0) {
       // 每份餐點的售價(本身 + 額外選項)
-      const itemTotalPrice = state.tempArray.reduce((acc, cur) => {
+      const itemTotalPrice = curDishCustomizeOption.reduce((acc, cur) => {
         const extraPriceTotal = cur.detail.reduce(
           (sum, customizeData) => sum + customizeData.extraPrice,
           0
@@ -170,7 +177,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
         ...data,
         itemTotalPrice,
         ingredientsUsage,
-        servings: state.tempServings,
+        servings,
         uniqueId,
       };
 
@@ -226,9 +233,8 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
                 type="required"
                 isEdit={isEdit}
                 customizeData={customizeData}
-                customizeIndex={customizeData.id}
                 register={register}
-                key={customizeData.id}
+                key={customizeData.customizeId}
               />
             ))}
 
@@ -237,9 +243,9 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
               <CustomizeArea
                 type="optional"
                 customizeData={customizeData}
-                customizeIndex={customizeData.id}
+                customizeIndex={customizeData.customizeId}
                 register={register}
-                key={customizeData.id}
+                key={customizeData.customizeId}
               />
             ))}
 
@@ -250,6 +256,8 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
 
       <Footer>
         <ServingsControl
+          servings={servings}
+          setServings={setServings}
           dishData={isEdit ? dishData : {}}
           liveUpdate={false}
           size="md"

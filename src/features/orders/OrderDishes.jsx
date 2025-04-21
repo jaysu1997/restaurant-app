@@ -51,7 +51,7 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-function OrderDishes({ dishData, isEdit, setOpenModal }) {
+function OrderDishes({ dishData, isEdit, setIsOpenModal, setSelectedDish }) {
   return (
     <OrderDishesList>
       <OrderDishRow $isEdit={isEdit}>
@@ -67,8 +67,9 @@ function OrderDishes({ dishData, isEdit, setOpenModal }) {
         <OrderDishItem
           dishData={dish}
           isEdit={isEdit}
+          setIsOpenModal={setIsOpenModal}
+          setSelectedDish={setSelectedDish}
           key={dish.uniqueId}
-          setIsOpenModal={setOpenModal}
         />
       ))}
 
@@ -82,14 +83,17 @@ function OrderDishes({ dishData, isEdit, setOpenModal }) {
   );
 }
 
-function OrderDishItem({ dishData, isEdit, setIsOpenModal }) {
+function OrderDishItem({ dishData, isEdit, setIsOpenModal, setSelectedDish }) {
   return (
     <OrderDishRow $isEdit={isEdit}>
       {isEdit && (
         <ButtonGroup>
           <Button
             $buttonStyle="remove"
-            onClick={() => setIsOpenModal(dishData)}
+            onClick={() => {
+              setSelectedDish(dishData);
+              setIsOpenModal("orderForm");
+            }}
           >
             <GoPencil />
           </Button>

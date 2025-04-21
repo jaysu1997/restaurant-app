@@ -4,6 +4,7 @@ import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useOrder } from "../context/OrderContext";
 import { useRef, useState } from "react";
 import StyledHotToast from "./StyledHotToast";
+import { compareInventory } from "../utils/helpers";
 
 const Serving = styled.div`
   display: flex;
@@ -54,50 +55,56 @@ const CountButton = styled.button`
   }
 `;
 
-function ServingsControl({ size = "sm", dishData = {}, liveUpdate = false }) {
+function ServingsControl({
+  size = "sm",
+  servings,
+  setServings,
+  dishData = {},
+  liveUpdate = false,
+}) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const { state, dispatch, compareInventory } = useOrder();
-  const prevServingsRef = useRef(state.tempServings);
+  const {
+    state: { inventoryMap },
+    dispatch,
+  } = useOrder();
+
+  const prevServingsRef = useRef(servings);
 
   // 處理份數調整的函式
-  function handleServingsChange(servings, order) {
-    // 如果是在OrderForm上使用，不需要再次檢查庫存剩餘食材
+  function handleServingsChange(servings, dishData) {
+    // 如果是在OrderForm上使用，不需要再次檢查庫存剩餘食材(沒有使用即時更新)
     if (!liveUpdate) {
       prevServingsRef.current = servings;
-      dispatch({ type: "update/servings", payload: servings });
-
+      setServings(servings);
       return;
     }
 
-    // 以下是如果餐點已經新增到訂單中會觸發的功能(需要再次檢查庫存食材是否充足)
+    // 即時更新功能需要先檢查庫存並修改剩餘數量
     let result = [];
 
     if (servings - prevServingsRef.current > 0) {
       result = compareInventory({
-        ingredientsUsage: order.ingredientsUsage,
+        ingredientsUsage: dishData.ingredientsUsage,
         servings: servings - prevServingsRef.current,
-        inventoryMap: new Map(state.inventoryMap),
+        inventoryMap: new Map(inventoryMap),
       });
     }
 
     // 庫存充足
     if (result.length === 0) {
       prevServingsRef.current = servings;
-      dispatch({ type: "update/servings", payload: servings });
-
+      setServings(servings);
       dispatch({
         type: "order/updateDishServings",
         payload: {
           servings,
-          uniqueId: order.uniqueId,
+          uniqueId: dishData.uniqueId,
         },
       });
-
       setButtonDisabled(false);
     } else {
       // 庫存不足
-      dispatch({ type: "update/servings", payload: prevServingsRef.current });
-
+      setServings(prevServingsRef.current);
       // 當前庫存無法再多製作1份餐點則禁用按鈕
       result.find((ingredients) => ingredients.maxCapacity === 0) &&
         setButtonDisabled(true);
@@ -128,8 +135,8 @@ function ServingsControl({ size = "sm", dishData = {}, liveUpdate = false }) {
       <CountButton
         type="button"
         $size={size}
-        disabled={state.tempServings <= 1}
-        onClick={() => handleServingsChange(state.tempServings - 1, dishData)}
+        disabled={servings <= 1}
+        onClick={() => handleServingsChange(servings - 1, dishData)}
       >
         <IoRemoveSharp />
       </CountButton>
@@ -137,18 +144,14 @@ function ServingsControl({ size = "sm", dishData = {}, liveUpdate = false }) {
       <CountInputField
         type="number"
         $size={size}
-        value={state.tempServings}
+        value={servings}
         onChange={(e) => {
-          dispatch({
-            type: "update/servings",
-            payload: Number(e.target.value),
-          });
+          setServings(
+            e.target.value !== "" ? Number(e.target.value) : e.target.value
+          );
         }}
         onBlur={() =>
-          handleServingsChange(
-            Math.max(1, Number(state.tempServings)),
-            dishData
-          )
+          handleServingsChange(Math.max(1, Number(servings)), dishData)
         }
         min={1}
         max={99}
@@ -160,7 +163,7 @@ function ServingsControl({ size = "sm", dishData = {}, liveUpdate = false }) {
         type="button"
         $size={size}
         disabled={buttonDisabled}
-        onClick={() => handleServingsChange(state.tempServings + 1, dishData)}
+        onClick={() => handleServingsChange(servings + 1, dishData)}
       >
         <IoAddSharp />
       </CountButton>

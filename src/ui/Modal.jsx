@@ -30,7 +30,6 @@ const StyleModal = styled.div`
   overflow: hidden;
   justify-content: center;
   align-items: center;
-  width: 100%;
 `;
 
 const Header = styled.header`

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { ImRadioChecked, ImRadioUnchecked } from "react-icons/im";
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { useOrder } from "../../context/OrderContext";
 import { useState } from "react";
@@ -127,20 +126,74 @@ const StyledOption = styled.label`
 `;
 
 // 自訂選項區塊
-function CustomizeArea({
-  type,
-  customizeData,
-  customizeIndex,
-  register,
-  edit = false,
-}) {
-  const [isAnswered, setIsAnswered] = useState(edit ? "isAnswered" : type);
+function CustomizeArea({ type, customizeData, register, isEdit = false }) {
+  // 用來控制細項CSS樣式(填寫狀態)
+  const [isAnswered, setIsAnswered] = useState(isEdit ? "isAnswered" : type);
+
+  const {
+    state: { curDishCustomizeOption },
+    dispatch,
+  } = useOrder();
+
+  const { choice, customizeId } = customizeData;
+
+  function handleClick(e, payload) {
+    // 單選新增
+    if (choice === "單選" && e.target.checked) {
+      dispatch({
+        type: "curDishCustomizeOption/setSingleChoice",
+        payload,
+      });
+      // 必填
+      type === "required" && setIsAnswered("isAnswered");
+    }
+
+    // 單選刪除
+    if (choice === "單選" && !e.target.checked) {
+      dispatch({
+        type: "curDishCustomizeOption/clearSingleChoice",
+        payload,
+      });
+      // 必填
+      type === "required" && setIsAnswered("required");
+    }
+
+    // 多選新增
+    if (choice === "多選" && e.target.checked) {
+      dispatch({
+        type: "curDishCustomizeOption/addMultipleChoice",
+        payload,
+      });
+      // 必填
+      type === "required" && setIsAnswered("isAnswered");
+    }
+
+    // 多選移除
+    if (choice === "多選" && !e.target.checked) {
+      // 如果此多選項目是必填，則在沒有選取任何值的情況下，整體樣式需恢復成未填寫狀態
+      if (type === "required") {
+        const curDishCustomizeOptionIndex = curDishCustomizeOption.findIndex(
+          (customize) => customize.customizeId === customizeId
+        );
+
+        // 當前選項長度為1，代表目前只有存在一個選項，被移除後就沒有選取任何值
+        curDishCustomizeOption[curDishCustomizeOptionIndex].detail.length ===
+          1 && setIsAnswered("required");
+      }
+
+      // 移除選項
+      dispatch({
+        type: "curDishCustomizeOption/removeMultipleChoice",
+        payload,
+      });
+    }
+  }
 
   return (
     <Customize
       type={type}
       $colorStyle={colorStyle.background[isAnswered]}
-      key={customizeData.id}
+      key={customizeData.customizeId}
     >
       <Heading>
         <Title>{customizeData.title}</Title>
@@ -156,16 +209,17 @@ function CustomizeArea({
         {customizeData.choice === "單選" ? "只能單選" : "可以多選"}
       </ChoiceLabel>
       <OptionsArea>
-        {customizeData.options.map((optionData, optionIndex) => (
+        {customizeData.options.map((optionData) => (
           <Option
             isAnswered={isAnswered}
-            setIsAnswered={setIsAnswered}
             type={type}
-            mode={customizeData.choice}
-            optionData={optionData}
-            customizeIndex={customizeIndex}
+            choice={choice}
+            customizeId={customizeId}
             register={register}
-            key={optionIndex}
+            optionData={optionData}
+            handleClick={handleClick}
+            curDishCustomizeOption={curDishCustomizeOption}
+            key={optionData.optionId}
           />
         ))}
       </OptionsArea>
@@ -177,102 +231,53 @@ export default CustomizeArea;
 
 // 單一選項ui
 function Option({
-  type,
-  mode,
-  optionData,
-  customizeIndex,
-  register,
   isAnswered,
-  setIsAnswered,
+  type,
+  choice,
+  customizeId,
+  register,
+  optionData,
+  handleClick,
+  curDishCustomizeOption,
 }) {
-  const {
-    state: { tempArray },
-    dispatch,
-  } = useOrder();
+  const { optionId, optionLabel, extraPrice, ingredientName, quantity } =
+    optionData;
 
   // 數據內容與格式
   const payload = {
-    customizeId: customizeIndex,
-    optionLabel: optionData.optionLabel,
-    extraPrice: optionData.extraPrice,
-    ingredientName: optionData.ingredientName.value,
-    quantity: optionData.quantity,
+    customizeId,
+    optionId,
+    optionLabel,
+    extraPrice,
+    ingredientName: ingredientName.value,
+    quantity,
   };
 
-  // 當前是否被選中的選項
-  const checked = tempArray[customizeIndex]?.detail.some(
-    (option) => option.optionLabel === optionData.optionLabel
+  // 獨一無二的值(避免如果不小心設定相同選項名稱所導致的功能異常)
+  const uniqueValue = `${customizeId}-${optionId}-${optionLabel}`;
+
+  // 當前選項是否是被選中的選項(單選細項需要)
+  const checked = curDishCustomizeOption[customizeId]?.detail.some(
+    (option) => option.optionId === optionId
   );
-
-  function handleClick(e) {
-    // 單選新增
-    if (mode === "單選" && e.target.checked) {
-      dispatch({
-        type: "tempArray/setSingleChoice",
-        payload,
-      });
-      // 必填
-      type === "required" && setIsAnswered("isAnswered");
-    }
-
-    // 單選刪除
-    if (mode === "單選" && !e.target.checked) {
-      dispatch({
-        type: "tempArray/clearSingleChoice",
-        payload,
-      });
-      // 必填
-      type === "required" && setIsAnswered("required");
-    }
-
-    // 多選新增
-    if (mode === "多選" && e.target.checked) {
-      dispatch({
-        type: "tempArray/addMultipleChoice",
-        payload,
-      });
-
-      type === "required" && setIsAnswered("isAnswered");
-    }
-
-    // 多選移除
-    if (mode === "多選" && !e.target.checked) {
-      // 如果此多選項目是必填，則在沒有選取任何值的情況下，整體樣式需恢復成未填寫狀態
-      if (type === "required") {
-        const tempArrayIndex = tempArray.findIndex(
-          (customize) => customize.customizeId === customizeIndex
-        );
-
-        // 當前選項長度為1，代表目前只有存在一個選項，被移除後就沒有選取任何值
-        tempArray[tempArrayIndex].detail.length === 1 &&
-          setIsAnswered("required");
-      }
-
-      // 移除選項
-      dispatch({
-        type: "tempArray/removeMultipleChoice",
-        payload,
-      });
-    }
-  }
 
   return (
     <StyledOption
-      type={type}
       $colorStyle={colorStyle.optionHover[isAnswered]}
-      htmlFor={optionData.optionLabel}
+      htmlFor={uniqueValue}
     >
       <input
         type="checkbox"
-        id={optionData.optionLabel}
-        value={optionData.optionLabel}
-        onClick={handleClick}
+        id={uniqueValue}
+        value={uniqueValue}
+        onClick={(e) => handleClick(e, payload)}
+        // 如果是單選細項且已經有選定選項，就禁止選擇其他選項
         disabled={
-          mode === "單選" &&
-          tempArray[customizeIndex]?.detail.length > 0 &&
+          choice === "單選" &&
+          curDishCustomizeOption[customizeId]?.detail.length > 0 &&
           !checked
         }
-        {...register(`customizeField.${type}.${customizeIndex}`, {
+        {...register(`customizeField.${type}.${customizeId}`, {
           required: type === "optional" ? false : true,
         })}
       />

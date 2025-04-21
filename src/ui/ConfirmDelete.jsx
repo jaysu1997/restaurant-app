@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import useDeleteMenu from "../features/menu-manage/useDeleteMenu";
-import useDeleteInventory from "../features/inventory/useDeleteInventory";
 import Button from "./Button";
 import { Fragment, useState } from "react";
 import Modal from "./Modal";
@@ -10,7 +8,7 @@ import { RiArrowRightSLine } from "react-icons/ri";
 import LoadingSpinner from "./LoadingSpinner";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 
-const StyleConfirmModal = styled.div`
+const StyledConfirmDelete = styled.div`
   max-width: 36rem;
   display: flex;
   flex-direction: column;
@@ -115,58 +113,23 @@ const ButtonRow = styled.div`
   gap: 0.6rem;
 `;
 
-function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
+function ConfirmDelete({
+  onCloseModal,
+  data,
+  modalType,
+  render,
+  handleDelete,
+}) {
   const [confirm, setConfirm] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [menuData, setMenuData] = useState(false);
-
-  const { filterMenuData, isPending } = useGetFilterMenuData(name);
-  const { deleteMenu, menuDeleting } = useDeleteMenu();
-  const { deleteInventory, inventoryDeleting } = useDeleteInventory();
-
-  if (isPending) return <LoadingSpinner />;
-
-  function handleDelete(id) {
-    tableName === "menus" ? deleteMenu(id) : deleteInventory(id);
-    onCloseModal();
-  }
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   return (
     <>
-      <StyleConfirmModal>
+      <StyledConfirmDelete>
         <Content>{render()}</Content>
 
-        {tableName === "inventory" && (
-          <Accordion>
-            <AccordionTitle
-              $collapse={isOpen}
-              onClick={() => setIsOpen((isOpen) => !isOpen)}
-            >
-              <RiArrowRightSLine />
-              <span>查看使用{name}的餐點</span>
-            </AccordionTitle>
-
-            <StyledOverlayScrollbars style={{ maxHeight: "10rem" }}>
-              <AccordionContent $collapse={isOpen}>
-                {filterMenuData.length !== 0 ? (
-                  filterMenuData.map((menu, index) => (
-                    <Fragment key={menu.id}>
-                      <span
-                        role="button"
-                        tabIndex="0"
-                        onClick={() => setMenuData(menu)}
-                      >
-                        {menu.name}
-                      </span>
-                      {index < filterMenuData.length - 1 ? "、" : "。"}
-                    </Fragment>
-                  ))
-                ) : (
-                  <span>無</span>
-                )}
-              </AccordionContent>
-            </StyledOverlayScrollbars>
-          </Accordion>
+        {modalType === "inventory" && (
+          <FilterMenuList name={data.label} setIsOpenModal={setIsOpenModal} />
         )}
 
         <ConfirmCheckBox>
@@ -185,22 +148,27 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
           </Button>
           <Button
             $buttonStyle="confirmDelete"
-            onClick={() => handleDelete(id)}
-            disabled={confirm === false || menuDeleting || inventoryDeleting}
+            disabled={confirm === false}
+            onClick={() => {
+              handleDelete(data.id, {
+                onSuccess: () => onCloseModal(),
+              });
+            }}
           >
             刪除
           </Button>
         </ButtonRow>
-      </StyleConfirmModal>
+      </StyledConfirmDelete>
 
-      {menuData && (
+      {isOpenModal && (
         <Modal
           modalHeader="編輯餐點設定"
-          onCloseModal={() => setMenuData(false)}
+          onCloseModal={() => setIsOpenModal(false)}
+          maxWidth={56}
         >
           <UpsertMenuForm
-            onCloseModal={() => setMenuData(false)}
-            menu={menuData}
+            onCloseModal={() => setIsOpenModal(false)}
+            menu={isOpenModal}
           />
         </Modal>
       )}
@@ -209,3 +177,43 @@ function ConfirmDelete({ onCloseModal, name, id, tableName, render }) {
 }
 
 export default ConfirmDelete;
+
+function FilterMenuList({ name, setIsOpenModal }) {
+  const [isCollapse, setIsCollapse] = useState(true);
+  const { filterMenuData, isPending } = useGetFilterMenuData(name);
+
+  if (isPending) return <LoadingSpinner />;
+
+  return (
+    <Accordion>
+      <AccordionTitle
+        $collapse={!isCollapse}
+        onClick={() => setIsCollapse((isCollapse) => !isCollapse)}
+      >
+        <RiArrowRightSLine />
+        <span>查看使用{name}的餐點</span>
+      </AccordionTitle>
+
+      <StyledOverlayScrollbars style={{ maxHeight: "10rem" }}>
+        <AccordionContent $collapse={!isCollapse}>
+          {filterMenuData.length !== 0 ? (
+            filterMenuData.map((menu, index) => (
+              <Fragment key={menu.id}>
+                <span
+                  role="button"
+                  tabIndex="0"
+                  onClick={() => setIsOpenModal(menu)}
+                >
+                  {menu.name}
+                </span>
+                {index < filterMenuData.length - 1 ? "、" : "。"}
+              </Fragment>
+            ))
+          ) : (
+            <span>無</span>
+          )}
+        </AccordionContent>
+      </StyledOverlayScrollbars>
+    </Accordion>
+  );
+}

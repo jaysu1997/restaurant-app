@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import FormTable from "../../ui/FormTable";
 import FormTypography from "../../ui/FormTypography";
 import FormRow from "../../ui/FormRow";
-// import InputField from "../../ui/FormInputField";
 import Button from "../../ui/Button";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import useUpsertInventory from "./useUpsertInventory";
@@ -25,7 +24,7 @@ const formFieldData = [
 ];
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
-  const { register, handleSubmit, getValues, reset, control } = useForm({
+  const { handleSubmit, getValues, reset, control } = useForm({
     defaultValues: inventory,
   });
   const { upsert, isUpserting } = useUpsertInventory();
@@ -48,6 +47,8 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
       return;
     }
 
+    console.log(inventoryData);
+
     upsert(inventoryData, {
       onSuccess: (data) => {
         inventory
@@ -60,7 +61,9 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
               title: "庫存食材設定新增成功",
             });
         onCloseModal?.();
-        setSearchParams({});
+        searchParams.set("quantity", "all");
+        searchParams.set("name", "");
+        setSearchParams(searchParams);
       },
       onError: (error) => {
         reset(getValues());
@@ -85,7 +88,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
     <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
       {inventory && (
         <FormTypography $titleStyle="description">
-          表單說明：食材名稱更改後，所有使用此食材的備料和選項也會同步更新名稱。
+          表單說明：食材名稱更改後，所有使用此食材的餐點備料和選項也會同步更新名稱。
         </FormTypography>
       )}
 

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "../../ui/Button";
 import ServingsControl from "../../ui/ServingsControl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import Modal from "../../ui/Modal";
@@ -62,10 +62,23 @@ const OrderPrice = styled.span`
 
 function CartItem({ order }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [servings, setServings] = useState(order.servings);
   const { dispatch } = useOrder();
+  const prevIsOpenModalRef = useRef(isOpenModal);
   const customizeChoices = summarizeMealChoices(order);
-
   const dishTotalPrice = order.itemTotalPrice * order.servings;
+
+  // 在OrderForm關閉時同步ServingsControl顯示的數據(不會影響到useReducer中的數據，可避免提交表單後或直接關閉OrderForm沒有執行提交時，ServingsControl顯示數據沒有同步更新的問題)
+  useEffect(
+    function () {
+      if (prevIsOpenModalRef.current && !isOpenModal) {
+        setServings(order.servings);
+      }
+
+      prevIsOpenModalRef.current = isOpenModal;
+    },
+    [isOpenModal, order.servings]
+  );
 
   return (
     <>
@@ -111,7 +124,13 @@ function CartItem({ order }) {
 
           <Row>
             <OrderPrice>$ {dishTotalPrice}</OrderPrice>
-            <ServingsControl type="sm" dishData={order} liveUpdate={true} />
+            <ServingsControl
+              type="sm"
+              servings={servings}
+              setServings={setServings}
+              dishData={order}
+              liveUpdate={true}
+            />
           </Row>
         </OrderCard>
       </OrderCardWrapper>

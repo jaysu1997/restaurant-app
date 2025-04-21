@@ -2,7 +2,6 @@
 import styled from "styled-components";
 import {
   formatCreatedTime,
-  formatOrderNumber,
   generatePickupTimes,
   generateTableNumbers,
 } from "../../utils/helpers";
@@ -18,16 +17,7 @@ import MiniMenu from "./MiniMenu";
 import Note from "../../ui/Note";
 import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
-
-const OrderHeader = styled.header`
-  background-color: #6366f1;
-  color: #fff;
-  padding: 1.6rem 3.6rem;
-  font-size: 2.4rem;
-  grid-column: 1 / -1;
-  border-radius: 6px;
-  font-weight: 600;
-`;
+import OrderOperation from "./OrderOperation";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -51,7 +41,8 @@ const Row = styled.div`
 
 function OrderSummaryEdit({ data, isEdit }) {
   const { inventoryDataFetching } = useGetInventory(true);
-  const [openModal, setOpenModal] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [selectedDish, setSelectedDish] = useState(null);
 
   const {
     state: { order },
@@ -104,9 +95,6 @@ function OrderSummaryEdit({ data, isEdit }) {
 
   return (
     <>
-      <OrderHeader>{`取餐號碼 ${formatOrderNumber(
-        data.orderNumber
-      )}`}</OrderHeader>
       <OrderInfo>
         <Row>
           <div>建立時間：</div>
@@ -118,9 +106,10 @@ function OrderSummaryEdit({ data, isEdit }) {
         </Row>
         <Row>
           <div>訂購餐點：</div>
+          {/* 這個樣式需要修正 */}
           <button
             style={{ width: "fit-content" }}
-            onClick={() => setOpenModal("openMenu")}
+            onClick={() => setIsOpenModal("openMenu")}
           >
             新增餐點
           </button>
@@ -128,7 +117,8 @@ function OrderSummaryEdit({ data, isEdit }) {
         <OrderDishes
           dishData={order}
           isEdit={isEdit}
-          setOpenModal={setOpenModal}
+          setIsOpenModal={setIsOpenModal}
+          setSelectedDish={setSelectedDish}
         />
       </OrderInfo>
 
@@ -202,19 +192,27 @@ function OrderSummaryEdit({ data, isEdit }) {
         <Note register={register} />
       </OrderInfo>
 
-      {openModal && (
+      <OrderOperation
+        isEdit={true}
+        handleSubmit={handleSubmit(onSubmit, onError)}
+      />
+
+      {isOpenModal && (
         <Modal
-          onCloseModal={() => setOpenModal(false)}
-          modalHeader={openModal === "openMenu" ? "菜單" : openModal.name}
+          onCloseModal={() => setIsOpenModal(false)}
+          modalHeader={isOpenModal === "openMenu" ? "菜單" : selectedDish.name}
           maxWidth={36}
         >
-          {openModal === "openMenu" ? (
-            <MiniMenu setOpenModal={setOpenModal} />
+          {isOpenModal === "openMenu" ? (
+            <MiniMenu
+              setIsOpenModal={setIsOpenModal}
+              setSelectedDish={setSelectedDish}
+            />
           ) : (
             <OrderForm
-              dishData={openModal}
-              onCloseModal={() => setOpenModal(false)}
-              isEdit={openModal.uniqueId ? true : false}
+              dishData={selectedDish}
+              onCloseModal={() => setIsOpenModal(false)}
+              isEdit={selectedDish.uniqueId ? true : false}
             />
           )}
         </Modal>

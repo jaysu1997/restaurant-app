@@ -1,18 +1,9 @@
 // 訂單詳情(檢視)
 import styled from "styled-components";
-import { formatCreatedTime, formatOrderNumber } from "../../utils/helpers";
+import { formatCreatedTime } from "../../utils/helpers";
 import Tag from "../../ui/Tag";
 import OrderDishes from "./OrderDishes";
-
-const OrderHeader = styled.header`
-  background-color: #6366f1;
-  color: #fff;
-  padding: 1.6rem 3.6rem;
-  font-size: 2.4rem;
-  grid-column: 1 / -1;
-  border-radius: 6px;
-  font-weight: 600;
-`;
+import OrderOperation from "./OrderOperation";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -37,9 +28,6 @@ const Row = styled.div`
 function OrderSummaryView({ data, isEdit }) {
   return (
     <>
-      <OrderHeader>{`取餐號碼 ${formatOrderNumber(
-        data.orderNumber
-      )}`}</OrderHeader>
       <OrderInfo>
         <Row>
           <div>建立時間：</div>
@@ -81,6 +69,8 @@ function OrderSummaryView({ data, isEdit }) {
           <div>{data.note || "無"}</div>
         </Row>
       </OrderInfo>
+
+      <OrderOperation isEdit={false} />
     </>
   );
 }

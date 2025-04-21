@@ -32,7 +32,7 @@ const Row = styled.div`
   font-weight: ${(props) => props.$fontWeight || "400"};
 `;
 
-function DishCard({ dish, setOpenModal, setSelectedDish }) {
+function DishCard({ dish, setIsOpenModal, setSelectedDish }) {
   const ingredientsList = dish.ingredients
     .map((ing) => ing.ingredientName.label)
     .join(", ");
@@ -41,7 +41,7 @@ function DishCard({ dish, setOpenModal, setSelectedDish }) {
     <StyledDishCard>
       <Card
         onClick={() => {
-          setOpenModal(true);
+          setIsOpenModal("orderForm");
           setSelectedDish(dish);
         }}
       >

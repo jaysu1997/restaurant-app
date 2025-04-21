@@ -6,6 +6,7 @@ import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
 import styled from "styled-components";
 import OrderOperation from "../features/orders/OrderOperation";
+import { formatOrderNumber } from "../utils/helpers";
 
 const StyledOrderSummary = styled.div`
   display: grid;
@@ -13,6 +14,16 @@ const StyledOrderSummary = styled.div`
   gap: 4rem;
   padding: 1.6rem 0;
   font-weight: 500;
+`;
+
+const OrderHeader = styled.header`
+  background-color: #6366f1;
+  color: #fff;
+  padding: 1.6rem 3.6rem;
+  font-size: 2.4rem;
+  grid-column: 1 / -1;
+  border-radius: 6px;
+  font-weight: 600;
 `;
 
 function Order() {
@@ -29,13 +40,17 @@ function Order() {
     <>
       <Heading>訂單詳情</Heading>
       <StyledOrderSummary>
+        <OrderHeader>{`取餐號碼 ${formatOrderNumber(
+          data.orderNumber
+        )}`}</OrderHeader>
+
         {isEditPage ? (
           <OrderSummaryEdit isEdit={true} data={data} />
         ) : (
           <OrderSummaryView isEdit={false} data={data} />
         )}
 
-        <OrderOperation isEdit={isEditPage} />
+        {/* <OrderOperation isEdit={isEditPage} /> */}
       </StyledOrderSummary>
     </>
   );

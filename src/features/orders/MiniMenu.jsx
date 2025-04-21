@@ -28,7 +28,7 @@ const CategoryName = styled.p`
   border-radius: 6px;
 `;
 
-function MiniMenu({ setOpenModal }) {
+function MiniMenu({ setIsOpenModal, setSelectedDish }) {
   const { menusData, menusDataFetching } = useGetMenus();
 
   if (menusDataFetching) {
@@ -56,7 +56,12 @@ function MiniMenu({ setOpenModal }) {
           <Fragment key={menu.category}>
             <CategoryName>{menu.category}</CategoryName>
             {menu.dishes.map((dish) => (
-              <DishCard dish={dish} key={dish.id} setOpenModal={setOpenModal} />
+              <DishCard
+                dish={dish}
+                key={dish.id}
+                setIsOpenModal={setIsOpenModal}
+                setSelectedDish={setSelectedDish}
+              />
             ))}
           </Fragment>
         ))}
