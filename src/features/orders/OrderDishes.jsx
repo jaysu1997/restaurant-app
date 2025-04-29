@@ -8,6 +8,9 @@ import { FiMinus } from "react-icons/fi";
 import { GoTrash, GoPencil } from "react-icons/go";
 import Button from "../../ui/Button";
 import styled from "styled-components";
+import { useState } from "react";
+import OrderForm from "../menu/OrderForm";
+import { useOrder } from "../../context/OrderContext";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -51,7 +54,7 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-function OrderDishes({ dishData, isEdit, setIsOpenModal, setSelectedDish }) {
+function OrderDishes({ dishData, isEdit }) {
   return (
     <OrderDishesList>
       <OrderDishRow $isEdit={isEdit}>
@@ -64,13 +67,7 @@ function OrderDishes({ dishData, isEdit, setIsOpenModal, setSelectedDish }) {
       </OrderDishRow>
 
       {dishData.map((dish) => (
-        <OrderDishItem
-          dishData={dish}
-          isEdit={isEdit}
-          setIsOpenModal={setIsOpenModal}
-          setSelectedDish={setSelectedDish}
-          key={dish.uniqueId}
-        />
+        <OrderDishItem dishData={dish} isEdit={isEdit} key={dish.uniqueId} />
       ))}
 
       <OrderDishRow>
@@ -83,32 +80,50 @@ function OrderDishes({ dishData, isEdit, setIsOpenModal, setSelectedDish }) {
   );
 }
 
-function OrderDishItem({ dishData, isEdit, setIsOpenModal, setSelectedDish }) {
+function OrderDishItem({ dishData, isEdit }) {
   return (
     <OrderDishRow $isEdit={isEdit}>
-      {isEdit && (
-        <ButtonGroup>
-          <Button
-            $buttonStyle="remove"
-            onClick={() => {
-              setSelectedDish(dishData);
-              setIsOpenModal("orderForm");
-            }}
-          >
-            <GoPencil />
-          </Button>
-          <Button $buttonStyle="remove">
-            <GoTrash />
-          </Button>
-        </ButtonGroup>
-      )}
-
+      {isEdit && <OrderEditButton dishData={dishData} />}
       <span>{dishData.name}</span>
       <span>{summarizeMealChoices(dishData) || <FiMinus />}</span>
       <span>{dishData.note || <FiMinus />}</span>
       <span>{dishData.servings}份</span>
       <span>$ {dishData.itemTotalPrice * dishData.servings}</span>
     </OrderDishRow>
+  );
+}
+
+function OrderEditButton({ dishData }) {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { dispatch } = useOrder();
+
+  return (
+    <>
+      <ButtonGroup>
+        <Button $buttonStyle="remove" onClick={() => setIsOpenModal(dishData)}>
+          <GoPencil />
+        </Button>
+        <Button
+          $buttonStyle="remove"
+          onClick={() =>
+            dispatch({
+              type: "order/removeDish",
+              payload: dishData.uniqueId,
+            })
+          }
+        >
+          <GoTrash />
+        </Button>
+      </ButtonGroup>
+
+      {isOpenModal && (
+        <OrderForm
+          dishData={isOpenModal}
+          onCloseModal={() => setIsOpenModal(false)}
+          isEdit={true}
+        />
+      )}
+    </>
   );
 }
 

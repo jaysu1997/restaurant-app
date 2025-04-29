@@ -4,14 +4,15 @@ import LoadingSpinner from "../../ui/LoadingSpinner";
 import useGetMenus from "../menu-manage/useGetMenus";
 import DishCard from "../menu/DishCard";
 import { Fragment } from "react";
+import Modal from "../../ui/Modal";
 
 const StyledMiniMenu = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f9fafb;
-  max-width: 36rem;
-  width: 100%;
-  padding: 1.6rem;
+  width: 36rem;
+  max-width: 95dvw;
+  padding: 2rem;
 `;
 
 const MenuList = styled.ul`
@@ -20,7 +21,7 @@ const MenuList = styled.ul`
   gap: 1.6rem;
 `;
 
-const CategoryName = styled.p`
+const CategoryName = styled.li`
   background-color: #262626;
   color: #fafafa;
   font-size: 1.8rem;
@@ -28,7 +29,7 @@ const CategoryName = styled.p`
   border-radius: 6px;
 `;
 
-function MiniMenu({ setIsOpenModal, setSelectedDish }) {
+function MiniMenu({ setIsOpenModal }) {
   const { menusData, menusDataFetching } = useGetMenus();
 
   if (menusDataFetching) {
@@ -50,23 +51,28 @@ function MiniMenu({ setIsOpenModal, setSelectedDish }) {
   );
 
   return (
-    <StyledMiniMenu>
-      <MenuList>
-        {menus.map((menu) => (
-          <Fragment key={menu.category}>
-            <CategoryName>{menu.category}</CategoryName>
-            {menu.dishes.map((dish) => (
-              <DishCard
-                dish={dish}
-                key={dish.id}
-                setIsOpenModal={setIsOpenModal}
-                setSelectedDish={setSelectedDish}
-              />
-            ))}
-          </Fragment>
-        ))}
-      </MenuList>
-    </StyledMiniMenu>
+    <Modal
+      onCloseModal={() => setIsOpenModal(false)}
+      modalHeader="菜單"
+      maxWidth={36}
+    >
+      <StyledMiniMenu>
+        <MenuList>
+          {menus.map((menu) => (
+            <Fragment key={menu.category}>
+              <CategoryName>{menu.category}</CategoryName>
+              {menu.dishes.map((dish) => (
+                <DishCard
+                  dish={dish}
+                  setIsOpenModal={setIsOpenModal}
+                  key={dish.id}
+                />
+              ))}
+            </Fragment>
+          ))}
+        </MenuList>
+      </StyledMiniMenu>
+    </Modal>
   );
 }
 

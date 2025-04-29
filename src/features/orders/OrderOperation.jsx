@@ -1,6 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { scrollToTop } from "../../utils/helpers";
+import {
+  formatCreatedTime,
+  formatPickupNumber,
+  scrollToTop,
+} from "../../utils/helpers";
+import { useState } from "react";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import useDeleteOrder from "./useDeleteOrder";
+import useUpdateOrder from "./useUpdateOrder";
 
 const Footer = styled.footer`
   display: flex;
@@ -23,51 +31,91 @@ const Button = styled.button`
   }
 `;
 
-function OrderOperation({ isEdit, handleSubmit }) {
-  const navigate = useNavigate();
+function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { mutate, isPending } = useDeleteOrder();
   const { orderId } = useParams();
+  const navigate = useNavigate();
 
   return (
-    <Footer>
-      {isEdit ? (
+    <>
+      <Footer>
+        {isEdit ? (
+          <Button
+            $bgColor="#059669"
+            $fontColor="#fff"
+            $hoverBgColor="#047857"
+            disabled={disabeldSubmit}
+            onClick={() => {
+              handleSubmit();
+              navigate(`/order-edit/${orderId}`);
+              scrollToTop();
+            }}
+          >
+            儲存
+          </Button>
+        ) : (
+          <Button
+            $bgColor="#059669"
+            $fontColor="#fff"
+            $hoverBgColor="#047857"
+            onClick={() => {
+              navigate(`/order-edit/${orderId}`);
+              scrollToTop();
+            }}
+          >
+            編輯
+          </Button>
+        )}
         <Button
-          $bgColor="#059669"
+          $bgColor="#dc2626"
           $fontColor="#fff"
-          $hoverBgColor="#047857"
-          onClick={() => {
-            handleSubmit();
-            navigate(`/order-edit/${orderId}`);
-            scrollToTop();
-          }}
+          $hoverBgColor="#b91c1c"
+          onClick={() => setIsOpenModal(true)}
         >
-          儲存
+          刪除
         </Button>
-      ) : (
-        <Button
-          $bgColor="#059669"
-          $fontColor="#fff"
-          $hoverBgColor="#047857"
-          onClick={() => {
-            navigate(`/order-edit/${orderId}`);
-            scrollToTop();
-          }}
-        >
-          編輯
-        </Button>
+        {isEdit ? (
+          <Button
+            $bgColor="#e7e5e4"
+            $fontColor="#333"
+            $hoverBgColor="#d6d3d1"
+            onClick={() => navigate(`/order/${orderId}`)}
+          >
+            取消更新
+          </Button>
+        ) : (
+          <Button
+            $bgColor="#e7e5e4"
+            $fontColor="#333"
+            $hoverBgColor="#d6d3d1"
+            onClick={() => navigate("/orders")}
+          >
+            返回列表
+          </Button>
+        )}
+      </Footer>
+
+      {isOpenModal && (
+        <ConfirmDelete
+          onCloseModal={() => setIsOpenModal(false)}
+          handleDelete={mutate}
+          isDeleting={isPending}
+          data={orderData}
+          modalType="order"
+          render={() => (
+            <p>
+              請確認是否要刪除
+              <strong>{`取餐號碼${formatPickupNumber(
+                orderData.pickupNumber
+              )}`}</strong>
+              &#8203;&nbsp;(
+              {formatCreatedTime(orderData.createdTime)}) 。
+            </p>
+          )}
+        />
       )}
-      <Button $bgColor="#dc2626" $fontColor="#fff" $hoverBgColor="#b91c1c">
-        刪除
-      </Button>
-      {isEdit ? (
-        <Button $bgColor="#e7e5e4" $fontColor="#333" $hoverBgColor="#d6d3d1">
-          取消更新
-        </Button>
-      ) : (
-        <Button $bgColor="#e7e5e4" $fontColor="#333" $hoverBgColor="#d6d3d1">
-          返回列表
-        </Button>
-      )}
-    </Footer>
+    </>
   );
 }
 

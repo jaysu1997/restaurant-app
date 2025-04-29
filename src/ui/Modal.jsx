@@ -35,7 +35,7 @@ const StyleModal = styled.div`
 const Header = styled.header`
   display: flex;
   border-bottom: 1px solid #e5e7eb;
-  padding: 0.8rem 1.6rem;
+  padding: 1rem 2rem;
   justify-content: space-between;
   height: 5.2rem;
   flex-shrink: 0;

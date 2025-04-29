@@ -19,58 +19,80 @@ const OrderInfo = styled.section`
 
 const Row = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 8rem 1fr;
   gap: 1.6rem;
   min-height: 3.8rem;
   align-items: center;
+
+  &:last-child {
+    align-items: start;
+  }
+
+  div {
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
 `;
 
-function OrderSummaryView({ data, isEdit }) {
+function OrderSummaryView({ orderData, isEdit }) {
+  if (!orderData) return <div>數據已刪除</div>;
+  const {
+    orderType,
+    tableNumber,
+    pickupTime,
+    status,
+    paid,
+    createdTime,
+    orderUUID,
+    order,
+    note,
+  } = orderData;
+
   return (
     <>
       <OrderInfo>
         <Row>
           <div>建立時間：</div>
-          <div>{formatCreatedTime(data.createdTime)}</div>
+          <div>{formatCreatedTime(createdTime)}</div>
         </Row>
         <Row>
           <div>訂單編號：</div>
-          <div>{data.orderUUID}</div>
+          <div>{orderUUID}</div>
         </Row>
         <Row>
           <div>訂購餐點：</div>
         </Row>
-        <OrderDishes dishData={data.order} isEdit={isEdit} />
+        <OrderDishes dishData={order} isEdit={isEdit} />
       </OrderInfo>
 
       <OrderInfo>
         <Row>
           <div>用餐方式：</div>
-          <div>{data.orderType}</div>
+          <div>{orderType}</div>
         </Row>
         <Row>
-          <div>{data.orderType === "內用" ? "內用桌號：" : "取餐時間："}</div>
-          <div>{data.tableNumber || data.pickupTime}</div>
+          <div>{orderType === "內用" ? "內用桌號：" : "取餐時間："}</div>
+          <div>{tableNumber || pickupTime}</div>
         </Row>
         <Row>
           <div>訂單狀態：</div>
           <div>
-            <Tag $tagStatus={data.status}>{data.status}</Tag>
+            <Tag $tagStatus={status}>{status}</Tag>
           </div>
         </Row>
         <Row>
           <div>付款狀態：</div>
           <div>
-            <Tag $tagStatus={data.paid}>{data.paid}</Tag>
+            <Tag $tagStatus={paid}>{paid}</Tag>
           </div>
         </Row>
         <Row>
           <div>訂單備註：</div>
-          <div>{data.note || "無"}</div>
+          <div>{note || "無"}</div>
         </Row>
       </OrderInfo>
 
-      <OrderOperation isEdit={false} />
+      <OrderOperation isEdit={false} orderData={orderData} />
     </>
   );
 }

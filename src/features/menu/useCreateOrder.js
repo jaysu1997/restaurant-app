@@ -16,10 +16,10 @@ function useCreateOrder(reset) {
   } = useMutation({
     mutationFn: createOrderApi,
     onSuccess: (data) => {
-      const orderNumber = String(data.order.orderNumber).padStart(3, "0");
+      const pickupNumber = String(data.order.pickupNumber).padStart(3, "0");
       StyledHotToast({
         type: "success",
-        title: `取餐單號#${orderNumber}建立成功`,
+        title: `取餐單號#${pickupNumber}建立成功`,
       });
 
       dispatch({ type: "order/reset" });

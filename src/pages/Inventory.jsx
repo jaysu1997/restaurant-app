@@ -8,12 +8,9 @@ import Button from "../ui/Button";
 import useGetInventory from "../features/inventory/useGetInventory";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
-import Modal from "../ui/Modal";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
 import Filter from "../ui/Filter";
-import ConfirmDelete from "../ui/ConfirmDelete";
-import useDeleteInventory from "../features/inventory/useDeleteInventory";
 
 const ToolBar = styled.div`
   display: flex;
@@ -53,7 +50,6 @@ function Inventory() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { inventoryData, inventoryDataFetching } = useGetInventory(false);
-  const { deleteInventory } = useDeleteInventory();
 
   if (inventoryDataFetching)
     return (
@@ -91,7 +87,7 @@ function Inventory() {
         <SearchField placeholder="搜尋食材名稱" />
         <Button
           $buttonStyle="createNewItem"
-          onClick={() => setIsOpenModal({ type: "create", data: null })}
+          onClick={() => setIsOpenModal(true)}
         >
           <BsFileEarmarkPlus />
           <span>新增食材</span>
@@ -103,44 +99,13 @@ function Inventory() {
           <span>沒有任何數據</span>
         ) : (
           displayInventoryData.map((inventory) => (
-            <InventoryDataCard
-              inventory={inventory}
-              setIsOpenModal={setIsOpenModal}
-              key={inventory.id}
-            />
+            <InventoryDataCard inventory={inventory} key={inventory.id} />
           ))
         )}
       </Container>
 
       {isOpenModal && (
-        <Modal
-          modalHeader={
-            isOpenModal.type === "delete" ? "確認刪除" : "食材設定表單"
-          }
-          headerColor={isOpenModal.type === "delete" ? "#991b1b" : "inherit"}
-          maxWidth={isOpenModal.type === "delete" ? 36 : 56}
-          onCloseModal={() => setIsOpenModal(false)}
-        >
-          {isOpenModal.type === "delete" ? (
-            <ConfirmDelete
-              onCloseModal={() => setIsOpenModal(false)}
-              handleDelete={deleteInventory}
-              data={isOpenModal.data}
-              modalType="inventory"
-              render={() => (
-                <p>
-                  請確認是否要刪除食材：<span>{isOpenModal.data.label}</span>
-                  ，以及各個餐點中所有使用此食材的備料和選項。
-                </p>
-              )}
-            />
-          ) : (
-            <UpsertInventoryForm
-              onCloseModal={() => setIsOpenModal(false)}
-              inventory={isOpenModal.data}
-            />
-          )}
-        </Modal>
+        <UpsertInventoryForm onCloseModal={() => setIsOpenModal(false)} />
       )}
     </>
   );

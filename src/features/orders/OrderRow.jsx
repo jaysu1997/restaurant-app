@@ -4,7 +4,7 @@ import OrderDropdownMenu from "./OrderDropdownMenu";
 import {
   calcOrderTotalPrice,
   formatCreatedTime,
-  formatOrderNumber,
+  formatPickupNumber,
 } from "../../utils/helpers";
 
 const StyledOrderRow = styled.div`
@@ -30,7 +30,7 @@ const StyledOrderRow = styled.div`
     grid-template-areas:
       "createdTime action"
       "orderType orderType"
-      "orderNumber orderNumber"
+      "pickupNumber pickupNumber"
       "totalPrice totalPrice"
       "status status"
       "paid paid";
@@ -65,7 +65,7 @@ const StyledOrderRow = styled.div`
     }
 
     div[data-order-number] {
-      grid-area: orderNumber;
+      grid-area: pickupNumber;
 
       &::before {
         content: "取餐號碼";
@@ -113,7 +113,7 @@ const OrderType = styled.span`
   font-weight: 700;
 `;
 
-function OrderRow({ orderData, isOpen, setIsOpen, tableRef, activeMenuRef }) {
+function OrderRow({ orderData, children }) {
   return (
     <StyledOrderRow>
       <div data-order-type>
@@ -123,7 +123,7 @@ function OrderRow({ orderData, isOpen, setIsOpen, tableRef, activeMenuRef }) {
       </div>
 
       <div data-order-number>
-        <span>{formatOrderNumber(orderData.orderNumber)}</span>
+        <span>{formatPickupNumber(orderData.pickupNumber)}</span>
       </div>
 
       <div data-created-time>{formatCreatedTime(orderData.createdTime)}</div>
@@ -138,15 +138,7 @@ function OrderRow({ orderData, isOpen, setIsOpen, tableRef, activeMenuRef }) {
         <Tag $tagStatus={orderData.paid}>{orderData.paid}</Tag>
       </div>
 
-      <div data-action>
-        <OrderDropdownMenu
-          orderId={orderData.id}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          tableRef={tableRef}
-          activeMenuRef={activeMenuRef}
-        />
-      </div>
+      <div data-action>{children}</div>
     </StyledOrderRow>
   );
 }

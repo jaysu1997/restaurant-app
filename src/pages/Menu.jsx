@@ -8,7 +8,6 @@ import { useSearchParams } from "react-router-dom";
 import ShoppingCart from "../features/menu/ShoppingCart";
 import useGetInventory from "../features/inventory/useGetInventory";
 import { useState } from "react";
-import Modal from "../ui/Modal";
 import OrderForm from "../features/menu/OrderForm";
 
 const Container = styled.div`
@@ -33,11 +32,12 @@ const Menus = styled.ul`
 
 function Menu() {
   // 取得所有菜單數據
-  const { menusData, menusDataFetching } = useGetMenus();
-  const { inventoryData, inventoryDataFetching } = useGetInventory(true);
-  const [searchParams] = useSearchParams();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [selectedDish, setSelectedDish] = useState(null);
+  const { menusData, menusDataFetching, menusDataFetchingError } =
+    useGetMenus();
+  const { inventoryData, inventoryDataFetching, inventoryDataFetchingError } =
+    useGetInventory(true);
+  const [searchParams] = useSearchParams();
 
   if (menusDataFetching || inventoryDataFetching)
     return (
@@ -46,6 +46,15 @@ function Menu() {
         <LoadingSpinner />
       </>
     );
+
+  if (menusDataFetchingError || inventoryDataFetchingError) {
+    return (
+      <>
+        <Heading>點餐系統</Heading>
+        <span>數據獲取失敗，請稍後再嘗試</span>
+      </>
+    );
+  }
 
   // 使用Set()過濾重複的分類
   const categorys = [...new Set(menusData.map((menu) => menu.category))];
@@ -72,7 +81,6 @@ function Menu() {
                 <DishCard
                   dish={dish}
                   setIsOpenModal={setIsOpenModal}
-                  setSelectedDish={setSelectedDish}
                   key={dish.id}
                 />
               ))}
@@ -83,19 +91,12 @@ function Menu() {
         <ShoppingCart inventoryData={inventoryData} />
       </Container>
 
-      {isOpenModal && (
-        <Modal
-          modalHeader={selectedDish.name}
-          maxWidth={36}
+      {isOpenModal.type === "OrderForm" && (
+        <OrderForm
+          dishData={isOpenModal.data}
+          isEdit={false}
           onCloseModal={() => setIsOpenModal(false)}
-          overlayScrollbar={false}
-        >
-          <OrderForm
-            dishData={selectedDish}
-            isEdit={false}
-            onCloseModal={() => setIsOpenModal(false)}
-          />
-        </Modal>
+        />
       )}
     </>
   );

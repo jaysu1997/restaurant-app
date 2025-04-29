@@ -13,7 +13,7 @@ const StyledToggleSwitch = styled.label`
   position: relative;
   border-radius: 15px;
   overflow: hidden;
-  cursor: pointer;
+  cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
 
   input:checked + span {
     transform: translateX(4.5rem);
@@ -44,22 +44,31 @@ const Slider = styled.span`
   transition: all 0.3s;
 `;
 
-function OrderTypeSwitch({ control, dineOption = false }) {
+function OrderTypeSwitch({
+  control,
+  setValue,
+  dineOption = false,
+  isDisabled = false,
+}) {
   return (
     <Controller
-      name="dineOption"
+      name="orderType"
       control={control}
-      defaultValue={dineOption}
+      defaultValue={dineOption ? "外帶" : "內用"}
       render={({ field }) => (
-        <StyledToggleSwitch>
+        <StyledToggleSwitch $disabled={isDisabled}>
           <input
             type="checkbox"
             hidden
-            checked={field.value}
-            onChange={(e) => field.onChange(e.target.checked)}
+            checked={field.value === "外帶"}
+            onChange={(e) => {
+              field.onChange(e.target.checked ? "外帶" : "內用");
+              setValue(dineOption ? "pickupTime" : "tableNumber", null);
+            }}
+            disabled={isDisabled}
           />
           <Slider />
-          <Option>
+          <Option disabled={isDisabled}>
             <span>內用</span>
           </Option>
           <Option>

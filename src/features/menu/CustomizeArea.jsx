@@ -75,12 +75,12 @@ const StyledOption = styled.label`
   height: 4rem;
   line-height: 1.4;
   position: relative;
-
   padding: 0.6rem;
   border-radius: 5px;
 
   &:hover {
     background-color: ${(props) => props.$colorStyle};
+    cursor: pointer;
   }
 
   input {

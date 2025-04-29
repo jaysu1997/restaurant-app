@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { FaXmark, FaTriangleExclamation, FaCircleCheck } from "react-icons/fa6";
 
 const Wrapper = styled.div`
+  padding: 0.8rem 0rem;
   width: 100%;
   display: grid;
   grid-template-columns: auto 1fr auto;

@@ -14,7 +14,7 @@ function useGetInventory(orderCreating = true) {
     data: inventoryData,
     isPending: inventoryDataFetching,
     error,
-    isError,
+    isError: inventoryDataFetchingError,
     isSuccess,
   } = useQuery({
     queryKey: ["inventory"],
@@ -40,17 +40,17 @@ function useGetInventory(orderCreating = true) {
         });
       }
 
-      if (isError) {
+      if (inventoryDataFetchingError) {
         StyledHotToast({
           type: "error",
           title: "庫存數據獲取失敗",
-          content: error,
+          content: error.message,
         });
       }
     },
     [
       isSuccess,
-      isError,
+      inventoryDataFetchingError,
       dispatch,
       inventoryData,
       error,
@@ -59,7 +59,7 @@ function useGetInventory(orderCreating = true) {
     ]
   );
 
-  return { inventoryData, inventoryDataFetching };
+  return { inventoryData, inventoryDataFetching, inventoryDataFetchingError };
 }
 
 export default useGetInventory;

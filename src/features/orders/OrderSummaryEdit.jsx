@@ -1,6 +1,7 @@
 // 訂單詳情(編輯)
 import styled from "styled-components";
 import {
+  buildOrderData,
   formatCreatedTime,
   generatePickupTimes,
   generateTableNumbers,
@@ -11,13 +12,13 @@ import { useForm } from "react-hook-form";
 import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { useState } from "react";
-import Modal from "../../ui/Modal";
 import OrderForm from "../menu/OrderForm";
 import MiniMenu from "./MiniMenu";
 import Note from "../../ui/Note";
 import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import OrderOperation from "./OrderOperation";
+import useUpdateOrder from "./useUpdateOrder";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -33,48 +34,61 @@ const OrderInfo = styled.section`
 
 const Row = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 8rem 1fr;
   gap: 1.6rem;
   min-height: 3.8rem;
   align-items: center;
+
+  &:last-child {
+    grid-template-columns: 1fr;
+  }
+
+  div {
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
 `;
 
-function OrderSummaryEdit({ data, isEdit }) {
+function OrderSummaryEdit({ orderData, isEdit }) {
+  // 上傳看起來是可以沒問題，但食材計算的部分還需要檢查，另外或許還需要調整優化sql，然後應該就可以進入rechart
+  const { updateOrder, updating, error } = useUpdateOrder();
   const { inventoryDataFetching } = useGetInventory(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [selectedDish, setSelectedDish] = useState(null);
 
   const {
     state: { order },
   } = useOrder();
 
-  const { register, control, watch, handleSubmit } = useForm({
+  const { tableNumber, pickupTime, status, paid, createdTime, orderUUID } =
+    orderData;
+
+  const { register, control, watch, handleSubmit, setValue } = useForm({
     defaultValues: {
-      ...data,
-      tableNumber: data.tableNumber
+      ...orderData,
+      tableNumber: tableNumber
         ? {
-            label: data.tableNumber,
-            value: data.tableNumber,
+            label: tableNumber,
+            value: tableNumber,
           }
         : null,
-      pickupTime: data.pickupTime
+      pickupTime: pickupTime
         ? {
-            label: data.pickupTime,
-            value: data.pickupTime,
+            label: pickupTime,
+            value: pickupTime,
           }
         : null,
       status: {
-        label: data.status,
-        value: data.status,
+        label: status,
+        value: status,
       },
       paid: {
-        label: data.paid,
-        value: data.paid,
+        label: paid,
+        value: paid,
       },
     },
   });
 
-  const dineOption = watch("dineOption");
+  const dineOption = watch("orderType") === "外帶";
 
   // 用餐方式的select選項
   const optionList = dineOption
@@ -82,7 +96,8 @@ function OrderSummaryEdit({ data, isEdit }) {
     : generateTableNumbers(10);
 
   function onSubmit(data) {
-    console.log(data);
+    const orderData = buildOrderData(order, data);
+    updateOrder(orderData);
   }
 
   function onError(error) {
@@ -98,35 +113,35 @@ function OrderSummaryEdit({ data, isEdit }) {
       <OrderInfo>
         <Row>
           <div>建立時間：</div>
-          <div>{formatCreatedTime(data.createdTime)}</div>
+          <div>{formatCreatedTime(createdTime)}</div>
         </Row>
         <Row>
           <div>訂單編號：</div>
-          <div>{data.orderUUID}</div>
+          <div>{orderUUID}</div>
         </Row>
         <Row>
           <div>訂購餐點：</div>
-          {/* 這個樣式需要修正 */}
+          {/* 這個按鈕的樣式需要修正 */}
           <button
             style={{ width: "fit-content" }}
-            onClick={() => setIsOpenModal("openMenu")}
+            onClick={() => setIsOpenModal({ type: "MiniMenu", data: null })}
           >
             新增餐點
           </button>
         </Row>
-        <OrderDishes
-          dishData={order}
-          isEdit={isEdit}
-          setIsOpenModal={setIsOpenModal}
-          setSelectedDish={setSelectedDish}
-        />
+        <OrderDishes dishData={order} isEdit={isEdit} />
       </OrderInfo>
 
       <OrderInfo>
         <Row>
           <div>用餐方式：</div>
           <div>
-            <OrderTypeSwitch dineOption={dineOption} control={control} />
+            <OrderTypeSwitch
+              setValue={setValue}
+              dineOption={dineOption}
+              control={control}
+              isDisabled={order.length === 0}
+            />
           </div>
         </Row>
         <Row>
@@ -187,35 +202,27 @@ function OrderSummaryEdit({ data, isEdit }) {
         </Row>
         <Row>
           <div>訂單備註：</div>
+          <Note register={register} />
         </Row>
-
-        <Note register={register} />
       </OrderInfo>
 
       <OrderOperation
         isEdit={true}
+        disabeldSubmit={order.length === 0 || updating}
+        orderData={orderData}
         handleSubmit={handleSubmit(onSubmit, onError)}
       />
 
-      {isOpenModal && (
-        <Modal
+      {isOpenModal.type === "MiniMenu" && (
+        <MiniMenu setIsOpenModal={setIsOpenModal} />
+      )}
+
+      {isOpenModal.type === "OrderForm" && (
+        <OrderForm
+          dishData={isOpenModal.data}
+          isEdit={false}
           onCloseModal={() => setIsOpenModal(false)}
-          modalHeader={isOpenModal === "openMenu" ? "菜單" : selectedDish.name}
-          maxWidth={36}
-        >
-          {isOpenModal === "openMenu" ? (
-            <MiniMenu
-              setIsOpenModal={setIsOpenModal}
-              setSelectedDish={setSelectedDish}
-            />
-          ) : (
-            <OrderForm
-              dishData={selectedDish}
-              onCloseModal={() => setIsOpenModal(false)}
-              isEdit={selectedDish.uniqueId ? true : false}
-            />
-          )}
-        </Modal>
+        />
       )}
     </>
   );

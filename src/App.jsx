@@ -16,13 +16,22 @@ import { OrderProvider } from "./context/OrderContext";
 import Order from "./pages/Order";
 import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
-// 這個之後需要刪除
+// 這個之後需要刪除(然後如果想要把遠端數據操作的錯誤原因好好呈現的話，或許需要把async throw new Error都改成message，然後custom hook中則設置中文為標題，錯誤內容則是message)
+
+// 還有，記得順便把mutation使用到的isPending傳到到按鈕上的disabled上，禁止重複點擊
 import Test from "./pages/Test";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
+      retry: 3,
+      retryDelay: 3000,
+      networkMode: "offlineFirst",
+    },
+    mutations: {
+      retry: false,
+      networkMode: "offlineFirst",
     },
   },
 });

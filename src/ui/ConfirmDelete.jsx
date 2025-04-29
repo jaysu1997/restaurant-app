@@ -7,13 +7,14 @@ import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
 import LoadingSpinner from "./LoadingSpinner";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
+import LoadingDotMini from "./LoadingDotMini";
 
 const StyledConfirmDelete = styled.div`
   max-width: 36rem;
   display: flex;
   flex-direction: column;
 
-  padding: 1.6rem;
+  padding: 2rem;
   gap: 1.2rem;
   font-size: 1.6rem;
 `;
@@ -21,11 +22,11 @@ const StyledConfirmDelete = styled.div`
 const Content = styled.div`
   font-size: 1.6rem;
 
-  span {
-    font-weight: 600;
+  strong {
     color: #dc2626;
   }
 `;
+
 const Accordion = styled.div`
   width: 100%;
   border: 1px solid #dddddd;
@@ -119,18 +120,23 @@ function ConfirmDelete({
   modalType,
   render,
   handleDelete,
+  isDeleting,
 }) {
   const [confirm, setConfirm] = useState(false);
-  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  console.log(data);
 
   return (
-    <>
+    <Modal
+      modalHeader="確認刪除"
+      headerColor="#991b1b"
+      maxWidth={36}
+      onCloseModal={onCloseModal}
+    >
       <StyledConfirmDelete>
         <Content>{render()}</Content>
 
-        {modalType === "inventory" && (
-          <FilterMenuList name={data.label} setIsOpenModal={setIsOpenModal} />
-        )}
+        {modalType === "inventory" && <FilterMenuList name={data.label} />}
 
         <ConfirmCheckBox>
           <input
@@ -155,10 +161,56 @@ function ConfirmDelete({
               });
             }}
           >
-            刪除
+            {isDeleting ? <LoadingDotMini /> : "刪除"}
           </Button>
         </ButtonRow>
       </StyledConfirmDelete>
+    </Modal>
+  );
+}
+
+export default ConfirmDelete;
+
+// 刪除食材時才需要顯示的內容
+function FilterMenuList({ name }) {
+  const [isCollapse, setIsCollapse] = useState(true);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { filterMenuData, isPending } = useGetFilterMenuData(name);
+
+  if (isPending) return <LoadingSpinner />;
+
+  return (
+    <>
+      <Accordion>
+        <AccordionTitle
+          $collapse={!isCollapse}
+          onClick={() => setIsCollapse((isCollapse) => !isCollapse)}
+        >
+          <RiArrowRightSLine />
+          <span>查看使用{name}的餐點</span>
+        </AccordionTitle>
+
+        <StyledOverlayScrollbars style={{ maxHeight: "10rem" }}>
+          <AccordionContent $collapse={!isCollapse}>
+            {filterMenuData.length !== 0 ? (
+              filterMenuData.map((menu, index) => (
+                <Fragment key={menu.id}>
+                  <span
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => setIsOpenModal(menu)}
+                  >
+                    {menu.name}
+                  </span>
+                  {index < filterMenuData.length - 1 ? "、" : "。"}
+                </Fragment>
+              ))
+            ) : (
+              <span>無</span>
+            )}
+          </AccordionContent>
+        </StyledOverlayScrollbars>
+      </Accordion>
 
       {isOpenModal && (
         <Modal
@@ -173,47 +225,5 @@ function ConfirmDelete({
         </Modal>
       )}
     </>
-  );
-}
-
-export default ConfirmDelete;
-
-function FilterMenuList({ name, setIsOpenModal }) {
-  const [isCollapse, setIsCollapse] = useState(true);
-  const { filterMenuData, isPending } = useGetFilterMenuData(name);
-
-  if (isPending) return <LoadingSpinner />;
-
-  return (
-    <Accordion>
-      <AccordionTitle
-        $collapse={!isCollapse}
-        onClick={() => setIsCollapse((isCollapse) => !isCollapse)}
-      >
-        <RiArrowRightSLine />
-        <span>查看使用{name}的餐點</span>
-      </AccordionTitle>
-
-      <StyledOverlayScrollbars style={{ maxHeight: "10rem" }}>
-        <AccordionContent $collapse={!isCollapse}>
-          {filterMenuData.length !== 0 ? (
-            filterMenuData.map((menu, index) => (
-              <Fragment key={menu.id}>
-                <span
-                  role="button"
-                  tabIndex="0"
-                  onClick={() => setIsOpenModal(menu)}
-                >
-                  {menu.name}
-                </span>
-                {index < filterMenuData.length - 1 ? "、" : "。"}
-              </Fragment>
-            ))
-          ) : (
-            <span>無</span>
-          )}
-        </AccordionContent>
-      </StyledOverlayScrollbars>
-    </Accordion>
   );
 }

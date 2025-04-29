@@ -1,4 +1,3 @@
-// import { createGlobalStyle } from "styled-components";
 import * as styled from "styled-components";
 
 export const GlobalStyles = styled.createGlobalStyle`

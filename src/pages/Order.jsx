@@ -6,7 +6,7 @@ import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
 import styled from "styled-components";
 import OrderOperation from "../features/orders/OrderOperation";
-import { formatOrderNumber } from "../utils/helpers";
+import { formatPickupNumber } from "../utils/helpers";
 
 const StyledOrderSummary = styled.div`
   display: grid;
@@ -40,14 +40,14 @@ function Order() {
     <>
       <Heading>訂單詳情</Heading>
       <StyledOrderSummary>
-        <OrderHeader>{`取餐號碼 ${formatOrderNumber(
-          data.orderNumber
+        <OrderHeader>{`取餐號碼 ${formatPickupNumber(
+          data.pickupNumber
         )}`}</OrderHeader>
 
         {isEditPage ? (
-          <OrderSummaryEdit isEdit={true} data={data} />
+          <OrderSummaryEdit isEdit={true} orderData={data} />
         ) : (
-          <OrderSummaryView isEdit={false} data={data} />
+          <OrderSummaryView isEdit={false} orderData={data} />
         )}
 
         {/* <OrderOperation isEdit={isEditPage} /> */}

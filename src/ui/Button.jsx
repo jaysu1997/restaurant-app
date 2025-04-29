@@ -13,9 +13,6 @@ const type = {
     background-color: #1d4ed8;
     color: #fff;
     box-shadow: 0 0px 15px 2px rgba(96, 165, 250, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     &:hover {
       background-color: #3b82f6;
@@ -37,9 +34,6 @@ const type = {
     }
   `,
   remove: css`
-    display: flex;
-    justify-content: center;
-    align-items: center;
     border-radius: 50%;
     width: fit-content;
     height: fit-content;
@@ -83,9 +77,6 @@ const type = {
     height: 3.6rem;
     width: fit-content;
     gap: 0.2rem;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
     color: #3b82f6;
     border-radius: 50px;
 
@@ -118,6 +109,10 @@ const type = {
 
 const Button = styled.button`
   ${({ $buttonStyle = "cancel" }) => type[$buttonStyle]}
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default Button;

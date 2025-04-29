@@ -8,7 +8,6 @@ export async function createOrderApi(orderData) {
   });
 
   if (error) {
-    console.log(error);
     throw new Error("訂單建立失敗");
   }
 
@@ -59,4 +58,31 @@ export async function getOrderApi(orderId) {
 
   // 回傳訂單數據、當前分頁、最大分頁數
   return data[0];
+}
+
+// 刪除指定訂單
+export async function deleteOrderApi(orderId) {
+  const { data, error } = await supabase.rpc("delete_order", {
+    order_id: orderId,
+  });
+
+  if (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function updateOrderApi(oderData) {
+  const { data, error } = await supabase.rpc("update_order", {
+    order_data: oderData,
+  });
+
+  if (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+
+  return data;
 }

@@ -14,6 +14,7 @@ import {
   compareInventory,
   generateDishItemId,
 } from "../../utils/helpers";
+import Modal from "../../ui/Modal";
 
 const Form = styled.form`
   display: flex;
@@ -27,7 +28,7 @@ const Form = styled.form`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 1.6rem;
+  padding: 2rem;
   gap: 2.4rem;
 `;
 
@@ -149,7 +150,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
       curDishCustomizeOption
     );
 
-    // 餐點原本的食材消耗(在編輯餐點狀態會需要用到)
+    // 餐點原本的食材消耗(在更新餐點設定會需要用到)
     const previousIngredientsUsage = isEdit && {
       usageMap: dishData.ingredientsUsage,
       servings: dishData.servings,
@@ -222,53 +223,60 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <StyledOverlayScrollbars style={{ maxHeight: "100%" }}>
-        <Container>
-          <Price>$ {price - discount}</Price>
+    <Modal
+      modalHeader={dishData.name}
+      maxWidth={36}
+      onCloseModal={onCloseModal}
+      overlayScrollbar={false}
+    >
+      <Form onSubmit={handleSubmit(onSubmit, onError)}>
+        <StyledOverlayScrollbars style={{ maxHeight: "100%" }}>
+          <Container>
+            <Price>$ {price - discount}</Price>
 
-          {requiredField &&
-            requiredField.map((customizeData) => (
-              <CustomizeArea
-                type="required"
-                isEdit={isEdit}
-                customizeData={customizeData}
-                register={register}
-                key={customizeData.customizeId}
-              />
-            ))}
+            {requiredField &&
+              requiredField.map((customizeData) => (
+                <CustomizeArea
+                  type="required"
+                  isEdit={isEdit}
+                  customizeData={customizeData}
+                  register={register}
+                  key={customizeData.customizeId}
+                />
+              ))}
 
-          {optionalField &&
-            optionalField.map((customizeData) => (
-              <CustomizeArea
-                type="optional"
-                customizeData={customizeData}
-                customizeIndex={customizeData.customizeId}
-                register={register}
-                key={customizeData.customizeId}
-              />
-            ))}
+            {optionalField &&
+              optionalField.map((customizeData) => (
+                <CustomizeArea
+                  type="optional"
+                  customizeData={customizeData}
+                  customizeIndex={customizeData.customizeId}
+                  register={register}
+                  key={customizeData.customizeId}
+                />
+              ))}
 
-          <Title>餐點備註</Title>
-          <Note register={register} />
-        </Container>
-      </StyledOverlayScrollbars>
+            <Title>餐點備註</Title>
+            <Note register={register} />
+          </Container>
+        </StyledOverlayScrollbars>
 
-      <Footer>
-        <ServingsControl
-          servings={servings}
-          setServings={setServings}
-          dishData={isEdit ? dishData : {}}
-          liveUpdate={false}
-          size="md"
-        />
+        <Footer>
+          <ServingsControl
+            servings={servings}
+            setServings={setServings}
+            dishData={isEdit ? dishData : {}}
+            liveUpdate={false}
+            size="md"
+          />
 
-        <AddToCartButton disabled={!isValid}>
-          <TiShoppingCart />
-          加入購物車
-        </AddToCartButton>
-      </Footer>
-    </Form>
+          <AddToCartButton disabled={!isValid}>
+            <TiShoppingCart />
+            加入購物車
+          </AddToCartButton>
+        </Footer>
+      </Form>
+    </Modal>
   );
 }
 

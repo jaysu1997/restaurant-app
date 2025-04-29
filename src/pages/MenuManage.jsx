@@ -8,12 +8,9 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
-import Modal from "../ui/Modal.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import SearchField from "../ui/SearchField.jsx";
 import Filter from "../ui/Filter.jsx";
-import ConfirmDelete from "../ui/ConfirmDelete.jsx";
-import useDeleteMenu from "../features/menu-manage/useDeleteMenu.js";
 
 const ToolBar = styled.div`
   display: flex;
@@ -52,7 +49,6 @@ function MenuManage() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { menusData, menusDataFetching } = useGetMenus();
-  const { deleteMenu } = useDeleteMenu();
 
   if (menusDataFetching) {
     return (
@@ -84,10 +80,9 @@ function MenuManage() {
       <ToolBar>
         <Filter optionsArray={options} field="category" selectTitle="分類" />
         <SearchField placeholder="搜尋餐點名稱" />
-
         <Button
           $buttonStyle="createNewItem"
-          onClick={() => setIsOpenModal({ type: "create", data: null })}
+          onClick={() => setIsOpenModal(true)}
         >
           <BsFileEarmarkPlus />
           <span>新增餐點</span>
@@ -99,44 +94,13 @@ function MenuManage() {
           <span>沒有任何數據</span>
         ) : (
           displayMenusData.map((menu) => (
-            <MenusDataCard
-              menu={menu}
-              setIsOpenModal={setIsOpenModal}
-              key={menu.id}
-            />
+            <MenusDataCard menu={menu} key={menu.id} />
           ))
         )}
       </Container>
 
       {isOpenModal && (
-        <Modal
-          modalHeader={
-            isOpenModal.type === "delete" ? "確認刪除" : "餐點設定表單"
-          }
-          headerColor={isOpenModal.type === "delete" ? "#991b1b" : "inherit"}
-          maxWidth={isOpenModal.type === "delete" ? 36 : 56}
-          onCloseModal={() => setIsOpenModal(false)}
-        >
-          {isOpenModal.type === "delete" ? (
-            <ConfirmDelete
-              onCloseModal={() => setIsOpenModal(false)}
-              handleDelete={deleteMenu}
-              data={isOpenModal.data}
-              modalType="menus"
-              render={() => (
-                <p>
-                  請確認是否要刪除餐點：<span>{isOpenModal.data.name}</span>
-                  ，以及該餐點的所有設定。
-                </p>
-              )}
-            />
-          ) : (
-            <UpsertMenuForm
-              onCloseModal={() => setIsOpenModal(false)}
-              menu={isOpenModal.data}
-            />
-          )}
-        </Modal>
+        <UpsertMenuForm onCloseModal={() => setIsOpenModal(false)} />
       )}
     </>
   );

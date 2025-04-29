@@ -8,18 +8,20 @@ function formatCreatedTime(createdTime) {
     day: "2-digit",
   });
 
+  const [year, month, day] = formattedDate.split("/");
+
   const formattedTime = time.toLocaleTimeString("zh-TW", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   });
 
-  return `${formattedDate} ${formattedTime}`;
+  return `${year}年${month}月${day}日 ${formattedTime}`;
 }
 
 // 訂單編號格式化
-function formatOrderNumber(orderNumber) {
-  return `# ${String(orderNumber).padStart(3, "0")}`;
+function formatPickupNumber(pickupNumber) {
+  return `# ${String(pickupNumber).padStart(3, "0")}`;
 }
 
 // 訂單單一餐點的所有自訂細項選擇彙整
@@ -188,9 +190,76 @@ function compareInventory({
   return result;
 }
 
+// 整合所有使用到的新食材(要順便新增到inventory中)
+function createNewIngredients({ newIngredientsMap, getValues }) {
+  const newIngredientSet = new Set();
+  const newIngredientsArr = [];
+
+  // 之所以使用Map存放數據，是為了檢察這個新食材是否真的有使用，而不是在新增食材食輸入錯誤但被記錄儲存的
+  newIngredientsMap.forEach((newIngredientsName, fieldName) => {
+    const fieldValue = getValues(fieldName).label;
+
+    if (
+      fieldValue === newIngredientsName &&
+      !newIngredientSet.has(newIngredientsName)
+    ) {
+      newIngredientSet.add(newIngredientsName);
+      newIngredientsArr.push({
+        label: newIngredientsName,
+        value: newIngredientsName,
+      });
+    }
+  });
+
+  return newIngredientsArr;
+}
+
+// 整合要上傳的訂單數據
+function buildOrderData(order, data) {
+  // 計算訂單的食材總共使用量
+  const totalIngredientsUsage = Object.fromEntries(
+    order.reduce((acc, order) => {
+      order.ingredientsUsage.forEach((quantity, name) => {
+        const curQuantity = acc.get(name) || 0;
+        acc.set(name, curQuantity + quantity * order.servings);
+      });
+
+      return acc;
+    }, new Map())
+  );
+
+  const orderData = {
+    ...data,
+    order: order.map((dish) => ({
+      ...dish,
+      ingredientsUsage: Object.fromEntries(dish.ingredientsUsage),
+    })),
+    totalIngredientsUsage,
+    tableNumber: data.tableNumber?.value || null,
+    pickupTime: data.pickupTime?.value || null,
+    paid: data.paid?.value || "未付款",
+    status: data.status?.value || "準備中",
+  };
+
+  return orderData;
+}
+
+// 這只是用來檢查兩個Map(食材)的前後差異功能，之後會刪除
+function compareMaps(map1, map2) {
+  const diffs = [];
+
+  map1.forEach((value, key) => {
+    if (map2.get(key) !== value) {
+      diffs.push({ [key]: value - map2.get(key) });
+    }
+  });
+
+  return diffs;
+}
+
 export {
   formatCreatedTime,
-  formatOrderNumber,
+  formatPickupNumber,
   summarizeMealChoices,
   calcOrderTotalPrice,
   calcOrderTotalItems,
@@ -200,4 +269,7 @@ export {
   calcIngredientsUsage,
   generateDishItemId,
   compareInventory,
+  createNewIngredients,
+  buildOrderData,
+  compareMaps,
 };

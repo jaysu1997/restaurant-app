@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui/StyledHotToast";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
+import Modal from "../../ui/Modal";
 
 const formFieldData = [
   {
@@ -24,8 +25,9 @@ const formFieldData = [
 ];
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
+  console.log(inventory);
   const { handleSubmit, getValues, reset, control } = useForm({
-    defaultValues: inventory,
+    defaultValues: inventory || {},
   });
   const { upsert, isUpserting } = useUpsertInventory();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,36 +39,21 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
       value: data.label,
     };
 
-    // 當網路離線時會跳出錯誤訊息，並終止提交表單動作
-    if (!navigator.onLine) {
-      StyledHotToast({
-        type: "error",
-        title: "庫存食材設定失敗",
-        content: "目前網路無法使用，請稍後再試。",
-      });
-      return;
-    }
-
-    console.log(inventoryData);
-
     upsert(inventoryData, {
       onSuccess: (data) => {
-        inventory
-          ? StyledHotToast({
-              type: "success",
-              title: "庫存食材設定更新成功",
-            })
-          : StyledHotToast({
-              type: "success",
-              title: "庫存食材設定新增成功",
-            });
+        StyledHotToast({
+          type: "success",
+          title: `庫存食材設定${inventory ? "更新" : "新增"}成功`,
+        });
+
         onCloseModal?.();
         searchParams.set("quantity", "all");
         searchParams.set("name", "");
         setSearchParams(searchParams);
       },
       onError: (error) => {
-        reset(getValues());
+        console.log("上傳失敗", error);
+        // reset(getValues());
       },
     });
   }
@@ -85,52 +72,54 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   }
 
   return (
-    <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
-      {inventory && (
-        <FormTypography $titleStyle="description">
-          表單說明：食材名稱更改後，所有使用此食材的餐點備料和選項也會同步更新名稱。
-        </FormTypography>
-      )}
-
-      {formFieldData.map((data) => (
-        <FormRow $formRowStyle="oneColumn" key={data.inputName}>
-          <FormTypography $titleStyle="title">
-            {data.title}
-            <FormTypography $titleStyle="highlight">*</FormTypography>
+    <Modal modalHeader="食材設定表單" maxWidth={56} onCloseModal={onCloseModal}>
+      <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
+        {inventory && (
+          <FormTypography $titleStyle="description">
+            表單說明：食材名稱更改後，所有使用此食材的餐點備料和選項也會同步更新名稱。
           </FormTypography>
+        )}
 
-          <FormFieldset legendValue="">
-            <ControlledInput
-              placeholder={`請輸入餐點${data.title}`}
-              type={data.inputType}
-              control={control}
-              name={data.inputName}
-              rules={{
-                required: `${data.title}欄位必須填寫`,
-                min: {
-                  value: 0,
-                  message: `${data.title}數量必須不得為負數`,
-                },
-              }}
-            />
-          </FormFieldset>
+        {formFieldData.map((data) => (
+          <FormRow $formRowStyle="oneColumn" key={data.inputName}>
+            <FormTypography $titleStyle="title">
+              {data.title}
+              <FormTypography $titleStyle="highlight">*</FormTypography>
+            </FormTypography>
+
+            <FormFieldset legendValue="">
+              <ControlledInput
+                placeholder={`請輸入餐點${data.title}`}
+                type={data.inputType}
+                control={control}
+                name={data.inputName}
+                rules={{
+                  required: `${data.title}欄位必須填寫`,
+                  min: {
+                    value: 0,
+                    message: `${data.title}數量必須不得為負數`,
+                  },
+                }}
+              />
+            </FormFieldset>
+          </FormRow>
+        ))}
+
+        <FormRow $formRowStyle="footer">
+          <Button
+            $buttonStyle="cancel"
+            type="button"
+            disabled={isUpserting}
+            onClick={onCloseModal}
+          >
+            取消
+          </Button>
+          <Button $buttonStyle="submit" type="submit" disabled={isUpserting}>
+            {isUpserting ? <LoadingDotMini /> : "儲存"}
+          </Button>
         </FormRow>
-      ))}
-
-      <FormRow $formRowStyle="footer">
-        <Button
-          $buttonStyle="cancel"
-          type="button"
-          disabled={isUpserting}
-          onClick={onCloseModal}
-        >
-          取消
-        </Button>
-        <Button $buttonStyle="submit" type="submit" disabled={isUpserting}>
-          {isUpserting ? <LoadingDotMini /> : "儲存"}
-        </Button>
-      </FormRow>
-    </FormTable>
+      </FormTable>
+    </Modal>
   );
 }
 

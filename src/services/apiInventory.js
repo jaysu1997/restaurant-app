@@ -8,8 +8,7 @@ export async function getInventoryApi() {
     .order("remainingQuantity", { ascending: true });
 
   if (error) {
-    console.log(error);
-    throw new Error("庫存數據獲取失敗");
+    throw new Error(error.message);
   }
 
   return data;
@@ -51,7 +50,7 @@ export async function updateInventoryApi(inventoryData) {
 
   if (error) {
     console.log(error);
-    throw new Error("庫存食材設定失敗");
+    throw new Error(error.message);
   }
 
   return data;

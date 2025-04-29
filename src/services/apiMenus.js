@@ -4,13 +4,12 @@ import supabase from "./supabase.js";
 // 取得所有menu數據
 export async function getMenusApi() {
   const { data, error } = await supabase
-    .from("menus")
+    .from("menu")
     .select()
     .order("category", { ascending: true });
 
   if (error) {
-    console.log(error);
-    throw new Error("Menus數據獲取失敗");
+    throw new Error(error.message);
   }
 
   return data;

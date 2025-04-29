@@ -50,7 +50,6 @@ export function reducer(state, action) {
         });
       }
 
-      console.log(newInventoryMap);
       return { ...state, inventoryMap: newInventoryMap };
     }
     // orderForm初始化

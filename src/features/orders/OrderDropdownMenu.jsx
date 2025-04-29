@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit2, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import { formatCreatedTime, formatPickupNumber } from "../../utils/helpers";
+import useDeleteOrder from "./useDeleteOrder";
 
 const MenuContainer = styled.div`
   position: relative;
@@ -31,14 +34,14 @@ const Menu = styled.ul`
   top: ${(props) => props.$position.y}px;
   right: ${(props) => props.$position.x}px;
   background: #fff;
-  box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   padding: 0.8rem 0;
   display: flex;
   flex-direction: column;
-  opacity: ${(props) => (props.$isOpen ? 1 : 0)};
-  visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
-  transform: scale(${(props) => (props.$isOpen ? 1 : 0.95)});
+  opacity: ${(props) => (props.$isOpenMenu ? 1 : 0)};
+  visibility: ${(props) => (props.$isOpenMenu ? "visible" : "hidden")};
+  transform: scale(${(props) => (props.$isOpenMenu ? 1 : 0.95)});
   transform-origin: top right;
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   z-index: 10;
@@ -70,18 +73,21 @@ const MenuItem = styled.li`
 
 function OrderDropdownMenu({
   tableRef,
-  orderId,
-  isOpen,
-  setIsOpen,
+  orderData,
+  isOpenMenu,
+  setIsOpenMenu,
   activeMenuRef,
 }) {
+  const { mutate, isPending } = useDeleteOrder();
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [position, setPosition] = useState(null);
   const toggleRef = useRef(null);
   const navigate = useNavigate();
+  const { id, pickupNumber, createdTime } = orderData;
 
   function handleToggle(e) {
     e.stopPropagation();
-    setIsOpen((isOpen) => (isOpen === orderId ? false : orderId));
+    setIsOpenMenu((isOpenMenu) => (isOpenMenu === id ? false : id));
 
     const tableRect = tableRef.current.getBoundingClientRect();
     const toggleRect = toggleRef.current.getBoundingClientRect();
@@ -97,54 +103,78 @@ function OrderDropdownMenu({
   }
 
   return (
-    <MenuContainer>
-      <ToggleButton
-        ref={toggleRef}
-        onClick={(e) => {
-          handleToggle(e);
-        }}
-      >
-        <FiMoreHorizontal />
-      </ToggleButton>
+    <>
+      <MenuContainer>
+        <ToggleButton
+          ref={toggleRef}
+          onClick={(e) => {
+            handleToggle(e);
+          }}
+        >
+          <FiMoreHorizontal />
+        </ToggleButton>
 
-      {isOpen === orderId && (
-        <Menu ref={activeMenuRef} $isOpen={isOpen} $position={position}>
-          <MenuItem>
-            <button
-              onClick={() => {
-                navigate(`/order/${orderId}`);
-                setIsOpen(false);
-              }}
-            >
-              <FiEye />
-              <span>檢視</span>
-            </button>
-          </MenuItem>
-          <MenuItem>
-            <button
-              onClick={() => {
-                navigate(`/order-edit/${orderId}`);
-                setIsOpen(false);
-              }}
-            >
-              <FiEdit2 />
-              <span>編輯</span>
-            </button>
-          </MenuItem>
-          <MenuItem>
-            <button
-              onClick={() => {
-                console.log("刪除");
-                setIsOpen(false);
-              }}
-            >
-              <FiTrash />
-              <span>刪除</span>
-            </button>
-          </MenuItem>
-        </Menu>
+        {isOpenMenu === id && (
+          <Menu
+            ref={activeMenuRef}
+            $isOpenMenu={isOpenMenu}
+            $position={position}
+          >
+            <MenuItem>
+              <button
+                onClick={() => {
+                  navigate(`/order/${id}`);
+                  setIsOpenMenu(false);
+                }}
+              >
+                <FiEye />
+                <span>檢視</span>
+              </button>
+            </MenuItem>
+            <MenuItem>
+              <button
+                onClick={() => {
+                  navigate(`/order-edit/${id}`);
+                  setIsOpenMenu(false);
+                }}
+              >
+                <FiEdit2 />
+                <span>編輯</span>
+              </button>
+            </MenuItem>
+            <MenuItem>
+              <button
+                onClick={() => {
+                  setIsOpenMenu(false);
+                  setIsOpenModal(true);
+                }}
+              >
+                <FiTrash />
+                <span>刪除</span>
+              </button>
+            </MenuItem>
+          </Menu>
+        )}
+      </MenuContainer>
+
+      {isOpenModal && (
+        <ConfirmDelete
+          onCloseModal={() => setIsOpenModal(false)}
+          handleDelete={mutate}
+          isDeleting={isPending}
+          data={orderData}
+          modalType="order"
+          render={() => (
+            <p>
+              請確認是否要刪除
+              <strong>{`取餐號碼${formatPickupNumber(pickupNumber)}`}</strong>
+              &#8203;&nbsp;(
+              {formatCreatedTime(createdTime)}) 。
+            </p>
+          )}
+        />
       )}
-    </MenuContainer>
+    </>
   );
 }
 

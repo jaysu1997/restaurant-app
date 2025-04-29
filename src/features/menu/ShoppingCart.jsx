@@ -9,6 +9,7 @@ import OrderInfoField from "./OrderInfoField";
 import useCreateOrder from "./useCreateOrder";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
+import { buildOrderData } from "../../utils/helpers";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
@@ -150,6 +151,7 @@ function ShoppingCart({ inventoryData }) {
     control,
     reset,
     watch,
+    setValue,
     formState: { isValid },
   } = useForm();
 
@@ -158,7 +160,7 @@ function ShoppingCart({ inventoryData }) {
   // 因為munu和edit-order共用相同useReducer，所以在切換頁面時可能出現ui渲染閃爍問題，因此增加判別條件解決閃爍(讓購物車ui只渲染點餐頁面的數據)
   const isCreatingOrder = curOrderPage === "/menu";
 
-  const dineOption = watch("dineOption");
+  const dineOption = watch("orderType") === "外帶";
 
   const { totalQuantity, totalCost } = order.reduce(
     (acc, cur) => {
@@ -171,30 +173,7 @@ function ShoppingCart({ inventoryData }) {
   );
 
   function onSubmit(data) {
-    // 計算訂單的食材總共使用量
-    const totalIngredientsUsage = Object.fromEntries(
-      order.reduce((acc, order) => {
-        order.ingredientsUsage.forEach((quantity, name) => {
-          const curQuantity = acc.get(name) || 0;
-          acc.set(name, curQuantity + quantity * order.servings);
-        });
-
-        return acc;
-      }, new Map())
-    );
-
-    const orderData = {
-      orderType: dineOption ? "外帶" : "內用",
-      order: order.map((dish) => ({
-        ...dish,
-        ingredientsUsage: Object.fromEntries(dish.ingredientsUsage),
-      })),
-      totalIngredientsUsage,
-      ...data,
-      tableNumber: dineOption ? null : data.tableNumber.value,
-      pickupTime: dineOption ? data.pickupTime.value : null,
-    };
-
+    const orderData = buildOrderData(order, data);
     createOrder(orderData);
   }
 
@@ -207,7 +186,12 @@ function ShoppingCart({ inventoryData }) {
       <Header>
         <h4>購物車</h4>
         <Row>
-          <OrderTypeSwitch dineOption={dineOption} control={control} />
+          <OrderTypeSwitch
+            dineOption={dineOption}
+            control={control}
+            setValue={setValue}
+            isDisabled={order.length === 0}
+          />
           {order.length !== 0 && isCreatingOrder && (
             <ClearAllButton
               onClick={() => {

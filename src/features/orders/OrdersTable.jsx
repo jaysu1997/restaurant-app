@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import OrderRow from "./OrderRow";
 import Pagination from "../../ui/Pagination";
 import usePagination from "./usePagination";
+import OrderDropdownMenu from "./OrderDropdownMenu";
 
 const OrderContainer = styled.div`
   max-width: 95dvw;
@@ -53,21 +54,21 @@ const OrderBody = styled.section`
 
 function OrdersTable() {
   const { ordersData, curPage, maxPage, isPending } = usePagination();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   const tableRef = useRef(null);
   const activeMenuRef = useRef(null);
 
   // 在父元件監聽點擊外部時關閉菜單(避免大量註冊事件監聽)
   useEffect(
     function () {
-      if (!isOpen) return;
+      if (!isOpenMenu) return;
 
       const handleClickOutside = (e) => {
         if (
           activeMenuRef.current &&
           !activeMenuRef.current.contains(e.target)
         ) {
-          setIsOpen(false);
+          setIsOpenMenu(false);
         }
       };
 
@@ -76,16 +77,16 @@ function OrdersTable() {
         document.removeEventListener("click", handleClickOutside);
       };
     },
-    [isOpen]
+    [isOpenMenu]
   );
 
-  // 監聽頁面滾動(包含滾輪和按鍵的滾動)時關閉菜單
+  // 監聽頁面滾動(包含滾輪和鍵盤的滾動)時關閉菜單
   useEffect(
     function () {
-      if (!isOpen) return;
+      if (!isOpenMenu) return;
 
       const handleScroll = () => {
-        setIsOpen(false);
+        setIsOpenMenu(false);
       };
 
       window.addEventListener("scroll", handleScroll, { capture: true });
@@ -94,7 +95,7 @@ function OrdersTable() {
         window.removeEventListener("scroll", handleScroll, { capture: true });
       };
     },
-    [isOpen, setIsOpen]
+    [isOpenMenu, setIsOpenMenu]
   );
 
   if (isPending) {
@@ -120,14 +121,15 @@ function OrdersTable() {
 
         <OrderBody>
           {ordersData.map((orderData) => (
-            <OrderRow
-              orderData={orderData}
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              tableRef={tableRef}
-              activeMenuRef={activeMenuRef}
-              key={orderData.id}
-            />
+            <OrderRow orderData={orderData} key={orderData.id}>
+              <OrderDropdownMenu
+                orderData={orderData}
+                isOpenMenu={isOpenMenu}
+                setIsOpenMenu={setIsOpenMenu}
+                tableRef={tableRef}
+                activeMenuRef={activeMenuRef}
+              />
+            </OrderRow>
           ))}
         </OrderBody>
       </OrderContainer>

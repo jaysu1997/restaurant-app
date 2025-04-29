@@ -4,7 +4,6 @@ import ServingsControl from "../../ui/ServingsControl";
 import { useEffect, useRef, useState } from "react";
 import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
-import Modal from "../../ui/Modal";
 import OrderForm from "./OrderForm";
 import { summarizeMealChoices } from "../../utils/helpers";
 
@@ -136,17 +135,11 @@ function CartItem({ order }) {
       </OrderCardWrapper>
 
       {isOpenModal && (
-        <Modal
+        <OrderForm
+          dishData={order}
           onCloseModal={() => setIsOpenModal(false)}
-          modalHeader={order.name}
-          maxWidth={36}
-        >
-          <OrderForm
-            dishData={order}
-            onCloseModal={() => setIsOpenModal(false)}
-            isEdit={true}
-          />
-        </Modal>
+          isEdit={true}
+        />
       )}
     </>
   );
