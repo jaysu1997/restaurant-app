@@ -15,12 +15,12 @@ const StyleSwiper = styled(Swiper)`
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`
-  background-color: #262626;
-  color: #fafafa;
   min-height: 3.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #fff;
+  background-color: ${(props) => (props.$isActive ? "#171717" : "#737373")};
 `;
 
 export default function SwiperBar({ categorys }) {
@@ -54,7 +54,14 @@ export default function SwiperBar({ categorys }) {
         },
       }}
     >
-      <StyleSwiperSlide onClick={handleFilter} data-type="all">
+      <StyleSwiperSlide
+        onClick={handleFilter}
+        data-type="all"
+        $isActive={
+          !searchParams.get("category") ||
+          searchParams.get("category") === "all"
+        }
+      >
         全部
       </StyleSwiperSlide>
       {categorys.map((category) => (
@@ -62,6 +69,7 @@ export default function SwiperBar({ categorys }) {
           key={category}
           onClick={handleFilter}
           data-type={category}
+          $isActive={searchParams.get("category") === category}
         >
           {category}
         </StyleSwiperSlide>

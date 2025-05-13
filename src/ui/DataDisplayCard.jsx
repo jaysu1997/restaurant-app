@@ -65,11 +65,6 @@ const Button = styled.button`
   &:hover {
     background-color: #f0f9ff;
   }
-
-  svg {
-    width: 1.6rem;
-    height: 1.6rem;
-  }
 `;
 
 function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
@@ -83,11 +78,11 @@ function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
       ))}
 
       <Button $fontColor="#0f766e" onClick={handleEditButton}>
-        <TbEdit />
+        <TbEdit size={16} />
         <span>編輯</span>
       </Button>
       <Button $fontColor="#b91c1c" onClick={handleDeleteButton}>
-        <TbTrashX />
+        <TbTrashX size={16} />
         <span>刪除</span>
       </Button>
     </Card>

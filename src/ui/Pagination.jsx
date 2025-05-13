@@ -1,3 +1,5 @@
+// 這個元件或許需要再加上直接轉跳頁面的功能
+
 import styled from "styled-components";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
@@ -49,11 +51,6 @@ const PaginationButton = styled.button`
   font-weight: 500;
   transition: none;
 
-  svg {
-    height: 2rem;
-    width: 2rem;
-  }
-
   &:is(button):not([aria-current="page"]):not(:disabled):hover {
     background-color: #eee;
   }
@@ -90,7 +87,6 @@ function Pagination({ curPage, maxPage }) {
   function handlePagination(key, value) {
     searchParams.set(key, value);
     setSearchParams(searchParams);
-
     scrollToTop();
   }
 
@@ -120,7 +116,7 @@ function Pagination({ curPage, maxPage }) {
           disabled={curPage === 1}
           onClick={() => handlePagination("page", curPage - 1)}
         >
-          <MdNavigateBefore />
+          <MdNavigateBefore size={20} />
         </PaginationButton>
 
         {paginationNumbers.map((num, index) => (
@@ -142,7 +138,7 @@ function Pagination({ curPage, maxPage }) {
           disabled={curPage === maxPage}
           onClick={() => handlePagination("page", curPage + 1)}
         >
-          <MdNavigateNext />
+          <MdNavigateNext size={20} />
         </PaginationButton>
       </PaginationWrapper>
     </StyledFooter>

@@ -5,15 +5,14 @@ import OrderRow from "./OrderRow";
 import Pagination from "../../ui/Pagination";
 import usePagination from "./usePagination";
 import OrderDropdownMenu from "./OrderDropdownMenu";
+import useClickOutside from "./useClickOutside";
 
 const OrderContainer = styled.div`
   max-width: 95dvw;
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* border: 1px solid #e5e7eb; */
   border: 1px solid #dcdcdc;
-
   border-radius: 8px;
   overflow: hidden;
 
@@ -25,16 +24,17 @@ const OrderContainer = styled.div`
 const OrderHeader = styled.header`
   display: grid;
   grid-template-columns:
-    5.6rem minmax(0, 1fr) minmax(0, 1.5fr) repeat(3, minmax(0, 1fr))
-    2.8rem;
+    minmax(0, 5.6rem) minmax(0, 1fr) minmax(0, 1.5fr) repeat(3, minmax(0, 1fr))
+    minmax(0, 2.8rem);
   align-items: center;
   justify-items: start;
   gap: 0.8rem;
   padding: 1.6rem;
   border: none;
   font-weight: 700;
-  background-color: #bfdbfe;
-  z-index: -10;
+  background-color: #525252;
+  color: #fafafa;
+  /* z-index: -10; */
 
   @media (max-width: 768px) {
     display: none;
@@ -59,6 +59,8 @@ function OrdersTable() {
   const activeMenuRef = useRef(null);
 
   // 在父元件監聽點擊外部時關閉菜單(避免大量註冊事件監聽)
+  useClickOutside(activeMenuRef, isOpenMenu, setIsOpenMenu);
+
   useEffect(
     function () {
       if (!isOpenMenu) return;

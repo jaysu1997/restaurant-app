@@ -22,6 +22,8 @@ const StyleNav = styled.nav`
   height: 100%;
   max-height: calc(100dvh - 6.4rem);
   width: 24rem;
+  /* visibility: hidden; */
+  /* display: none; */
 `;
 
 const NavList = styled.ul`
@@ -43,8 +45,6 @@ const StyleNavLink = styled(NavLink)`
 
   svg {
     color: #475569;
-    width: 2rem;
-    height: 2rem;
   }
 
   &:link,

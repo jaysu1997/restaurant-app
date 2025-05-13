@@ -66,11 +66,6 @@ const Button = styled.button`
   align-items: center;
   position: relative;
 
-  svg {
-    width: 2.8rem;
-    height: 2.8rem;
-  }
-
   &::before {
     content: "";
     position: absolute;
@@ -117,7 +112,7 @@ function Modal({
         <Header>
           <Title $textColor={headerColor}>{modalHeader}</Title>
           <Button onClick={onCloseModal}>
-            <IoIosClose />
+            <IoIosClose size={28} />
           </Button>
         </Header>
         {overlayScrollbar ? (

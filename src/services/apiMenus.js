@@ -4,7 +4,7 @@ import supabase from "./supabase.js";
 // 取得所有menu數據
 export async function getMenusApi() {
   const { data, error } = await supabase
-    .from("menu")
+    .from("menus")
     .select()
     .order("category", { ascending: true });
 

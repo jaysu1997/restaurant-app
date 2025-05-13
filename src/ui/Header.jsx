@@ -9,7 +9,7 @@ const StyleHeader = styled.header`
   background-color: #fff;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 10;
   grid-column: 1 / -1;
   padding: 0 2.4rem;
 `;

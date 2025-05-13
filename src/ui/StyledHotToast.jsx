@@ -18,11 +18,6 @@ const Icon = styled.div`
   align-items: center;
   justify-content: center;
   color: ${(props) => (props.type === "error" ? "#e11d48" : "#22c55e")};
-
-  svg {
-    height: 2rem;
-    width: 2rem;
-  }
 `;
 
 const Title = styled.h4`
@@ -38,11 +33,6 @@ const CloseButton = styled.button`
   border-radius: 50%;
   height: 2rem;
   width: 2rem;
-
-  svg {
-    height: 1.6rem;
-    width: 1.6rem;
-  }
 `;
 
 const Content = styled.div`
@@ -63,12 +53,16 @@ function StyledHotToast({
   return toastAlert((t) => (
     <Wrapper>
       <Icon type={type}>
-        {type === "error" ? <FaTriangleExclamation /> : <FaCircleCheck />}
+        {type === "error" ? (
+          <FaTriangleExclamation size={20} />
+        ) : (
+          <FaCircleCheck size={20} />
+        )}
       </Icon>
       <Title type={type}>{title}</Title>
       {closeButton && (
         <CloseButton onClick={() => toast.dismiss(t.id)}>
-          <FaXmark />
+          <FaXmark size={16} />
         </CloseButton>
       )}
       {content && <Content>{content}</Content>}

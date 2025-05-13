@@ -52,8 +52,6 @@ const AccordionTitle = styled.button`
     $collapse ? "1px solid #dddddd" : "none"};
 
   svg {
-    width: 1.4rem;
-    height: 1.4rem;
     transition: transform 0.3s;
     transform: ${({ $collapse }) =>
       $collapse ? "rotate(90deg)" : "rotate(0deg)"};
@@ -186,7 +184,7 @@ function FilterMenuList({ name }) {
           $collapse={!isCollapse}
           onClick={() => setIsCollapse((isCollapse) => !isCollapse)}
         >
-          <RiArrowRightSLine />
+          <RiArrowRightSLine size={14} />
           <span>查看使用{name}的餐點</span>
         </AccordionTitle>
 

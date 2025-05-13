@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMenusApi } from "../../services/apiMenus";
 import StyledHotToast from "../../ui/StyledHotToast";
+import { useEffect } from "react";
 
 function useGetMenus() {
   const {
@@ -14,13 +15,18 @@ function useGetMenus() {
     queryFn: getMenusApi,
   });
 
-  if (menusDataFetchingError) {
-    StyledHotToast({
-      type: "error",
-      title: "菜單數據獲取失敗",
-      content: error.message,
-    });
-  }
+  useEffect(
+    function () {
+      if (menusDataFetchingError) {
+        StyledHotToast({
+          type: "error",
+          title: "菜單數據獲取失敗",
+          content: error.message,
+        });
+      }
+    },
+    [error, menusDataFetchingError]
+  );
 
   return { menusData, menusDataFetching, menusDataFetchingError };
 }

@@ -24,7 +24,6 @@ function useCreateOrder(reset) {
 
       dispatch({ type: "order/reset" });
       reset();
-
       queryClient.invalidateQueries(["orders", "inventory"]);
     },
     onError: (error) => {

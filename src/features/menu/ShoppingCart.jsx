@@ -66,11 +66,6 @@ const ClearAllButton = styled.button`
   height: 2.4rem;
   padding: 0.3rem 0.6rem;
 
-  svg {
-    height: 1.4rem;
-    width: 1.4rem;
-  }
-
   span {
     font-size: 1.4rem;
     line-height: 1.6;
@@ -112,11 +107,6 @@ const SubmitButton = styled.button`
   &:not(:disabled):hover {
     background-color: #2563eb;
   }
-
-  svg {
-    width: 2rem;
-    height: 2rem;
-  }
 `;
 
 const EmptyShoppingCart = styled.div`
@@ -129,8 +119,6 @@ const EmptyShoppingCart = styled.div`
   gap: 1.2rem;
 
   svg {
-    width: 6.4rem;
-    height: 6.4rem;
     color: #a1a1aa;
   }
 
@@ -166,7 +154,6 @@ function ShoppingCart({ inventoryData }) {
     (acc, cur) => {
       acc.totalQuantity += cur.servings;
       acc.totalCost += cur.servings * cur.itemTotalPrice;
-
       return acc;
     },
     { totalQuantity: 0, totalCost: 0 }
@@ -174,6 +161,7 @@ function ShoppingCart({ inventoryData }) {
 
   function onSubmit(data) {
     const orderData = buildOrderData(order, data);
+
     createOrder(orderData);
   }
 
@@ -203,7 +191,7 @@ function ShoppingCart({ inventoryData }) {
                 reset();
               }}
             >
-              <GrClear />
+              <GrClear size={14} />
               <span>清空</span>
             </ClearAllButton>
           )}
@@ -228,7 +216,7 @@ function ShoppingCart({ inventoryData }) {
         </StyledOverlayScrollbars>
       ) : (
         <EmptyShoppingCart>
-          <FaShoppingCart />
+          <FaShoppingCart size={64} />
           <span>開始選擇美味的餐點吧！</span>
         </EmptyShoppingCart>
       )}

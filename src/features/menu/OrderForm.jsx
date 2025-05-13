@@ -74,11 +74,6 @@ const AddToCartButton = styled.button`
   &:not(:disabled):hover {
     background-color: #3f3f46;
   }
-
-  svg {
-    width: 2rem;
-    height: 2rem;
-  }
 `;
 
 function OrderForm({ dishData, onCloseModal, isEdit = false }) {
@@ -271,7 +266,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
           />
 
           <AddToCartButton disabled={!isValid}>
-            <TiShoppingCart />
+            <TiShoppingCart size={20} />
             加入購物車
           </AddToCartButton>
         </Footer>

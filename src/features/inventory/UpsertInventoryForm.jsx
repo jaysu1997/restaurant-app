@@ -47,8 +47,8 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
         });
 
         onCloseModal?.();
-        searchParams.set("quantity", "all");
-        searchParams.set("name", "");
+        searchParams.delete("quantity");
+        searchParams.delete("name");
         setSearchParams(searchParams);
       },
       onError: (error) => {

@@ -1,7 +1,6 @@
 // 食材備料頁面
 import styled from "styled-components";
 import Heading from "../ui/Heading";
-import SearchField from "../ui/SearchField";
 import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import Button from "../ui/Button";
@@ -17,6 +16,7 @@ const ToolBar = styled.div`
   gap: 1.6rem;
   padding: 1rem 0;
   justify-content: space-between;
+  /* width: 100%; */
 `;
 
 const Container = styled.ul`
@@ -69,13 +69,27 @@ function Inventory() {
     quantityKeyWord
   );
 
-  // 篩選選項(Filter需要)
-  const options = [
-    { label: "不篩選", value: "all" },
-    { label: "庫存低於100", value: 100 },
-    { label: "庫存低於50", value: 50 },
-    { label: "庫存低於10", value: 10 },
-    { label: "庫存已耗盡", value: 0 },
+  const filtersConfig = [
+    {
+      title: "食材名稱",
+      type: "search",
+      inputType: "text",
+      queryKey: "name",
+      placeholder: "搜尋食材名稱",
+    },
+    {
+      title: "庫存數量",
+      type: "select",
+      queryKey: "quantity",
+      placeholder: "選擇庫存剩餘量",
+      options: [
+        { label: "不篩選", value: "all" },
+        { label: "庫存低於100", value: "100" },
+        { label: "庫存低於50", value: "50" },
+        { label: "庫存低於10", value: "10" },
+        { label: "庫存已耗盡", value: "0" },
+      ],
+    },
   ];
 
   return (
@@ -83,8 +97,7 @@ function Inventory() {
       <Heading>庫存管理</Heading>
 
       <ToolBar>
-        <Filter optionsArray={options} field="quantity" selectTitle="數量" />
-        <SearchField placeholder="搜尋食材名稱" />
+        <Filter filtersConfig={filtersConfig} />
         <Button
           $buttonStyle="createNewItem"
           onClick={() => setIsOpenModal(true)}

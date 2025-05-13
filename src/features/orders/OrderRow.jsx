@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Tag from "../../ui/Tag";
-import OrderDropdownMenu from "./OrderDropdownMenu";
 import {
   calcOrderTotalPrice,
   formatCreatedTime,
@@ -20,7 +19,7 @@ const StyledOrderRow = styled.div`
   background-color: #fff;
 
   &:hover {
-    background-color: #f0f9ff;
+    background-color: #f9fafb;
   }
 
   @media (max-width: 768px) {
@@ -38,7 +37,7 @@ const StyledOrderRow = styled.div`
     border-radius: 6px;
 
     &:hover {
-      background-color: #f5f5f5;
+      background-color: #fff;
     }
 
     div {

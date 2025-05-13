@@ -16,7 +16,7 @@ export async function createOrderApi(orderData) {
 
 // 獲取指定範圍訂單數據api
 export async function getOrdersApi(page, itemsPerPage) {
-  // 訂單數據總筆數
+  // 用來取得數據總筆數(不會獲取data數據)
   const { count, error: countError } = await supabase
     .from("orders")
     .select("*", { count: "exact", head: true });
@@ -26,7 +26,7 @@ export async function getOrdersApi(page, itemsPerPage) {
     throw new Error("訂單數據總筆數獲取失敗");
   }
 
-  // 最大分頁數以及當前分頁
+  // 最大分頁數以及當前分頁(不可超過最大分頁)
   const maxPage = Math.ceil(count / itemsPerPage);
   const curPage = page > maxPage ? maxPage : page;
   // 取得指定範圍內的數據

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
-import { useOrder } from "../context/OrderContext";
 
 const StyleAppLayout = styled.div`
   display: grid;

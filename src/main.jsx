@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./ui/ErrorFallBack.jsx";
 
-// fallback元件需要再做修正
+// fallback元件需要再做修正(樣式和內容可能都要)
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorBoundary

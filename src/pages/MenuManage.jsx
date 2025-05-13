@@ -9,13 +9,12 @@ import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
-import SearchField from "../ui/SearchField.jsx";
 import Filter from "../ui/Filter.jsx";
 
 const ToolBar = styled.div`
   display: flex;
-  gap: 1.6rem;
   justify-content: space-between;
+  gap: 1.6rem;
   padding: 1rem 0;
 `;
 
@@ -65,12 +64,26 @@ function MenuManage() {
   // 要展示的數據
   const displayMenusData = filterData(menusData, nameKeyWord, categoryKeyWord);
 
-  // 篩選選項(Filter需要)
-  const options = [
-    { label: "不篩選", value: "all" },
-    ...Array.from(new Set(menusData.map((data) => data.category))).map(
-      (category) => ({ label: category, value: category })
-    ),
+  const filtersConfig = [
+    {
+      title: "餐點名稱",
+      type: "search",
+      inputType: "text",
+      queryKey: "name",
+      placeholder: "搜尋餐點名稱",
+    },
+    {
+      title: "餐點分類",
+      type: "select",
+      queryKey: "category",
+      placeholder: "選擇餐點分類",
+      options: [
+        { label: "不篩選", value: "all" },
+        ...Array.from(new Set(menusData.map((data) => data.category))).map(
+          (category) => ({ label: category, value: category })
+        ),
+      ],
+    },
   ];
 
   return (
@@ -78,8 +91,7 @@ function MenuManage() {
       <Heading>菜單設定</Heading>
 
       <ToolBar>
-        <Filter optionsArray={options} field="category" selectTitle="分類" />
-        <SearchField placeholder="搜尋餐點名稱" />
+        <Filter filtersConfig={filtersConfig} />
         <Button
           $buttonStyle="createNewItem"
           onClick={() => setIsOpenModal(true)}

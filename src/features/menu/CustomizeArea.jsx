@@ -88,19 +88,14 @@ const StyledOption = styled.label`
   }
 
   svg[role="unchecked"] {
-    width: 1.8rem;
-    height: 1.8rem;
     transition: opacity 0.2s;
     color: rgba(0, 0, 0, 0.6);
   }
 
   svg[role="checked"] {
-    width: 1.8rem;
-    height: 1.8rem;
     color: #007bff;
     position: absolute;
     opacity: 0;
-
     transform: scale(0.5);
     transition: opacity 0.2s, transform 0.5s;
   }
@@ -282,8 +277,8 @@ function Option({
         })}
       />
 
-      <ImCheckboxUnchecked role="unchecked" />
-      <ImCheckboxChecked role="checked" />
+      <ImCheckboxUnchecked size={18} role="unchecked" />
+      <ImCheckboxChecked size={18} role="checked" />
 
       <span role="optionName">{optionData.optionLabel}</span>
       <span role="price">

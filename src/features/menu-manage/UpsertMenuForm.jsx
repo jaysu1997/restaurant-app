@@ -108,8 +108,8 @@ function UpsertMenuForm({ onCloseModal, menu }) {
           title: `餐點設定${menu ? "更新" : "新增"}成功`,
         });
         onCloseModal?.();
-        searchParams.set("category", "all");
-        searchParams.set("name", "");
+        searchParams.delete("category");
+        searchParams.delete("name");
         setSearchParams(searchParams);
       },
       onError: (error) => {

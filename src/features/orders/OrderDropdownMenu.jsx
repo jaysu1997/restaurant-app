@@ -22,11 +22,6 @@ const ToggleButton = styled.button`
   &:hover {
     background-color: #e5e7eb;
   }
-
-  svg {
-    height: 2rem;
-    width: 2rem;
-  }
 `;
 
 const Menu = styled.ul`
@@ -44,12 +39,11 @@ const Menu = styled.ul`
   transform: scale(${(props) => (props.$isOpenMenu ? 1 : 0.95)});
   transform-origin: top right;
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-  z-index: 10;
+  z-index: 1;
 `;
 
 const MenuItem = styled.li`
-  width: 16rem;
-  z-index: 2;
+  width: 14rem;
 
   &:hover {
     background: #f0f0f0;
@@ -63,11 +57,6 @@ const MenuItem = styled.li`
     display: flex;
     align-items: center;
     justify-content: flex-start;
-  }
-
-  svg {
-    width: 1.6rem;
-    height: 1.6rem;
   }
 `;
 
@@ -98,7 +87,7 @@ function OrderDropdownMenu({
       y:
         tableRect.bottom > toggleRect.bottom + 133
           ? window.scrollY + toggleRect.bottom + 6
-          : window.scrollY + toggleRect.top - 127 - 6,
+          : window.scrollY + toggleRect.top - 133 - 6,
     });
   }
 
@@ -111,7 +100,7 @@ function OrderDropdownMenu({
             handleToggle(e);
           }}
         >
-          <FiMoreHorizontal />
+          <FiMoreHorizontal size={20} />
         </ToggleButton>
 
         {isOpenMenu === id && (
@@ -127,8 +116,8 @@ function OrderDropdownMenu({
                   setIsOpenMenu(false);
                 }}
               >
-                <FiEye />
-                <span>檢視</span>
+                <FiEye size={16} />
+                <span>檢視訂單</span>
               </button>
             </MenuItem>
             <MenuItem>
@@ -138,8 +127,8 @@ function OrderDropdownMenu({
                   setIsOpenMenu(false);
                 }}
               >
-                <FiEdit2 />
-                <span>編輯</span>
+                <FiEdit2 size={16} />
+                <span>編輯訂單</span>
               </button>
             </MenuItem>
             <MenuItem>
@@ -149,8 +138,8 @@ function OrderDropdownMenu({
                   setIsOpenModal(true);
                 }}
               >
-                <FiTrash />
-                <span>刪除</span>
+                <FiTrash size={16} />
+                <span>刪除訂單</span>
               </button>
             </MenuItem>
           </Menu>

@@ -3,7 +3,7 @@ import supabase from "./supabase";
 // 取得stocks中的所有食材數據
 export async function getInventoryApi() {
   const { data, error } = await supabase
-    .from("inventory")
+    .from("inventory  ")
     .select()
     .order("remainingQuantity", { ascending: true });
 
@@ -87,7 +87,6 @@ export async function deleteInventoryApi(id) {
   );
 
   if (error) {
-    console.error("刪除失敗:", error);
     throw new Error("刪除失敗");
   }
 

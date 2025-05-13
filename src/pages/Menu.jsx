@@ -9,6 +9,8 @@ import ShoppingCart from "../features/menu/ShoppingCart";
 import useGetInventory from "../features/inventory/useGetInventory";
 import { useState } from "react";
 import OrderForm from "../features/menu/OrderForm";
+import StyledHotToast from "../ui/StyledHotToast";
+import FetchFailFallback from "../ui/FetchFailFallback";
 
 const Container = styled.div`
   max-width: 120rem;
@@ -51,7 +53,7 @@ function Menu() {
     return (
       <>
         <Heading>點餐系統</Heading>
-        <span>數據獲取失敗，請稍後再嘗試</span>
+        <FetchFailFallback />
       </>
     );
   }
