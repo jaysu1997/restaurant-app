@@ -1,5 +1,4 @@
 // 用來展示數據的卡片ui
-
 import styled from "styled-components";
 import { TbEdit, TbTrashX } from "react-icons/tb";
 
@@ -9,7 +8,7 @@ const Card = styled.li`
   grid-template-columns: repeat(2, 1fr);
   border-radius: 10px;
   overflow: hidden;
-  outline: 2px solid #dcdcdc;
+  border: 2px solid #dcdcdc;
   /* background-color: #f9fafb; */
   background-color: #fff;
   /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
@@ -18,7 +17,7 @@ const Card = styled.li`
   &:hover {
     transform: translateY(-2px);
     /* box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); */
-    outline: 2px solid #93c5fd;
+    border: 2px solid #93c5fd;
   }
 `;
 

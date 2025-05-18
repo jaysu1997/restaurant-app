@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-
 import {
   BiBarChartSquare,
   BiChalkboard,
@@ -11,7 +10,7 @@ import {
   BiUserPlus,
 } from "react-icons/bi";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
-import { scrollToTop } from "../utils/helpers";
+import { scrollToTop } from "../utils/scrollToTop";
 
 const StyleNav = styled.nav`
   border-right: 1px solid #dcdcdc;
@@ -22,7 +21,6 @@ const StyleNav = styled.nav`
   height: 100%;
   max-height: calc(100dvh - 6.4rem);
   width: 24rem;
-  /* visibility: hidden; */
   /* display: none; */
 `;
 

@@ -11,6 +11,10 @@ function useDeleteOrder() {
     mutationFn: deleteOrderApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      StyledHotToast({
+        type: "success",
+        title: "訂單刪除成功",
+      });
       navigate("/orders");
     },
     onError: (error) => {

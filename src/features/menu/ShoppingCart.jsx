@@ -2,14 +2,17 @@ import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
 import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
 import CartItem from "./CartItem";
-import { FaShoppingCart } from "react-icons/fa";
 import { GrClear } from "react-icons/gr";
 import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import useCreateOrder from "./useCreateOrder";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
-import { buildOrderData } from "../../utils/helpers";
+import { GiShoppingCart } from "react-icons/gi";
+import {
+  buildOrderData,
+  calculateOrderSummary,
+} from "../../utils/orderHelpers";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
@@ -122,7 +125,7 @@ const EmptyShoppingCart = styled.div`
     color: #a1a1aa;
   }
 
-  span {
+  p {
     font-size: 1.6rem;
   }
 `;
@@ -150,14 +153,7 @@ function ShoppingCart({ inventoryData }) {
 
   const dineOption = watch("orderType") === "外帶";
 
-  const { totalQuantity, totalCost } = order.reduce(
-    (acc, cur) => {
-      acc.totalQuantity += cur.servings;
-      acc.totalCost += cur.servings * cur.itemTotalPrice;
-      return acc;
-    },
-    { totalQuantity: 0, totalCost: 0 }
-  );
+  const { totalQuantity, totalCost } = calculateOrderSummary(order);
 
   function onSubmit(data) {
     const orderData = buildOrderData(order, data);
@@ -216,8 +212,8 @@ function ShoppingCart({ inventoryData }) {
         </StyledOverlayScrollbars>
       ) : (
         <EmptyShoppingCart>
-          <FaShoppingCart size={64} />
-          <span>開始選擇美味的餐點吧！</span>
+          <GiShoppingCart size={80} />
+          <p>開始選擇美味的餐點吧！</p>
         </EmptyShoppingCart>
       )}
 
@@ -234,7 +230,7 @@ function ShoppingCart({ inventoryData }) {
 
         <Row>
           <SubmitButton
-            disabled={order.length === 0 || !isValid}
+            disabled={order.length === 0 || !isValid || orderCreating}
             onClick={handleSubmit(onSubmit, onError)}
           >
             {orderCreating ? <LoadingDotMini /> : "提交"}

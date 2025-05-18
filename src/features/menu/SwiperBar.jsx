@@ -23,7 +23,7 @@ const StyleSwiperSlide = styled(SwiperSlide)`
   background-color: ${(props) => (props.$isActive ? "#171717" : "#737373")};
 `;
 
-export default function SwiperBar({ categorys }) {
+export default function SwiperBar({ categories }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 根據選擇的option值來改變URL的searchParams
@@ -64,7 +64,7 @@ export default function SwiperBar({ categorys }) {
       >
         全部
       </StyleSwiperSlide>
-      {categorys.map((category) => (
+      {categories.map((category) => (
         <StyleSwiperSlide
           key={category}
           onClick={handleFilter}

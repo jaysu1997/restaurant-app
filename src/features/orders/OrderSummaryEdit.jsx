@@ -1,24 +1,25 @@
 // 訂單詳情(編輯)
 import styled from "styled-components";
-import {
-  buildOrderData,
-  formatCreatedTime,
-  generatePickupTimes,
-  generateTableNumbers,
-} from "../../utils/helpers";
+
 import OrderDishes from "./OrderDishes";
 import { useOrder } from "../../context/OrderContext";
 import { useForm } from "react-hook-form";
 import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { useState } from "react";
-import OrderForm from "../menu/OrderForm";
 import MiniMenu from "./MiniMenu";
 import Note from "../../ui/Note";
 import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import OrderOperation from "./OrderOperation";
 import useUpdateOrder from "./useUpdateOrder";
+import {
+  buildOrderData,
+  formatCreatedTime,
+  generatePickupTimes,
+  generateTableNumbers,
+} from "../../utils/orderHelpers";
+import OrderForm from "../../ui/OrderForm/OrderForm";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -51,7 +52,6 @@ const Row = styled.div`
 
 // 新增餐點的按鈕需要再調整樣式
 function OrderSummaryEdit({ orderData, isEdit }) {
-  // 上傳看起來是可以沒問題，但食材計算的部分還需要檢查，另外或許還需要調整優化sql，然後應該就可以進入rechart
   const { updateOrder, updating, error } = useUpdateOrder();
   const { inventoryDataFetching } = useGetInventory(true);
   const [isOpenModal, setIsOpenModal] = useState(false);

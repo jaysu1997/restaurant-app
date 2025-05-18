@@ -1,20 +1,17 @@
 // 點餐功能表單
-import { useForm } from "react-hook-form";
-import { TiShoppingCart } from "react-icons/ti";
 import styled from "styled-components";
-import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
-import { useEffect, useRef, useState } from "react";
 import { useOrder } from "../../context/OrderContext";
-import StyledHotToast from "../../ui/StyledHotToast";
+import { useEffect, useRef, useState } from "react";
+import { calcIngredientsUsage, generateDishItemId } from "./orderFormHelpers";
+import { useForm } from "react-hook-form";
+import { compareInventory } from "../../utils/orderHelpers";
+import StyledHotToast from "../StyledHotToast";
+import Modal from "../Modal";
+import StyledOverlayScrollbars from "../StyledOverlayScrollbars";
+import Note from "../Note";
 import CustomizeArea from "./CustomizeArea";
-import ServingsControl from "../../ui/ServingsControl";
-import Note from "../../ui/Note";
-import {
-  calcIngredientsUsage,
-  compareInventory,
-  generateDishItemId,
-} from "../../utils/helpers";
-import Modal from "../../ui/Modal";
+import ServingsControl from "../ServingsControl";
+import { TiShoppingCart } from "react-icons/ti";
 
 const Form = styled.form`
   display: flex;
@@ -95,30 +92,29 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
   } = dishData;
 
   // 必填細項與選填細項
-  const { requiredField, optionalField, totalField } = customize.reduce(
+  const { displayFields, reducerFields } = customize.reduce(
     (acc, curCustomization) => {
-      acc.totalField.push({
+      acc.reducerFields.push({
         customizeId: curCustomization.customizeId,
         customizeTitle: curCustomization.title,
         detail: [],
       });
       if (curCustomization.required === "必填") {
-        acc.requiredField.push(curCustomization);
+        acc.displayFields.unshift(curCustomization);
       } else {
-        acc.optionalField.push(curCustomization);
+        acc.displayFields.push(curCustomization);
       }
       return acc;
     },
     {
-      requiredField: [],
-      optionalField: [],
-      totalField: [],
+      displayFields: [],
+      reducerFields: [],
     }
   );
 
   // 用來存放初始化細項數據
   const customizeOptionRef = useRef(
-    isEdit ? dishData.customizeDetail : totalField
+    isEdit ? dishData.customizeDetail : reducerFields
   );
 
   // 初始化useReducer的curDishCustomizeOption(自訂細項的詳細數據)
@@ -139,7 +135,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
   });
 
   function onSubmit(data) {
-    // 先計算食材總消耗與庫存剩餘比對
+    // 計算食材總消耗
     const ingredientsUsage = calcIngredientsUsage(
       ingredients,
       curDishCustomizeOption
@@ -151,6 +147,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
       servings: dishData.servings,
     };
 
+    // 庫存剩餘比對
     const result = compareInventory({
       ingredientsUsage,
       servings,
@@ -185,29 +182,21 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
       });
 
       onCloseModal();
-
-      StyledHotToast({
-        type: "success",
-        title: isEdit ? "更新成功" : "點餐成功",
-      });
     } else {
       // 庫存不足
       StyledHotToast({
         type: "error",
-        title: "點餐失敗",
+        title: "點餐失敗（庫存食材不足）",
         content: (
-          <>
-            <h4>庫存食材不足：</h4>
-            <ul>
-              {result.map((ingredient, index) => (
-                <li key={index}>
-                  {ingredient.maxCapacity === 0
-                    ? `${ingredient.name}已用完`
-                    : `${ingredient.name}不足（最多供應${ingredient.maxCapacity}份）`}
-                </li>
-              ))}
-            </ul>
-          </>
+          <ul>
+            {result.map((ingredient, index) => (
+              <li key={index}>
+                {ingredient.maxCapacity === 0
+                  ? `${ingredient.name}已用完`
+                  : `${ingredient.name}不足（最多供應${ingredient.maxCapacity}份）`}
+              </li>
+            ))}
+          </ul>
         ),
       });
     }
@@ -229,23 +218,14 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
           <Container>
             <Price>$ {price - discount}</Price>
 
-            {requiredField &&
-              requiredField.map((customizeData) => (
+            {displayFields &&
+              displayFields.map((customizeData) => (
                 <CustomizeArea
-                  type="required"
+                  type={
+                    customizeData.required === "必填" ? "required" : "optional"
+                  }
                   isEdit={isEdit}
                   customizeData={customizeData}
-                  register={register}
-                  key={customizeData.customizeId}
-                />
-              ))}
-
-            {optionalField &&
-              optionalField.map((customizeData) => (
-                <CustomizeArea
-                  type="optional"
-                  customizeData={customizeData}
-                  customizeIndex={customizeData.customizeId}
                   register={register}
                   key={customizeData.customizeId}
                 />

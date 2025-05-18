@@ -1,7 +1,6 @@
 // 菜單設定頁面
 import styled from "styled-components";
 import useGetMenus from "../features/menu-manage/useGetMenus.js";
-import Heading from "../ui/Heading.jsx";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import LoadingSpinner from "../ui/LoadingSpinner.jsx";
 import { useSearchParams } from "react-router-dom";
@@ -10,13 +9,7 @@ import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import Filter from "../ui/Filter.jsx";
-
-const ToolBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 1.6rem;
-  padding: 1rem 0;
-`;
+import PageHeader from "../ui/PageHeader.jsx";
 
 const Container = styled.ul`
   display: grid;
@@ -52,7 +45,7 @@ function MenuManage() {
   if (menusDataFetching) {
     return (
       <>
-        <Heading>菜單設定</Heading>
+        <PageHeader title="菜單設定" />
         <LoadingSpinner />
       </>
     );
@@ -88,21 +81,19 @@ function MenuManage() {
 
   return (
     <>
-      <Heading>菜單設定</Heading>
-
-      <ToolBar>
+      <PageHeader title="菜單設定">
         <Filter filtersConfig={filtersConfig} />
         <Button
           $buttonStyle="createNewItem"
           onClick={() => setIsOpenModal(true)}
         >
-          <BsFileEarmarkPlus />
+          <BsFileEarmarkPlus size={18} />
           <span>新增餐點</span>
         </Button>
-      </ToolBar>
+      </PageHeader>
 
       <Container>
-        {displayMenusData.length === 0 ? (
+        {menusData.length === 0 ? (
           <span>沒有任何數據</span>
         ) : (
           displayMenusData.map((menu) => (

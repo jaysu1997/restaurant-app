@@ -38,6 +38,7 @@ const StyledFilterCheckIcon = styled(TbFilterCheck)`
 const FilterContainer = styled.div`
   position: absolute;
   top: 5rem;
+  right: 0;
   z-index: 1;
   padding: 1.5rem;
   font-size: 1.4rem;
@@ -107,12 +108,10 @@ function getInitialFilterState(searchParams, filtersConfig) {
       if (type === "search") {
         value = searchParams.get(queryKey);
       }
-
       if (type === "select") {
         value =
           options.find((opt) => opt.value === searchParams.get(queryKey)) || "";
       }
-
       if (type === "datePicker") {
         const [from, to] = searchParams.get(queryKey).split("_");
         value = { from, to };
@@ -160,7 +159,6 @@ function Filter({ filtersConfig }) {
   function handleSearchParams() {
     for (const [key, obj] of Object.entries(tempFilters)) {
       let searchParamsValue = "";
-
       if (obj.type === "search" && obj.value) {
         searchParamsValue = obj.value;
       }

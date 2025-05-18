@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StyledHotToast from "../../ui/StyledHotToast";
 import { updateOrderApi } from "../../services/apiOrder";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function useUpdateOrder() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { orderId } = useParams();
 
   const {
     mutate: updateOrder,

@@ -4,7 +4,7 @@ import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useOrder } from "../context/OrderContext";
 import { useRef, useState } from "react";
 import StyledHotToast from "./StyledHotToast";
-import { compareInventory } from "../utils/helpers";
+import { compareInventory } from "../utils/orderHelpers";
 
 const Serving = styled.div`
   display: flex;

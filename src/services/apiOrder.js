@@ -1,4 +1,7 @@
 // 訂單相關api
+
+// 各個api的error處理應該都要使用handleSupabaseError
+
 import supabase from "./supabase.js";
 
 // 建立新的餐點訂單api
@@ -15,7 +18,10 @@ export async function createOrderApi(orderData) {
 }
 
 // 獲取指定範圍訂單數據api
-export async function getOrdersApi(page, itemsPerPage) {
+export async function getOrdersApi(page) {
+  // 每一分頁顯示25筆數據
+  const itemsPerPage = 25;
+
   // 用來取得數據總筆數(不會獲取data數據)
   const { count, error: countError } = await supabase
     .from("orders")
@@ -43,6 +49,7 @@ export async function getOrdersApi(page, itemsPerPage) {
 
   // 回傳訂單數據、當前分頁、最大分頁數
   return { ordersData, curPage, maxPage };
+  // return [];
 }
 
 export async function getOrderApi(orderId) {
@@ -68,7 +75,9 @@ export async function deleteOrderApi(orderId) {
 
   if (error) {
     console.log(error);
-    throw new Error(error.message);
+    throw new Error(
+      error.message.includes("Failed to fetch") ? "網路連線異常" : error.message
+    );
   }
 
   return data;

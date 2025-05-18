@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import errorSvg from "../assets/error.svg";
+import emptyState from "../assets/empty-state.svg";
 import Image from "./Image";
+import { useNavigate } from "react-router-dom";
 
-const StyledFetchFailFallback = styled.section`
+const StyledEmptyState = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,17 +54,23 @@ const ReloadButton = styled.button`
   }
 `;
 
-function FetchFailFallback() {
+function EmptyState({ message = "", buttonText = "" }) {
+  const navigate = useNavigate();
+
+  function handleClick() {
+    navigate("/menu-manage");
+  }
+
   return (
-    <StyledFetchFailFallback>
-      <Image src={errorSvg} alt="fetchingErrorSvg" />
-      <Message>數據獲取失敗</Message>
-      <SubMessage>請檢查網路連線，或稍後再試一次</SubMessage>
-      <ReloadButton onClick={() => window.location.reload()}>
-        重新嘗試
-      </ReloadButton>
-    </StyledFetchFailFallback>
+    <StyledEmptyState>
+      <Image src={emptyState} alt="emptyStateSvg" />
+      <Message>沒有相關數據</Message>
+      {message && <SubMessage>{message}</SubMessage>}
+      {buttonText && (
+        <ReloadButton onClick={handleClick}>{buttonText}</ReloadButton>
+      )}
+    </StyledEmptyState>
   );
 }
 
-export default FetchFailFallback;
+export default EmptyState;

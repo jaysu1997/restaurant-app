@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
-import { useOrder } from "../../context/OrderContext";
+// import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { useState } from "react";
+import { useOrder } from "../../context/OrderContext";
+import Option from "./Option";
 
 // 不同選項要求和狀態的樣式設定
 const colorStyle = {
@@ -14,11 +15,6 @@ const colorStyle = {
     optional: { background: "#e7e5e4", font: "#000" },
     required: { background: "#f43f5e", font: "#fff" },
     isAnswered: { background: "#3b82f6", font: "#fff" },
-  },
-  optionHover: {
-    optional: "#e7e5e4",
-    required: "#fecdd3",
-    isAnswered: "#bae6fd",
   },
 };
 
@@ -68,69 +64,20 @@ const OptionsArea = styled.div`
   gap: 1.2rem;
 `;
 
-const StyledOption = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  height: 4rem;
-  line-height: 1.4;
-  position: relative;
-  padding: 0.6rem;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: ${(props) => props.$colorStyle};
-    cursor: pointer;
-  }
-
-  input {
-    display: none;
-  }
-
-  svg[role="unchecked"] {
-    transition: opacity 0.2s;
-    color: rgba(0, 0, 0, 0.6);
-  }
-
-  svg[role="checked"] {
-    color: #007bff;
-    position: absolute;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: opacity 0.2s, transform 0.5s;
-  }
-
-  &:has(input:disabled) {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  input:checked ~ svg[role="checked"] {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  input:checked ~ svg[role="unchecked"] {
-    opacity: 0;
-  }
-
-  span[role="price"] {
-    margin-left: auto;
-    letter-spacing: 0.15rem;
-  }
-`;
-
 // 自訂選項區塊
-function CustomizeArea({ type, customizeData, register, isEdit = false }) {
+function CustomizeArea({ customizeData, register, isEdit = false }) {
+  const { choice, customizeId, required } = customizeData;
+  const type = required === "必填" ? "required" : "optional";
+
   // 用來控制細項CSS樣式(填寫狀態)
-  const [isAnswered, setIsAnswered] = useState(isEdit ? "isAnswered" : type);
+  const [isAnswered, setIsAnswered] = useState(
+    isEdit && type === "required" ? "isAnswered" : type
+  );
 
   const {
     state: { curDishCustomizeOption },
     dispatch,
   } = useOrder();
-
-  const { choice, customizeId } = customizeData;
 
   function handleClick(e, payload) {
     // 單選新增
@@ -223,67 +170,3 @@ function CustomizeArea({ type, customizeData, register, isEdit = false }) {
 }
 
 export default CustomizeArea;
-
-// 單一選項ui
-function Option({
-  isAnswered,
-  type,
-  choice,
-  customizeId,
-  register,
-  optionData,
-  handleClick,
-  curDishCustomizeOption,
-}) {
-  const { optionId, optionLabel, extraPrice, ingredientName, quantity } =
-    optionData;
-
-  // 數據內容與格式
-  const payload = {
-    customizeId,
-    optionId,
-    optionLabel,
-    extraPrice,
-    ingredientName: ingredientName.value,
-    quantity,
-  };
-
-  // 獨一無二的值(避免如果不小心設定相同選項名稱所導致的功能異常)
-  const uniqueValue = `${customizeId}-${optionId}-${optionLabel}`;
-
-  // 當前選項是否是被選中的選項(單選細項需要)
-  const checked = curDishCustomizeOption[customizeId]?.detail.some(
-    (option) => option.optionId === optionId
-  );
-
-  return (
-    <StyledOption
-      $colorStyle={colorStyle.optionHover[isAnswered]}
-      htmlFor={uniqueValue}
-    >
-      <input
-        type="checkbox"
-        id={uniqueValue}
-        value={uniqueValue}
-        onClick={(e) => handleClick(e, payload)}
-        // 如果是單選細項且已經有選定選項，就禁止選擇其他選項
-        disabled={
-          choice === "單選" &&
-          curDishCustomizeOption[customizeId]?.detail.length > 0 &&
-          !checked
-        }
-        {...register(`customizeField.${type}.${customizeId}`, {
-          required: type === "optional" ? false : true,
-        })}
-      />
-
-      <ImCheckboxUnchecked size={18} role="unchecked" />
-      <ImCheckboxChecked size={18} role="checked" />
-
-      <span role="optionName">{optionData.optionLabel}</span>
-      <span role="price">
-        {optionData.extraPrice === 0 ? "免費" : `+$ ${optionData.extraPrice}`}
-      </span>
-    </StyledOption>
-  );
-}

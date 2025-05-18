@@ -1,16 +1,15 @@
 // 訂單詳情頁面中的訂購餐點列表
 import {
-  calcOrderTotalPrice,
   summarizeMealChoices,
-  calcOrderTotalItems,
-} from "../../utils/helpers";
+  calculateOrderSummary,
+} from "../../utils/orderHelpers";
 import { FiMinus } from "react-icons/fi";
 import { GoTrash, GoPencil } from "react-icons/go";
 import Button from "../../ui/Button";
 import styled from "styled-components";
 import { useState } from "react";
-import OrderForm from "../menu/OrderForm";
 import { useOrder } from "../../context/OrderContext";
+import OrderForm from "../../ui/OrderForm/OrderForm";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -55,6 +54,8 @@ const ButtonGroup = styled.div`
 `;
 
 function OrderDishes({ dishData, isEdit }) {
+  const { totalQuantity, totalCost } = calculateOrderSummary(dishData);
+
   return (
     <OrderDishesList>
       <OrderDishRow $isEdit={isEdit}>
@@ -72,9 +73,9 @@ function OrderDishes({ dishData, isEdit }) {
 
       <OrderDishRow>
         <span>總計：</span>
-        <span>共{calcOrderTotalItems(dishData)}份</span>
+        <span>共{totalQuantity}份</span>
         <span>/</span>
-        <span className="emphasize">$ {calcOrderTotalPrice(dishData)}</span>
+        <span className="emphasize">$ {totalCost}</span>
       </OrderDishRow>
     </OrderDishesList>
   );

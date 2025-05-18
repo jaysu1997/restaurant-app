@@ -1,14 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import {
-  formatCreatedTime,
-  formatPickupNumber,
-  scrollToTop,
-} from "../../utils/helpers";
+
 import { useState } from "react";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import useDeleteOrder from "./useDeleteOrder";
 import useUpdateOrder from "./useUpdateOrder";
+import { scrollToTop } from "../../utils/scrollToTop";
+import {
+  formatCreatedTime,
+  formatPickupNumber,
+} from "../../utils/orderHelpers";
 
 const Footer = styled.footer`
   display: flex;
@@ -60,7 +61,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $fontColor="#fff"
             $hoverBgColor="#047857"
             onClick={() => {
-              navigate(`/order-edit/${orderId}`);
+              navigate(`/order-edit/${orderId}`, { replace: true });
               scrollToTop();
             }}
           >
@@ -80,7 +81,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $bgColor="#e7e5e4"
             $fontColor="#333"
             $hoverBgColor="#d6d3d1"
-            onClick={() => navigate(`/order/${orderId}`)}
+            onClick={() => navigate(`/order/${orderId}`, { replace: true })}
           >
             取消更新
           </Button>
@@ -89,7 +90,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $bgColor="#e7e5e4"
             $fontColor="#333"
             $hoverBgColor="#d6d3d1"
-            onClick={() => navigate("/orders")}
+            onClick={() => navigate(-1)}
           >
             返回列表
           </Button>

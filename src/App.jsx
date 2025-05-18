@@ -31,7 +31,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      retry: 3,
+      // retry: 3,
+      retry: false,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },

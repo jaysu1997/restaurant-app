@@ -69,25 +69,16 @@ const type = {
     }
   `,
   createNewItem: css`
-    background-color: #fff;
-    border: 1px solid #3b82f6;
+    gap: 0.6rem;
     font-size: 1.4rem;
-    font-weight: 600;
-    padding: 0.4rem 0.8rem;
-    height: 3.6rem;
-    width: fit-content;
-    gap: 0.2rem;
-    color: #3b82f6;
-    border-radius: 50px;
-
-    svg {
-      height: 2rem;
-      width: 2rem;
-    }
+    font-weight: 500;
+    padding: 0.8rem 1.6rem;
+    border: 1px solid #2563eb;
+    border-radius: 4px;
+    color: #2563eb;
 
     &:hover {
-      background-color: #3b82f6;
-      color: #fff;
+      background-color: #eef2ff;
     }
   `,
   confirmDelete: css`

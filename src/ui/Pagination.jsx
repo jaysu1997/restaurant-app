@@ -1,147 +1,140 @@
-// 這個元件或許需要再加上直接轉跳頁面的功能
-
 import styled from "styled-components";
-import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
+import { RxSlash } from "react-icons/rx";
 import { useSearchParams } from "react-router-dom";
-import { scrollToTop } from "../utils/helpers";
+import { useEffect, useRef } from "react";
+import { scrollToTop } from "../utils/scrollToTop";
 
-const StyledFooter = styled.footer`
+const StyledPagination = styled.footer`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.6rem 0;
-`;
-
-const ItemsPerPage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  font-size: 1.4rem;
-  font-weight: 500;
-
-  select {
-    width: 5.6rem;
-    height: 2.4rem;
-    border: 1px solid #1f2937;
-    font-size: 1.4rem;
-  }
-
-  select:focus {
-    outline: 1px solid #1f2937;
-  }
-`;
-
-const PaginationWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  text-align: center;
-`;
-
-const PaginationButton = styled.button`
-  display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 2rem 0.5rem;
   font-size: 1.4rem;
-  border-radius: 50%;
-  height: 3.6rem;
-  width: 3.6rem;
-  font-weight: 500;
-  transition: none;
+  margin-bottom: 1.6rem;
+`;
 
-  &:is(button):not([aria-current="page"]):not(:disabled):hover {
-    background-color: #eee;
+const PaginationControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  justify-content: center;
+
+  strong {
+    color: #2563eb;
   }
 
-  &:disabled {
-    color: inherit;
-    opacity: 0.5;
-  }
+  button {
+    display: inline-flex;
+    color: #333;
 
-  &[aria-current="page"] {
-    background-color: #2563eb;
-    color: #fff;
+    &:not(:disabled):hover {
+      color: #e63946;
+    }
+
+    &:disabled {
+      color: inherit;
+      opacity: 0.5;
+    }
   }
 `;
 
-// 分頁邏輯(盡量保持總共有9個按鈕)
-function paginationButton(curPage, maxPage) {
-  const range = (start, end) =>
-    Array.from({ length: end - start + 1 }, (_, i) => start + i);
+const JumpSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
 
-  if (maxPage <= 9) return range(1, maxPage);
+  input {
+    text-align: center;
+    font-size: 1.4rem;
+    border: 1px solid #e3e5e7;
+    border-radius: 3px;
+    width: 4.2rem;
+    padding: 0.5rem 0.2rem;
+  }
 
-  if (curPage <= 5) return [...range(1, 7), "...", maxPage];
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    height: 2.8rem;
+    border-radius: 3px;
+    background-color: #e63946;
+    color: #fff;
 
-  if (curPage >= maxPage - 4) return [1, "...", ...range(maxPage - 6, maxPage)];
-
-  return [1, "...", ...range(curPage - 2, curPage + 2), "...", maxPage];
-}
+    &:hover {
+      background-color: #dc2626;
+    }
+  }
+`;
 
 function Pagination({ curPage, maxPage }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const paginationNumbers = paginationButton(curPage, maxPage);
+  const inputRef = useRef(null);
 
-  function handlePagination(key, value) {
-    searchParams.set(key, value);
+  useEffect(
+    function () {
+      scrollToTop();
+    },
+    [curPage]
+  );
+
+  function handlePagination(value) {
+    const page = Math.max(1, Math.min(Number(value), maxPage));
+    searchParams.set("page", page);
     setSearchParams(searchParams);
-    scrollToTop();
+  }
+
+  function handleSubmit() {
+    handlePagination(inputRef?.current?.value || curPage);
+    inputRef.current.value = "";
+    inputRef.current?.blur();
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
   }
 
   return (
-    <StyledFooter>
-      <ItemsPerPage>
-        <span>每頁顯示筆數：</span>
-        <select
-          id="itemsPerPage"
-          value={searchParams.get("items") || 10}
-          onChange={(e) => {
-            searchParams.set("page", 1);
-            handlePagination("items", e.target.value);
-          }}
-        >
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
-      </ItemsPerPage>
-
-      <PaginationWrapper>
-        <PaginationButton
+    <StyledPagination>
+      <PaginationControls>
+        <button
           type="button"
-          role="previousPage"
+          onClick={() => handlePagination(curPage - 1)}
           disabled={curPage === 1}
-          onClick={() => handlePagination("page", curPage - 1)}
         >
-          <MdNavigateBefore size={20} />
-        </PaginationButton>
+          <BiSolidLeftArrow size={16} />
+        </button>
+        <strong>{curPage}</strong>
+        <RxSlash size={16} />
 
-        {paginationNumbers.map((num, index) => (
-          <PaginationButton
-            as={num === "..." ? "span" : "button"}
-            onClick={
-              num === "..." ? undefined : () => handlePagination("page", num)
-            }
-            aria-current={curPage === num ? "page" : undefined}
-            key={index}
-          >
-            {num}
-          </PaginationButton>
-        ))}
-
-        <PaginationButton
+        <span>共 {maxPage} 頁</span>
+        <button
           type="button"
-          role="nextPage"
+          onClick={() => handlePagination(curPage + 1)}
           disabled={curPage === maxPage}
-          onClick={() => handlePagination("page", curPage + 1)}
         >
-          <MdNavigateNext size={20} />
-        </PaginationButton>
-      </PaginationWrapper>
-    </StyledFooter>
+          <BiSolidRightArrow size={16} />
+        </button>
+      </PaginationControls>
+      <JumpSection>
+        <span>前往</span>
+        <input type="number" ref={inputRef} onKeyDown={handleKeyDown} />
+        <span>頁</span>
+        <button onClick={handleSubmit} role="submit">
+          GO
+        </button>
+      </JumpSection>
+    </StyledPagination>
   );
 }
 

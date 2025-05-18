@@ -1,6 +1,8 @@
 import { createInventoryApi } from "./apiInventory.js";
 import supabase from "./supabase.js";
 
+// 各個api的error處理應該都要使用handleSupabaseError
+
 // 取得所有menu數據
 export async function getMenusApi() {
   const { data, error } = await supabase
@@ -13,20 +15,7 @@ export async function getMenusApi() {
   }
 
   return data;
-}
-
-// 取得指定id的menu數據
-export async function getSpecifiedMenuApi(id) {
-  console.log(id);
-
-  const { data, error } = await supabase.from("menus").select("*").eq("id", id);
-
-  if (error) {
-    console.log(error);
-    throw new Error("Menu數據獲取失敗");
-  }
-
-  return data;
+  // return [];
 }
 
 // 新增or更新單筆menu數據

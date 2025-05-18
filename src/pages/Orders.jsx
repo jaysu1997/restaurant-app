@@ -1,6 +1,6 @@
 import OrdersTable from "../features/orders/OrdersTable";
 import Filter from "../ui/Filter";
-import Heading from "../ui/Heading";
+import PageHeader from "../ui/PageHeader";
 
 function Orders() {
   const filtersConfig = [
@@ -21,8 +21,9 @@ function Orders() {
 
   return (
     <>
-      <Heading>訂單管理</Heading>
-      <Filter filtersConfig={filtersConfig} />
+      <PageHeader title="訂單管理">
+        <Filter filtersConfig={filtersConfig} />
+      </PageHeader>
       <OrdersTable />
     </>
   );

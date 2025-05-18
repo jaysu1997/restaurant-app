@@ -1,8 +1,8 @@
 // Error回退處理功能組件(當在渲染時遇到Error時，會顯示此組件的內容，代替全白且無法操作的Error畫面)
 import styled from "styled-components";
-import Heading from "./Heading";
 import Button from "./Button";
 import { GlobalStyles } from "../style/GlobalStyles";
+import PageHeader from "./PageHeader";
 
 const StyledErrorFallback = styled.main`
   height: 100vh;
@@ -41,7 +41,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
       <GlobalStyles />
       <StyledErrorFallback>
         <Box>
-          <Heading as="h1">Something went wrong 🧐</Heading>
+          <PageHeader title="Something went wrong 🧐" />
           <p>{error.message}</p>
           <Button onClick={resetErrorBoundary}>Try again</Button>
         </Box>

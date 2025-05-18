@@ -4,8 +4,8 @@ import ServingsControl from "../../ui/ServingsControl";
 import { useEffect, useRef, useState } from "react";
 import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
-import OrderForm from "./OrderForm";
-import { summarizeMealChoices } from "../../utils/helpers";
+import { summarizeMealChoices } from "../../utils/orderHelpers";
+import OrderForm from "../../ui/OrderForm/OrderForm";
 
 const OrderCardWrapper = styled.li`
   list-style: none;

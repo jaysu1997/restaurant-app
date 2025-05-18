@@ -1,6 +1,5 @@
 // 食材備料頁面
 import styled from "styled-components";
-import Heading from "../ui/Heading";
 import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import Button from "../ui/Button";
@@ -10,14 +9,7 @@ import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
 import Filter from "../ui/Filter";
-
-const ToolBar = styled.div`
-  display: flex;
-  gap: 1.6rem;
-  padding: 1rem 0;
-  justify-content: space-between;
-  /* width: 100%; */
-`;
+import PageHeader from "../ui/PageHeader";
 
 const Container = styled.ul`
   display: grid;
@@ -54,7 +46,7 @@ function Inventory() {
   if (inventoryDataFetching)
     return (
       <>
-        <Heading>庫存管理</Heading>
+        <PageHeader title="庫存管理" />
         <LoadingSpinner />
       </>
     );
@@ -94,28 +86,26 @@ function Inventory() {
 
   return (
     <>
-      <Heading>庫存管理</Heading>
-
-      <ToolBar>
+      <PageHeader title="庫存管理">
         <Filter filtersConfig={filtersConfig} />
         <Button
           $buttonStyle="createNewItem"
           onClick={() => setIsOpenModal(true)}
         >
-          <BsFileEarmarkPlus />
-          <span>新增食材</span>
+          <BsFileEarmarkPlus size={18} />
+          <span>新增餐點</span>
         </Button>
-      </ToolBar>
+      </PageHeader>
 
-      <Container>
-        {displayInventoryData.length === 0 ? (
-          <span>沒有任何數據</span>
-        ) : (
-          displayInventoryData.map((inventory) => (
+      {displayInventoryData.length === 0 ? (
+        <img src="empty-state.svg" width="500" />
+      ) : (
+        <Container>
+          {displayInventoryData.map((inventory) => (
             <InventoryDataCard inventory={inventory} key={inventory.id} />
-          ))
-        )}
-      </Container>
+          ))}
+        </Container>
+      )}
 
       {isOpenModal && (
         <UpsertInventoryForm onCloseModal={() => setIsOpenModal(false)} />

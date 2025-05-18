@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
 import useGetOrder from "../features/orders/useGetOrder";
-import Heading from "../ui/Heading";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
 import styled from "styled-components";
 import OrderOperation from "../features/orders/OrderOperation";
-import { formatPickupNumber } from "../utils/helpers";
+import PageHeader from "../ui/PageHeader";
+import { formatPickupNumber } from "../utils/orderHelpers";
 
 const StyledOrderSummary = styled.div`
   display: grid;
@@ -32,13 +32,11 @@ function Order() {
   const isEditPage = pathname.includes("edit");
   const { data, isPending } = useGetOrder(isEditPage);
 
-  if (isPending) {
-    return <LoadingSpinner />;
-  }
+  if (isPending) return <LoadingSpinner />;
 
   return (
     <>
-      <Heading>訂單詳情</Heading>
+      <PageHeader title="訂單詳情" />
       <StyledOrderSummary>
         <OrderHeader>{`取餐號碼 ${formatPickupNumber(
           data.pickupNumber

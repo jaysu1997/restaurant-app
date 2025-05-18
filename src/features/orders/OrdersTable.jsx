@@ -6,6 +6,8 @@ import Pagination from "../../ui/Pagination";
 import usePagination from "./usePagination";
 import OrderDropdownMenu from "./OrderDropdownMenu";
 import useClickOutside from "./useClickOutside";
+import EmptyState from "../../ui/EmptyState";
+import FetchFailFallback from "../../ui/FetchFailFallback";
 
 const OrderContainer = styled.div`
   max-width: 95dvw;
@@ -15,6 +17,7 @@ const OrderContainer = styled.div`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   overflow: hidden;
+  margin: 1.6rem 0;
 
   @media (max-width: 768px) {
     border: none;
@@ -53,7 +56,7 @@ const OrderBody = styled.section`
 `;
 
 function OrdersTable() {
-  const { ordersData, curPage, maxPage, isPending } = usePagination();
+  const { ordersData, curPage, maxPage, isPending, isError } = usePagination();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const tableRef = useRef(null);
   const activeMenuRef = useRef(null);
@@ -100,13 +103,12 @@ function OrdersTable() {
     [isOpenMenu, setIsOpenMenu]
   );
 
-  if (isPending) {
-    return <LoadingSpinner />;
-  }
+  if (isPending) return <LoadingSpinner />;
 
-  if (ordersData.length === 0) {
-    return <span>沒有任何訂單數據</span>;
-  }
+  if (isError) return <FetchFailFallback />;
+
+  if (ordersData.length === 0)
+    return <EmptyState message="目前沒有任何訂單數據" />;
 
   return (
     <>

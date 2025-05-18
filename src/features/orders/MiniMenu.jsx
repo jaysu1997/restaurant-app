@@ -2,9 +2,9 @@
 import styled from "styled-components";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import useGetMenus from "../menu-manage/useGetMenus";
-import DishCard from "../menu/DishCard";
 import { Fragment } from "react";
 import Modal from "../../ui/Modal";
+import DishCard from "../../ui/DishCard";
 
 const StyledMiniMenu = styled.div`
   display: flex;

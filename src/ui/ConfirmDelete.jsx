@@ -122,8 +122,6 @@ function ConfirmDelete({
 }) {
   const [confirm, setConfirm] = useState(false);
 
-  console.log(data);
-
   return (
     <Modal
       modalHeader="確認刪除"

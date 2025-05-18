@@ -1,15 +1,16 @@
+import { handleSupabaseError } from "../utils/handleSupabaseError";
 import supabase from "./supabase";
 
-// 取得stocks中的所有食材數據
+// 各個api的error處理應該都要使用handleSupabaseError
+
+// 取得inventory中的所有食材數據
 export async function getInventoryApi() {
   const { data, error } = await supabase
-    .from("inventory  ")
+    .from("inventory")
     .select()
     .order("remainingQuantity", { ascending: true });
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  handleSupabaseError(error);
 
   return data;
 }

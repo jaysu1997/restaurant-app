@@ -1,9 +1,9 @@
 // 訂單詳情(檢視)
 import styled from "styled-components";
-import { formatCreatedTime } from "../../utils/helpers";
 import Tag from "../../ui/Tag";
 import OrderDishes from "./OrderDishes";
 import OrderOperation from "./OrderOperation";
+import { formatCreatedTime } from "../../utils/orderHelpers";
 
 const OrderInfo = styled.section`
   background-color: #fff;

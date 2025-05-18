@@ -2,7 +2,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getInventoryApi } from "../../services/apiInventory";
 import { useEffect } from "react";
-import StyledHotToast from "../../ui/StyledHotToast";
 import { useOrder } from "../../context/OrderContext";
 import { useLocation } from "react-router-dom";
 
@@ -37,14 +36,6 @@ function useGetInventory(orderCreating = true) {
         dispatch({
           type: "inventory/setAll",
           payload: inventoryData,
-        });
-      }
-
-      if (inventoryDataFetchingError) {
-        StyledHotToast({
-          type: "error",
-          title: "庫存數據獲取失敗",
-          content: error.message,
         });
       }
     },

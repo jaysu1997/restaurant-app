@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Tag from "../../ui/Tag";
 import {
-  calcOrderTotalPrice,
+  calculateOrderSummary,
   formatCreatedTime,
   formatPickupNumber,
-} from "../../utils/helpers";
+} from "../../utils/orderHelpers";
 
 const StyledOrderRow = styled.div`
   display: grid;
@@ -113,6 +113,8 @@ const OrderType = styled.span`
 `;
 
 function OrderRow({ orderData, children }) {
+  const { totalCost } = calculateOrderSummary(orderData.order);
+
   return (
     <StyledOrderRow>
       <div data-order-type>
@@ -131,7 +133,7 @@ function OrderRow({ orderData, children }) {
         <Tag $tagStatus={orderData.status}>{orderData.status}</Tag>
       </div>
 
-      <div data-total-price>{`$ ${calcOrderTotalPrice(orderData.order)}`}</div>
+      <div data-total-price>{`$ ${totalCost}`}</div>
 
       <div data-paid>
         <Tag $tagStatus={orderData.paid}>{orderData.paid}</Tag>

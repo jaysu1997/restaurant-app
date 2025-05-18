@@ -3,8 +3,11 @@ import { useRef, useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit2, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import { formatCreatedTime, formatPickupNumber } from "../../utils/helpers";
 import useDeleteOrder from "./useDeleteOrder";
+import {
+  formatCreatedTime,
+  formatPickupNumber,
+} from "../../utils/orderHelpers";
 
 const MenuContainer = styled.div`
   position: relative;
@@ -34,11 +37,8 @@ const Menu = styled.ul`
   padding: 0.8rem 0;
   display: flex;
   flex-direction: column;
-  opacity: ${(props) => (props.$isOpenMenu ? 1 : 0)};
   visibility: ${(props) => (props.$isOpenMenu ? "visible" : "hidden")};
-  transform: scale(${(props) => (props.$isOpenMenu ? 1 : 0.95)});
-  transform-origin: top right;
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  transition: visibility 0.5s;
   z-index: 1;
 `;
 

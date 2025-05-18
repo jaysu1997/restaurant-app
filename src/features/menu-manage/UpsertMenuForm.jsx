@@ -17,7 +17,7 @@ import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
 import useGetInventory from "../inventory/useGetInventory";
 import Modal from "../../ui/Modal";
-import { createNewIngredients } from "../../utils/helpers";
+import { createNewIngredients } from "./createNewIngredients";
 
 const formFieldData = [
   {
@@ -90,16 +90,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       newIngredients,
     };
 
-    // 當網路離線時會跳出錯誤訊息，並終止提交表單動作
-    // if (!navigator.onLine) {
-    //   StyledHotToast({
-    //     type: "error",
-    //     title: "網路異常，請稍後再試。",
-    //   });
-
-    //   return;
-    // }
-
     // 執行表單數據上傳
     upsert(menuData, {
       onSuccess: (data) => {
@@ -114,8 +104,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       },
       onError: (error) => {
         console.log("上傳失敗", error);
-        // 確保在上傳supabase失敗後，各個欄位的值不會被清空
-        // reset(getValues());
       },
     });
   }

@@ -11,7 +11,7 @@ function useGetOrder(isEditPage) {
   const { dispatch } = useOrder();
 
   const { data, isPending, error, isError, isSuccess } = useQuery({
-    queryKey: ["order", orderId],
+    queryKey: ["orders", orderId],
     queryFn: () => getOrderApi(orderId),
   });
 

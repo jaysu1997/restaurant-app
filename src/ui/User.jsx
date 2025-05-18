@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import defaultAvatar from "../assets/man.png";
 
 const Button = styled.button`
   display: flex;
@@ -32,7 +33,7 @@ const Button = styled.button`
 function User() {
   return (
     <Button>
-      <img src="man.png" alt="user avatar" />
+      <img src={defaultAvatar} alt="user avatar" />
       <span>Jay</span>
     </Button>
   );
