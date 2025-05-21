@@ -1,14 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import useGetMenus from "../menu-manage/useGetMenus";
-import useGetInventory from "../inventory/useGetInventory";
 import { useSearchParams } from "react-router-dom";
-import LoadingSpinner from "../../ui/LoadingSpinner";
-import FetchFailFallback from "../../ui/FetchFailFallback";
 import SwiperBar from "./SwiperBar";
 import DishCard from "../../ui/DishCard";
 import ShoppingCart from "./ShoppingCart";
-import EmptyState from "../../ui/EmptyState";
 import OrderForm from "../../ui/OrderForm/OrderForm";
 
 const Container = styled.div`
@@ -31,28 +26,10 @@ const Menus = styled.ul`
   padding: 1.6rem 0;
 `;
 
-function MenuView() {
+function MenuView({ menusData, inventoryData }) {
   // 取得所有菜單數據
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { menusData, menusDataFetching, menusDataFetchingError } =
-    useGetMenus();
-  const { inventoryData, inventoryDataFetching, inventoryDataFetchingError } =
-    useGetInventory(true);
   const [searchParams] = useSearchParams();
-
-  // 數據獲取中
-  if (menusDataFetching || inventoryDataFetching) return <LoadingSpinner />;
-  // 數據獲取失敗
-  if (menusDataFetchingError || inventoryDataFetchingError)
-    return <FetchFailFallback />;
-  // 沒有數據
-  if (menusData.length === 0)
-    return (
-      <EmptyState
-        message="目前沒有任何餐點數據，請前往菜單設定頁面新增餐點"
-        buttonText="新增餐點"
-      />
-    );
 
   // 使用Set()過濾重複的分類
   const categories = [...new Set(menusData.map((menu) => menu.category))];

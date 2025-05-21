@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from "react";
-import { initialState, reducer } from "../features/menu/orderReducer";
+import { initialState, reducer } from "./orderReducer";
 
 const OrderContext = createContext();
 

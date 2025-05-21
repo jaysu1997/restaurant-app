@@ -1,6 +1,5 @@
 // 用來新增或更新單筆menu數據的表單
 import { useFieldArray, useForm, FormProvider } from "react-hook-form";
-import useUpsertMenu from "./useUpsertMenu";
 import { useSearchParams } from "react-router-dom";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import FieldArray from "./FieldArray";
@@ -15,9 +14,11 @@ import StyledHotToast from "../../ui/StyledHotToast";
 import { useRef } from "react";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
-import useGetInventory from "../inventory/useGetInventory";
 import Modal from "../../ui/Modal";
 import { createNewIngredients } from "./createNewIngredients";
+import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
+import useGetInventory from "../../hooks/data/inventory/useGetInventory";
+import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
 
 const formFieldData = [
   {
@@ -109,27 +110,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   }
 
   function onError(error) {
-    // 透過反覆遍歷取得所有錯誤訊息
-    const getAllMessages = (errors) => {
-      return Object.keys(errors).flatMap((key) => {
-        const error = errors[key];
-        if (error.message) {
-          return [error.message];
-        }
-        if (typeof error === "object") {
-          return getAllMessages(error);
-        }
-        return [];
-      });
-    };
-
-    console.log("一開始就失敗");
-
-    StyledHotToast({
-      type: "error",
-      title: "餐點設定失敗",
-      content: `${getAllMessages(error).join("， ")}。`,
-    });
+    return handleRHFSubmitError(error, "餐點設定失敗");
   }
 
   if (inventoryDataFetching) {

@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createInventoryApi,
   updateInventoryApi,
-} from "../../services/apiInventory";
-import StyledHotToast from "../../ui/StyledHotToast";
+} from "../../../services/apiInventory";
+import StyledHotToast from "../../../ui/StyledHotToast";
 
 function useUpsertInventory() {
   const queryClient = useQueryClient();

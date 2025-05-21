@@ -1,7 +1,6 @@
-import { createInventoryApi } from "./apiInventory.js";
 import supabase from "./supabase.js";
-
-// 各個api的error處理應該都要使用handleSupabaseError
+import { createInventoryApi } from "./apiInventory.js";
+import { handleSupabaseError } from "../utils/handleSupabaseError";
 
 // 取得所有menu數據
 export async function getMenusApi() {

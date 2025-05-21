@@ -1,8 +1,8 @@
 // 刪除指定食材數據
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteInventoryApi } from "../../services/apiInventory";
-import StyledHotToast from "../../ui/StyledHotToast";
+import { deleteInventoryApi } from "../../../services/apiInventory";
+import StyledHotToast from "../../../ui/StyledHotToast";
 
 function useDeleteInventory() {
   const queryClient = useQueryClient();

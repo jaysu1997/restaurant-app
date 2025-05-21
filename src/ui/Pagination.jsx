@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
-import { RxSlash } from "react-icons/rx";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { scrollToTop } from "../utils/scrollToTop";
+import { GoDotFill } from "react-icons/go";
 
 const StyledPagination = styled.footer`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.6rem;
   padding: 2rem 0.5rem;
   font-size: 1.4rem;
   margin-bottom: 1.6rem;
@@ -115,8 +115,7 @@ function Pagination({ curPage, maxPage }) {
           <BiSolidLeftArrow size={16} />
         </button>
         <strong>{curPage}</strong>
-        <RxSlash size={16} />
-
+        <GoDotFill size={10} />
         <span>共 {maxPage} 頁</span>
         <button
           type="button"

@@ -4,7 +4,7 @@ import DataDisplayCard from "../../ui/DataDisplayCard";
 import { useState } from "react";
 import UpsertMenuForm from "./UpsertMenuForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import useDeleteMenu from "./useDeleteMenu";
+import useDeleteMenu from "../../hooks/data/menus/useDeleteMenu";
 
 function MenusDataCard({ menu }) {
   const [isOpenModal, setIsOpenModal] = useState(false);

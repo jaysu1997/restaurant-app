@@ -67,7 +67,7 @@ function CartItem({ order }) {
   const customizeChoices = summarizeMealChoices(order);
   const dishTotalPrice = order.itemTotalPrice * order.servings;
 
-  // 在OrderForm關閉時同步ServingsControl顯示的數據(不會影響到useReducer中的數據，可避免提交表單後或直接關閉OrderForm沒有執行提交時，ServingsControl顯示數據沒有同步更新的問題)
+  // 開啟OrderForm「更新」購物車中已訂購餐點的servings，並不會同步更新CartItem元件的servings，所以使用這個useEffect同步更新(至於useReducer中的數據則會同步更新，但如果這裡不進行同步，後續直接使用CartItem更新份量會造成錯誤)
   useEffect(
     function () {
       if (prevIsOpenModalRef.current && !isOpenModal) {

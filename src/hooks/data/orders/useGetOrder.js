@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { getOrderApi } from "../../services/apiOrder";
+import { getOrderApi } from "../../../services/apiOrder";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import StyledHotToast from "../../ui/StyledHotToast";
-import { useOrder } from "../../context/OrderContext";
+import StyledHotToast from "../../../ui/StyledHotToast";
+import { useOrder } from "../../../context/OrderContext";
 
 // 根據params(orderId)獲取對應訂單數據
 function useGetOrder(isEditPage) {

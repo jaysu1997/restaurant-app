@@ -1,7 +1,5 @@
-import { handleSupabaseError } from "../utils/handleSupabaseError";
 import supabase from "./supabase";
-
-// 各個api的error處理應該都要使用handleSupabaseError
+import { handleSupabaseError } from "../utils/handleSupabaseError";
 
 // 取得inventory中的所有食材數據
 export async function getInventoryApi() {
@@ -43,16 +41,18 @@ export async function updateInventoryApi(inventoryData) {
     }
   );
 
-  // 重複新增相同名稱食材的Error(name必須是獨一無二)
-  if (error && error.code === "23505") {
-    console.log(error);
-    throw new Error(`${inventoryData.label}已存在庫存數據庫中。`);
-  }
+  handleSupabaseError(error, `${inventoryData.label}已存在`);
 
-  if (error) {
-    console.log(error);
-    throw new Error(error.message);
-  }
+  // 重複新增相同名稱食材的Error(name必須是獨一無二)
+  // if (error && error.code === "23505") {
+  //   console.log(error);
+  //   throw new Error(`${inventoryData.label}已存在庫存數據庫中。`);
+  // }
+
+  // if (error) {
+  //   console.log(error);
+  //   throw new Error(error.message);
+  // }
 
   return data;
 }
@@ -64,16 +64,18 @@ export async function createInventoryApi(newIngredients) {
     .upsert(newIngredients)
     .select();
 
-  // 重複新增相同名稱食材的Error(name必須是獨一無二)
-  if (error && error.code === "23505") {
-    console.log(error);
-    throw new Error(`${newIngredients.label}已存在庫存數據庫中。`);
-  }
+  handleSupabaseError(error, `${newIngredients.label}已存在`);
 
-  if (error) {
-    console.log(error);
-    throw new Error("庫存食材新增失敗");
-  }
+  // // 重複新增相同名稱食材的Error(name必須是獨一無二)
+  // if (error && error.code === "23505") {
+  //   console.log(error);
+  //   throw new Error(`${newIngredients.label}已存在庫存數據庫中。`);
+  // }
+
+  // if (error) {
+  //   console.log(error);
+  //   throw new Error("庫存食材新增失敗");
+  // }
 
   return data;
 }

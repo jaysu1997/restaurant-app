@@ -1,9 +1,9 @@
 // 建立新的訂單
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrderApi } from "../../services/apiOrder";
-import StyledHotToast from "../../ui/StyledHotToast";
-import { useOrder } from "../../context/OrderContext";
+import { createOrderApi } from "../../../services/apiOrder";
+import StyledHotToast from "../../../ui/StyledHotToast";
+import { useOrder } from "../../../context/OrderContext";
+import { formatPickupNumber } from "../../../utils/orderHelpers";
 
 function useCreateOrder(reset) {
   const { dispatch } = useOrder();
@@ -16,10 +16,9 @@ function useCreateOrder(reset) {
   } = useMutation({
     mutationFn: createOrderApi,
     onSuccess: (data) => {
-      const pickupNumber = String(data.order.pickupNumber).padStart(3, "0");
       StyledHotToast({
         type: "success",
-        title: `取餐單號#${pickupNumber}建立成功`,
+        title: `取餐單號${formatPickupNumber(data.order.pickupNumber)}建立成功`,
       });
 
       dispatch({ type: "order/reset" });

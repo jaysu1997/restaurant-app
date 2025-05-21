@@ -3,13 +3,12 @@ import styled from "styled-components";
 
 import { useState } from "react";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import useDeleteOrder from "./useDeleteOrder";
-import useUpdateOrder from "./useUpdateOrder";
 import { scrollToTop } from "../../utils/scrollToTop";
 import {
   formatCreatedTime,
   formatPickupNumber,
 } from "../../utils/orderHelpers";
+import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
 
 const Footer = styled.footer`
   display: flex;

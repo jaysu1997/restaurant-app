@@ -1,11 +1,11 @@
 // 取得所有庫存食材數據
 import { useQuery } from "@tanstack/react-query";
-import { getInventoryApi } from "../../services/apiInventory";
+import { getInventoryApi } from "../../../services/apiInventory";
 import { useEffect } from "react";
-import { useOrder } from "../../context/OrderContext";
+import { useOrder } from "../../../context/OrderContext";
 import { useLocation } from "react-router-dom";
 
-function useGetInventory(orderCreating = true) {
+function useGetInventory(isInOrderContext = false) {
   const { dispatch } = useOrder();
   const { pathname } = useLocation();
 
@@ -24,7 +24,7 @@ function useGetInventory(orderCreating = true) {
   useEffect(
     function () {
       // 如果不是在訂單編輯狀態，不需要使用useReducer
-      if (!orderCreating) return;
+      if (!isInOrderContext) return;
 
       // 如果是在點餐頁面和訂單編輯頁面來回切換的話需要重置useReducer的state，避免數據出問題
       dispatch({
@@ -45,7 +45,7 @@ function useGetInventory(orderCreating = true) {
       dispatch,
       inventoryData,
       error,
-      orderCreating,
+      isInOrderContext,
       pathname,
     ]
   );

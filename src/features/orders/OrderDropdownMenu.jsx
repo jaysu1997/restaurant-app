@@ -3,11 +3,11 @@ import { useRef, useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit2, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import useDeleteOrder from "./useDeleteOrder";
 import {
   formatCreatedTime,
   formatPickupNumber,
 } from "../../utils/orderHelpers";
+import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
 
 const MenuContainer = styled.div`
   position: relative;
@@ -21,6 +21,7 @@ const ToggleButton = styled.button`
   border-radius: 6px;
   height: 2.8rem;
   width: 2.8rem;
+  background-color: ${(props) => (props.$isActive ? "#e5e7eb" : "transparent")};
 
   &:hover {
     background-color: #e5e7eb;
@@ -96,6 +97,7 @@ function OrderDropdownMenu({
       <MenuContainer>
         <ToggleButton
           ref={toggleRef}
+          $isActive={isOpenMenu === id}
           onClick={(e) => {
             handleToggle(e);
           }}

@@ -1,10 +1,10 @@
 // 訂單編輯頁面的迷你菜單
 import styled from "styled-components";
 import LoadingSpinner from "../../ui/LoadingSpinner";
-import useGetMenus from "../menu-manage/useGetMenus";
 import { Fragment } from "react";
 import Modal from "../../ui/Modal";
 import DishCard from "../../ui/DishCard";
+import useGetMenus from "../../hooks/data/menus/useGetMenus";
 
 const StyledMiniMenu = styled.div`
   display: flex;

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import DataDisplayCard from "../../ui/DataDisplayCard";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import useDeleteInventory from "./useDeleteInventory";
 import UpsertInventoryForm from "./UpsertInventoryForm";
+import useDeleteInventory from "../../hooks/data/inventory/useDeleteInventory";
 
 function InventoryDataCard({ inventory }) {
   const [isOpenModal, setIsOpenModal] = useState(false);

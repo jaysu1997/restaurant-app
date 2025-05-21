@@ -3,10 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { TbFilter, TbFilterCheck } from "react-icons/tb";
 import DatePicker from "./DatePicker";
-import useClickOutside from "../features/orders/useClickOutside";
 import { format } from "date-fns";
 import SelectFilter from "./SelectFilter";
 import SearchFilter from "./SearchFilter";
+import useClickOutside from "../hooks/ui/useClickOutside";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -129,7 +129,13 @@ function Filter({ filtersConfig }) {
   const [tempFilters, setTempFilters] = useState(initialFilterState);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
   const filterContainerRef = useRef(null);
-  useClickOutside(filterContainerRef, isContainerOpen, setIsContainerOpen);
+
+  useClickOutside(
+    filterContainerRef,
+    isContainerOpen,
+    setIsContainerOpen,
+    true
+  );
 
   // 清除條件按鈕disabled(filter輸入框有無輸入值)
   const isButtonDisabled = !Object.values(tempFilters).some(

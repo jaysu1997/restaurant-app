@@ -9,10 +9,8 @@ import ControlledSelect from "../../ui/ControlledSelect";
 import { useState } from "react";
 import MiniMenu from "./MiniMenu";
 import Note from "../../ui/Note";
-import useGetInventory from "../inventory/useGetInventory";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import OrderOperation from "./OrderOperation";
-import useUpdateOrder from "./useUpdateOrder";
 import {
   buildOrderData,
   formatCreatedTime,
@@ -20,6 +18,9 @@ import {
   generateTableNumbers,
 } from "../../utils/orderHelpers";
 import OrderForm from "../../ui/OrderForm/OrderForm";
+import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
+import useGetInventory from "../../hooks/data/inventory/useGetInventory";
+import useUpdateOrder from "../../hooks/data/orders/useUpdateOrder";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -102,7 +103,7 @@ function OrderSummaryEdit({ orderData, isEdit }) {
   }
 
   function onError(error) {
-    console.log(error);
+    return handleRHFSubmitError(error, "訂單更新失敗");
   }
 
   if (inventoryDataFetching) {

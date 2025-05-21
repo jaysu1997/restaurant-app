@@ -54,11 +54,12 @@ const ReloadButton = styled.button`
   }
 `;
 
-function EmptyState({ message = "", buttonText = "" }) {
+// 數據獲取結果為無的fallback ui
+function EmptyState({ message = "", buttonText = "", redirectTo = "" }) {
   const navigate = useNavigate();
 
   function handleClick() {
-    navigate("/menu-manage");
+    navigate(redirectTo);
   }
 
   return (

@@ -5,14 +5,15 @@ import CartItem from "./CartItem";
 import { GrClear } from "react-icons/gr";
 import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
-import useCreateOrder from "./useCreateOrder";
 import LoadingDotMini from "../../ui/LoadingDotMini";
 import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
-import { GiShoppingCart } from "react-icons/gi";
 import {
   buildOrderData,
   calculateOrderSummary,
 } from "../../utils/orderHelpers";
+import EmptyShoppingCart from "./EmptyShoppingCart";
+import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
+import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
@@ -21,10 +22,11 @@ const StyledShoppingCart = styled.aside`
   background-color: #fff;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   border-radius: 6px;
   font-size: 1.4rem;
-  max-height: clamp(0rem, calc(100dvh - 16.2rem), 64.8rem);
-  height: 100dvh;
+  max-height: clamp(12rem, calc(100dvh - 16.2rem), 64.8rem);
+  height: 64.8rem;
   position: sticky;
   top: 16.2rem;
   overflow: hidden;
@@ -112,24 +114,6 @@ const SubmitButton = styled.button`
   }
 `;
 
-const EmptyShoppingCart = styled.div`
-  flex: 1;
-  max-height: 40rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1.2rem;
-
-  svg {
-    color: #a1a1aa;
-  }
-
-  p {
-    font-size: 1.6rem;
-  }
-`;
-
 function ShoppingCart({ inventoryData }) {
   const {
     state: { order, curOrderPage },
@@ -157,12 +141,11 @@ function ShoppingCart({ inventoryData }) {
 
   function onSubmit(data) {
     const orderData = buildOrderData(order, data);
-
     createOrder(orderData);
   }
 
   function onError(error) {
-    console.log(Object.values(error).map((value) => value.message));
+    return handleRHFSubmitError(error, "訂單建立失敗");
   }
 
   return (
@@ -194,8 +177,8 @@ function ShoppingCart({ inventoryData }) {
         </Row>
       </Header>
 
-      {order.length !== 0 && isCreatingOrder ? (
-        <StyledOverlayScrollbars>
+      <StyledOverlayScrollbars>
+        {order.length !== 0 && isCreatingOrder ? (
           <ShoppingList>
             <>
               {order.map((order) => (
@@ -209,13 +192,10 @@ function ShoppingCart({ inventoryData }) {
               />
             </>
           </ShoppingList>
-        </StyledOverlayScrollbars>
-      ) : (
-        <EmptyShoppingCart>
-          <GiShoppingCart size={80} />
-          <p>開始選擇美味的餐點吧！</p>
-        </EmptyShoppingCart>
-      )}
+        ) : (
+          <EmptyShoppingCart />
+        )}
+      </StyledOverlayScrollbars>
 
       <Footer>
         <Row>
@@ -230,7 +210,7 @@ function ShoppingCart({ inventoryData }) {
 
         <Row>
           <SubmitButton
-            disabled={order.length === 0 || !isValid || orderCreating}
+            disabled={order.length === 0 || orderCreating || !isValid}
             onClick={handleSubmit(onSubmit, onError)}
           >
             {orderCreating ? <LoadingDotMini /> : "提交"}

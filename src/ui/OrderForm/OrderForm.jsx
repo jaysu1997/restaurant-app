@@ -12,6 +12,7 @@ import Note from "../Note";
 import CustomizeArea from "./CustomizeArea";
 import ServingsControl from "../ServingsControl";
 import { TiShoppingCart } from "react-icons/ti";
+import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
 
 const Form = styled.form`
   display: flex;
@@ -203,7 +204,10 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
   }
 
   function onError(error) {
-    console.log(error);
+    return handleRHFSubmitError(
+      error,
+      isEdit ? "訂購餐點更新失敗" : "餐點訂購失敗"
+    );
   }
 
   return (

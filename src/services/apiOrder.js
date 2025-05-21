@@ -1,8 +1,6 @@
 // 訂單相關api
-
-// 各個api的error處理應該都要使用handleSupabaseError
-
 import supabase from "./supabase.js";
+import { handleSupabaseError } from "../utils/handleSupabaseError";
 
 // 建立新的餐點訂單api
 export async function createOrderApi(orderData) {
@@ -10,9 +8,7 @@ export async function createOrderApi(orderData) {
     order_data: orderData,
   });
 
-  if (error) {
-    throw new Error("訂單建立失敗");
-  }
+  handleSupabaseError(error);
 
   return data;
 }

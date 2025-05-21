@@ -1,6 +1,5 @@
 // 菜單設定頁面
 import styled from "styled-components";
-import useGetMenus from "../features/menu-manage/useGetMenus.js";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import LoadingSpinner from "../ui/LoadingSpinner.jsx";
 import { useSearchParams } from "react-router-dom";
@@ -10,6 +9,7 @@ import Button from "../ui/Button.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import Filter from "../ui/Filter.jsx";
 import PageHeader from "../ui/PageHeader.jsx";
+import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 
 const Container = styled.ul`
   display: grid;

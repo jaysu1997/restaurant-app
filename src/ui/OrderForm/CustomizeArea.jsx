@@ -66,7 +66,7 @@ const OptionsArea = styled.div`
 
 // 自訂選項區塊
 function CustomizeArea({ customizeData, register, isEdit = false }) {
-  const { choice, customizeId, required } = customizeData;
+  const { choice, customizeId, required, title, options } = customizeData;
   const type = required === "必填" ? "required" : "optional";
 
   // 用來控制細項CSS樣式(填寫狀態)
@@ -135,10 +135,10 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
     <Customize
       type={type}
       $colorStyle={colorStyle.background[isAnswered]}
-      key={customizeData.customizeId}
+      key={customizeId}
     >
       <Heading>
-        <Title>{customizeData.title}</Title>
+        <Title>{title}</Title>
         <RequiredLabel type={type} $colorStyle={colorStyle.label[isAnswered]}>
           {type === "required"
             ? isAnswered === "isAnswered"
@@ -147,16 +147,13 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
             : "選填"}
         </RequiredLabel>
       </Heading>
-      <ChoiceLabel>
-        {customizeData.choice === "單選" ? "只能單選" : "可以多選"}
-      </ChoiceLabel>
+      <ChoiceLabel>{choice === "單選" ? "只能單選" : "可以多選"}</ChoiceLabel>
       <OptionsArea>
-        {customizeData.options.map((optionData) => (
+        {options.map((optionData) => (
           <Option
             isAnswered={isAnswered}
             type={type}
-            choice={choice}
-            customizeId={customizeId}
+            customizeData={customizeData}
             register={register}
             optionData={optionData}
             handleClick={handleClick}

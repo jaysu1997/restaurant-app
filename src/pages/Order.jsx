@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import useGetOrder from "../features/orders/useGetOrder";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
@@ -7,6 +6,7 @@ import styled from "styled-components";
 import OrderOperation from "../features/orders/OrderOperation";
 import PageHeader from "../ui/PageHeader";
 import { formatPickupNumber } from "../utils/orderHelpers";
+import useGetOrder from "../hooks/data/orders/useGetOrder";
 
 const StyledOrderSummary = styled.div`
   display: grid;

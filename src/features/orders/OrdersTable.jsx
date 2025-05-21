@@ -3,11 +3,11 @@ import LoadingSpinner from "../../ui/LoadingSpinner";
 import { useEffect, useRef, useState } from "react";
 import OrderRow from "./OrderRow";
 import Pagination from "../../ui/Pagination";
-import usePagination from "./usePagination";
 import OrderDropdownMenu from "./OrderDropdownMenu";
-import useClickOutside from "./useClickOutside";
 import EmptyState from "../../ui/EmptyState";
 import FetchFailFallback from "../../ui/FetchFailFallback";
+import useClickOutside from "../../hooks/ui/useClickOutside";
+import usePagination from "../../hooks/data/orders/usePagination";
 
 const OrderContainer = styled.div`
   max-width: 95dvw;
@@ -62,28 +62,7 @@ function OrdersTable() {
   const activeMenuRef = useRef(null);
 
   // 在父元件監聽點擊外部時關閉菜單(避免大量註冊事件監聽)
-  useClickOutside(activeMenuRef, isOpenMenu, setIsOpenMenu);
-
-  useEffect(
-    function () {
-      if (!isOpenMenu) return;
-
-      const handleClickOutside = (e) => {
-        if (
-          activeMenuRef.current &&
-          !activeMenuRef.current.contains(e.target)
-        ) {
-          setIsOpenMenu(false);
-        }
-      };
-
-      document.addEventListener("click", handleClickOutside);
-      return () => {
-        document.removeEventListener("click", handleClickOutside);
-      };
-    },
-    [isOpenMenu]
-  );
+  useClickOutside(activeMenuRef, isOpenMenu, setIsOpenMenu, false);
 
   // 監聽頁面滾動(包含滾輪和鍵盤的滾動)時關閉菜單
   useEffect(

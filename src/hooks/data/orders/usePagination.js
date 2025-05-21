@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { getOrdersApi } from "../../services/apiOrder";
+import { getOrdersApi } from "../../../services/apiOrder";
 import { useEffect } from "react";
 
 // 只能是正整數(否則回傳預設值)

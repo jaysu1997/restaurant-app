@@ -66,13 +66,14 @@ const StyledOption = styled.label`
 function Option({
   isAnswered,
   type,
-  choice,
-  customizeId,
+  customizeData,
   register,
   optionData,
   handleClick,
   curDishCustomizeOption,
 }) {
+  const { customizeId, choice, title } = customizeData;
+
   const { optionId, optionLabel, extraPrice, ingredientName, quantity } =
     optionData;
 
@@ -111,7 +112,7 @@ function Option({
           !checked
         }
         {...register(`customizeField.${type}.${customizeId}`, {
-          required: type === "optional" ? false : true,
+          required: type === "optional" ? false : `${title}必須填選`,
         })}
       />
 

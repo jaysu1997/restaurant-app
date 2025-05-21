@@ -4,12 +4,13 @@ import FormTypography from "../../ui/FormTypography";
 import FormRow from "../../ui/FormRow";
 import Button from "../../ui/Button";
 import LoadingDotMini from "../../ui/LoadingDotMini";
-import useUpsertInventory from "./useUpsertInventory";
 import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui/StyledHotToast";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
 import Modal from "../../ui/Modal";
+import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
+import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
 
 const formFieldData = [
   {
@@ -25,7 +26,6 @@ const formFieldData = [
 ];
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
-  console.log(inventory);
   const { handleSubmit, getValues, reset, control } = useForm({
     defaultValues: inventory || {},
   });
@@ -51,24 +51,11 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
         searchParams.delete("name");
         setSearchParams(searchParams);
       },
-      onError: (error) => {
-        console.log("上傳失敗", error);
-        // reset(getValues());
-      },
     });
   }
 
   function onError(error) {
-    // 所有的error訊息
-    const toastMessage = `${Object.values(error)
-      .map((err) => err.message)
-      .join("， ")}。`;
-
-    StyledHotToast({
-      type: "error",
-      title: "庫存食材設定失敗",
-      content: toastMessage,
-    });
+    return handleRHFSubmitError(error, "食材設定失敗");
   }
 
   return (

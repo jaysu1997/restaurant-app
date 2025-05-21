@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import Button from "../ui/Button";
-import useGetInventory from "../features/inventory/useGetInventory";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
 import Filter from "../ui/Filter";
 import PageHeader from "../ui/PageHeader";
+import useGetInventory from "../hooks/data/inventory/useGetInventory";
 
 const Container = styled.ul`
   display: grid;

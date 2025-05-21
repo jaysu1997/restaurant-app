@@ -4,8 +4,7 @@ import { zhTW } from "react-day-picker/locale";
 import styled, { css } from "styled-components";
 import { PiCalendar } from "react-icons/pi";
 import { format, startOfMonth, startOfWeek, startOfYear } from "date-fns";
-import useClickOutside from "../features/orders/useClickOutside";
-import { useSearchParams } from "react-router-dom";
+import useClickOutside from "../hooks/ui/useClickOutside";
 
 const StyledDatePicker = styled.div`
   position: relative;
@@ -147,13 +146,12 @@ const CustomDayPicker = styled(DayPicker)`
 `;
 
 function DatePicker({ filterValue, handleValueChange, ...filters }) {
-  const [searchParams, setSearchParams] = useSearchParams();
   const { queryKey, placeholder } = filters;
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
   const [month, setMonth] = useState(new Date());
   const daypickerRef = useRef(null);
 
-  useClickOutside(daypickerRef, isOpenDayPicker, setIsOpenDayPicker);
+  useClickOutside(daypickerRef, isOpenDayPicker, setIsOpenDayPicker, true);
 
   function formatRangeDate(selectedDate) {
     return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
@@ -171,7 +169,7 @@ function DatePicker({ filterValue, handleValueChange, ...filters }) {
     <StyledDatePicker>
       <DateField
         $isActive={isOpenDayPicker}
-        onClick={() => setIsOpenDayPicker((isOpen) => !isOpen)}
+        onClick={() => setIsOpenDayPicker(true)}
       >
         <input
           value={filterValue ? formatRangeDate(filterValue) : ""}
