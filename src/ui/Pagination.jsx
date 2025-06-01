@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { scrollToTop } from "../utils/scrollToTop";
 import { GoDotFill } from "react-icons/go";
+import { isValidPositiveInteger } from "../utils/orderHelpers";
 
 const StyledPagination = styled.footer`
   display: flex;
@@ -86,7 +87,8 @@ function Pagination({ curPage, maxPage }) {
   );
 
   function handlePagination(value) {
-    const page = Math.max(1, Math.min(Number(value), maxPage));
+    const inputValue = isValidPositiveInteger(Number(value), 1);
+    const page = Math.max(1, Math.min(inputValue, maxPage));
     searchParams.set("page", page);
     setSearchParams(searchParams);
   }

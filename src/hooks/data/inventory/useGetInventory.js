@@ -11,9 +11,9 @@ function useGetInventory(isInOrderContext = false) {
 
   const {
     data: inventoryData,
-    isPending: inventoryDataFetching,
-    error,
-    isError: inventoryDataFetchingError,
+    isPending: inventoryIsPending,
+    error: inventoryError,
+    isError: inventoryIsError,
     isSuccess,
   } = useQuery({
     queryKey: ["inventory"],
@@ -39,18 +39,15 @@ function useGetInventory(isInOrderContext = false) {
         });
       }
     },
-    [
-      isSuccess,
-      inventoryDataFetchingError,
-      dispatch,
-      inventoryData,
-      error,
-      isInOrderContext,
-      pathname,
-    ]
+    [dispatch, inventoryData, isInOrderContext, isSuccess, pathname]
   );
 
-  return { inventoryData, inventoryDataFetching, inventoryDataFetchingError };
+  return {
+    inventoryData,
+    inventoryIsPending,
+    inventoryError,
+    inventoryIsError,
+  };
 }
 
 export default useGetInventory;

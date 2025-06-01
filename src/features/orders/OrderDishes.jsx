@@ -59,7 +59,7 @@ function OrderDishes({ dishData, isEdit }) {
   return (
     <OrderDishesList>
       <OrderDishRow $isEdit={isEdit}>
-        {isEdit && <span></span>}
+        {isEdit && <span aria-hidden="true"></span>}
         <span>名稱</span>
         <span>細項</span>
         <span>備註</span>

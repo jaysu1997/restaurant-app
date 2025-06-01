@@ -1,6 +1,5 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-
 import { useState } from "react";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import { scrollToTop } from "../../utils/scrollToTop";
@@ -32,10 +31,10 @@ const Button = styled.button`
 `;
 
 function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const { mutate, isPending } = useDeleteOrder();
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { mutate, isPending } = useDeleteOrder();
 
   return (
     <>
@@ -48,7 +47,6 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             disabled={disabeldSubmit}
             onClick={() => {
               handleSubmit();
-              navigate(`/order-edit/${orderId}`);
               scrollToTop();
             }}
           >
@@ -60,7 +58,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $fontColor="#fff"
             $hoverBgColor="#047857"
             onClick={() => {
-              navigate(`/order-edit/${orderId}`, { replace: true });
+              navigate(`/order-edit/${orderId}`);
               scrollToTop();
             }}
           >
@@ -80,7 +78,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $bgColor="#e7e5e4"
             $fontColor="#333"
             $hoverBgColor="#d6d3d1"
-            onClick={() => navigate(`/order/${orderId}`, { replace: true })}
+            onClick={() => navigate(-1)}
           >
             取消更新
           </Button>

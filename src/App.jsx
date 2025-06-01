@@ -18,15 +18,6 @@ import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
 
-// 這個之後需要刪除(然後如果想要把遠端數據操作的錯誤原因好好呈現的話，或許需要把async throw new Error都改成message，然後custom hook中則設置中文為標題，錯誤內容則是message。然後可能需要針對網路連線狀態異常的部分特地加上一個網路異常的message處理)
-
-// 還有數據獲取失敗時，請記得使用FetchFailFallback元件
-
-// 以及稍微看看是否可以把每個頁面進行重構，讓Heading元件可以不需要在數據獲取不同狀態下反覆編寫，現在是isPending和isError和isSuccess都有，導致一個頁面中反覆使用了三次Heading元件
-
-// 還有，記得順便把mutation使用到的isPending傳到到按鈕上的disabled上，禁止重複點擊
-import Test from "./pages/Test";
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -93,7 +84,6 @@ export default function App() {
               <Route path="/staff" element={<Staff />} />
             </Route>
             <Route path="*" element={<PageNotFound />} />
-            <Route path="test" element={<Test />} />
           </Routes>
         </BrowserRouter>
       </OrderProvider>

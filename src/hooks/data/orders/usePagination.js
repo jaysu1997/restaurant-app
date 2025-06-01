@@ -6,21 +6,42 @@ import {
 } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { getOrdersApi } from "../../../services/apiOrder";
-import { useEffect } from "react";
+import {
+  isValidPositiveInteger,
+  safeParseDate,
+} from "../../../utils/orderHelpers";
+import { addDays, format } from "date-fns";
 
-// 只能是正整數(否則回傳預設值)
-function getValidPositiveInteger(searchParams, key, defaultValue = 1) {
-  const value = searchParams.get(key);
-  return /^[1-9]\d*$/.test(value) ? Number(value) : defaultValue;
+// 將日期篩選條件轉換成supabase時間欄位的要求格式
+function getCreatedTimeSearchParams(createdTime) {
+  if (!createdTime) return null;
+
+  const [fromStr, toStr] = createdTime.split("_");
+  const fromDate = safeParseDate(fromStr);
+  const toDate = safeParseDate(toStr);
+
+  if (fromDate && toDate) {
+    return {
+      from: format(fromDate, "yyyy-MM-dd HH:mm:ss"),
+      to: format(addDays(toDate, 1), "yyyy-MM-dd HH:mm:ss"),
+    };
+  }
+
+  return null;
 }
 
 function usePagination() {
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const page = getValidPositiveInteger(searchParams, "page", 1);
-
-  const date = searchParams.get("date") || "all";
+  const [searchParams] = useSearchParams();
+  // 篩選條件(參數)
+  const page = isValidPositiveInteger(searchParams.get("page"), 1);
+  const pickupNumber = isValidPositiveInteger(
+    Number(searchParams.get("pickupNumber")),
+    null
+  );
+  const createdTime = getCreatedTimeSearchParams(
+    searchParams.get("createdTime")
+  );
 
   const {
     data: { ordersData = [], curPage = 1, maxPage = 1 } = {},
@@ -28,23 +49,22 @@ function usePagination() {
     error,
     isError,
   } = useQuery({
-    queryKey: ["orders", page],
-    queryFn: () => getOrdersApi(page),
+    queryKey: ["orders", page, createdTime, pickupNumber],
+    queryFn: () => getOrdersApi(page, createdTime, pickupNumber),
     placeholderData: keepPreviousData,
   });
 
   // 預先獲取前後頁的數據
   if (curPage < maxPage) {
     queryClient.prefetchQuery({
-      queryKey: ["orders", page + 1],
-      queryFn: () => getOrdersApi(page + 1),
+      queryKey: ["orders", page + 1, createdTime, pickupNumber],
+      queryFn: () => getOrdersApi(page + 1, createdTime, pickupNumber),
     });
   }
-
   if (curPage > 1) {
     queryClient.prefetchQuery({
-      queryKey: ["orders", page - 1],
-      queryFn: () => getOrdersApi(page - 1),
+      queryKey: ["orders", page - 1, createdTime, pickupNumber],
+      queryFn: () => getOrdersApi(page - 1, createdTime, pickupNumber),
     });
   }
 
@@ -54,6 +74,9 @@ function usePagination() {
     maxPage,
     isPending,
     isError,
+    error,
+    createdTime,
+    pickupNumber,
   };
 }
 

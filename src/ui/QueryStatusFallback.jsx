@@ -6,12 +6,14 @@ import LoadingSpinner from "./LoadingSpinner";
 function QueryStatusFallback({
   isPending,
   isError,
+  error,
   isEmpty,
   emptyState,
+  render,
   children,
 }) {
   if (isPending) return <LoadingSpinner />;
-  if (isError) return <FetchFailFallback />;
+  if (isError) return <FetchFailFallback error={error} />;
   if (isEmpty) {
     const { message, buttonText, redirectTo } = emptyState;
 
@@ -24,8 +26,8 @@ function QueryStatusFallback({
     );
   }
 
-  // 如果沒有異常且有數據就顯示正常的ui
-  return children;
+  // 如果沒有異常且有數據就顯示正常的ui(有些ui會因為沒有第一時間取得數據而造成error，所以改成使用render prop延後渲染)
+  return children || render();
 }
 
 export default QueryStatusFallback;

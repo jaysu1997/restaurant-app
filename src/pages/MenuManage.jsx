@@ -1,15 +1,15 @@
 // 菜單設定頁面
-import styled from "styled-components";
-import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
-import LoadingSpinner from "../ui/LoadingSpinner.jsx";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
 import Button from "../ui/Button.jsx";
 import { BsFileEarmarkPlus } from "react-icons/bs";
-import Filter from "../ui/Filter.jsx";
 import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
+import Filter from "../ui/Filter/Filter.jsx";
+import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
+import styled from "styled-components";
+import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 
 const Container = styled.ul`
   display: grid;
@@ -20,17 +20,21 @@ const Container = styled.ul`
   padding: 1.6rem 0;
 `;
 
-function filterData(menusData, nameKeyWord, categoryKeyWord) {
+function filterData(menusData, nameSearchParams, categorySearchParams) {
+  if (!menusData) return menusData;
+
   let displayData = menusData;
 
   // 關鍵字篩選
-  if (nameKeyWord && nameKeyWord !== "") {
-    displayData = menusData.filter((menu) => menu.name.includes(nameKeyWord));
+  if (nameSearchParams && nameSearchParams !== "") {
+    displayData = menusData.filter((menu) =>
+      menu.name.includes(nameSearchParams)
+    );
   }
   // 餐點分類篩選
-  if (categoryKeyWord && categoryKeyWord !== "all") {
+  if (categorySearchParams && categorySearchParams !== "all") {
     displayData = displayData.filter(
-      (menu) => menu.category === categoryKeyWord
+      (menu) => menu.category === categorySearchParams
     );
   }
 
@@ -40,22 +44,22 @@ function filterData(menusData, nameKeyWord, categoryKeyWord) {
 function MenuManage() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { menusData, menusDataFetching } = useGetMenus();
+  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
 
-  if (menusDataFetching) {
-    return (
-      <>
-        <PageHeader title="菜單設定" />
-        <LoadingSpinner />
-      </>
-    );
-  }
-
-  const nameKeyWord = searchParams.get("name");
-  const categoryKeyWord = searchParams.get("category");
+  const nameSearchParams = searchParams.get("name");
+  const categorySearchParams = searchParams.get("category");
 
   // 要展示的數據
-  const displayMenusData = filterData(menusData, nameKeyWord, categoryKeyWord);
+  const displayMenusData = filterData(
+    menusData,
+    nameSearchParams,
+    categorySearchParams
+  );
+
+  const emptyStateMessage =
+    nameSearchParams || categorySearchParams
+      ? "查無符合當前篩選條件的餐點數據"
+      : "目前沒有任何餐點數據，請點擊新增餐點開始新建餐點數據。";
 
   const filtersConfig = [
     {
@@ -72,7 +76,7 @@ function MenuManage() {
       placeholder: "選擇餐點分類",
       options: [
         { label: "不篩選", value: "all" },
-        ...Array.from(new Set(menusData.map((data) => data.category))).map(
+        ...Array.from(new Set(menusData?.map((data) => data.category))).map(
           (category) => ({ label: category, value: category })
         ),
       ],
@@ -92,15 +96,24 @@ function MenuManage() {
         </Button>
       </PageHeader>
 
-      <Container>
-        {menusData.length === 0 ? (
-          <span>沒有任何數據</span>
-        ) : (
-          displayMenusData.map((menu) => (
-            <MenusDataCard menu={menu} key={menu.id} />
-          ))
+      <QueryStatusFallback
+        isPending={menusIsPending}
+        isError={menusIsError}
+        error={menusError}
+        isEmpty={
+          Array.isArray(displayMenusData) && displayMenusData?.length === 0
+        }
+        emptyState={{
+          message: emptyStateMessage,
+        }}
+        render={() => (
+          <Container>
+            {displayMenusData.map((menu) => (
+              <MenusDataCard menu={menu} key={menu.id} />
+            ))}
+          </Container>
         )}
-      </Container>
+      />
 
       {isOpenModal && (
         <UpsertMenuForm onCloseModal={() => setIsOpenModal(false)} />

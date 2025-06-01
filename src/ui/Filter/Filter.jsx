@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { TbFilter, TbFilterCheck } from "react-icons/tb";
-import DatePicker from "./DatePicker";
-import { format } from "date-fns";
 import SelectFilter from "./SelectFilter";
 import SearchFilter from "./SearchFilter";
-import useClickOutside from "../hooks/ui/useClickOutside";
+import DateRangeFilter from "./DateRangeFilter";
+import useClickOutside from "../../hooks/ui/useClickOutside";
+import { getInitialFilterState, handleSearchParams } from "./filterHelpers";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -98,34 +98,12 @@ const ResetFiltersButton = styled(ApplyFiltersButton)`
   }
 `;
 
-// 從url取得searchParams值
-function getInitialFilterState(searchParams, filtersConfig) {
-  return filtersConfig.reduce((acc, filter) => {
-    const { queryKey, type, options } = filter;
-    let value = "";
-
-    if (searchParams.get(queryKey)) {
-      if (type === "search") {
-        value = searchParams.get(queryKey);
-      }
-      if (type === "select") {
-        value =
-          options.find((opt) => opt.value === searchParams.get(queryKey)) || "";
-      }
-      if (type === "datePicker") {
-        const [from, to] = searchParams.get(queryKey).split("_");
-        value = { from, to };
-      }
-    }
-
-    acc[queryKey] = { type, value };
-    return acc;
-  }, {});
-}
-
 function Filter({ filtersConfig }) {
+  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  // 篩選條件的初始值(在未完成更新以前將保持不變)
   const initialFilterState = getInitialFilterState(searchParams, filtersConfig);
+  // 臨時存放篩選條件值的地方
   const [tempFilters, setTempFilters] = useState(initialFilterState);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
   const filterContainerRef = useRef(null);
@@ -149,7 +127,7 @@ function Filter({ filtersConfig }) {
   // 篩選種類和對應元件
   const filterComponents = {
     select: SelectFilter,
-    datePicker: DatePicker,
+    datePicker: DateRangeFilter,
     search: SearchFilter,
   };
 
@@ -159,34 +137,6 @@ function Filter({ filtersConfig }) {
       ...tempFilters,
       [queryKey]: { ...tempFilters[queryKey], value },
     }));
-  }
-
-  // 處理searchParams更新(URL)
-  function handleSearchParams() {
-    for (const [key, obj] of Object.entries(tempFilters)) {
-      let searchParamsValue = "";
-      if (obj.type === "search" && obj.value) {
-        searchParamsValue = obj.value;
-      }
-      if (obj.type === "select" && obj.value?.value) {
-        searchParamsValue = obj.value.value;
-      }
-      if (obj.type === "datePicker" && obj.value?.from && obj.value?.to) {
-        searchParamsValue = `${format(obj.value.from, "yyyy-MM-dd")}_${format(
-          obj.value.to,
-          "yyyy-MM-dd"
-        )}`;
-      }
-
-      if (searchParamsValue) {
-        searchParams.set(key, searchParamsValue);
-      } else {
-        // 刪除沒有進行篩選的searchParams
-        searchParams.delete(key);
-      }
-      setSearchParams(searchParams);
-    }
-    setIsContainerOpen(false);
   }
 
   return (
@@ -241,7 +191,18 @@ function Filter({ filtersConfig }) {
             >
               清空條件
             </ResetFiltersButton>
-            <ApplyFiltersButton onClick={() => handleSearchParams()}>
+            <ApplyFiltersButton
+              onClick={() =>
+                handleSearchParams(
+                  pathname,
+                  filtersConfig,
+                  tempFilters,
+                  searchParams,
+                  setSearchParams,
+                  setIsContainerOpen
+                )
+              }
+            >
               確認
             </ApplyFiltersButton>
           </ActionButtonGroup>

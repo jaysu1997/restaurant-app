@@ -33,10 +33,12 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   function onSubmit(data) {
+    console.log(data);
     // 增加value(配合react-select的格式)
     const inventoryData = {
       ...data,
-      value: data.label,
+      label: data.label.trim(),
+      value: data.label.trim(),
     };
 
     upsert(inventoryData, {

@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
 import Button from "../ui/Button";
-import LoadingSpinner from "../ui/LoadingSpinner";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
-import Filter from "../ui/Filter";
 import PageHeader from "../ui/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
+import Filter from "../ui/Filter/Filter";
+import QueryStatusFallback from "../ui/QueryStatusFallback";
 
 const Container = styled.ul`
   display: grid;
@@ -20,12 +20,37 @@ const Container = styled.ul`
   padding: 1.6rem 0;
 `;
 
-function filterData(inventoryData, nameKeyWord, quantityKeyWord) {
+const filtersConfig = [
+  {
+    title: "食材名稱",
+    type: "search",
+    inputType: "text",
+    queryKey: "name",
+    placeholder: "搜尋食材名稱",
+  },
+  {
+    title: "庫存數量",
+    type: "select",
+    queryKey: "quantity",
+    placeholder: "選擇庫存剩餘量",
+    options: [
+      { label: "不篩選", value: "all" },
+      { label: "庫存低於100", value: "100" },
+      { label: "庫存低於50", value: "50" },
+      { label: "庫存低於10", value: "10" },
+      { label: "庫存已耗盡", value: "0" },
+    ],
+  },
+];
+
+function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
+  if (!inventoryData) return inventoryData;
+
   let displayData = inventoryData;
 
-  if (nameKeyWord && nameKeyWord !== "") {
+  if (nameSearchParams && nameSearchParams !== "") {
     displayData = inventoryData.filter((inventory) =>
-      inventory.label.includes(nameKeyWord)
+      inventory.label.includes(nameSearchParams)
     );
   }
 
@@ -41,48 +66,35 @@ function filterData(inventoryData, nameKeyWord, quantityKeyWord) {
 function Inventory() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { inventoryData, inventoryDataFetching } = useGetInventory(false);
+  const {
+    inventoryData,
+    inventoryIsPending,
+    inventoryError,
+    inventoryIsError,
+  } = useGetInventory(false);
 
-  if (inventoryDataFetching)
-    return (
-      <>
-        <PageHeader title="庫存管理" />
-        <LoadingSpinner />
-      </>
-    );
+  // if (inventoryIsPending)
+  //   return (
+  //     <>
+  //       <PageHeader title="庫存管理" />
+  //       <LoadingSpinner />
+  //     </>
+  //   );
 
-  const nameKeyWord = searchParams.get("name");
-  const quantityKeyWord = searchParams.get("quantity");
+  const nameSearchParams = searchParams.get("name");
+  const quantitySearchParams = searchParams.get("quantity");
 
   // 要展示的數據
   const displayInventoryData = filterData(
     inventoryData,
-    nameKeyWord,
-    quantityKeyWord
+    nameSearchParams,
+    quantitySearchParams
   );
 
-  const filtersConfig = [
-    {
-      title: "食材名稱",
-      type: "search",
-      inputType: "text",
-      queryKey: "name",
-      placeholder: "搜尋食材名稱",
-    },
-    {
-      title: "庫存數量",
-      type: "select",
-      queryKey: "quantity",
-      placeholder: "選擇庫存剩餘量",
-      options: [
-        { label: "不篩選", value: "all" },
-        { label: "庫存低於100", value: "100" },
-        { label: "庫存低於50", value: "50" },
-        { label: "庫存低於10", value: "10" },
-        { label: "庫存已耗盡", value: "0" },
-      ],
-    },
-  ];
+  const emptyStateMessage =
+    nameSearchParams || quantitySearchParams
+      ? "查無符合當前篩選條件的食材數據"
+      : "目前沒有任何食材數據，請點擊新增食材開始新建食材數據。";
 
   return (
     <>
@@ -93,19 +105,26 @@ function Inventory() {
           onClick={() => setIsOpenModal(true)}
         >
           <BsFileEarmarkPlus size={18} />
-          <span>新增餐點</span>
+          <span>新增食材</span>
         </Button>
       </PageHeader>
 
-      {displayInventoryData.length === 0 ? (
-        <img src="empty-state.svg" width="500" />
-      ) : (
-        <Container>
-          {displayInventoryData.map((inventory) => (
-            <InventoryDataCard inventory={inventory} key={inventory.id} />
-          ))}
-        </Container>
-      )}
+      <QueryStatusFallback
+        isPending={inventoryIsPending}
+        isError={inventoryIsError}
+        error={inventoryError}
+        isEmpty={Array.isArray(inventoryData) && inventoryData?.length === 0}
+        emptyState={{
+          message: emptyStateMessage,
+        }}
+        render={() => (
+          <Container>
+            {displayInventoryData.map((inventory) => (
+              <InventoryDataCard inventory={inventory} key={inventory.id} />
+            ))}
+          </Container>
+        )}
+      />
 
       {isOpenModal && (
         <UpsertInventoryForm onCloseModal={() => setIsOpenModal(false)} />

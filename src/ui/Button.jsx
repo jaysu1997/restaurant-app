@@ -98,6 +98,7 @@ const type = {
   `,
 };
 
+// 或許之後可以可慮把所有的button都集中在這裡，然後記得設計不同的type屬性(預設改成button之類的)
 const Button = styled.button`
   ${({ $buttonStyle = "cancel" }) => type[$buttonStyle]}
 

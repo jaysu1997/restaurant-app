@@ -20,10 +20,12 @@ function useDeleteInventory() {
       });
       queryClient.invalidateQueries({ queryKey: ["inventory"] });
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error);
       StyledHotToast({
         type: "error",
         title: "庫存食材刪除失敗",
+        content: error.message,
       });
     },
   });

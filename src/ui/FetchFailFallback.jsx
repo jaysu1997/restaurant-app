@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import errorSvg from "../assets/error.svg";
 import Image from "./Image";
+import { FaTriangleExclamation } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const StyledFetchFailFallback = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  padding: 2rem;
   width: 100%;
   gap: 2rem;
   animation: fadeIn 0.3s ease forwards;
@@ -30,8 +34,17 @@ const Message = styled.p`
 `;
 
 const SubMessage = styled.p`
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   color: #6b7280;
+  word-break: break-word;
+  /* white-space: pre-wrap; */
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.6rem;
 `;
 
 const ReloadButton = styled.button`
@@ -53,16 +66,39 @@ const ReloadButton = styled.button`
   }
 `;
 
+const HomeButton = styled(ReloadButton)`
+  background-color: #dc2626;
+
+  &:hover {
+    background-color: #b91c1c;
+  }
+
+  &:focus {
+    outline: 2px solid #fca5a5;
+    outline-offset: 2px;
+  }
+`;
+
 // 數據獲取失敗fallback ui
-function FetchFailFallback() {
+function FetchFailFallback({ error }) {
+  const navigate = useNavigate();
+
   return (
     <StyledFetchFailFallback>
-      <Image src={errorSvg} alt="fetchingErrorSvg" />
+      {/* 離線errorSvg會死圖，所以放個備用icon */}
+      {navigator.onLine ? (
+        <Image src={errorSvg} alt="fetchingErrorSvg" />
+      ) : (
+        <FaTriangleExclamation size={96} color="#dc2626" />
+      )}
       <Message>數據獲取失敗</Message>
-      <SubMessage>請檢查網路連線，或稍後再試一次</SubMessage>
-      <ReloadButton onClick={() => window.location.reload()}>
-        重新嘗試
-      </ReloadButton>
+      <SubMessage>{error?.message}</SubMessage>
+      <ButtonGroup>
+        <ReloadButton onClick={error?.action}>
+          {error?.actionLabel}
+        </ReloadButton>
+        <HomeButton onClick={() => navigate("/")}>返回首頁</HomeButton>
+      </ButtonGroup>
     </StyledFetchFailFallback>
   );
 }

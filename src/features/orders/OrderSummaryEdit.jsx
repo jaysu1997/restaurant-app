@@ -1,6 +1,5 @@
 // 訂單詳情(編輯)
 import styled from "styled-components";
-
 import OrderDishes from "./OrderDishes";
 import { useOrder } from "../../context/OrderContext";
 import { useForm } from "react-hook-form";
@@ -9,7 +8,6 @@ import ControlledSelect from "../../ui/ControlledSelect";
 import { useState } from "react";
 import MiniMenu from "./MiniMenu";
 import Note from "../../ui/Note";
-import LoadingSpinner from "../../ui/LoadingSpinner";
 import OrderOperation from "./OrderOperation";
 import {
   buildOrderData,
@@ -19,7 +17,6 @@ import {
 } from "../../utils/orderHelpers";
 import OrderForm from "../../ui/OrderForm/OrderForm";
 import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
-import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import useUpdateOrder from "../../hooks/data/orders/useUpdateOrder";
 
 const OrderInfo = styled.section`
@@ -53,8 +50,7 @@ const Row = styled.div`
 
 // 新增餐點的按鈕需要再調整樣式
 function OrderSummaryEdit({ orderData, isEdit }) {
-  const { updateOrder, updating, error } = useUpdateOrder();
-  const { inventoryDataFetching } = useGetInventory(true);
+  const { updateOrder, updating } = useUpdateOrder();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const {
@@ -104,10 +100,6 @@ function OrderSummaryEdit({ orderData, isEdit }) {
 
   function onError(error) {
     return handleRHFSubmitError(error, "訂單更新失敗");
-  }
-
-  if (inventoryDataFetching) {
-    return <LoadingSpinner />;
   }
 
   return (

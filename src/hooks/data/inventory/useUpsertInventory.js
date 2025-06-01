@@ -27,7 +27,6 @@ function useUpsertInventory() {
       });
     },
     onError: (error) => {
-      console.log(error);
       StyledHotToast({
         type: "error",
         title: "庫存食材設定失敗",

@@ -4,10 +4,10 @@ import { Fragment, useState } from "react";
 import Modal from "./Modal";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
-import LoadingSpinner from "./LoadingSpinner";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 import LoadingDotMini from "./LoadingDotMini";
 import useGetFilterMenuData from "../hooks/data/menus/useGetFilterData";
+import QueryStatusFallback from "./QueryStatusFallback";
 
 const StyledConfirmDelete = styled.div`
   max-width: 36rem;
@@ -121,6 +121,12 @@ function ConfirmDelete({
   isDeleting,
 }) {
   const [confirm, setConfirm] = useState(false);
+  // 只有在庫存數據刪除的時候，才需要執行以下custom hook以及展示FilterMenuList
+  const shouldFetchFilterData = modalType === "inventory";
+  const { filterMenuData, isPending, isError, error } = useGetFilterMenuData(
+    data.label,
+    shouldFetchFilterData
+  );
 
   return (
     <Modal
@@ -130,36 +136,44 @@ function ConfirmDelete({
       onCloseModal={onCloseModal}
     >
       <StyledConfirmDelete>
-        <Content>{render()}</Content>
+        <QueryStatusFallback
+          isPending={shouldFetchFilterData && isPending}
+          isError={shouldFetchFilterData && isError}
+          error={error}
+        >
+          <Content>{render()}</Content>
 
-        {modalType === "inventory" && <FilterMenuList name={data.label} />}
+          {shouldFetchFilterData && (
+            <FilterMenuList filterMenuData={filterMenuData} name={data.label} />
+          )}
 
-        <ConfirmCheckBox>
-          <input
-            type="checkbox"
-            id="confirm"
-            checked={confirm}
-            onChange={(e) => setConfirm(e.target.checked)}
-          />
-          <label htmlFor="confirm">是的，我確認</label>
-        </ConfirmCheckBox>
+          <ConfirmCheckBox>
+            <input
+              type="checkbox"
+              id="confirm"
+              checked={confirm}
+              onChange={(e) => setConfirm(e.target.checked)}
+            />
+            <label htmlFor="confirm">是的，我確認</label>
+          </ConfirmCheckBox>
 
-        <ButtonRow>
-          <Button $buttonStyle="cancel" onClick={onCloseModal}>
-            取消
-          </Button>
-          <Button
-            $buttonStyle="confirmDelete"
-            disabled={confirm === false}
-            onClick={() => {
-              handleDelete(data.id, {
-                onSuccess: () => onCloseModal(),
-              });
-            }}
-          >
-            {isDeleting ? <LoadingDotMini /> : "刪除"}
-          </Button>
-        </ButtonRow>
+          <ButtonRow>
+            <Button $buttonStyle="cancel" onClick={onCloseModal}>
+              取消
+            </Button>
+            <Button
+              $buttonStyle="confirmDelete"
+              disabled={confirm === false || isDeleting}
+              onClick={() => {
+                handleDelete(data.id, {
+                  onSuccess: () => onCloseModal(),
+                });
+              }}
+            >
+              {isDeleting ? <LoadingDotMini /> : "刪除"}
+            </Button>
+          </ButtonRow>
+        </QueryStatusFallback>
       </StyledConfirmDelete>
     </Modal>
   );
@@ -168,12 +182,9 @@ function ConfirmDelete({
 export default ConfirmDelete;
 
 // 刪除食材時才需要顯示的內容
-function FilterMenuList({ name }) {
+function FilterMenuList({ name, filterMenuData }) {
   const [isCollapse, setIsCollapse] = useState(true);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { filterMenuData, isPending } = useGetFilterMenuData(name);
-
-  if (isPending) return <LoadingSpinner />;
 
   return (
     <>
@@ -209,16 +220,10 @@ function FilterMenuList({ name }) {
       </Accordion>
 
       {isOpenModal && (
-        <Modal
-          modalHeader="編輯餐點設定"
+        <UpsertMenuForm
           onCloseModal={() => setIsOpenModal(false)}
-          maxWidth={56}
-        >
-          <UpsertMenuForm
-            onCloseModal={() => setIsOpenModal(false)}
-            menu={isOpenModal}
-          />
-        </Modal>
+          menu={isOpenModal}
+        />
       )}
     </>
   );

@@ -1,4 +1,12 @@
-import { addMinutes, isBefore, format, setMinutes, setHours } from "date-fns";
+import {
+  addMinutes,
+  isBefore,
+  format,
+  setMinutes,
+  setHours,
+  isValid,
+  parse,
+} from "date-fns";
 import { zhTW } from "date-fns/locale";
 
 // 將訂單建立時間格式化
@@ -142,6 +150,18 @@ function buildOrderData(order, data) {
   return orderData;
 }
 
+// 驗證是否為正整數(否則回傳預設值)
+function isValidPositiveInteger(value, defaultValue = 1) {
+  return /^[1-9]\d*$/.test(value) ? Number(value) : defaultValue;
+}
+
+// 檢查日期searchParams是否格式正確(預防url手動更改後造成的格式錯誤問題)
+function safeParseDate(dateStr) {
+  if (typeof dateStr !== "string") return undefined;
+  const date = parse(dateStr, "yyyy-MM-dd", new Date());
+  return isValid(date) ? date : undefined;
+}
+
 export {
   formatCreatedTime,
   formatPickupNumber,
@@ -151,4 +171,6 @@ export {
   generateTableNumbers,
   compareInventory,
   buildOrderData,
+  isValidPositiveInteger,
+  safeParseDate,
 };

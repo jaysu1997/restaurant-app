@@ -35,7 +35,6 @@ const Row = styled.div`
 `;
 
 function OrderSummaryView({ orderData, isEdit }) {
-  if (!orderData) return <div>數據已刪除</div>;
   const {
     orderType,
     tableNumber,

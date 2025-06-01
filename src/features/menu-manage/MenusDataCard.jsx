@@ -13,12 +13,12 @@ function MenusDataCard({ menu }) {
   const { name, category, price, discount, ingredients, customize } = menu;
 
   // 所有成份
-  const ingredientArray = ingredients?.map(
+  const ingredientList = ingredients?.map(
     (ingredient) => ingredient.ingredientName.label
   );
 
   // 所有自訂附加項目
-  const customizeArray = customize?.map((custom) => custom.title);
+  const customizeList = customize?.map((custom) => custom.title);
 
   // 卡片展示格式
   const menuDataFormat = [
@@ -26,10 +26,10 @@ function MenusDataCard({ menu }) {
     { head: "分類", body: category, twoColumns: false },
     { head: "售價", body: price, twoColumns: false },
     { head: "折扣", body: discount || <FiMinus />, twoColumns: false },
-    { head: "食材", body: ingredientArray?.join(", "), twoColumns: true },
+    { head: "食材", body: ingredientList?.join(", "), twoColumns: true },
     {
       head: "細項",
-      body: customizeArray?.join(", ") || <FiMinus />,
+      body: customizeList?.join(", ") || <FiMinus />,
       twoColumns: true,
     },
   ];

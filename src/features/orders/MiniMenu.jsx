@@ -30,9 +30,9 @@ const CategoryName = styled.li`
 `;
 
 function MiniMenu({ setIsOpenModal }) {
-  const { menusData, menusDataFetching } = useGetMenus();
+  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
 
-  if (menusDataFetching) {
+  if (menusIsPending) {
     return <LoadingSpinner />;
   }
 

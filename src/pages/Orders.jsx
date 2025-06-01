@@ -1,30 +1,62 @@
 import OrdersTable from "../features/orders/OrdersTable";
-import Filter from "../ui/Filter";
+import usePagination from "../hooks/data/orders/usePagination";
+import Filter from "../ui/Filter/Filter";
 import PageHeader from "../ui/PageHeader";
+import Pagination from "../ui/Pagination";
+import QueryStatusFallback from "../ui/QueryStatusFallback";
+
+const filtersConfig = [
+  {
+    title: "取餐號碼",
+    type: "search",
+    inputType: "number",
+    queryKey: "pickupNumber",
+    placeholder: "搜尋取餐號碼",
+  },
+  {
+    title: "訂單建立時間",
+    type: "datePicker",
+    queryKey: "createdTime",
+    placeholder: "選擇篩選日期範圍",
+  },
+];
 
 function Orders() {
-  const filtersConfig = [
-    {
-      title: "取餐號碼",
-      type: "search",
-      inputType: "number",
-      queryKey: "pickupNumber",
-      placeholder: "搜尋取餐號碼",
-    },
-    {
-      title: "訂單建立時間",
-      type: "datePicker",
-      queryKey: "createdTime",
-      placeholder: "選擇篩選日期範圍",
-    },
-  ];
+  const {
+    ordersData,
+    curPage,
+    maxPage,
+    isPending,
+    isError,
+    error,
+    createdTime,
+    pickupNumber,
+  } = usePagination();
+
+  const emptyStateMessage =
+    createdTime || pickupNumber
+      ? "查無符合當前篩選條件的訂單數據"
+      : "目前沒有任何已經建立的訂單數據";
 
   return (
     <>
       <PageHeader title="訂單管理">
         <Filter filtersConfig={filtersConfig} />
       </PageHeader>
-      <OrdersTable />
+      <QueryStatusFallback
+        isPending={isPending}
+        isError={isError}
+        error={error}
+        isEmpty={Array.isArray(ordersData) && ordersData?.length === 0}
+        emptyState={{
+          message: emptyStateMessage,
+          buttonText: createdTime || pickupNumber ? "" : "建立訂單",
+          redirectTo: "/menu",
+        }}
+      >
+        <OrdersTable ordersData={ordersData} />
+        <Pagination curPage={Number(curPage)} maxPage={Number(maxPage)} />
+      </QueryStatusFallback>
     </>
   );
 }

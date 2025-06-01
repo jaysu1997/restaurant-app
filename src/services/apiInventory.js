@@ -20,9 +20,7 @@ export async function getFilterDataApi(ingredientName) {
     ingredient_name: `${ingredientName}`,
   });
 
-  if (error) {
-    console.error("Error:", error);
-  }
+  handleSupabaseError(error);
 
   return data;
 }
@@ -41,18 +39,10 @@ export async function updateInventoryApi(inventoryData) {
     }
   );
 
-  handleSupabaseError(error, `${inventoryData.label}已存在`);
-
-  // 重複新增相同名稱食材的Error(name必須是獨一無二)
-  // if (error && error.code === "23505") {
-  //   console.log(error);
-  //   throw new Error(`${inventoryData.label}已存在庫存數據庫中。`);
-  // }
-
-  // if (error) {
-  //   console.log(error);
-  //   throw new Error(error.message);
-  // }
+  handleSupabaseError(error, {
+    for: "23505",
+    message: `${inventoryData.label}已存在`,
+  });
 
   return data;
 }
@@ -61,21 +51,13 @@ export async function updateInventoryApi(inventoryData) {
 export async function createInventoryApi(newIngredients) {
   const { data, error } = await supabase
     .from("inventory")
-    .upsert(newIngredients)
+    .insert(newIngredients)
     .select();
 
-  handleSupabaseError(error, `${newIngredients.label}已存在`);
-
-  // // 重複新增相同名稱食材的Error(name必須是獨一無二)
-  // if (error && error.code === "23505") {
-  //   console.log(error);
-  //   throw new Error(`${newIngredients.label}已存在庫存數據庫中。`);
-  // }
-
-  // if (error) {
-  //   console.log(error);
-  //   throw new Error("庫存食材新增失敗");
-  // }
+  handleSupabaseError(error, {
+    for: "23505",
+    message: `${newIngredients.label}已存在`,
+  });
 
   return data;
 }
@@ -89,9 +71,7 @@ export async function deleteInventoryApi(id) {
     }
   );
 
-  if (error) {
-    throw new Error("刪除失敗");
-  }
+  handleSupabaseError(error);
 
   return data;
 }

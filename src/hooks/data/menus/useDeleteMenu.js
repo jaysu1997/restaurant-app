@@ -18,10 +18,11 @@ function useDeleteMenu() {
       });
       queryClient.invalidateQueries({ queryKey: ["menus"] });
     },
-    onError: () => {
+    onError: (error) => {
       StyledHotToast({
         type: "error",
         title: "數據刪除失敗",
+        content: error.message,
       });
     },
   });

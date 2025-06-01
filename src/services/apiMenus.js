@@ -1,5 +1,4 @@
 import supabase from "./supabase.js";
-import { createInventoryApi } from "./apiInventory.js";
 import { handleSupabaseError } from "../utils/handleSupabaseError";
 
 // 取得所有menu數據
@@ -9,39 +8,39 @@ export async function getMenusApi() {
     .select()
     .order("category", { ascending: true });
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  handleSupabaseError(error);
 
   return data;
-  // return [];
 }
 
 // 新增or更新單筆menu數據
-export async function upsertMenuApi(menuData) {
+export async function upsertMenuApi(upsertData) {
+  const { menuData, newIngredients } = upsertData;
+
+  if (newIngredients.length > 0) {
+    // 將輸入的食材新增到stocks表單中
+    const { error: inventoryError } = await supabase
+      .from("inventory")
+      .insert(newIngredients)
+      .select();
+
+    handleSupabaseError(inventoryError, {
+      for: "default",
+      message:
+        "新食材數據自動建立失敗，可以嘗試嘗試再次交表單，或前往庫存管理頁面手動建立。",
+    });
+  }
+
+  // 新增餐點數據
   const { data, error } = await supabase
     .from("menus")
-    .upsert(menuData.data)
+    .upsert(menuData)
     .select();
 
-  // 重複新增相同名稱餐點的Error(name必須是獨一無二)
-  if (error && error.code === "23505") {
-    console.log(error);
-    throw new Error(`${menuData.data.name}已存在。`);
-  }
-
-  if (error) {
-    console.log(error);
-    throw new Error("餐點設定失敗");
-  }
-
-  try {
-    // 將輸入的食材新增到stocks表單中
-    await createInventoryApi(menuData.newIngredients);
-  } catch (inventoryError) {
-    console.log(inventoryError);
-    throw new Error("餐點已建立，但食材新增失敗", inventoryError);
-  }
+  handleSupabaseError(error, {
+    for: "23505",
+    message: `${menuData.name}已存在。`,
+  });
 
   return data;
 }
@@ -50,10 +49,7 @@ export async function upsertMenuApi(menuData) {
 export async function deleteMenuApi(id) {
   const { error } = await supabase.from("menus").delete().eq("id", id);
 
-  if (error) {
-    console.log(error);
-    throw new Error("Menu數據刪除失敗");
-  }
+  handleSupabaseError(error);
 
   return null;
 }

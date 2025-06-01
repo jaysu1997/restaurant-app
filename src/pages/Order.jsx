@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
-import LoadingSpinner from "../ui/LoadingSpinner";
 import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
 import styled from "styled-components";
-import OrderOperation from "../features/orders/OrderOperation";
 import PageHeader from "../ui/PageHeader";
 import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
+import QueryStatusFallback from "../ui/QueryStatusFallback";
+import useGetInventory from "../hooks/data/inventory/useGetInventory";
 
 const StyledOrderSummary = styled.div`
   display: grid;
@@ -27,29 +27,34 @@ const OrderHeader = styled.header`
 `;
 
 function Order() {
+  const { inventoryIsPending, inventoryError, inventoryIsError } =
+    useGetInventory(true);
   // 根據pathname判別當前是否為編輯狀態
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
-  const { data, isPending } = useGetOrder(isEditPage);
-
-  if (isPending) return <LoadingSpinner />;
+  const { orderData, orderIsPending, orderError, orderIsError } =
+    useGetOrder(isEditPage);
 
   return (
     <>
-      <PageHeader title="訂單詳情" />
-      <StyledOrderSummary>
-        <OrderHeader>{`取餐號碼 ${formatPickupNumber(
-          data.pickupNumber
-        )}`}</OrderHeader>
+      <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
+      <QueryStatusFallback
+        isPending={orderIsPending || inventoryIsPending}
+        isError={orderIsError || inventoryIsError}
+        error={orderError || inventoryError}
+      >
+        <StyledOrderSummary>
+          <OrderHeader>{`取餐號碼 ${formatPickupNumber(
+            orderData?.pickupNumber
+          )}`}</OrderHeader>
 
-        {isEditPage ? (
-          <OrderSummaryEdit isEdit={true} orderData={data} />
-        ) : (
-          <OrderSummaryView isEdit={false} orderData={data} />
-        )}
-
-        {/* <OrderOperation isEdit={isEditPage} /> */}
-      </StyledOrderSummary>
+          {isEditPage ? (
+            <OrderSummaryEdit isEdit={true} orderData={orderData} />
+          ) : (
+            <OrderSummaryView isEdit={false} orderData={orderData} />
+          )}
+        </StyledOrderSummary>
+      </QueryStatusFallback>
     </>
   );
 }

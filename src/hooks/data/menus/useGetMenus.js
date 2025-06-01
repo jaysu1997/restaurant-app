@@ -5,15 +5,15 @@ import { getMenusApi } from "../../../services/apiMenus";
 function useGetMenus() {
   const {
     data: menusData,
-    isPending: menusDataFetching,
-    error,
-    isError: menusDataFetchingError,
+    isPending: menusIsPending,
+    error: menusError,
+    isError: menusIsError,
   } = useQuery({
     queryKey: ["menus"],
     queryFn: getMenusApi,
   });
 
-  return { menusData, menusDataFetching, menusDataFetchingError };
+  return { menusData, menusIsPending, menusError, menusIsError };
 }
 
 export default useGetMenus;

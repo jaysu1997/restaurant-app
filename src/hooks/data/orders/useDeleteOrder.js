@@ -15,7 +15,7 @@ function useDeleteOrder() {
         type: "success",
         title: "訂單刪除成功",
       });
-      navigate("/orders");
+      navigate("/orders", { replace: true });
     },
     onError: (error) => {
       StyledHotToast({

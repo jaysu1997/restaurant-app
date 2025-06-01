@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
-import { DayPicker } from "react-day-picker";
-import { zhTW } from "react-day-picker/locale";
+
 import styled, { css } from "styled-components";
 import { PiCalendar } from "react-icons/pi";
 import { format, startOfMonth, startOfWeek, startOfYear } from "date-fns";
-import useClickOutside from "../hooks/ui/useClickOutside";
+import useClickOutside from "../../hooks/ui/useClickOutside";
+import DateRangePicker from "../DateRangePicker";
 
 const StyledDatePicker = styled.div`
   position: relative;
@@ -77,75 +77,27 @@ const UtilityButton = styled(ShortcutButton)`
   font-size: 1.4rem;
 `;
 
-const CustomDayPicker = styled(DayPicker)`
-  font-size: 1.2rem;
-  font-weight: 600;
+// 快捷選項設定
+const shortcuts = [
+  {
+    label: "今年",
+    start: startOfYear(new Date()),
+  },
+  {
+    label: "本月",
+    start: startOfMonth(new Date()),
+  },
+  {
+    label: "本週",
+    start: startOfWeek(new Date()),
+  },
+  {
+    label: "今天",
+    start: new Date(),
+  },
+];
 
-  --rdp-accent-color: #6366f1;
-  --rdp-day-height: 3.2rem;
-  --rdp-day-width: 3.2rem;
-  --rdp-day_button-height: 3.2rem;
-  --rdp-day_button-width: 3.2rem;
-
-  button {
-    transition: none;
-  }
-
-  .rdp-selected {
-    font-size: 1.2rem;
-  }
-
-  .rdp-dropdown:focus-visible ~ .rdp-caption_label {
-    outline: none;
-  }
-
-  .rdp-month {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .rdp-nav {
-    padding: 0 0.5rem;
-  }
-
-  .rdp-month_caption {
-    padding: 0 1rem;
-  }
-
-  .rdp-dropdown {
-    cursor: pointer;
-  }
-
-  .rdp-chevron {
-    fill: #1d4ed8;
-    width: 1.4rem;
-    height: 1.4rem;
-  }
-
-  .rdp-button_next,
-  .rdp-button_previous {
-    width: 2.4rem;
-    height: 2.4rem;
-  }
-
-  :is(.rdp-button_next, .rdp-button_previous):not(
-      [aria-disabled="true"]
-    ):hover {
-    background-color: #dbeafe;
-    border-radius: 50%;
-  }
-
-  .rdp-caption_label {
-    gap: 0.5rem;
-  }
-
-  .rdp-day:not(.rdp-selected):hover .rdp-day_button {
-    border: 2px dashed #818cf8;
-  }
-`;
-
-function DatePicker({ filterValue, handleValueChange, ...filters }) {
+function DateRangeFilter({ filterValue, handleValueChange, ...filters }) {
   const { queryKey, placeholder } = filters;
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
   const [month, setMonth] = useState(new Date());
@@ -184,55 +136,22 @@ function DatePicker({ filterValue, handleValueChange, ...filters }) {
       {isOpenDayPicker && (
         <Wrapper ref={daypickerRef}>
           <ShortcutsList>
-            <li>
-              <ShortcutButton
-                onClick={() =>
-                  handleShortcuts(startOfYear(new Date()), new Date())
-                }
-              >
-                今年
-              </ShortcutButton>
-            </li>
-            <li>
-              <ShortcutButton
-                onClick={() =>
-                  handleShortcuts(startOfMonth(new Date()), new Date())
-                }
-              >
-                本月
-              </ShortcutButton>
-            </li>
-            <li>
-              <ShortcutButton
-                onClick={() =>
-                  handleShortcuts(startOfWeek(new Date()), new Date())
-                }
-              >
-                本周
-              </ShortcutButton>
-            </li>
-            <li>
-              <ShortcutButton
-                onClick={() => handleShortcuts(new Date(), new Date())}
-              >
-                今天
-              </ShortcutButton>
-            </li>
+            {shortcuts.map((shortcut) => (
+              <li key={shortcut.label}>
+                <ShortcutButton
+                  onClick={() => handleShortcuts(shortcut.start, new Date())}
+                >
+                  {shortcut.label}
+                </ShortcutButton>
+              </li>
+            ))}
           </ShortcutsList>
-          <CustomDayPicker
-            animate
-            captionLayout="dropdown-years"
-            mode="range"
-            weekStartsOn={0}
-            locale={zhTW}
+          <DateRangePicker
             month={month}
-            onMonthChange={setMonth}
-            startMonth={new Date(2020, 0)}
-            endMonth={new Date()}
-            selected={filterValue}
-            onSelect={(range) =>
-              handleValueChange(queryKey, range ? range : "")
-            }
+            setMonth={setMonth}
+            filterValue={filterValue}
+            queryKey={queryKey}
+            handleValueChange={handleValueChange}
           />
           <ShortcutsList>
             <li>
@@ -245,7 +164,7 @@ function DatePicker({ filterValue, handleValueChange, ...filters }) {
             </li>
             <li>
               <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
-                關閉
+                確認
               </UtilityButton>
             </li>
           </ShortcutsList>
@@ -255,4 +174,4 @@ function DatePicker({ filterValue, handleValueChange, ...filters }) {
   );
 }
 
-export default DatePicker;
+export default DateRangeFilter;

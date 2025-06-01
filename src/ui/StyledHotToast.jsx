@@ -39,6 +39,7 @@ const Content = styled.div`
   grid-column: 2 / 3;
   font-size: 1.4rem;
   font-weight: 400;
+  word-break: break-all;
 `;
 
 function StyledHotToast({

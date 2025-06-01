@@ -1,19 +1,16 @@
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 function Homepage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  const [value, setValue] = useState(0);
   return (
-    <div>
-      <button
-        onClick={() => {
-          searchParams.set("from", "2025--0-4309-2");
-          setSearchParams(searchParams);
-        }}
-      >
-        test
-      </button>
-    </div>
+    <form>
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button>submit</button>
+    </form>
   );
 }
 

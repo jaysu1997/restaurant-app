@@ -1,13 +1,8 @@
 import styled from "styled-components";
-import LoadingSpinner from "../../ui/LoadingSpinner";
 import { useEffect, useRef, useState } from "react";
 import OrderRow from "./OrderRow";
-import Pagination from "../../ui/Pagination";
 import OrderDropdownMenu from "./OrderDropdownMenu";
-import EmptyState from "../../ui/EmptyState";
-import FetchFailFallback from "../../ui/FetchFailFallback";
 import useClickOutside from "../../hooks/ui/useClickOutside";
-import usePagination from "../../hooks/data/orders/usePagination";
 
 const OrderContainer = styled.div`
   max-width: 95dvw;
@@ -55,8 +50,7 @@ const OrderBody = styled.section`
   }
 `;
 
-function OrdersTable() {
-  const { ordersData, curPage, maxPage, isPending, isError } = usePagination();
+function OrdersTable({ ordersData }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const tableRef = useRef(null);
   const activeMenuRef = useRef(null);
@@ -82,42 +76,32 @@ function OrdersTable() {
     [isOpenMenu, setIsOpenMenu]
   );
 
-  if (isPending) return <LoadingSpinner />;
-
-  if (isError) return <FetchFailFallback />;
-
-  if (ordersData.length === 0)
-    return <EmptyState message="目前沒有任何訂單數據" />;
-
   return (
-    <>
-      <OrderContainer ref={tableRef}>
-        <OrderHeader>
-          <div></div>
-          <div>取餐號碼</div>
-          <div>建立時間</div>
-          <div>訂單狀態</div>
-          <div>消費金額</div>
-          <div>付款狀態</div>
-          <div></div>
-        </OrderHeader>
+    <OrderContainer ref={tableRef}>
+      <OrderHeader>
+        <div aria-hidden="true"></div>
+        <div>取餐號碼</div>
+        <div>建立時間</div>
+        <div>訂單狀態</div>
+        <div>消費金額</div>
+        <div>付款狀態</div>
+        <div aria-hidden="true"></div>
+      </OrderHeader>
 
-        <OrderBody>
-          {ordersData.map((orderData) => (
-            <OrderRow orderData={orderData} key={orderData.id}>
-              <OrderDropdownMenu
-                orderData={orderData}
-                isOpenMenu={isOpenMenu}
-                setIsOpenMenu={setIsOpenMenu}
-                tableRef={tableRef}
-                activeMenuRef={activeMenuRef}
-              />
-            </OrderRow>
-          ))}
-        </OrderBody>
-      </OrderContainer>
-      <Pagination curPage={Number(curPage)} maxPage={Number(maxPage)} />
-    </>
+      <OrderBody>
+        {ordersData.map((orderData) => (
+          <OrderRow orderData={orderData} key={orderData.id}>
+            <OrderDropdownMenu
+              orderData={orderData}
+              isOpenMenu={isOpenMenu}
+              setIsOpenMenu={setIsOpenMenu}
+              tableRef={tableRef}
+              activeMenuRef={activeMenuRef}
+            />
+          </OrderRow>
+        ))}
+      </OrderBody>
+    </OrderContainer>
   );
 }
 
