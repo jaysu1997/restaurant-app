@@ -18,8 +18,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   max-height: 75dvh;
-  max-width: clamp(1rem, 36rem, 95dvw);
-  width: 100dvw;
+  width: min(36rem, 95dvw);
   font-size: 1.4rem;
 `;
 

@@ -18,6 +18,7 @@ import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
 
+// 這個要調回3次重試
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

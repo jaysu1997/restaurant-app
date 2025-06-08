@@ -23,6 +23,7 @@ const ToggleButton = styled.button`
   border: 1px solid #2563eb;
   border-radius: 4px;
   color: #2563eb;
+  background-color: #fff;
 
   &:hover {
     background-color: #eef2ff;
@@ -48,7 +49,7 @@ const FilterContainer = styled.div`
   background-color: #fff;
   box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-  width: clamp(16rem, 100dvw, 28rem);
+  width: min(95dvw, 28rem);
 `;
 
 const FilterTitle = styled.h3`

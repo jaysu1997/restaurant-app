@@ -8,16 +8,19 @@ const StyleAppLayout = styled.div`
   grid-template-rows: 6.4rem 1fr;
   grid-template-columns: auto 1fr;
   min-height: 100dvh;
+  width: 100%;
+  max-width: 192rem;
+  margin: 0 auto;
 `;
 
 const Body = styled.div`
   width: 100%;
   margin-top: 3.6rem;
+  padding: 0 1rem;
 `;
 
 const Main = styled.main`
-  max-width: 120rem;
-  width: 100%;
+  width: min(120rem, 100%, 95dvw);
   display: flex;
   flex-direction: column;
   gap: 1.6rem;

@@ -43,7 +43,7 @@ const Row = styled.div`
   }
 
   div {
-    overflow: hidden;
+    /* overflow: hidden; */
     overflow-wrap: break-word;
   }
 `;
@@ -162,15 +162,23 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               options={[
                 { label: "準備中", value: "準備中" },
                 { label: "待取餐", value: "待取餐" },
-                { label: "已交付", value: "已交付" },
+                { label: "已完成", value: "已完成" },
               ]}
               control={control}
               name={"status"}
               creatable={false}
               menuPlacement="auto"
-              placeholder="訂單製作狀態"
+              placeholder="訂單狀態"
               rules={{
-                required: "請選擇訂單製作狀態",
+                required: "請選擇訂單狀態",
+                validate: (value) => {
+                  // 假設如果沒付款就不能選「已完成」
+                  const paid = watch("paid")?.value;
+                  if (value?.value === "已完成" && paid !== "已付款") {
+                    return "訂單未付款，不能標記為已完成";
+                  }
+                  return true;
+                },
               }}
             />
           </div>
@@ -187,9 +195,9 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               name={"paid"}
               creatable={false}
               menuPlacement="auto"
-              placeholder={dineOption ? "取餐時間" : "桌號"}
+              placeholder="付款狀態"
               rules={{
-                required: dineOption ? "請選擇取餐時間" : "請選擇內用桌號",
+                required: "請選擇付款狀態",
               }}
             />
           </div>

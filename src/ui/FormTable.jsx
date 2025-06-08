@@ -5,7 +5,7 @@ import styled from "styled-components";
 const FormTable = styled.form`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  max-width: 95dvw;
+  max-width: 100%;
   width: 36rem;
   padding: 2rem;
   gap: 1.6rem;

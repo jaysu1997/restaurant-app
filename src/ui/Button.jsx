@@ -76,6 +76,7 @@ const type = {
     border: 1px solid #2563eb;
     border-radius: 4px;
     color: #2563eb;
+    background-color: #fff;
 
     &:hover {
       background-color: #eef2ff;

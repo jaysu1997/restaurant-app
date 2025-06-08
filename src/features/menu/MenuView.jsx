@@ -16,7 +16,7 @@ const Container = styled.div`
 `;
 
 const Menus = styled.ul`
-  grid-column: 1 /2;
+  grid-column: 1 / 2;
   grid-row: 2 / -1;
   max-width: 100%;
   display: grid;

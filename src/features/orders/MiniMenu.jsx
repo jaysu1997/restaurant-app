@@ -10,8 +10,7 @@ const StyledMiniMenu = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f9fafb;
-  width: 36rem;
-  max-width: 95dvw;
+  width: min(36rem, 95dvw);
   padding: 2rem;
 `;
 

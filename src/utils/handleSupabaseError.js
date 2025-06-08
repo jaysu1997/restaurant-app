@@ -12,6 +12,7 @@ function handleSupabaseError(error, fallback = "") {
       action: () => window.location.reload(),
     };
 
+    // 指定error，提供指定message
     if (error.code === fallback.for) {
       errorFallback.message = fallback.message;
     }

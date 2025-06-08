@@ -11,7 +11,9 @@ const colorStyle = {
 };
 
 const StyledOption = styled.label`
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  /* display: flex; */
   align-items: center;
   gap: 1.2rem;
   height: 4rem;
@@ -29,6 +31,12 @@ const StyledOption = styled.label`
     display: none;
   }
 
+  span[role="optionName"] {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   svg[role="unchecked"] {
     transition: opacity 0.2s;
     color: rgba(0, 0, 0, 0.6);
@@ -38,6 +46,8 @@ const StyledOption = styled.label`
     color: #007bff;
     position: absolute;
     opacity: 0;
+    // 和padding相同
+    left: 0.6rem;
     transform: scale(0.5);
     transition: opacity 0.2s, transform 0.5s;
   }

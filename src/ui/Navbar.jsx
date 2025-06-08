@@ -14,8 +14,8 @@ import { scrollToTop } from "../utils/scrollToTop";
 
 const StyleNav = styled.nav`
   border-right: 1px solid #dcdcdc;
-  min-width: 18rem;
   background-color: #fff;
+  min-width: 18rem;
   position: sticky;
   top: 6.4rem;
   height: 100%;
@@ -67,7 +67,7 @@ const StyleNavLink = styled(NavLink)`
 `;
 
 const navigationsLink = [
-  { to: "/", icon: <BiChalkboard />, title: "總覽頁面" },
+  { to: "/", icon: <BiChalkboard />, title: "營運總覽" },
   { to: "menu", icon: <BiFork />, title: "點餐系統" },
   { to: "/orders", icon: <BiEdit />, title: "訂單管理" },
   { to: "/menu-manage", icon: <BiFoodMenu />, title: "菜單設定" },

@@ -5,7 +5,6 @@ import OrderDropdownMenu from "./OrderDropdownMenu";
 import useClickOutside from "../../hooks/ui/useClickOutside";
 
 const OrderContainer = styled.div`
-  max-width: 95dvw;
   width: 100%;
   display: flex;
   flex-direction: column;

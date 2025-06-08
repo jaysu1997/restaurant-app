@@ -21,7 +21,7 @@ const StyleModal = styled.div`
   position: fixed;
   display: flex;
   flex-direction: column;
-  max-width: ${({ $maxWidth }) => `clamp(0px, ${$maxWidth}rem, 95dvw)`};
+  max-width: ${({ $maxWidth }) => `min( ${$maxWidth}rem, 95dvw)`};
   max-height: 90dvh;
   margin: 0 0.6rem;
   background-color: #fff;

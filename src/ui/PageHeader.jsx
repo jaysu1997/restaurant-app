@@ -4,7 +4,6 @@ const StyledPageHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* max-width: 95dvw; */
   width: 100%;
 `;
 
