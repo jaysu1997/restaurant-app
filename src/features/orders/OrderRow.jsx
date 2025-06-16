@@ -19,7 +19,8 @@ const StyledOrderRow = styled.div`
   background-color: #fff;
 
   &:hover {
-    background-color: #f9fafb;
+    /* background-color: #f9fafb; */
+    background-color: #f0f9ff;
   }
 
   @media (max-width: 768px) {

@@ -25,10 +25,10 @@ const StyledShoppingCart = styled.aside`
   justify-content: space-between;
   border-radius: 6px;
   font-size: 1.4rem;
-  max-height: clamp(12rem, calc(100dvh - 16.2rem), 64.8rem);
+  max-height: clamp(12rem, calc(100dvh - 17.8rem), 64.8rem);
   height: 64.8rem;
   position: sticky;
-  top: 16.2rem;
+  top: 17.8rem;
   overflow: hidden;
 `;
 

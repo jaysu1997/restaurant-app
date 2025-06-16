@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 const data = [
-  { date: "12/12", count: 20 },
+  { date: "12/12", count: 200000 },
   { date: "12/13", count: 35 },
   { date: "12/14", count: 30 },
   { date: "12/15", count: 42 },
@@ -18,10 +18,10 @@ const data = [
   { date: "12/18", count: 34 },
 ];
 
-function OrderCountTrendChart() {
+function RevenueTrendChart() {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <AreaChart data={data} margin={{ top: 5, right: 15, bottom: 5, left: 0 }}>
+      <AreaChart data={data} margin={{ top: 0, right: 15, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
@@ -44,4 +44,4 @@ function OrderCountTrendChart() {
   );
 }
 
-export default OrderCountTrendChart;
+export default RevenueTrendChart;

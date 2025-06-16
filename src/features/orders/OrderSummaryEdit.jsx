@@ -175,7 +175,7 @@ function OrderSummaryEdit({ orderData, isEdit }) {
                   // 假設如果沒付款就不能選「已完成」
                   const paid = watch("paid")?.value;
                   if (value?.value === "已完成" && paid !== "已付款") {
-                    return "訂單未付款，不能標記為已完成";
+                    return "訂單未付款，不能標記訂單狀態為已完成";
                   }
                   return true;
                 },

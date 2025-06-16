@@ -1,5 +1,5 @@
 import OrdersTable from "../features/orders/OrdersTable";
-import usePagination from "../hooks/data/orders/usePagination";
+import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
 import Filter from "../ui/Filter/Filter";
 import PageHeader from "../ui/PageHeader";
 import Pagination from "../ui/Pagination";
@@ -31,7 +31,7 @@ function Orders() {
     error,
     createdTime,
     pickupNumber,
-  } = usePagination();
+  } = useGetPaginatedOrders();
 
   const emptyStateMessage =
     createdTime || pickupNumber

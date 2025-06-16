@@ -30,12 +30,9 @@ const Tag = styled.span`
   font-size: 1.4rem;
   font-weight: 700;
   border-radius: 12px;
+  width: fit-content;
 
   ${(props) => tagStyles[props.$tagStatus] || tagStyles["準備中"]}
-
-  @media (max-width: 768px) {
-    font-size: 1.2rem;
-  }
 `;
 
 export default Tag;

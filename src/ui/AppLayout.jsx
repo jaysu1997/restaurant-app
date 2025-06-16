@@ -15,7 +15,7 @@ const StyleAppLayout = styled.div`
 
 const Body = styled.div`
   width: 100%;
-  margin-top: 3.6rem;
+  margin: 3.6rem 0;
   padding: 0 1rem;
 `;
 
@@ -23,7 +23,7 @@ const Main = styled.main`
   width: min(120rem, 100%, 95dvw);
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: 3.2rem;
   margin: 0 auto;
 `;
 

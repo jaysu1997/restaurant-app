@@ -14,7 +14,7 @@ export async function createOrderApi(orderData) {
 }
 
 // 獲取指定範圍訂單數據api
-export async function getOrdersApi(page, createdTime, pickupNumber) {
+export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
   // 每一分頁顯示25筆數據
   const itemsPerPage = 25;
 
@@ -52,6 +52,16 @@ export async function getOrdersApi(page, createdTime, pickupNumber) {
   };
 }
 
+// 獲取所有訂單數據
+export async function getOrdersApi() {
+  const { data, error } = await supabase.from("orders").select("*");
+
+  handleSupabaseError(error);
+
+  return data;
+}
+
+// 獲取指定單筆訂單數據
 export async function getOrderApi(orderId) {
   const { data, error } = await supabase
     .from("orders")

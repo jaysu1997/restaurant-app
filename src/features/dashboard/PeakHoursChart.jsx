@@ -112,13 +112,13 @@ const data = [
   },
 ];
 
-function PopularHoursChart() {
+function PeakHoursChart() {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
         data={data}
         barCategoryGap="25%"
-        margin={{ top: 5, right: 15, bottom: 5, left: 0 }}
+        margin={{ top: 0, right: 15, bottom: 0, left: 0 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
@@ -137,4 +137,4 @@ function PopularHoursChart() {
   );
 }
 
-export default PopularHoursChart;
+export default PeakHoursChart;

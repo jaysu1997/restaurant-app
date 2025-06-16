@@ -9,12 +9,13 @@ const StyledDishCard = styled.li`
   gap: 0.2rem;
   padding: 0.6rem;
   border-radius: 5px;
-  border: 1px solid #dcdcdc;
+  border: 2px solid #dcdcdc;
   transition: all 0.3s;
   cursor: pointer;
 
   &:hover {
-    background-color: #d1fae5;
+    background-color: #f0f9ff;
+    border: 2px solid #93c5fd;
   }
 `;
 

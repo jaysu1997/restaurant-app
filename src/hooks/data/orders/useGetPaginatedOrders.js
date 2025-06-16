@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { getOrdersApi } from "../../../services/apiOrder";
+import { getPaginatedOrdersApi } from "../../../services/apiOrder";
 import {
   isValidPositiveInteger,
   safeParseDate,
@@ -30,7 +30,7 @@ function getCreatedTimeSearchParams(createdTime) {
   return null;
 }
 
-function usePagination() {
+function useGetPaginatedOrders() {
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   // 篩選條件(參數)
@@ -50,7 +50,7 @@ function usePagination() {
     isError,
   } = useQuery({
     queryKey: ["orders", page, createdTime, pickupNumber],
-    queryFn: () => getOrdersApi(page, createdTime, pickupNumber),
+    queryFn: () => getPaginatedOrdersApi(page, createdTime, pickupNumber),
     placeholderData: keepPreviousData,
   });
 
@@ -58,13 +58,13 @@ function usePagination() {
   if (curPage < maxPage) {
     queryClient.prefetchQuery({
       queryKey: ["orders", page + 1, createdTime, pickupNumber],
-      queryFn: () => getOrdersApi(page + 1, createdTime, pickupNumber),
+      queryFn: () => getPaginatedOrdersApi(page + 1, createdTime, pickupNumber),
     });
   }
   if (curPage > 1) {
     queryClient.prefetchQuery({
       queryKey: ["orders", page - 1, createdTime, pickupNumber],
-      queryFn: () => getOrdersApi(page - 1, createdTime, pickupNumber),
+      queryFn: () => getPaginatedOrdersApi(page - 1, createdTime, pickupNumber),
     });
   }
 
@@ -80,4 +80,4 @@ function usePagination() {
   };
 }
 
-export default usePagination;
+export default useGetPaginatedOrders;

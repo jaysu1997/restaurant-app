@@ -14,7 +14,6 @@ const StyledPagination = styled.footer`
   gap: 1.6rem;
   padding: 2rem 0.5rem;
   font-size: 1.4rem;
-  margin-bottom: 1.6rem;
 `;
 
 const PaginationControls = styled.div`

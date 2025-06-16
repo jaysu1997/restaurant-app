@@ -11,7 +11,6 @@ const OrderContainer = styled.div`
   border: 1px solid #dcdcdc;
   border-radius: 8px;
   overflow: hidden;
-  margin: 1.6rem 0;
 
   @media (max-width: 768px) {
     border: none;

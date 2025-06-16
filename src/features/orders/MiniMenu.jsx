@@ -1,10 +1,9 @@
 // 訂單編輯頁面的迷你菜單
 import styled from "styled-components";
-import LoadingSpinner from "../../ui/LoadingSpinner";
-import { Fragment } from "react";
 import Modal from "../../ui/Modal";
-import DishCard from "../../ui/DishCard";
 import useGetMenus from "../../hooks/data/menus/useGetMenus";
+import QueryStatusFallback from "../../ui/QueryStatusFallback";
+import CategoryGroup from "./CategoryGroup";
 
 const StyledMiniMenu = styled.div`
   display: flex;
@@ -20,24 +19,10 @@ const MenuList = styled.ul`
   gap: 1.6rem;
 `;
 
-const CategoryName = styled.li`
-  background-color: #262626;
-  color: #fafafa;
-  font-size: 1.8rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-`;
-
-function MiniMenu({ setIsOpenModal }) {
-  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
-
-  if (menusIsPending) {
-    return <LoadingSpinner />;
-  }
-
-  // 根據分類名稱將餐點分類
-  const menus = Object.values(
-    menusData.reduce((acc, dish) => {
+// 將餐點案分類整理
+function groupDishesByCategory(dishes) {
+  return Object.values(
+    dishes.reduce((acc, dish) => {
       if (!acc[dish.category]) {
         acc[dish.category] = {
           category: dish.category,
@@ -48,6 +33,12 @@ function MiniMenu({ setIsOpenModal }) {
       return acc;
     }, {})
   );
+}
+
+function MiniMenu({ setIsOpenModal }) {
+  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
+
+  const groupedMenus = menusData ? groupDishesByCategory(menusData) : [];
 
   return (
     <Modal
@@ -56,20 +47,29 @@ function MiniMenu({ setIsOpenModal }) {
       maxWidth={36}
     >
       <StyledMiniMenu>
-        <MenuList>
-          {menus.map((menu) => (
-            <Fragment key={menu.category}>
-              <CategoryName>{menu.category}</CategoryName>
-              {menu.dishes.map((dish) => (
-                <DishCard
-                  dish={dish}
-                  setIsOpenModal={setIsOpenModal}
-                  key={dish.id}
+        <QueryStatusFallback
+          isPending={menusIsPending}
+          isError={menusIsError}
+          error={menusError}
+          isEmpty={Array.isArray(menusData) && menusData.length === 0}
+          emptyState={{
+            message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
+            buttonText: "新增餐點",
+            redirectTo: "/menu-manage",
+          }}
+          render={() => (
+            <MenuList>
+              {groupedMenus.map((menu) => (
+                <CategoryGroup
+                  key={menu.category}
+                  category={menu.category}
+                  dishes={menu.dishes}
+                  onSelect={setIsOpenModal}
                 />
               ))}
-            </Fragment>
-          ))}
-        </MenuList>
+            </MenuList>
+          )}
+        />
       </StyledMiniMenu>
     </Modal>
   );

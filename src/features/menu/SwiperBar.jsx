@@ -7,20 +7,18 @@ import { useSearchParams } from "react-router-dom";
 
 const StyleSwiper = styled(Swiper)`
   grid-column: 1 / 2;
-  max-width: 96rem;
   width: 100%;
-  box-sizing: border-box;
-  max-height: 3.2rem;
-  z-index: 0;
+  /* max-width: 96rem; */
+  /* z-index: 0; */
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`
-  min-height: 3.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
   background-color: ${(props) => (props.$isActive ? "#171717" : "#737373")};
+  padding: 0.6rem 1.2rem;
 `;
 
 export default function SwiperBar({ categories }) {

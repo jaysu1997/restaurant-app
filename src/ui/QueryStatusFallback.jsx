@@ -1,4 +1,4 @@
-import EmptyState from "./EmptyState";
+import EmptyStateFallback from "./EmptyStateFallback";
 import FetchFailFallback from "./FetchFailFallback";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -18,7 +18,7 @@ function QueryStatusFallback({
     const { message, buttonText, redirectTo } = emptyState;
 
     return (
-      <EmptyState
+      <EmptyStateFallback
         message={message}
         buttonText={buttonText}
         redirectTo={redirectTo}
@@ -26,7 +26,7 @@ function QueryStatusFallback({
     );
   }
 
-  // 如果沒有異常且有數據就顯示正常的ui(有些ui會因為沒有第一時間取得數據而造成error，所以改成使用render prop延後渲染)
+  // 如果沒有異常且有數據就顯示正常的ui(有些ui會因為沒有第一時間取得數據而造成error，所以選擇改成使用render prop延後渲染)
   return children || render();
 }
 

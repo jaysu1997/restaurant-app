@@ -10,7 +10,7 @@ const Container = styled.div`
   max-width: 120rem;
   display: grid;
   grid-template-columns: minmax(0, 96rem) 21.6rem;
-  grid-template-rows: 3.2rem 1fr;
+  grid-template-rows: auto 1fr;
   gap: 2.4rem;
   width: 100%;
 `;
@@ -23,7 +23,6 @@ const Menus = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
   height: fit-content;
-  padding: 1.6rem 0;
 `;
 
 function MenuView({ menusData, inventoryData }) {

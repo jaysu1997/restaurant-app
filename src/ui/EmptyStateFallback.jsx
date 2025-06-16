@@ -3,7 +3,7 @@ import emptyState from "../assets/empty-state.svg";
 import Image from "./Image";
 import { useNavigate } from "react-router-dom";
 
-const StyledEmptyState = styled.section`
+const StyledEmptyStateFallback = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -55,7 +55,11 @@ const ReloadButton = styled.button`
 `;
 
 // 數據獲取結果為無的fallback ui
-function EmptyState({ message = "", buttonText = "", redirectTo = "" }) {
+function EmptyStateFallback({
+  message = "",
+  buttonText = "",
+  redirectTo = "",
+}) {
   const navigate = useNavigate();
 
   function handleClick() {
@@ -63,15 +67,15 @@ function EmptyState({ message = "", buttonText = "", redirectTo = "" }) {
   }
 
   return (
-    <StyledEmptyState>
+    <StyledEmptyStateFallback>
       <Image src={emptyState} alt="emptyStateSvg" />
       <Message>沒有相關數據</Message>
       {message && <SubMessage>{message}</SubMessage>}
       {buttonText && (
         <ReloadButton onClick={handleClick}>{buttonText}</ReloadButton>
       )}
-    </StyledEmptyState>
+    </StyledEmptyStateFallback>
   );
 }
 
-export default EmptyState;
+export default EmptyStateFallback;

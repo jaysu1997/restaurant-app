@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GlobalStyles } from "./style/GlobalStyles";
 import AppLayout from "./ui/AppLayout";
-import Homepage from "./pages/Homepage";
 import Menu from "./pages/Menu";
 import Orders from "./pages/Orders";
 import MenuManage from "./pages/MenuManage";
@@ -17,6 +16,7 @@ import Order from "./pages/Order";
 import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
+import Dashboard from "./pages/Dashboard";
 
 // 這個要調回3次重試
 const queryClient = new QueryClient({
@@ -74,7 +74,7 @@ export default function App() {
                 </StyledOverlayScrollbars>
               }
             >
-              <Route index element={<Homepage />} />
+              <Route index element={<Dashboard />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/order/:orderId" element={<Order />} />

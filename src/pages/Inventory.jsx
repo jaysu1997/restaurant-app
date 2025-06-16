@@ -17,7 +17,7 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  padding: 1.6rem 0;
+  /* padding: 1.6rem 0; */
 `;
 
 const filtersConfig = [
@@ -72,14 +72,6 @@ function Inventory() {
     inventoryError,
     inventoryIsError,
   } = useGetInventory(false);
-
-  // if (inventoryIsPending)
-  //   return (
-  //     <>
-  //       <PageHeader title="庫存管理" />
-  //       <LoadingSpinner />
-  //     </>
-  //   );
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");
