@@ -36,16 +36,16 @@ function summarizeMealChoices(order) {
 
 // 計算訂單的總份數和總金額
 function calculateOrderSummary(order) {
-  const { totalQuantity, totalCost } = order.reduce(
+  const { totalServings, totalPrice } = order.reduce(
     (acc, cur) => {
-      acc.totalQuantity += cur.servings;
-      acc.totalCost += cur.servings * cur.itemTotalPrice;
+      acc.totalServings += cur.servings;
+      acc.totalPrice += cur.servings * cur.itemTotalPrice;
       return acc;
     },
-    { totalQuantity: 0, totalCost: 0 }
+    { totalServings: 0, totalPrice: 0 }
   );
 
-  return { totalQuantity, totalCost };
+  return { totalServings, totalPrice };
 }
 
 // 生成外帶取餐時間
@@ -122,6 +122,9 @@ function compareInventory({
 
 // 整合要上傳的訂單數據
 function buildOrderData(order, data) {
+  // 計算餐點總分數與總
+  const { totalServings, totalPrice } = calculateOrderSummary(order);
+
   // 計算訂單的食材總共使用量
   const totalIngredientsUsage = Object.fromEntries(
     order.reduce((acc, order) => {
@@ -140,6 +143,8 @@ function buildOrderData(order, data) {
       ...dish,
       ingredientsUsage: Object.fromEntries(dish.ingredientsUsage),
     })),
+    totalServings,
+    totalPrice,
     totalIngredientsUsage,
     tableNumber: data.tableNumber?.value || null,
     pickupTime: data.pickupTime?.value || null,

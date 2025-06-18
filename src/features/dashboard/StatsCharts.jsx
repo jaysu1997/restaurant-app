@@ -6,7 +6,7 @@ import TopDishesChart from "./TopDishesChart";
 
 const StatsChartRow = styled.section`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 30rem);
   grid-template-rows: 40rem;
   gap: 2.8rem;
 `;

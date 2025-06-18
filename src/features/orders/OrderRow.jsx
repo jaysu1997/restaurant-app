@@ -19,7 +19,6 @@ const StyledOrderRow = styled.div`
   background-color: #fff;
 
   &:hover {
-    /* background-color: #f9fafb; */
     background-color: #f0f9ff;
   }
 
@@ -114,8 +113,6 @@ const OrderType = styled.span`
 `;
 
 function OrderRow({ orderData, children }) {
-  const { totalCost } = calculateOrderSummary(orderData.order);
-
   return (
     <StyledOrderRow>
       <div data-order-type>
@@ -134,7 +131,7 @@ function OrderRow({ orderData, children }) {
         <Tag $tagStatus={orderData.status}>{orderData.status}</Tag>
       </div>
 
-      <div data-total-price>{`$ ${totalCost}`}</div>
+      <div data-total-price>{`$ ${orderData.totalPrice}`}</div>
 
       <div data-paid>
         <Tag $tagStatus={orderData.paid}>{orderData.paid}</Tag>

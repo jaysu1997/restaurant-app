@@ -54,7 +54,7 @@ const ButtonGroup = styled.div`
 `;
 
 function OrderDishes({ dishData, isEdit }) {
-  const { totalQuantity, totalCost } = calculateOrderSummary(dishData);
+  const { totalServings, totalPrice } = calculateOrderSummary(dishData);
 
   return (
     <OrderDishesList>
@@ -73,9 +73,9 @@ function OrderDishes({ dishData, isEdit }) {
 
       <OrderDishRow>
         <span>總計：</span>
-        <span>共{totalQuantity}份</span>
-        <span>/</span>
-        <span className="emphasize">$ {totalCost}</span>
+        <span>{totalServings} 份餐點</span>
+        <span>,</span>
+        <span className="emphasize">${totalPrice}</span>
       </OrderDishRow>
     </OrderDishesList>
   );

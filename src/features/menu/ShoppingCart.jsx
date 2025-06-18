@@ -137,7 +137,7 @@ function ShoppingCart({ inventoryData }) {
 
   const dineOption = watch("orderType") === "外帶";
 
-  const { totalQuantity, totalCost } = calculateOrderSummary(order);
+  const { totalServings, totalPrice } = calculateOrderSummary(order);
 
   function onSubmit(data) {
     const orderData = buildOrderData(order, data);
@@ -202,9 +202,9 @@ function ShoppingCart({ inventoryData }) {
           <span>總計</span>
         </Row>
         <Row>
-          <span>{`${isCreatingOrder ? totalQuantity : 0}份餐點`}</span>
+          <span>{`${isCreatingOrder ? totalServings : 0}份餐點`}</span>
           <span className="emphasize">{`$ ${
-            isCreatingOrder ? totalCost : 0
+            isCreatingOrder ? totalPrice : 0
           }`}</span>
         </Row>
 
