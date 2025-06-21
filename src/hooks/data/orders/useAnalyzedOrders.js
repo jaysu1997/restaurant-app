@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getOrdersApi } from "../../../services/apiOrder";
 
 // 取得所有訂單數據
-function useGetOrders() {
+function useAnalyzedOrders() {
   const {
     data: ordersData,
     isPending: ordersIsPending,
@@ -16,9 +16,9 @@ function useGetOrders() {
   return {
     ordersData,
     ordersIsPending,
-    ordersError,
     ordersIsError,
+    ordersError,
   };
 }
 
-export default useGetOrders;
+export default useAnalyzedOrders;

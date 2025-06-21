@@ -17,6 +17,7 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
+  padding-bottom: 3.6rem;
 `;
 
 function filterData(menusData, nameSearchParams, categorySearchParams) {

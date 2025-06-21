@@ -12,7 +12,7 @@ const StyledOrderSummary = styled.div`
   display: grid;
   grid-template-columns: minmax(0px, 1fr) minmax(0px, 28rem);
   gap: 4rem;
-  padding: 1.6rem 0;
+  padding: 1.6rem 0 3.6rem;
   font-weight: 500;
 `;
 

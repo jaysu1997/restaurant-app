@@ -17,7 +17,7 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  /* padding: 1.6rem 0; */
+  padding-bottom: 3.6rem;
 `;
 
 const filtersConfig = [

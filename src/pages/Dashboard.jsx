@@ -3,17 +3,22 @@ import StatsCharts from "../features/dashboard/StatsCharts";
 import PageHeader from "../ui/PageHeader";
 import styled from "styled-components";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import useGetOrders from "../hooks/data/orders/useGetOrders";
+import analyzeOrders from "../features/dashboard/analyzeOrders";
+import useAnalyzedOrders from "../hooks/data/orders/useAnalyzedOrders";
+import useGetSettings from "../hooks/data/settings/useGetSettings";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.8rem;
+  padding-bottom: 3.6rem;
 `;
 
 function Dashboard() {
   const { ordersData, ordersIsPending, ordersError, ordersIsError } =
-    useGetOrders();
+    useAnalyzedOrders();
+
+  const { data } = useGetSettings();
 
   return (
     <>
@@ -22,12 +27,17 @@ function Dashboard() {
         isPending={ordersIsPending}
         isError={ordersIsError}
         error={ordersError}
-      >
-        <Container>
-          <StatsCards ordersData={ordersData} />
-          <StatsCharts ordersData={ordersData} />
-        </Container>
-      </QueryStatusFallback>
+        render={() => {
+          analyzeOrders(ordersData);
+
+          return (
+            <Container>
+              <StatsCards ordersData={ordersData} />
+              <StatsCharts ordersData={ordersData} />
+            </Container>
+          );
+        }}
+      ></QueryStatusFallback>
     </>
   );
 }

@@ -25,8 +25,7 @@ const StyledShoppingCart = styled.aside`
   justify-content: space-between;
   border-radius: 6px;
   font-size: 1.4rem;
-  max-height: clamp(12rem, calc(100dvh - 17.8rem), 64.8rem);
-  height: 64.8rem;
+  height: min(64.8rem, calc(100dvh - 17.8rem));
   position: sticky;
   top: 17.8rem;
   overflow: hidden;
