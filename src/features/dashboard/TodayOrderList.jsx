@@ -2,6 +2,8 @@ import styled from "styled-components";
 import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
 import { FaArrowRight } from "react-icons/fa";
 import Tag from "../../ui/Tag";
+import { formatPickupNumber } from "../../utils/orderHelpers";
+import { useNavigate } from "react-router-dom";
 
 const OrderList = styled.ul`
   max-height: 30rem;
@@ -59,20 +61,47 @@ const Order = styled.li`
   }
 `;
 
-function TodayOrderList({ analyzedData, renderEmpty }) {
+const EmptyState = styled.p`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+`;
+
+function formatDishes(order) {
+  return order.map((dish) => `${dish.name} x ${dish.servings}`).join(" , ");
+}
+
+function TodayOrderList({ analyzedData }) {
+  const navigate = useNavigate();
+
+  const { todayOrders } = analyzedData;
+
+  if (todayOrders.length === 0)
+    return <EmptyState>今日尚無任何訂單</EmptyState>;
+
   return (
     <StyledOverlayScrollbars autoHide="leave" style={{ maxHeight: "30rem" }}>
       <OrderList>
-        <Order>
-          <Tag $tagStatus="已完成">已完成</Tag>
-          <span># 9999</span>
-          <span>起司蛋餅 x 1 、 紅茶 x 2</span>
-          <span>$ 50000</span>
-          <button>
-            <span>詳情</span>
-            <FaArrowRight size={13} />
-          </button>
-        </Order>
+        {todayOrders.map((order) => (
+          <Order key={order.id}>
+            <Tag $tagStatus={order.status}>{order.status}</Tag>
+            <span>{formatPickupNumber(order.pickupNumber)}</span>
+            <span>{formatDishes(order.order)}</span>
+            <span>{`$${order.totalPrice}`}</span>
+            <button
+              onClick={() =>
+                navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
+              }
+            >
+              <span>詳情</span>
+              <FaArrowRight size={13} />
+            </button>
+          </Order>
+        ))}
       </OrderList>
     </StyledOverlayScrollbars>
   );

@@ -18,7 +18,7 @@ function formatCreatedTime(createdTime) {
 
 // 訂單編號格式化
 function formatPickupNumber(pickupNumber) {
-  return `# ${String(pickupNumber).padStart(3, "0")}`;
+  return `# ${String(pickupNumber).padStart(4, "0")}`;
 }
 
 // 訂單單一餐點的所有自訂細項選擇彙整

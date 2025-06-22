@@ -6,7 +6,7 @@ import TopDishesChart from "./TopDishesChart";
 
 const StatsChartRow = styled.section`
   display: grid;
-  grid-template-columns: repeat(2, 30rem);
+  grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 40rem;
   gap: 2.8rem;
 `;
@@ -27,17 +27,7 @@ const ChartHeading = styled.h3`
   font-weight: 600;
 `;
 
-const EmptyData = styled.div`
-  height: 30rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 function StatsCharts({ analyzedData }) {
-  console.log(analyzedData);
-
   const statChartItems = [
     {
       heading: "今日訂單列表",
@@ -65,10 +55,7 @@ function StatsCharts({ analyzedData }) {
         return (
           <StatsChart key={index}>
             <ChartHeading>{item.heading}</ChartHeading>
-            <Chart
-              analyzedData={analyzedData}
-              renderEmpty={() => <EmptyData>沒有數據</EmptyData>}
-            />
+            <Chart analyzedData={analyzedData} />
           </StatsChart>
         );
       })}

@@ -69,7 +69,7 @@ function analyzeOrders(orders) {
     start: sevenDaysAgoStart,
     end: now,
   }).map((date) => ({
-    date: format(date, "MM/dd"),
+    date: format(date, "dd日"),
     orderCount: 0,
     totalRevenue: 0,
   }));
@@ -79,7 +79,7 @@ function analyzeOrders(orders) {
 
   // 今日每小時訂單總筆數
   const hourlyOrderCounts = Array.from({ length: 24 }, (_, i) => ({
-    hour: i,
+    hour: `${i}時`,
     totalOrders: 0,
   }));
 

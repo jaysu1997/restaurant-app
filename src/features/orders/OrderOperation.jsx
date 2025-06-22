@@ -35,6 +35,8 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { mutate, isPending } = useDeleteOrder();
+  const location = useLocation();
+  const from = location.state?.from;
 
   return (
     <>
@@ -89,7 +91,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $hoverBgColor="#d6d3d1"
             onClick={() => navigate(-1)}
           >
-            返回列表
+            {from === "dashboard" ? "返回首頁" : "返回列表"}
           </Button>
         )}
       </Footer>

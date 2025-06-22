@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import {
   BarChart,
   Bar,
@@ -9,37 +10,45 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const data = [
-  { name: "經典gfhrfhjfkj fhfh", value: 100, amount: 10000 },
-  { name: "", value: "", amount: 18 },
-  { name: "綜合拼餐", value: 120, amount: 12 },
-  { name: "漢堡漢堡漢堡", value: 240, amount: 24000 },
-  { name: "飲料", value: 90, amount: 9 },
-];
+const EmptyState = styled.p`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+`;
 
+// 設定Y軸刻度文字的寬度和換行
 function CustomYAxisTick({ x, y, payload }) {
   return (
     <Text
       x={x}
       y={y}
       style={{ fontSize: "1.4rem" }}
-      width={45} // 設定寬度，超出時自動換行
+      width={45}
       textAnchor="end"
       verticalAnchor="middle"
-      breakAll // 允許在任意字元處換行，適用於中文
-      maxLines={2} // 限制最多顯示的行數，超出時顯示省略號
+      breakAll
+      maxLines={2}
     >
       {payload.value}
     </Text>
   );
 }
 
-function TopDishesChart() {
+function TopDishesChart({ analyzedData }) {
+  const { todayTopDishes } = analyzedData;
+
+  if (todayTopDishes.length === 0)
+    return <EmptyState>今日尚無任何訂單</EmptyState>;
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
         layout="vertical"
-        data={data}
+        data={todayTopDishes}
         barSize={20}
         margin={{ top: 0, right: 15, bottom: 0, left: 0 }}
       >
@@ -51,8 +60,8 @@ function TopDishesChart() {
           tick={<CustomYAxisTick />}
           width={55}
         />
-        <Tooltip />
-        <Bar dataKey="value" fill="#8884d8" />
+        <Tooltip cursor={{ fill: "rgba(0, 0, 0, 0.05)", width: 20 }} />
+        <Bar dataKey="totalServings" fill="#8884d8" />
       </BarChart>
     </ResponsiveContainer>
   );
