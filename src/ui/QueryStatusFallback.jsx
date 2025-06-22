@@ -12,8 +12,8 @@ function QueryStatusFallback({
   render,
   children,
 }) {
-  if (isPending) return <LoadingSpinner />;
   if (isError) return <FetchFailFallback error={error} />;
+  if (isPending) return <LoadingSpinner />;
   if (isEmpty) {
     const { message, buttonText, redirectTo } = emptyState;
 

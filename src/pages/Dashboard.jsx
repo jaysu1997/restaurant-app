@@ -15,28 +15,26 @@ const Container = styled.div`
 `;
 
 function Dashboard() {
-  const { ordersData, ordersIsPending, ordersError, ordersIsError } =
-    useAnalyzedOrders();
-
-  const { data } = useGetSettings();
+  const {
+    analyzedData,
+    analyzedDataIsPending,
+    analyzedDataIsError,
+    analyzedDataError,
+  } = useAnalyzedOrders();
 
   return (
     <>
       <PageHeader title="營運總覽" />
       <QueryStatusFallback
-        isPending={ordersIsPending}
-        isError={ordersIsError}
-        error={ordersError}
-        render={() => {
-          analyzeOrders(ordersData);
-
-          return (
-            <Container>
-              <StatsCards ordersData={ordersData} />
-              <StatsCharts ordersData={ordersData} />
-            </Container>
-          );
-        }}
+        isPending={analyzedDataIsPending}
+        isError={analyzedDataIsError}
+        error={analyzedDataError}
+        render={() => (
+          <Container>
+            <StatsCards analyzedData={analyzedData} />
+            <StatsCharts analyzedData={analyzedData} />
+          </Container>
+        )}
       ></QueryStatusFallback>
     </>
   );

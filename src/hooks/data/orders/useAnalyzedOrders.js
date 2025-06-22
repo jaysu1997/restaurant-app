@@ -1,23 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
-import { getOrdersApi } from "../../../services/apiOrder";
+import { getLast7DaysOrdersApi } from "../../../services/apiOrder";
+import { useMemo } from "react";
+import analyzeOrders from "../../../features/dashboard/analyzeOrders";
 
 // 取得所有訂單數據
 function useAnalyzedOrders() {
-  const {
-    data: ordersData,
-    isPending: ordersIsPending,
-    error: ordersError,
-    isError: ordersIsError,
-  } = useQuery({
-    queryKey: ["orders"],
-    queryFn: getOrdersApi,
+  const { data, isPending, error, isError, isSuccess } = useQuery({
+    queryKey: ["last7DaysOrders"],
+    queryFn: getLast7DaysOrdersApi,
   });
 
+  const analyzedData = useMemo(() => {
+    if (!isSuccess) return null;
+    return analyzeOrders(data);
+  }, [isSuccess, data]);
+
   return {
-    ordersData,
-    ordersIsPending,
-    ordersIsError,
-    ordersError,
+    analyzedData,
+    analyzedDataIsPending: isPending || !analyzedData,
+    analyzedDataIsError: isError,
+    analyzedDataError: error,
   };
 }
 

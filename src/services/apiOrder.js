@@ -1,6 +1,7 @@
 // 訂單相關api
 import supabase from "./supabase.js";
 import { handleSupabaseError } from "../utils/handleSupabaseError";
+import { format, parseISO, startOfDay, subDays } from "date-fns";
 
 // 建立新的餐點訂單api
 export async function createOrderApi(orderData) {
@@ -52,13 +53,21 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
   };
 }
 
-// 獲取所有訂單數據
-export async function getOrdersApi() {
-  const { data, error } = await supabase.from("orders").select("*");
+// 獲取近7天所有訂單數據
+export async function getLast7DaysOrdersApi() {
+  const startDate = format(
+    startOfDay(subDays(new Date(), 6)),
+    "yyyy-MM-dd HH:mm:ss"
+  );
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .gte("createdTime", startDate);
 
   handleSupabaseError(error);
 
-  return data;
+  // return data;
+  return [];
 }
 
 // 獲取指定單筆訂單數據

@@ -59,11 +59,10 @@ const Order = styled.li`
   }
 `;
 
-function TodayOrderList() {
+function TodayOrderList({ analyzedData, renderEmpty }) {
   return (
     <StyledOverlayScrollbars autoHide="leave" style={{ maxHeight: "30rem" }}>
       <OrderList>
-        {/* <EmptyData>無資料</EmptyData> */}
         <Order>
           <Tag $tagStatus="已完成">已完成</Tag>
           <span># 9999</span>

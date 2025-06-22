@@ -35,7 +35,9 @@ const EmptyData = styled.div`
   align-items: center;
 `;
 
-function StatsCharts() {
+function StatsCharts({ analyzedData }) {
+  console.log(analyzedData);
+
   const statChartItems = [
     {
       heading: "今日訂單列表",
@@ -58,13 +60,15 @@ function StatsCharts() {
   return (
     <StatsChartRow>
       {statChartItems.map((item, index) => {
-        // 這裡需要再補上Empty元件
         const Chart = item.chart;
 
         return (
           <StatsChart key={index}>
             <ChartHeading>{item.heading}</ChartHeading>
-            <Chart />
+            <Chart
+              analyzedData={analyzedData}
+              renderEmpty={() => <EmptyData>沒有數據</EmptyData>}
+            />
           </StatsChart>
         );
       })}
