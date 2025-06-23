@@ -5,7 +5,7 @@ const CategoryName = styled.li`
   background-color: #262626;
   color: #fafafa;
   font-size: 1.8rem;
-  padding: 0.3rem 0.6rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 6px;
 `;
 

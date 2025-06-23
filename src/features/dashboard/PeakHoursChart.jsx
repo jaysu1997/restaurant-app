@@ -11,6 +11,9 @@ import {
 function PeakHoursChart({ analyzedData }) {
   const { hourlyOrderCounts } = analyzedData;
 
+  const test = "1時";
+  console.log(test.slice(0, -1));
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
@@ -26,7 +29,11 @@ function PeakHoursChart({ analyzedData }) {
         />
         <YAxis allowDecimals={false} width={55} tick={{ fontSize: 14 }} />
         <Tooltip
-          payload={[{ hour: hourlyOrderCounts.hour, value: 12, unit: "kg" }]}
+          formatter={(value) => [`共 ${value} 筆`, "訂單建立"]}
+          labelFormatter={(label) => {
+            const hour = label.slice(0, -1);
+            return `${hour}:00 ~ ${hour}:59`;
+          }}
         />
         <Bar dataKey="totalOrders" fill="#8884d8" />
       </BarChart>

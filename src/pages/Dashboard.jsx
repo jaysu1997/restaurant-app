@@ -22,6 +22,8 @@ function Dashboard() {
     analyzedDataError,
   } = useAnalyzedOrders();
 
+  console.log(analyzedData);
+
   return (
     <>
       <PageHeader title="營運總覽" />

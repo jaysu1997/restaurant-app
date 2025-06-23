@@ -7,7 +7,7 @@ const StyledDishCard = styled.li`
   flex-direction: column;
   background-color: #fff;
   gap: 0.2rem;
-  padding: 0.6rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 5px;
   border: 2px solid #dcdcdc;
   transition: all 0.3s;

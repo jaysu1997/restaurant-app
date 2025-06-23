@@ -69,7 +69,7 @@ function analyzeOrders(orders) {
     start: sevenDaysAgoStart,
     end: now,
   }).map((date) => ({
-    date: format(date, "dd日"),
+    date: format(date, "yyyy-MM-dd"),
     orderCount: 0,
     totalRevenue: 0,
   }));

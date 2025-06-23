@@ -60,7 +60,7 @@ function TopDishesChart({ analyzedData }) {
           tick={<CustomYAxisTick />}
           width={55}
         />
-        <Tooltip cursor={{ fill: "rgba(0, 0, 0, 0.05)", width: 20 }} />
+        <Tooltip formatter={(value) => [`共 ${value} 份`, "今日銷售"]} />
         <Bar dataKey="totalServings" fill="#8884d8" />
       </BarChart>
     </ResponsiveContainer>

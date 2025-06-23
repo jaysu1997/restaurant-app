@@ -24,6 +24,7 @@ const Content = styled.div`
 
   strong {
     color: #dc2626;
+    word-break: break-all;
   }
 `;
 

@@ -10,7 +10,7 @@ import {
 
 function RevenueTrendChart({ analyzedData }) {
   const { last7DaysStats } = analyzedData;
-  console.log(analyzedData);
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <AreaChart
@@ -24,7 +24,7 @@ function RevenueTrendChart({ analyzedData }) {
           </linearGradient>
         </defs>
         <XAxis dataKey="date" interval={0} tick={{ fontSize: 12 }} />
-        <YAxis width={55} tick={{ fontSize: 14 }} />
+        <YAxis width={55} tick={{ fontSize: 14 }} unit="$" />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
         <Area
