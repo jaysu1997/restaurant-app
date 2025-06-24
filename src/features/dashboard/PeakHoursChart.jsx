@@ -24,7 +24,19 @@ function PeakHoursChart({ analyzedData }) {
           interval="equidistantPreserveStart"
           tick={{ fontSize: 12 }}
         />
-        <YAxis allowDecimals={false} width={55} tick={{ fontSize: 14 }} />
+        <YAxis
+          allowDecimals={false}
+          width={55}
+          tick={{ fontSize: 14 }}
+          domain={[
+            0,
+            (dataMax) => {
+              const dynamicMax = Math.ceil(dataMax * 1.15);
+              const minDisplayMax = 10;
+              return Math.max(dynamicMax, minDisplayMax);
+            },
+          ]}
+        />
         <Tooltip
           separator=""
           formatter={(value) => [` ${value} 筆訂單`, "總計建立"]}
@@ -33,7 +45,7 @@ function PeakHoursChart({ analyzedData }) {
             return `${hour}:00 ~ ${hour}:59`;
           }}
         />
-        <Bar dataKey="totalOrders" fill="#0284c7" />
+        <Bar dataKey="totalOrders" fill="#0ea5e9" />
       </BarChart>
     </ResponsiveContainer>
   );

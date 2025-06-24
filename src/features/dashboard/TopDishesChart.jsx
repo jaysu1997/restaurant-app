@@ -83,6 +83,7 @@ function TopDishesChart({ analyzedData }) {
         <Bar
           dataKey="totalServings"
           fill="#3b82f6"
+          activeBar={{ fill: "#1d4ed8" }}
           background
           label={{ fill: "#000", fontSize: 12, position: "right" }}
         />

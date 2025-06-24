@@ -19,8 +19,8 @@ function RevenueTrendChart({ analyzedData }) {
       >
         <defs>
           <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#10b981" stopOpacity={0.5} />
+            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.5} />
           </linearGradient>
         </defs>
         <XAxis
@@ -41,7 +41,7 @@ function RevenueTrendChart({ analyzedData }) {
         <Area
           type="monotone"
           dataKey="totalRevenue"
-          stroke="#10b981"
+          stroke="#8b5cf6"
           fillOpacity={0.5}
           fill="url(#colorCount)"
         />
