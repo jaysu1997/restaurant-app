@@ -57,7 +57,7 @@ function getTopDishesFromStats(dishesSaleStats) {
       // 若再相等，比名稱（字典順序）升冪
       return a.name.localeCompare(b.name);
     })
-    .slice(0, 4);
+    .slice(0, 5);
 }
 
 function analyzeOrders(orders) {

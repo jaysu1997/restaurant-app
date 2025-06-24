@@ -154,7 +154,6 @@ function ServingsControl({
           handleServingsChange(Math.max(1, Number(servings)), dishData)
         }
         min={1}
-        max={99}
         required
         inputMode="numeric"
       />

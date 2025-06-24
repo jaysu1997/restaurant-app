@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
   Text,
   CartesianGrid,
+  LabelList,
 } from "recharts";
 
 const EmptyState = styled.p`
@@ -53,15 +54,38 @@ function TopDishesChart({ analyzedData }) {
         margin={{ top: 0, right: 15, bottom: 0, left: 0 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" tick={{ fontSize: 12 }} />
+        <XAxis
+          type="number"
+          tick={{ fontSize: 12 }}
+          domain={[
+            0,
+            (dataMax) => {
+              const dynamicMax = Math.ceil(dataMax * 1.15);
+              const minDisplayMax = 10;
+              return Math.max(dynamicMax, minDisplayMax);
+            },
+          ]}
+          unit="份"
+          allowDecimals={false}
+        />
         <YAxis
           type="category"
           dataKey="name"
           tick={<CustomYAxisTick />}
           width={55}
         />
-        <Tooltip formatter={(value) => [`共 ${value} 份`, "今日銷售"]} />
-        <Bar dataKey="totalServings" fill="#8884d8" />
+        <Tooltip
+          separator=""
+          cursor={false}
+          formatter={(value) => [` ${value} 份`, "今日銷售"]}
+          viewBox={{ x: 0, y: 0, width: 10, height: 10 }}
+        />
+        <Bar
+          dataKey="totalServings"
+          fill="#3b82f6"
+          background
+          label={{ fill: "#000", fontSize: 12, position: "right" }}
+        />
       </BarChart>
     </ResponsiveContainer>
   );
