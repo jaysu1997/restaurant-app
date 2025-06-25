@@ -8,6 +8,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
+// 今日熱門時段圖表
 function PeakHoursChart({ analyzedData }) {
   const { hourlyOrderCounts } = analyzedData;
 
@@ -24,19 +25,7 @@ function PeakHoursChart({ analyzedData }) {
           interval="equidistantPreserveStart"
           tick={{ fontSize: 12 }}
         />
-        <YAxis
-          allowDecimals={false}
-          width={55}
-          tick={{ fontSize: 14 }}
-          domain={[
-            0,
-            (dataMax) => {
-              const dynamicMax = Math.ceil(dataMax * 1.15);
-              const minDisplayMax = 10;
-              return Math.max(dynamicMax, minDisplayMax);
-            },
-          ]}
-        />
+        <YAxis allowDecimals={false} width={55} tick={{ fontSize: 14 }} />
         <Tooltip
           separator=""
           formatter={(value) => [` ${value} 筆訂單`, "總計建立"]}

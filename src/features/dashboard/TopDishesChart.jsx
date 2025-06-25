@@ -39,6 +39,7 @@ function CustomYAxisTick({ x, y, payload }) {
   );
 }
 
+// 今日熱銷餐點圖表
 function TopDishesChart({ analyzedData }) {
   const { todayTopDishes } = analyzedData;
 

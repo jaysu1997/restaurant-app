@@ -10,6 +10,7 @@ function useAnalyzedOrders() {
     queryFn: getLast7DaysOrdersApi,
   });
 
+  // 取得數據後進行分析
   const analyzedData = useMemo(() => {
     if (!isSuccess) return null;
     return analyzeOrders(data);

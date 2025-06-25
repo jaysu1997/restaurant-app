@@ -27,6 +27,7 @@ const ChartHeading = styled.h3`
   font-weight: 600;
 `;
 
+// 圖表
 function StatsCharts({ analyzedData }) {
   const statChartItems = [
     {

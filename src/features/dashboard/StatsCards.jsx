@@ -69,6 +69,7 @@ const StatData = styled.div`
   }
 `;
 
+// 今日數據卡
 function StatsCards({ analyzedData }) {
   const { todayOrderCounts, todayRevenue, todayRevenueTrend, todayTopDishes } =
     analyzedData;

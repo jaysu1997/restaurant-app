@@ -60,6 +60,7 @@ function getTopDishesFromStats(dishesSaleStats) {
     .slice(0, 5);
 }
 
+// 分析訂單數據的函式
 function analyzeOrders(orders) {
   const now = new Date();
   // 7天之前

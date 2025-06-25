@@ -75,6 +75,7 @@ function formatDishes(order) {
   return order.map((dish) => `${dish.name} x ${dish.servings}`).join(" , ");
 }
 
+// 今日訂單列表
 function TodayOrderList({ analyzedData }) {
   const navigate = useNavigate();
 

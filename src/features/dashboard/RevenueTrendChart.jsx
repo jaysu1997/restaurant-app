@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+// 近期營收趨勢圖表
 function RevenueTrendChart({ analyzedData }) {
   const { last7DaysStats } = analyzedData;
 
@@ -19,8 +20,8 @@ function RevenueTrendChart({ analyzedData }) {
       >
         <defs>
           <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.5} />
+            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#6366f1" stopOpacity={0.5} />
           </linearGradient>
         </defs>
         <XAxis
@@ -41,7 +42,7 @@ function RevenueTrendChart({ analyzedData }) {
         <Area
           type="monotone"
           dataKey="totalRevenue"
-          stroke="#8b5cf6"
+          stroke="#6366f1"
           fillOpacity={0.5}
           fill="url(#colorCount)"
         />

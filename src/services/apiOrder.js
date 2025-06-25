@@ -67,7 +67,6 @@ export async function getLast7DaysOrdersApi() {
   handleSupabaseError(error);
 
   return data;
-  // return [];
 }
 
 // 獲取指定單筆訂單數據
