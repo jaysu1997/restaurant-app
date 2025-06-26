@@ -1,0 +1,23 @@
+// 表單ui元件
+
+import styled from "styled-components";
+
+const FormTable = styled.form`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+  width: 36rem;
+  padding: 2rem;
+  gap: 1.6rem;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 600;
+  font-size: 1.4rem;
+  transition: all 0.3s;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 56rem;
+  }
+`;
+
+export default FormTable;
