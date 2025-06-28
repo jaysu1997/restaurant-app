@@ -31,7 +31,8 @@ const ToggleButton = styled.button`
 const Menu = styled.ul`
   position: fixed;
   top: ${(props) => props.$position.y}px;
-  right: ${(props) => props.$position.x}px;
+  left: ${(props) => props.$position.x}px;
+
   background: #fff;
   box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -62,7 +63,6 @@ const MenuItem = styled.li`
 `;
 
 function OrderDropdownMenu({
-  tableRef,
   orderData,
   isOpenMenu,
   setIsOpenMenu,
@@ -79,16 +79,21 @@ function OrderDropdownMenu({
     e.stopPropagation();
     setIsOpenMenu((isOpenMenu) => (isOpenMenu === id ? false : id));
 
-    const tableRect = tableRef.current.getBoundingClientRect();
     const toggleRect = toggleRef.current.getBoundingClientRect();
+    const menuHeight = 133;
+    const spacing = 6;
+    const MENU_WIDTH = 140;
+    const TOGGLE_WIDTH = 28;
 
-    // 預設展開位置在toggleButton的下方，若空間不足則改成上方
+    // 判斷空間足夠，就顯示在下方，否則顯示在上方
+    const showBelow =
+      window.innerHeight - toggleRect.bottom > menuHeight + spacing;
+
     setPosition({
-      x: document.documentElement.clientWidth - toggleRect.x - toggleRect.width,
-      y:
-        tableRect.bottom > toggleRect.bottom + 133
-          ? window.scrollY + toggleRect.bottom + 6
-          : window.scrollY + toggleRect.top - 133 - 6,
+      x: toggleRect.left - MENU_WIDTH + TOGGLE_WIDTH,
+      y: showBelow
+        ? toggleRect.bottom + spacing
+        : toggleRect.top - menuHeight - spacing,
     });
   }
 

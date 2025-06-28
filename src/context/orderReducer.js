@@ -124,19 +124,19 @@ export function reducer(state, action) {
     }
     // 新增餐點
     case "dishes/addDish": {
-      const orderData = action.payload;
+      const dishData = action.payload;
       const newState = structuredClone(state);
 
       newState.dishes.push({
-        ...orderData,
+        ...dishData,
         customizeDetail: state.curDishCustomizeOption,
       });
 
       // 將庫存食材 - 本次餐點所需食材
-      orderData.ingredientsUsage.forEach((quantity, name) => {
+      dishData.ingredientsUsage.forEach((quantity, name) => {
         newState.inventoryMap.set(
           name,
-          newState.inventoryMap.get(name) - quantity * orderData.servings
+          newState.inventoryMap.get(name) - quantity * dishData.servings
         );
       });
 

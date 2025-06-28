@@ -13,11 +13,9 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { OrderProvider } from "./context/OrderContext";
 import Order from "./pages/Order";
-import StyledOverlayScrollbars from "./ui/StyledOverlayScrollbars";
 import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
 import Dashboard from "./pages/Dashboard";
-
 // 這個要調回3次重試
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,13 +65,7 @@ export default function App() {
       <OrderProvider>
         <BrowserRouter>
           <Routes>
-            <Route
-              element={
-                <StyledOverlayScrollbars style={{ maxHeight: "100dvh" }}>
-                  <AppLayout />
-                </StyledOverlayScrollbars>
-              }
-            >
+            <Route element={<AppLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/orders" element={<Orders />} />

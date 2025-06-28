@@ -50,7 +50,6 @@ const OrderBody = styled.section`
 
 function OrdersTable({ ordersData }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const tableRef = useRef(null);
   const activeMenuRef = useRef(null);
 
   // 在父元件監聽點擊外部時關閉菜單(避免大量註冊事件監聽)
@@ -75,7 +74,7 @@ function OrdersTable({ ordersData }) {
   );
 
   return (
-    <OrderContainer ref={tableRef}>
+    <OrderContainer>
       <OrderHeader>
         <div aria-hidden="true"></div>
         <div>取餐號碼</div>
@@ -93,7 +92,6 @@ function OrdersTable({ ordersData }) {
               orderData={orderData}
               isOpenMenu={isOpenMenu}
               setIsOpenMenu={setIsOpenMenu}
-              tableRef={tableRef}
               activeMenuRef={activeMenuRef}
             />
           </OrderRow>

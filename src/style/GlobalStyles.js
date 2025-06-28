@@ -23,6 +23,7 @@ export const GlobalStyles = styled.createGlobalStyle`
     color: #1f2937;
     background-color: #f9fafb;
     min-height: 100dvh;
+    overflow-y: scroll;
   }
 
   img {
@@ -58,6 +59,11 @@ export const GlobalStyles = styled.createGlobalStyle`
   input {
     outline: none;
     border: none;
+  }
+
+  /* 覆蓋會自動以本地系統顏色(windows色彩)為勾選顏色的小問題 */
+  input[type="radio"]:checked {
+    accent-color: #2563eb;
   }
 
   /* 移除number input的預設上下按鈕 */
