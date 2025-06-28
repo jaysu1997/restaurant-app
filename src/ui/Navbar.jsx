@@ -73,7 +73,7 @@ const navigationsLink = [
   { to: "/menu-manage", icon: <BiFoodMenu />, title: "菜單設定" },
   { to: "/inventory", icon: <BiFridge />, title: "庫存管理" },
   { to: "/analytics", icon: <BiBarChartSquare />, title: "營業數據" },
-  { to: "/staff", icon: <BiUserPlus />, title: "員工管理" },
+  { to: "/settings", icon: <BiUserPlus />, title: "店鋪設定" },
 ];
 
 function Navbar() {

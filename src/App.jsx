@@ -6,7 +6,7 @@ import Orders from "./pages/Orders";
 import MenuManage from "./pages/MenuManage";
 import Inventory from "./pages/Inventory";
 import Analytics from "./pages/Analytics";
-import Staff from "./pages/Staff";
+import Settings from "./pages/Settings";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
@@ -74,7 +74,7 @@ export default function App() {
               <Route path="/menu-manage" element={<MenuManage />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/analytics" element={<Analytics />} />
-              <Route path="/staff" element={<Staff />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="*" element={<PageNotFound />} />
           </Routes>
