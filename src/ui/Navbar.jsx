@@ -7,7 +7,7 @@ import {
   BiFoodMenu,
   BiFork,
   BiFridge,
-  BiUserPlus,
+  BiSliderAlt,
 } from "react-icons/bi";
 import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 import { scrollToTop } from "../utils/scrollToTop";
@@ -72,8 +72,7 @@ const navigationsLink = [
   { to: "/orders", icon: <BiEdit />, title: "訂單管理" },
   { to: "/menu-manage", icon: <BiFoodMenu />, title: "菜單設定" },
   { to: "/inventory", icon: <BiFridge />, title: "庫存管理" },
-  { to: "/analytics", icon: <BiBarChartSquare />, title: "營業數據" },
-  { to: "/settings", icon: <BiUserPlus />, title: "店鋪設定" },
+  { to: "/settings", icon: <BiSliderAlt />, title: "店鋪設定" },
 ];
 
 function Navbar() {

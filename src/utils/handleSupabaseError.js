@@ -37,6 +37,28 @@ function handleSupabaseError(error, fallback = "") {
       };
     }
 
+    // 這邊或許需要修改
+    if (
+      error.name === "AuthWeakPasswordError" ||
+      error.message.includes("Password should")
+    ) {
+      errorFallback.message = "密碼不符合安全規範";
+      console.log("密碼不符合安全規範");
+    }
+
+    if (
+      error.name === "AuthApiError" &&
+      error.message.includes("email address")
+    ) {
+      errorFallback.message = "Email 格式不正確";
+      console.log("Email 格式不正確");
+    }
+
+    if (error.message.includes("User already registered")) {
+      errorFallback.message = "此 Email 已註冊";
+      console.log("此 Email 已註冊");
+    }
+
     throw errorFallback;
   }
 }

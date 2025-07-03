@@ -52,6 +52,7 @@ function calculateOrderSummary(order) {
 function generatePickupTimes(startTime, endTime) {
   const result = [];
 
+  // 至少預留20分鐘的準備餐點時間
   const now = addMinutes(new Date(), 20);
 
   const parseTime = (timeStr) => {

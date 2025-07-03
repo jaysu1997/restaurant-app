@@ -22,6 +22,10 @@ const StyledOrderRow = styled.div`
     background-color: #f0f9ff;
   }
 
+  &:last-child {
+    border-radius: 0 0 8px 8px;
+  }
+
   @media (max-width: 768px) {
     display: grid;
     gap: 1rem;
@@ -35,6 +39,10 @@ const StyledOrderRow = styled.div`
       "paid paid";
     border: none;
     border-radius: 6px;
+
+    &:last-child {
+      border-radius: 6px;
+    }
 
     &:hover {
       background-color: #fff;

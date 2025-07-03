@@ -65,33 +65,22 @@ const StyledDayPicker = styled(DayPicker)`
     gap: 0.5rem;
   }
 
+  .rdp-selected:not(.rdp-range_middle) .rdp-day_button,
+  .rdp-range_start .rdp-day_button,
+  .rdp-range_end .rdp-day_button {
+    border-radius: 0px;
+    background-color: #6366f1;
+    color: #fff;
+  }
+
   .rdp-day:not(.rdp-selected):hover .rdp-day_button {
     border: 2px dashed #818cf8;
+    border-radius: 0px;
   }
 `;
 
-function DateRangePicker({
-  month,
-  setMonth,
-  filterValue,
-  handleValueChange,
-  queryKey,
-}) {
-  return (
-    <StyledDayPicker
-      animate
-      captionLayout="dropdown-years"
-      mode="range"
-      weekStartsOn={0}
-      locale={zhTW}
-      month={month}
-      onMonthChange={setMonth}
-      startMonth={new Date(2020, 0)}
-      endMonth={new Date()}
-      selected={filterValue}
-      onSelect={(range) => handleValueChange(queryKey, range ? range : "")}
-    />
-  );
+function DateRangePicker({ ...rest }) {
+  return <StyledDayPicker animate weekStartsOn={0} locale={zhTW} {...rest} />;
 }
 
 export default DateRangePicker;

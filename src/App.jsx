@@ -5,7 +5,6 @@ import Menu from "./pages/Menu";
 import Orders from "./pages/Orders";
 import MenuManage from "./pages/MenuManage";
 import Inventory from "./pages/Inventory";
-import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -73,7 +72,6 @@ export default function App() {
               <Route path="/order-edit/:orderId" element={<Order />} />
               <Route path="/menu-manage" element={<MenuManage />} />
               <Route path="/inventory" element={<Inventory />} />
-              <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="*" element={<PageNotFound />} />

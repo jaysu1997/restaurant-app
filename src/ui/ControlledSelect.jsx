@@ -4,23 +4,32 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 const selectStyle = {
-  container: (baseStyles) => ({
-    ...baseStyles,
-    width: "100%",
-  }),
-  control: (baseStyles) => ({
-    ...baseStyles,
-    border: "none",
-    boxShadow: "none",
-    minHeight: "3.6rem",
-    height: "3.6rem",
-    fontWeight: "400",
-  }),
-  menuList: (baseStyles) => ({
-    ...baseStyles,
-    maxHeight: "30dvh",
-    overflowY: "auto",
-  }),
+  creatable: {
+    container: (baseStyles) => ({
+      ...baseStyles,
+      width: "100%",
+    }),
+    control: (baseStyles) => ({
+      ...baseStyles,
+      border: "none",
+      boxShadow: "none",
+      minHeight: "3.6rem",
+      height: "3.6rem",
+      fontWeight: "400",
+    }),
+    menuList: (baseStyles) => ({
+      ...baseStyles,
+      maxHeight: "30dvh",
+      overflowY: "auto",
+    }),
+  },
+  notCreatable: {
+    container: (baseStyles) => ({
+      ...baseStyles,
+      width: "100%",
+      fontSize: "1.4rem",
+    }),
+  },
 };
 
 function ControlledSelect({
@@ -41,7 +50,7 @@ function ControlledSelect({
       {creatable ? (
         <CreatableSelect
           {...field}
-          styles={selectStyle}
+          styles={selectStyle.creatable}
           formatCreateLabel={(inputValue) => `新增食材: ${inputValue}`}
           options={options}
           isClearable
@@ -55,9 +64,10 @@ function ControlledSelect({
       ) : (
         <Select
           {...field}
+          styles={selectStyle.notCreatable}
           maxMenuHeight={280}
           menuPortalTarget={document.body}
-          menuShouldBlockScroll
+          // menuShouldBlockScroll
           isSearchable={false}
           options={options}
           menuPlacement={menuPlacement}

@@ -55,7 +55,22 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
             />
           </FormFieldset>
 
-          <ControlledSwitch control={control} fieldIndex={index} />
+          <span>細項填寫設定：</span>
+          <ControlledSwitch
+            control={control}
+            items={[
+              {
+                name: `customize.${index}.required`,
+                label1: "選填",
+                label2: "必填",
+              },
+              {
+                name: `customize.${index}.choice`,
+                label1: "多選",
+                label2: "單選",
+              },
+            ]}
+          />
 
           {/* 設定細項的id */}
           <input

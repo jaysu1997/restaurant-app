@@ -24,11 +24,11 @@ const HeaderContainer = styled.div`
 const LogoStyle = styled.div`
   display: flex;
   align-items: center;
-`;
 
-const H1 = styled.h1`
-  color: #ea580c;
-  font-size: 2rem;
+  h1 {
+    color: #ea580c;
+    font-size: 2rem;
+  }
 `;
 
 const Img = styled.img`
@@ -41,7 +41,7 @@ function Header() {
       <HeaderContainer>
         <LogoStyle>
           <Img src="logo.png" alt="logo" />
-          <H1>Aurora Bites</H1>
+          <h1>Aurora Bites</h1>
         </LogoStyle>
         <User />
       </HeaderContainer>

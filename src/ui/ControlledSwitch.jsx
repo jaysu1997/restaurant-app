@@ -3,19 +3,27 @@ import { FiCheck, FiX } from "react-icons/fi";
 import { Controller } from "react-hook-form";
 
 const StyledControlledSwitch = styled.div`
-  display: flex;
-  justify-content: space-around;
-
-  @media (max-width: 280px) {
-    flex-direction: column;
-    gap: 0.8rem;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr));
+  gap: 1rem;
+  align-items: start;
 `;
 
 const StyledSwitch = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
+
+  @media (max-width: 288px) {
+    justify-content: start;
+  }
+
+  span {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+  }
 `;
 
 // 開關容器
@@ -47,61 +55,52 @@ const SwitchHandle = styled.div`
   transition: left 0.3s ease-in-out;
 `;
 
-function ControlledSwitch({ control, fieldIndex }) {
+function ControlledSwitch({ control, items }) {
   return (
-    <>
-      <span>選項填寫設定</span>
-      <StyledControlledSwitch>
-        <StyledSwitch>
-          <span>必填</span>
-          <Switch
-            name={`customize.${fieldIndex}.required`}
-            control={control}
-            label1="選填"
-            label2="必填"
-          />
-        </StyledSwitch>
-
-        <StyledSwitch>
-          <span>單選</span>
-          <Switch
-            name={`customize.${fieldIndex}.choice`}
-            control={control}
-            label1="多選"
-            label2="單選"
-          />
-        </StyledSwitch>
-      </StyledControlledSwitch>
-    </>
+    <StyledControlledSwitch>
+      {items.map((item, index) => (
+        <Controller
+          key={index}
+          name={item.name}
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <StyledSwitch>
+              <Switch
+                value={value}
+                onChange={onChange}
+                label1={item.label1}
+                label2={item.label2}
+              />
+              <span>{value === item.label2 ? item.label2 : item.label1}</span>
+            </StyledSwitch>
+          )}
+        />
+      ))}
+    </StyledControlledSwitch>
   );
 }
 
-function Switch({ control, name, label1, label2 }) {
+function Switch({ value, onChange, label1, label2 }) {
+  const checked = value === label2;
+
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field: { value, onChange } }) => (
-        <SwitchContainer $checked={value === label2}>
-          <input
-            type="checkbox"
-            hidden
-            checked={value === label2}
-            value={value}
-            onChange={(e) => {
-              onChange(e.target.checked ? label2 : label1);
-            }}
-          />
-          <SwitchHandle $checked={value === label2}>
-            {value === label2 ? (
-              <FiCheck size={16} color="#007bff" />
-            ) : (
-              <FiX size={16} color="#ccc" />
-            )}
-          </SwitchHandle>
-        </SwitchContainer>
-      )}
-    />
+    <SwitchContainer $checked={checked}>
+      <input
+        type="checkbox"
+        hidden
+        checked={checked}
+        onChange={(e) => {
+          onChange(e.target.checked ? label2 : label1);
+        }}
+      />
+      <SwitchHandle $checked={checked}>
+        {checked ? (
+          <FiCheck size={16} color="#007bff" />
+        ) : (
+          <FiX size={16} color="#ccc" />
+        )}
+      </SwitchHandle>
+    </SwitchContainer>
   );
 }
 

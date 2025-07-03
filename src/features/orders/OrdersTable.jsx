@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import OrderRow from "./OrderRow";
 import OrderDropdownMenu from "./OrderDropdownMenu";
 import useClickOutside from "../../hooks/ui/useClickOutside";
@@ -10,7 +10,6 @@ const OrderContainer = styled.div`
   flex-direction: column;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
-  overflow: hidden;
 
   @media (max-width: 768px) {
     border: none;
@@ -30,7 +29,7 @@ const OrderHeader = styled.header`
   font-weight: 700;
   background-color: #525252;
   color: #fafafa;
-  /* z-index: -10; */
+  border-radius: 8px 8px 0 0;
 
   @media (max-width: 768px) {
     display: none;
@@ -54,24 +53,6 @@ function OrdersTable({ ordersData }) {
 
   // 在父元件監聽點擊外部時關閉菜單(避免大量註冊事件監聽)
   useClickOutside(activeMenuRef, isOpenMenu, setIsOpenMenu, false);
-
-  // 監聽頁面滾動(包含滾輪和鍵盤的滾動)時關閉菜單
-  useEffect(
-    function () {
-      if (!isOpenMenu) return;
-
-      const handleScroll = () => {
-        setIsOpenMenu(false);
-      };
-
-      window.addEventListener("scroll", handleScroll, { capture: true });
-
-      return () => {
-        window.removeEventListener("scroll", handleScroll, { capture: true });
-      };
-    },
-    [isOpenMenu, setIsOpenMenu]
-  );
 
   return (
     <OrderContainer>

@@ -1,8 +1,16 @@
-import { useRef, useState } from "react";
-
+import { useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { PiCalendar } from "react-icons/pi";
-import { format, startOfMonth, startOfWeek, startOfYear } from "date-fns";
+import {
+  addDays,
+  format,
+  isAfter,
+  isBefore,
+  isEqual,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+} from "date-fns";
 import useClickOutside from "../../hooks/ui/useClickOutside";
 import DateRangePicker from "../DateRangePicker";
 
@@ -102,13 +110,28 @@ function DateRangeFilter({ filterValue, handleValueChange, ...filters }) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
   const [month, setMonth] = useState(new Date());
   const daypickerRef = useRef(null);
+  const [hoverPreview, setHoverPreview] = useState(undefined);
+
+  const hoverRange = useMemo(() => {
+    const from = filterValue.from;
+
+    // 如果 hoverDate > from
+    if (isAfter(hoverPreview, from)) {
+      return { from: addDays(from, 1), to: hoverPreview };
+    }
+
+    // 如果 hoverDate < from
+    if (isBefore(hoverPreview, from)) {
+      return { from: hoverPreview, to: addDays(from, 1) };
+    }
+  }, [filterValue, hoverPreview]);
 
   useClickOutside(daypickerRef, isOpenDayPicker, setIsOpenDayPicker, true);
 
   function formatRangeDate(selectedDate) {
-    return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
+    return `${format(selectedDate.from, "yyyy / MM / dd")} ~ ${format(
       selectedDate.to,
-      "yyyy/MM/dd"
+      "yyyy / MM / dd"
     )}`;
   }
 
@@ -146,12 +169,30 @@ function DateRangeFilter({ filterValue, handleValueChange, ...filters }) {
               </li>
             ))}
           </ShortcutsList>
+
           <DateRangePicker
+            captionLayout="dropdown"
+            mode="range"
             month={month}
-            setMonth={setMonth}
-            filterValue={filterValue}
-            queryKey={queryKey}
-            handleValueChange={handleValueChange}
+            onMonthChange={setMonth}
+            startMonth={new Date(2020, 0)}
+            endMonth={new Date()}
+            selected={filterValue}
+            onSelect={(range) =>
+              handleValueChange(queryKey, range ? range : "")
+            }
+            onDayMouseEnter={(date) => {
+              if (isEqual(filterValue.from, filterValue.to)) {
+                setHoverPreview(date);
+              }
+            }}
+            onDayMouseLeave={() => setHoverPreview(undefined)}
+            modifiers={{
+              hoverPreview: hoverRange,
+            }}
+            modifiersClassNames={{
+              hoverPreview: "rdp-range_middle",
+            }}
           />
           <ShortcutsList>
             <li>

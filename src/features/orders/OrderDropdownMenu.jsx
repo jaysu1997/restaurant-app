@@ -29,10 +29,9 @@ const ToggleButton = styled.button`
 `;
 
 const Menu = styled.ul`
-  position: fixed;
-  top: ${(props) => props.$position.y}px;
-  left: ${(props) => props.$position.x}px;
-
+  position: absolute;
+  top: ${(props) => props.$position}px;
+  right: 0;
   background: #fff;
   box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -82,19 +81,16 @@ function OrderDropdownMenu({
     const toggleRect = toggleRef.current.getBoundingClientRect();
     const menuHeight = 133;
     const spacing = 6;
-    const MENU_WIDTH = 140;
-    const TOGGLE_WIDTH = 28;
 
-    // 判斷空間足夠，就顯示在下方，否則顯示在上方
-    const showBelow =
-      window.innerHeight - toggleRect.bottom > menuHeight + spacing;
+    // 根據<Menu />展開後是否會超出視窗可是範圍來決定Y軸定位
+    const idealBottom = toggleRect.bottom + spacing + menuHeight;
+    const shouldOpenUpward = idealBottom > window.innerHeight;
 
-    setPosition({
-      x: toggleRect.left - MENU_WIDTH + TOGGLE_WIDTH,
-      y: showBelow
-        ? toggleRect.bottom + spacing
-        : toggleRect.top - menuHeight - spacing,
-    });
+    setPosition(
+      shouldOpenUpward
+        ? -spacing - menuHeight
+        : toggleRef.current.offsetHeight + spacing
+    );
   }
 
   return (

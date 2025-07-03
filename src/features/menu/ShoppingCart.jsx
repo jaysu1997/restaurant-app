@@ -50,6 +50,8 @@ const ShoppingList = styled.ul`
   flex-direction: column;
   padding: 0 1.6rem;
   height: 40rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
 `;
 
 const Row = styled.div`
@@ -176,25 +178,25 @@ function ShoppingCart({ inventoryData }) {
         </Row>
       </Header>
 
-      <StyledOverlayScrollbars>
-        {dishes.length !== 0 && isCreatingOrder ? (
-          <ShoppingList>
-            <>
-              {dishes.map((dish) => (
-                <CartItem dish={dish} key={dish.uniqueId} />
-              ))}
+      {/* <StyledOverlayScrollbars> */}
+      {dishes.length !== 0 && isCreatingOrder ? (
+        <ShoppingList>
+          <>
+            {dishes.map((dish) => (
+              <CartItem dish={dish} key={dish.uniqueId} />
+            ))}
 
-              <OrderInfoField
-                register={register}
-                control={control}
-                dineOption={dineOption}
-              />
-            </>
-          </ShoppingList>
-        ) : (
-          <EmptyShoppingCart />
-        )}
-      </StyledOverlayScrollbars>
+            <OrderInfoField
+              register={register}
+              control={control}
+              dineOption={dineOption}
+            />
+          </>
+        </ShoppingList>
+      ) : (
+        <EmptyShoppingCart />
+      )}
+      {/* </StyledOverlayScrollbars> */}
 
       <Footer>
         <Row>
