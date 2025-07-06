@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
 import { FaArrowRight } from "react-icons/fa";
 import Tag from "../../ui/Tag";
 import { formatPickupNumber } from "../../utils/orderHelpers";
@@ -8,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 const OrderList = styled.ul`
   max-height: 30rem;
   padding-right: 1.5rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
 `;
 
 const Order = styled.li`
@@ -85,26 +86,24 @@ function TodayOrderList({ analyzedData }) {
     return <EmptyState>今日尚無任何訂單</EmptyState>;
 
   return (
-    <StyledOverlayScrollbars autoHide="leave" style={{ maxHeight: "30rem" }}>
-      <OrderList>
-        {todayOrders.map((order) => (
-          <Order key={order.id}>
-            <Tag $tagStatus={order.status}>{order.status}</Tag>
-            <span>{formatPickupNumber(order.pickupNumber)}</span>
-            <span>{formatDishes(order.dishes)}</span>
-            <span>{`$${order.totalPrice}`}</span>
-            <button
-              onClick={() =>
-                navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
-              }
-            >
-              <span>詳情</span>
-              <FaArrowRight size={13} />
-            </button>
-          </Order>
-        ))}
-      </OrderList>
-    </StyledOverlayScrollbars>
+    <OrderList>
+      {todayOrders.map((order) => (
+        <Order key={order.id}>
+          <Tag $tagStatus={order.status}>{order.status}</Tag>
+          <span>{formatPickupNumber(order.pickupNumber)}</span>
+          <span>{formatDishes(order.dishes)}</span>
+          <span>{`$${order.totalPrice}`}</span>
+          <button
+            onClick={() =>
+              navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
+            }
+          >
+            <span>詳情</span>
+            <FaArrowRight size={13} />
+          </button>
+        </Order>
+      ))}
+    </OrderList>
   );
 }
 

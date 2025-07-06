@@ -1,86 +1,153 @@
-import { DayPicker } from "react-day-picker";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { zhTW } from "react-day-picker/locale";
+import { format } from "date-fns";
+import { useRef, useState } from "react";
+import useClickOutside from "../hooks/ui/useClickOutside";
+import { PiCalendar } from "react-icons/pi";
+import StyledDayPicker from "./StyledDayPicker";
 
-const StyledDayPicker = styled(DayPicker)`
-  font-size: 1.2rem;
-  font-weight: 600;
+const StyledDatePicker = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 25rem;
+`;
 
-  --rdp-accent-color: #6366f1;
-  --rdp-day-height: 3.2rem;
-  --rdp-day-width: 3.2rem;
-  --rdp-day_button-height: 3.2rem;
-  --rdp-day_button-width: 3.2rem;
+const DateField = styled.div`
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.8rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
 
-  button {
-    transition: none;
-  }
+  ${(props) =>
+    props.$isActive &&
+    css`
+      border-color: #2684ff;
+      box-shadow: 0 0 0 1px #2684ff;
+    `}
 
-  .rdp-selected {
-    font-size: 1.2rem;
-  }
-
-  .rdp-dropdown:focus-visible ~ .rdp-caption_label {
-    outline: none;
-  }
-
-  .rdp-month {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .rdp-nav {
-    padding: 0 0.5rem;
-  }
-
-  .rdp-month_caption {
-    padding: 0 1rem;
-  }
-
-  .rdp-dropdown {
+  input {
+    font-size: 1.4rem;
+    width: 100%;
     cursor: pointer;
   }
 
-  .rdp-chevron {
-    fill: #1d4ed8;
-    width: 1.4rem;
-    height: 1.4rem;
-  }
-
-  .rdp-button_next,
-  .rdp-button_previous {
-    width: 2.4rem;
-    height: 2.4rem;
-  }
-
-  :is(.rdp-button_next, .rdp-button_previous):not(
-      [aria-disabled="true"]
-    ):hover {
-    background-color: #dbeafe;
-    border-radius: 50%;
-  }
-
-  .rdp-caption_label {
-    gap: 0.5rem;
-  }
-
-  .rdp-selected:not(.rdp-range_middle) .rdp-day_button,
-  .rdp-range_start .rdp-day_button,
-  .rdp-range_end .rdp-day_button {
-    border-radius: 0px;
-    background-color: #6366f1;
-    color: #fff;
-  }
-
-  .rdp-day:not(.rdp-selected):hover .rdp-day_button {
-    border: 2px dashed #818cf8;
-    border-radius: 0px;
+  span {
+    display: inline-flex;
+    color: #3b82f6;
   }
 `;
 
-function DateRangePicker({ ...rest }) {
-  return <StyledDayPicker animate weekStartsOn={0} locale={zhTW} {...rest} />;
+const Wrapper = styled.div`
+  background-color: #fff;
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 8px;
+  padding: 1.3rem;
+  position: absolute;
+  top: 5rem;
+  z-index: 2;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const UtilityButton = styled.button`
+  display: flex;
+  padding: 0.5rem 1.2rem;
+  color: #1d4ed8;
+  background-color: transparent;
+  font-size: 1.4rem;
+  font-weight: 500;
+`;
+
+function DateRangePicker({
+  placeholder,
+  startMonth,
+  endMonth,
+  selected,
+  onSelect,
+  handleValueReset,
+}) {
+  const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
+  const daypickerRef = useRef(null);
+
+  useClickOutside(daypickerRef, isOpenDayPicker, setIsOpenDayPicker, true);
+
+  function formatRangeDate(selectedDate) {
+    return `${format(selectedDate, "yyyy/MM/dd")}`;
+  }
+
+  return (
+    <StyledDatePicker>
+      <DateField
+        $isActive={isOpenDayPicker}
+        onClick={() => setIsOpenDayPicker(true)}
+      >
+        <input
+          name="startDate"
+          value={selected ? formatRangeDate(selected?.from) : ""}
+          placeholder="開始日期"
+          readOnly
+        />
+        <span>
+          <PiCalendar size={20} />
+        </span>
+      </DateField>
+      <span>至</span>
+      <DateField
+        $isActive={isOpenDayPicker}
+        onClick={() => setIsOpenDayPicker(true)}
+      >
+        <input
+          name="endDate"
+          value={selected ? formatRangeDate(selected?.to) : ""}
+          placeholder="結束日期"
+          readOnly
+        />
+        <span>
+          <PiCalendar size={20} />
+        </span>
+      </DateField>
+
+      {isOpenDayPicker && (
+        <Wrapper ref={daypickerRef}>
+          <StyledDayPicker
+            animate
+            captionLayout="dropdown"
+            mode="range"
+            weekStartsOn={0}
+            locale={zhTW}
+            startMonth={startMonth}
+            endMonth={endMonth}
+            selected={selected}
+            onSelect={onSelect}
+          />
+          <Footer>
+            <UtilityButton onClick={handleValueReset} disabled={!selected}>
+              清除
+            </UtilityButton>
+
+            <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
+              確認
+            </UtilityButton>
+          </Footer>
+        </Wrapper>
+      )}
+    </StyledDatePicker>
+  );
 }
 
 export default DateRangePicker;

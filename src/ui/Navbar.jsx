@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import {
-  BiBarChartSquare,
   BiChalkboard,
   BiEdit,
   BiFoodMenu,
@@ -9,7 +8,6 @@ import {
   BiFridge,
   BiSliderAlt,
 } from "react-icons/bi";
-import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
 import { scrollToTop } from "../utils/scrollToTop";
 
 const StyleNav = styled.nav`
@@ -21,6 +19,8 @@ const StyleNav = styled.nav`
   height: 100%;
   max-height: calc(100dvh - 6.4rem);
   width: 24rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
   /* display: none; */
 `;
 
@@ -78,18 +78,16 @@ const navigationsLink = [
 function Navbar() {
   return (
     <StyleNav>
-      <StyledOverlayScrollbars style={{ maxHeight: "inherit" }}>
-        <NavList>
-          {navigationsLink.map((nav) => (
-            <li key={nav.title}>
-              <StyleNavLink to={nav.to} onClick={() => scrollToTop()}>
-                {nav.icon}
-                <span>{nav.title}</span>
-              </StyleNavLink>
-            </li>
-          ))}
-        </NavList>
-      </StyledOverlayScrollbars>
+      <NavList>
+        {navigationsLink.map((nav) => (
+          <li key={nav.title}>
+            <StyleNavLink to={nav.to} onClick={() => scrollToTop()}>
+              {nav.icon}
+              <span>{nav.title}</span>
+            </StyleNavLink>
+          </li>
+        ))}
+      </NavList>
     </StyleNav>
   );
 }

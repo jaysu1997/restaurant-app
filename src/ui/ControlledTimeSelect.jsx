@@ -1,6 +1,7 @@
 import ControlledSelect from "./ControlledSelect";
 import { eachMinuteOfInterval, endOfDay, format, startOfDay } from "date-fns";
 
+// 這個應該還需要再修改
 function ControlledTimeSelect({ control, name }) {
   const times = [
     ...eachMinuteOfInterval(
@@ -13,9 +14,10 @@ function ControlledTimeSelect({ control, name }) {
       label: format(time, "HH:mm"),
       value: format(time, "HH:mm"),
     })),
-    { label: "24:00", value: "24:00" },
+    { label: "23:59", value: "23:59" },
   ];
 
+  // 這個應該還需要再修改
   return (
     <ControlledSelect
       options={times}
@@ -26,7 +28,6 @@ function ControlledTimeSelect({ control, name }) {
       rules={{
         required: true,
       }}
-      key="MonStartTime"
     />
   );
 }

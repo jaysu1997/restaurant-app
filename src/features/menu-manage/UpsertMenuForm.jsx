@@ -201,7 +201,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                       name={`ingredients.${index}.ingredientName`}
                       control={control}
                       rules={{ required: "食材名稱不能空白" }}
-                      menuPlacement="auto"
                       options={inventoryData}
                       handleCreateNewItems={handleCreateNewItems}
                       creatable={true}

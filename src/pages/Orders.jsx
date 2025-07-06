@@ -17,7 +17,6 @@ const filtersConfig = [
     title: "訂單建立時間",
     type: "datePicker",
     queryKey: "createdTime",
-    placeholder: "選擇篩選日期範圍",
   },
 ];
 

@@ -81,7 +81,6 @@ function NestedFieldArray({
               name={`customize.${nestedIndex}.options.${index}.ingredientName`}
               control={control}
               rules={{ required: "額外消耗食材不能空白" }}
-              menuPlacement="auto"
               options={[
                 {
                   label: "無",

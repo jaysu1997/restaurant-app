@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
-import StyledOverlayScrollbars from "../../ui/StyledOverlayScrollbars";
 import CartItem from "./CartItem";
 import { GrClear } from "react-icons/gr";
 import { useForm } from "react-hook-form";
@@ -49,7 +48,7 @@ const ShoppingList = styled.ul`
   display: flex;
   flex-direction: column;
   padding: 0 1.6rem;
-  height: 40rem;
+  height: 100%;
   overflow-y: scroll;
   scrollbar-width: thin;
 `;
@@ -178,25 +177,21 @@ function ShoppingCart({ inventoryData }) {
         </Row>
       </Header>
 
-      {/* <StyledOverlayScrollbars> */}
       {dishes.length !== 0 && isCreatingOrder ? (
         <ShoppingList>
-          <>
-            {dishes.map((dish) => (
-              <CartItem dish={dish} key={dish.uniqueId} />
-            ))}
+          {dishes.map((dish) => (
+            <CartItem dish={dish} key={dish.uniqueId} />
+          ))}
 
-            <OrderInfoField
-              register={register}
-              control={control}
-              dineOption={dineOption}
-            />
-          </>
+          <OrderInfoField
+            register={register}
+            control={control}
+            dineOption={dineOption}
+          />
         </ShoppingList>
       ) : (
         <EmptyShoppingCart />
       )}
-      {/* </StyledOverlayScrollbars> */}
 
       <Footer>
         <Row>

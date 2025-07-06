@@ -5,6 +5,7 @@ export const GlobalStyles = styled.createGlobalStyle`
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+    scrollbar-width: thin;
   }
 
   *:disabled {
@@ -13,6 +14,8 @@ export const GlobalStyles = styled.createGlobalStyle`
 
   html {
     font-size: 62.5%;
+    scrollbar-gutter: stable;
+    scrollbar-width: auto;
   }
 
   body {
@@ -23,7 +26,6 @@ export const GlobalStyles = styled.createGlobalStyle`
     color: #1f2937;
     background-color: #f9fafb;
     min-height: 100dvh;
-    overflow-y: scroll;
   }
 
   img {
@@ -48,7 +50,7 @@ export const GlobalStyles = styled.createGlobalStyle`
   textarea {
     width: 100%;
     resize: none;
-    height: 6.4rem;
+    min-height: 6.4rem;
     border: 1px solid #cacaca;
     border-radius: 5px;
     padding: 0.3rem 0.6rem;
@@ -62,7 +64,8 @@ export const GlobalStyles = styled.createGlobalStyle`
   }
 
   /* 覆蓋會自動以本地系統顏色(windows色彩)為勾選顏色的小問題 */
-  input[type="radio"]:checked {
+  input[type="radio"]:checked,
+  input[type="checkbox"]:checked {
     accent-color: #2563eb;
   }
 

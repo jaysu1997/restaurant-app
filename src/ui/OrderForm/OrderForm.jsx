@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { compareInventory } from "../../utils/orderHelpers";
 import StyledHotToast from "../StyledHotToast";
 import Modal from "../Modal";
-import StyledOverlayScrollbars from "../StyledOverlayScrollbars";
 import Note from "../Note";
 import CustomizeArea from "./CustomizeArea";
 import ServingsControl from "../ServingsControl";
@@ -27,6 +26,7 @@ const Container = styled.div`
   flex-direction: column;
   padding: 2rem;
   gap: 2.4rem;
+  overflow: auto;
 `;
 
 const Price = styled.span`
@@ -212,30 +212,28 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
       modalHeader={dishData.name}
       maxWidth={36}
       onCloseModal={onCloseModal}
-      overlayScrollbar={false}
+      scrollBar={false}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)}>
-        <StyledOverlayScrollbars style={{ maxHeight: "100%" }}>
-          <Container>
-            <Price>$ {price - discount}</Price>
+        <Container>
+          <Price>$ {price - discount}</Price>
 
-            {displayFields &&
-              displayFields.map((customizeData) => (
-                <CustomizeArea
-                  type={
-                    customizeData.required === "必填" ? "required" : "optional"
-                  }
-                  isEdit={isEdit}
-                  customizeData={customizeData}
-                  register={register}
-                  key={customizeData.customizeId}
-                />
-              ))}
+          {displayFields &&
+            displayFields.map((customizeData) => (
+              <CustomizeArea
+                type={
+                  customizeData.required === "必填" ? "required" : "optional"
+                }
+                isEdit={isEdit}
+                customizeData={customizeData}
+                register={register}
+                key={customizeData.customizeId}
+              />
+            ))}
 
-            <Title>餐點備註</Title>
-            <Note register={register} />
-          </Container>
-        </StyledOverlayScrollbars>
+          <Title>餐點備註</Title>
+          <Note register={register} />
+        </Container>
 
         <Footer>
           <ServingsControl

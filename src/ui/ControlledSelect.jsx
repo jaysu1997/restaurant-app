@@ -27,7 +27,6 @@ const selectStyle = {
     container: (baseStyles) => ({
       ...baseStyles,
       width: "100%",
-      fontSize: "1.4rem",
     }),
   },
 };
@@ -41,7 +40,6 @@ function ControlledSelect({
   disabled,
   creatable = true,
   placeholder = null,
-  menuPlacement = "auto",
 }) {
   const { field } = useController({ name, control, rules });
 
@@ -55,7 +53,7 @@ function ControlledSelect({
           options={options}
           isClearable
           isDisabled={disabled}
-          menuPlacement={menuPlacement}
+          menuPosition="fixed"
           placeholder={placeholder}
           onCreateOption={(optionValue) => {
             handleCreateNewItems(optionValue, field.name);
@@ -67,10 +65,9 @@ function ControlledSelect({
           styles={selectStyle.notCreatable}
           maxMenuHeight={280}
           menuPortalTarget={document.body}
-          // menuShouldBlockScroll
+          menuPosition="fixed"
           isSearchable={false}
           options={options}
-          menuPlacement={menuPlacement}
           placeholder={placeholder}
         />
       )}

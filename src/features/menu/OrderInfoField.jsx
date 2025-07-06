@@ -49,7 +49,6 @@ function OrderInfoField({ register, dineOption, control }) {
         name={dineOption ? "pickupTime" : "tableNumber"}
         creatable={false}
         placeholder={dineOption ? "選擇取餐時間" : "選擇桌號"}
-        menuPlacement="top"
         rules={{
           required: dineOption ? "請選擇取餐時間" : "請選擇內用桌號",
         }}

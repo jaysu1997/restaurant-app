@@ -147,7 +147,6 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               name={dineOption ? "pickupTime" : "tableNumber"}
               creatable={false}
               placeholder={dineOption ? "選擇時間" : "選擇桌號"}
-              menuPlacement="top"
               rules={{
                 required: dineOption ? "請選擇取餐時間" : "請選擇內用桌號",
               }}
@@ -167,7 +166,6 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               control={control}
               name={"status"}
               creatable={false}
-              menuPlacement="auto"
               placeholder="訂單狀態"
               rules={{
                 required: "請選擇訂單狀態",
@@ -194,7 +192,6 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               control={control}
               name={"paid"}
               creatable={false}
-              menuPlacement="auto"
               placeholder="付款狀態"
               rules={{
                 required: "請選擇付款狀態",

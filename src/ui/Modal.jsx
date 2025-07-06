@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { IoIosClose } from "react-icons/io";
-import StyledOverlayScrollbars from "./StyledOverlayScrollbars";
+import { useEffect } from "react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -85,26 +85,29 @@ const Button = styled.button`
   }
 `;
 
+const Content = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow-y: ${(props) => (props.$scrollbar ? "auto" : "hidden")};
+  overflow-x: hidden;
+`;
+
 function Modal({
   children,
   onCloseModal,
   modalHeader = "表單",
   headerColor = "inherit",
   maxWidth = 56,
-  overlayScrollbar = true,
+  scrollBar = true,
 }) {
   // 用來處理使用原生滾動軸時，打開Modal後出現body仍然可以滾動的問題
-  // useEffect(() => {
-  //   const scrollBarWidth =
-  //     window.innerWidth - document.documentElement.clientWidth;
-  //   document.body.style.overflow = "hidden";
-  //   document.body.style.paddingRight = `${scrollBarWidth}px`; // 修正滾動條消失造成的版面移動
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
 
-  //   return () => {
-  //     document.body.style.overflow = "auto";
-  //     document.body.style.paddingRight = "";
-  //   };
-  // }, []);
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   return createPortal(
     <Overlay>
@@ -115,11 +118,7 @@ function Modal({
             <IoIosClose size={28} />
           </Button>
         </Header>
-        {overlayScrollbar ? (
-          <StyledOverlayScrollbars>{children}</StyledOverlayScrollbars>
-        ) : (
-          children
-        )}
+        <Content $scrollbar={scrollBar}>{children}</Content>
       </StyleModal>
     </Overlay>,
     document.body
