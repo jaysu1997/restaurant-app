@@ -33,7 +33,7 @@ const SwitchContainer = styled.label`
   width: 50px;
   height: 26px;
   background: ${(props) => (props.$checked ? "#007bff" : "#ccc")};
-  border-radius: 15px;
+  border-radius: 999px;
   cursor: pointer;
   position: relative;
   transition: background 0.3s ease-in-out;

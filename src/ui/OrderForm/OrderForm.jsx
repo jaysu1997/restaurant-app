@@ -26,7 +26,7 @@ const Container = styled.div`
   flex-direction: column;
   padding: 2rem;
   gap: 2.4rem;
-  overflow: auto;
+  overflow-y: scroll;
 `;
 
 const Price = styled.span`
@@ -59,7 +59,7 @@ const AddToCartButton = styled.button`
   height: 3.2rem;
   width: 100%;
   padding: 0.6rem;
-  border-radius: 5px;
+  border-radius: 6px;
   background-color: #292524;
   color: #fff;
   font-size: 1.4rem;

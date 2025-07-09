@@ -26,7 +26,7 @@ const StyleModal = styled.div`
   margin: 0 0.6rem;
   background-color: #fff;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
-  border-radius: 15px;
+  border-radius: 6px;
   overflow: hidden;
   justify-content: center;
   align-items: center;

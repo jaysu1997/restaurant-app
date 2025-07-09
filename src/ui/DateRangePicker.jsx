@@ -22,7 +22,7 @@ const DateField = styled.div`
   padding: 0.2rem 0.8rem;
   width: 100%;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: #fff;
   cursor: pointer;
 
@@ -51,7 +51,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 1.3rem;
   position: absolute;
   top: 5rem;

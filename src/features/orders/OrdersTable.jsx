@@ -8,8 +8,9 @@ const OrderContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 6px;
+  border: 1px solid #dfdfdf;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 
   @media (max-width: 768px) {
     border: none;
@@ -29,7 +30,7 @@ const OrderHeader = styled.header`
   font-weight: 700;
   background-color: #525252;
   color: #fafafa;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
 
   @media (max-width: 768px) {
     display: none;

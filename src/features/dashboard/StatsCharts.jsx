@@ -15,11 +15,11 @@ const StatsChart = styled.article`
   border-radius: 6px;
   display: inline-flex;
   flex-direction: column;
-
   padding: 2.4rem;
   gap: 2rem;
-
   background-color: #fff;
+  border: 1px solid #dfdfdf;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 `;
 
 const ChartHeading = styled.h3`

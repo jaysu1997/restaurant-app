@@ -6,17 +6,14 @@ const Card = styled.li`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(2, 1fr);
-  border-radius: 10px;
+  border-radius: 6px;
   overflow: hidden;
   border: 2px solid #dcdcdc;
-  /* background-color: #f9fafb; */
   background-color: #fff;
-  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, border 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    /* box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); */
     border: 2px solid #93c5fd;
   }
 `;

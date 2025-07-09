@@ -11,7 +11,7 @@ const StyledToggleSwitch = styled.label`
   align-items: center;
   padding: 0.3rem;
   position: relative;
-  border-radius: 15px;
+  border-radius: 999px;
   overflow: hidden;
   cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
 

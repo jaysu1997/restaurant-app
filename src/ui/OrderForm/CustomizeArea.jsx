@@ -1,5 +1,4 @@
 import styled from "styled-components";
-// import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import { useState } from "react";
 import { useOrder } from "../../context/OrderContext";
 import Option from "./Option";
@@ -23,7 +22,7 @@ const Customize = styled.section`
   flex-direction: column;
   border: 1px solid #cacaca;
   padding: 1.2rem;
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: ${(props) => props.$colorStyle};
   transition: all 0.2s;
 `;
@@ -47,7 +46,7 @@ const RequiredLabel = styled.span`
   line-height: 1.5;
   background-color: ${(props) => props.$colorStyle.background};
   color: ${(props) => props.$colorStyle.font};
-  border-radius: 50px;
+  border-radius: 999px;
   padding: 0.4rem 1rem;
   font-weight: 400;
 `;

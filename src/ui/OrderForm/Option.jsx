@@ -13,14 +13,13 @@ const colorStyle = {
 const StyledOption = styled.label`
   display: grid;
   grid-template-columns: auto 1fr auto;
-  /* display: flex; */
   align-items: center;
   gap: 1.2rem;
   height: 4rem;
   line-height: 1.4;
   position: relative;
   padding: 0.6rem;
-  border-radius: 5px;
+  border-radius: 6px;
 
   &:hover {
     background-color: ${(props) => props.$colorStyle};

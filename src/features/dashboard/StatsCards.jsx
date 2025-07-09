@@ -27,6 +27,8 @@ const StatCard = styled.article`
   grid-template-columns: 6rem 1fr;
   column-gap: 1.4rem;
   background-color: ${(props) => props.$bgColor};
+  border: 1px solid ${(props) => props.$bgColor};
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 `;
 
 const StatIcon = styled.span`

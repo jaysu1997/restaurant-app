@@ -21,7 +21,7 @@ const ToggleButton = styled.button`
   font-weight: 500;
   padding: 0.8rem 1.6rem;
   border: 1px solid #2563eb;
-  border-radius: 4px;
+  border-radius: 6px;
   color: #2563eb;
   background-color: #fff;
 
@@ -48,7 +48,7 @@ const FilterContainer = styled.div`
   gap: 1.6rem;
   background-color: #fff;
   box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
+  border-radius: 6px;
   width: min(95dvw, 28rem);
 `;
 
@@ -84,7 +84,7 @@ const ApplyFiltersButton = styled.button`
   width: 100%;
   background-color: #2563eb;
   color: #fff;
-  border-radius: 4px;
+  border-radius: 6px;
 `;
 
 const ResetFiltersButton = styled(ApplyFiltersButton)`

@@ -11,7 +11,7 @@ const Serving = styled.div`
   border: 1px solid #d1d5db;
   align-items: center;
   justify-content: space-between;
-  border-radius: 5px;
+  border-radius: 6px;
   overflow: hidden;
   width: fit-content;
   height: ${({ $size }) => ($size === "sm" ? "2.4rem" : "3.2rem")};

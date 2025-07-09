@@ -52,7 +52,7 @@ export const GlobalStyles = styled.createGlobalStyle`
     resize: none;
     min-height: 6.4rem;
     border: 1px solid #cacaca;
-    border-radius: 5px;
+    border-radius: 6px;
     padding: 0.3rem 0.6rem;
     font-size: 1.4rem;
     line-height: 1.4;

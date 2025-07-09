@@ -6,7 +6,7 @@ const type = {
   submit: css`
     width: 6.4rem;
     height: 3.2rem;
-    border-radius: 50px;
+    border-radius: 999px;
     font-size: 1.4rem;
     font-weight: 600;
     padding: 0.6rem 1.2rem;
@@ -53,7 +53,7 @@ const type = {
     grid-column: 1 / -1;
     width: fit-content;
     height: fit-content;
-    border-radius: 10px;
+    border-radius: 6px;
     background-color: #059669;
     color: #f8fafc;
     padding: 0.4rem 0.8rem;
@@ -74,7 +74,7 @@ const type = {
     font-weight: 500;
     padding: 0.8rem 1.6rem;
     border: 1px solid #2563eb;
-    border-radius: 4px;
+    border-radius: 6px;
     color: #2563eb;
     background-color: #fff;
 

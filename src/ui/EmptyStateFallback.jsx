@@ -38,7 +38,7 @@ const SubMessage = styled.p`
 const ReloadButton = styled.button`
   background-color: #2563eb;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 1rem 2rem;
   font-size: 1.4rem;
   cursor: pointer;

@@ -21,7 +21,6 @@ const StyleNav = styled.nav`
   width: 24rem;
   overflow-y: auto;
   scrollbar-width: thin;
-  /* display: none; */
 `;
 
 const NavList = styled.ul`
@@ -39,7 +38,7 @@ const StyleNavLink = styled(NavLink)`
   font-size: 2rem;
   font-weight: 600;
   padding: 1rem 2rem;
-  border-radius: 10px;
+  border-radius: 6px;
 
   svg {
     color: #475569;

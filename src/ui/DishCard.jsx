@@ -8,7 +8,7 @@ const StyledDishCard = styled.li`
   background-color: #fff;
   gap: 0.2rem;
   padding: 0.6rem 1.2rem;
-  border-radius: 5px;
+  border-radius: 6px;
   border: 2px solid #dcdcdc;
   transition: all 0.3s;
   cursor: pointer;

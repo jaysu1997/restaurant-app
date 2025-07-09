@@ -18,6 +18,13 @@ const Container = styled.div`
   padding-bottom: 3.6rem;
 `;
 
+const SettingSection = styled.section`
+  background: #fff;
+  border: 1px solid #dfdfdf;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+`;
+
 function Settings() {
   const [selectedDate, setSelectedDate] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -47,19 +54,24 @@ function Settings() {
       <PageHeader title="店鋪設定" />
 
       <Container>
-        <RegularBusinessHours control={control} />
-        <SpecialBusinessHours control={control} />
-        <DineInTableSettings control={control} />
-        <StoreInfo control={control} />
+        <SettingSection>
+          <RegularBusinessHours control={control} />
+        </SettingSection>
+
+        <SettingSection>
+          <SpecialBusinessHours control={control} />
+        </SettingSection>
+
+        <SettingSection>
+          <DineInTableSettings control={control} />
+        </SettingSection>
+
+        <SettingSection>
+          <StoreInfo control={control} />
+        </SettingSection>
       </Container>
     </>
   );
 }
 
 export default Settings;
-
-// 模組名稱	說明文字（副標）
-// 一般營業時間	設定每週固定的營業時間，系統將依此顯示開店與關店狀態。
-// 特殊營業時間	當遇到節日、活動或臨時變更，可在此指定某天為公休或營業，以覆蓋平日設定。
-// 內用桌號設定	設定店內的桌號配置與區域分類，用於點餐時標記桌位，無即時座位管理功能。
-// 店鋪基本資訊	編輯店鋪名稱、地址與聯絡方式，部分資訊將可能顯示在前台或訂單頁。

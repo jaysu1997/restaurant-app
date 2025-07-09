@@ -29,7 +29,7 @@ const Tag = styled.span`
   padding: 0.4rem 1.2rem;
   font-size: 1.4rem;
   font-weight: 700;
-  border-radius: 12px;
+  border-radius: 6px;
   width: fit-content;
 
   ${(props) => tagStyles[props.$tagStatus] || tagStyles["準備中"]}

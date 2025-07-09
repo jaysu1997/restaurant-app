@@ -17,7 +17,7 @@ const Box = styled.div`
   /* Box */
   background-color: #fff;
   border: 1px solid #f3f4f6;
-  border-radius: 7px;
+  border-radius: 6px;
 
   padding: 4.8rem;
   flex: 0 1 96rem;

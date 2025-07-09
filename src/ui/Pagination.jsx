@@ -51,7 +51,7 @@ const JumpSection = styled.div`
     text-align: center;
     font-size: 1.4rem;
     border: 1px solid #e3e5e7;
-    border-radius: 3px;
+    border-radius: 6px;
     width: 4.2rem;
     padding: 0.5rem 0.2rem;
   }
@@ -64,7 +64,7 @@ const JumpSection = styled.div`
     font-weight: 600;
     padding: 0.3rem 0.6rem;
     height: 2.8rem;
-    border-radius: 3px;
+    border-radius: 6px;
     background-color: #e63946;
     color: #fff;
 
