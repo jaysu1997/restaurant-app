@@ -135,7 +135,7 @@ function ShoppingCart({ inventoryData }) {
   // 因為munu和edit-order共用相同useReducer，所以在切換頁面時可能出現ui渲染閃爍問題，因此增加判別條件解決閃爍(讓購物車ui只渲染點餐頁面的數據)
   const isCreatingOrder = curOrderPage === "/menu";
 
-  const dineOption = watch("orderType") === "外帶";
+  const takeOut = watch("diningMethod") === "takeOut";
 
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
@@ -154,7 +154,7 @@ function ShoppingCart({ inventoryData }) {
         <h4>購物車</h4>
         <Row>
           <OrderTypeSwitch
-            dineOption={dineOption}
+            takeOut={takeOut}
             control={control}
             setValue={setValue}
             isDisabled={dishes.length === 0}
@@ -186,7 +186,7 @@ function ShoppingCart({ inventoryData }) {
           <OrderInfoField
             register={register}
             control={control}
-            dineOption={dineOption}
+            takeOut={takeOut}
           />
         </ShoppingList>
       ) : (

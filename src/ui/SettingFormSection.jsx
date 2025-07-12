@@ -1,0 +1,69 @@
+import styled from "styled-components";
+
+const StyledSettingFormSection = styled.form`
+  background: #fff;
+  border: 1px solid #dfdfdf;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+`;
+
+const Wrapper = styled.section`
+  display: grid;
+  grid-template-columns: 32rem 1fr;
+  padding: 3.2rem;
+  column-gap: 4rem;
+  row-gap: 2rem;
+  font-size: 1.4rem;
+`;
+
+const FormHeading = styled.header`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  p {
+    color: #797f87;
+  }
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+  border-top: 1px solid #dfdfdf;
+  padding: 1.6rem 3.2rem;
+
+  button {
+    font-size: 1.4rem;
+  }
+`;
+
+function SettingFormSection({
+  title = "",
+  description = "",
+  handleSubmit,
+  handleReset,
+  children,
+}) {
+  return (
+    <StyledSettingFormSection onSubmit={handleSubmit}>
+      <Wrapper>
+        <FormHeading>
+          <h3>{title}</h3>
+          <p>{description}</p>
+        </FormHeading>
+        {children}
+      </Wrapper>
+      <Footer>
+        <button>儲存</button>
+        <button type="button">取消</button>
+      </Footer>
+    </StyledSettingFormSection>
+  );
+}
+
+export default SettingFormSection;

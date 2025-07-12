@@ -2,7 +2,8 @@ import ControlledSelect from "./ControlledSelect";
 import { eachMinuteOfInterval, endOfDay, format, startOfDay } from "date-fns";
 
 // 這個應該還需要再修改
-function ControlledTimeSelect({ control, name }) {
+function ControlledTimeSelect({ control, name, placeholder, disabled }) {
+  // 一天的時段(每5分鐘)
   const times = [
     ...eachMinuteOfInterval(
       {
@@ -17,17 +18,20 @@ function ControlledTimeSelect({ control, name }) {
     { label: "23:59", value: "23:59" },
   ];
 
-  // 這個應該還需要再修改
+  // 這個應該還需要再修改(填寫規則很重要)
   return (
     <ControlledSelect
       options={times}
       control={control}
       name={name}
       creatable={false}
-      placeholder="開始時間"
-      rules={{
-        required: true,
-      }}
+      placeholder={placeholder}
+      disabled={disabled}
+      rules={
+        {
+          // required: true,
+        }
+      }
     />
   );
 }

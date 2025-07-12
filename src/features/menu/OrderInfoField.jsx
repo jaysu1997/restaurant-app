@@ -31,9 +31,9 @@ const StyledPaidSection = styled.div`
   justify-content: space-around;
 `;
 
-function OrderInfoField({ register, dineOption, control }) {
+function OrderInfoField({ register, takeOut, control }) {
   // 用餐方式的select選項
-  const optionList = dineOption
+  const optionList = takeOut
     ? generatePickupTimes("10:00", "24:00")
     : generateTableNumbers(10);
 
@@ -42,17 +42,16 @@ function OrderInfoField({ register, dineOption, control }) {
       <h5>訂單備註：</h5>
       <Note register={register} />
 
-      <h5>{dineOption ? "取餐時間：" : "內用桌號："}</h5>
+      <h5>{takeOut ? "取餐時間：" : "內用桌號："}</h5>
       <ControlledSelect
         options={optionList}
         control={control}
-        name={dineOption ? "pickupTime" : "tableNumber"}
+        name={takeOut ? "pickupTime" : "tableNumber"}
         creatable={false}
-        placeholder={dineOption ? "選擇取餐時間" : "選擇桌號"}
+        placeholder={takeOut ? "選擇取餐時間" : "選擇桌號"}
         rules={{
-          required: dineOption ? "請選擇取餐時間" : "請選擇內用桌號",
+          required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
         }}
-        key={dineOption ? "外帶" : "內用"}
       />
 
       <h5>付款狀態：</h5>

@@ -47,23 +47,23 @@ const Slider = styled.span`
 function OrderTypeSwitch({
   control,
   setValue,
-  dineOption = false,
+  takeOut = false,
   isDisabled = false,
 }) {
   return (
     <Controller
-      name="orderType"
+      name="diningMethod"
       control={control}
-      defaultValue={dineOption ? "外帶" : "內用"}
+      defaultValue={takeOut ? "takeOut" : "dineIn"}
       render={({ field }) => (
         <StyledToggleSwitch $disabled={isDisabled}>
           <input
             type="checkbox"
             hidden
-            checked={field.value === "外帶"}
+            checked={field.value === "takeOut"}
             onChange={(e) => {
-              field.onChange(e.target.checked ? "外帶" : "內用");
-              setValue(dineOption ? "pickupTime" : "tableNumber", null);
+              field.onChange(e.target.checked ? "takeOut" : "dineIn");
+              setValue(takeOut ? "pickupTime" : "tableNumber", null);
             }}
             disabled={isDisabled}
           />

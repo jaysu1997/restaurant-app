@@ -91,7 +91,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     uniqueId = generateDishItemId(dishes),
   } = dishData;
 
-  // 必填細項與選填細項
+  // 將自訂細項數據整理成訂購表單展示的欄位數據以及在useReducer進行初始化的數據
   const { displayFields, reducerFields } = customize.reduce(
     (acc, curCustomization) => {
       acc.reducerFields.push({
@@ -99,7 +99,8 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
         customizeTitle: curCustomization.title,
         detail: [],
       });
-      if (curCustomization.required === "必填") {
+      // 必填細項與選填細項
+      if (curCustomization.isRequired === "required") {
         acc.displayFields.unshift(curCustomization);
       } else {
         acc.displayFields.push(curCustomization);
@@ -221,9 +222,6 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
           {displayFields &&
             displayFields.map((customizeData) => (
               <CustomizeArea
-                type={
-                  customizeData.required === "必填" ? "required" : "optional"
-                }
                 isEdit={isEdit}
                 customizeData={customizeData}
                 register={register}

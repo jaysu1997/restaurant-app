@@ -60,14 +60,14 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
             control={control}
             items={[
               {
-                name: `customize.${index}.required`,
-                label1: "選填",
-                label2: "必填",
+                name: `customize.${index}.isRequired`,
+                option1: { label: "選填", value: "optional" },
+                option2: { label: "必填", value: "required" },
               },
               {
-                name: `customize.${index}.choice`,
-                label1: "多選",
-                label2: "單選",
+                name: `customize.${index}.choiceType`,
+                option1: { label: "多選", value: "multiple" },
+                option2: { label: "單選", value: "single" },
               },
             ]}
           />
@@ -93,8 +93,8 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
         onClick={() =>
           append({
             title: "",
-            required: "選填",
-            choice: "多選",
+            isRequired: "optional",
+            choiceType: "multiple",
             options: [
               {
                 ingredientName: {

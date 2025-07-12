@@ -36,7 +36,7 @@ const Row = styled.div`
 
 function OrderSummaryView({ orderData, isEdit }) {
   const {
-    orderType,
+    diningMethod,
     tableNumber,
     pickupTime,
     status,
@@ -67,10 +67,10 @@ function OrderSummaryView({ orderData, isEdit }) {
       <OrderInfo>
         <Row>
           <div>用餐方式：</div>
-          <div>{orderType}</div>
+          <div>{diningMethod === "dineIn" ? "內用" : "外帶"}</div>
         </Row>
         <Row>
-          <div>{orderType === "內用" ? "內用桌號：" : "取餐時間："}</div>
+          <div>{diningMethod === "dineIn" ? "內用桌號：" : "取餐時間："}</div>
           <div>{tableNumber || pickupTime}</div>
         </Row>
         <Row>

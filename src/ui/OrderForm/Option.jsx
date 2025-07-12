@@ -74,14 +74,13 @@ const StyledOption = styled.label`
 // 單一選項ui
 function Option({
   isAnswered,
-  type,
   customizeData,
   register,
   optionData,
   handleClick,
   curDishCustomizeOption,
 }) {
-  const { customizeId, choice, title } = customizeData;
+  const { customizeId, choiceType, isRequired, title } = customizeData;
 
   const { optionId, optionLabel, extraPrice, ingredientName, quantity } =
     optionData;
@@ -116,12 +115,12 @@ function Option({
         onClick={(e) => handleClick(e, payload)}
         // 如果是單選細項且已經有選定選項，就禁止選擇其他選項
         disabled={
-          choice === "單選" &&
+          choiceType === "single" &&
           curDishCustomizeOption[customizeId]?.detail.length > 0 &&
           !checked
         }
-        {...register(`customizeField.${type}.${customizeId}`, {
-          required: type === "optional" ? false : `${title}必須填選`,
+        {...register(`customizeField.${isRequired}.${customizeId}`, {
+          required: isRequired === "optional" ? false : `${title}必須填選`,
         })}
       />
 

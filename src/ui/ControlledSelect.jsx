@@ -68,6 +68,7 @@ function ControlledSelect({
           menuPosition="fixed"
           isSearchable={false}
           options={options}
+          isDisabled={disabled}
           placeholder={placeholder}
         />
       )}

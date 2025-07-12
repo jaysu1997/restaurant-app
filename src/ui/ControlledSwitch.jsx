@@ -63,44 +63,40 @@ function ControlledSwitch({ control, items }) {
           key={index}
           name={item.name}
           control={control}
-          render={({ field: { value, onChange } }) => (
-            <StyledSwitch>
-              <Switch
-                value={value}
-                onChange={onChange}
-                label1={item.label1}
-                label2={item.label2}
-              />
-              <span>{value === item.label2 ? item.label2 : item.label1}</span>
-            </StyledSwitch>
-          )}
+          defaultValue={item.option1.value}
+          render={({ field: { value, onChange } }) => {
+            const checked = value === item.option2.value;
+
+            return (
+              <StyledSwitch>
+                <SwitchContainer $checked={checked}>
+                  <input
+                    type="checkbox"
+                    hidden
+                    checked={checked}
+                    onChange={(e) => {
+                      onChange(
+                        e.target.checked
+                          ? item.option2.value
+                          : item.option1.value
+                      );
+                    }}
+                  />
+                  <SwitchHandle $checked={checked}>
+                    {checked ? (
+                      <FiCheck size={16} color="#007bff" />
+                    ) : (
+                      <FiX size={16} color="#ccc" />
+                    )}
+                  </SwitchHandle>
+                </SwitchContainer>
+                <span>{checked ? item.option2.label : item.option1.label}</span>
+              </StyledSwitch>
+            );
+          }}
         />
       ))}
     </StyledControlledSwitch>
-  );
-}
-
-function Switch({ value, onChange, label1, label2 }) {
-  const checked = value === label2;
-
-  return (
-    <SwitchContainer $checked={checked}>
-      <input
-        type="checkbox"
-        hidden
-        checked={checked}
-        onChange={(e) => {
-          onChange(e.target.checked ? label2 : label1);
-        }}
-      />
-      <SwitchHandle $checked={checked}>
-        {checked ? (
-          <FiCheck size={16} color="#007bff" />
-        ) : (
-          <FiX size={16} color="#ccc" />
-        )}
-      </SwitchHandle>
-    </SwitchContainer>
   );
 }
 

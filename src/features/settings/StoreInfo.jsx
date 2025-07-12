@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import ControlledInput from "../../ui/ControlledInput";
+import { useForm } from "react-hook-form";
 
 const Content = styled.section`
   display: grid;
@@ -63,7 +64,8 @@ const Footer = styled.footer`
   }
 `;
 
-function StoreInfo({ control }) {
+function StoreInfo() {
+  const { register, handleSubmit, reset, control } = useForm();
   return (
     <>
       <Content>

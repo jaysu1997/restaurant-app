@@ -10,7 +10,6 @@ export async function getMenusApi() {
 
   handleSupabaseError(error);
 
-  // return [];
   return data;
 }
 

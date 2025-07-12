@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Tag from "../../ui/Tag";
 import {
-  calculateOrderSummary,
   formatCreatedTime,
   formatPickupNumber,
 } from "../../utils/orderHelpers";
@@ -32,7 +31,7 @@ const StyledOrderRow = styled.div`
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "createdTime action"
-      "orderType orderType"
+      "diningMethod diningMethod"
       "pickupNumber pickupNumber"
       "totalPrice totalPrice"
       "status status"
@@ -64,7 +63,7 @@ const StyledOrderRow = styled.div`
     }
 
     div[data-order-type] {
-      grid-area: orderType;
+      grid-area: diningMethod;
 
       &::before {
         content: "用餐方式";
@@ -114,9 +113,10 @@ const StyledOrderRow = styled.div`
   }
 `;
 
-const OrderType = styled.span`
+const DiningMethod = styled.span`
   font-size: 1.4rem;
-  color: ${(props) => (props.$orderType === "內用" ? "#1e88e5" : "#43a047")};
+  color: ${(props) =>
+    props.$diningMethod === "dineIn" ? "#1e88e5" : "#43a047"};
   font-weight: 700;
 `;
 
@@ -124,9 +124,9 @@ function OrderRow({ orderData, children }) {
   return (
     <StyledOrderRow>
       <div data-order-type>
-        <OrderType $orderType={orderData.orderType}>
-          {`[${orderData.orderType}]`}
-        </OrderType>
+        <DiningMethod $diningMethod={orderData.diningMethod}>
+          {`[${orderData.diningMethod === "takeOut" ? "外帶" : "內用"}]`}
+        </DiningMethod>
       </div>
 
       <div data-order-number>

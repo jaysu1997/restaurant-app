@@ -65,14 +65,14 @@ const OptionsArea = styled.div`
 
 // 自訂選項區塊
 function CustomizeArea({ customizeData, register, isEdit = false }) {
-  const { choice, customizeId, required, title, options } = customizeData;
-  const type = required === "必填" ? "required" : "optional";
+  const { choiceType, customizeId, isRequired, title, options } = customizeData;
 
   // 用來控制細項CSS樣式(填寫狀態)
   const [isAnswered, setIsAnswered] = useState(
-    isEdit && type === "required" ? "isAnswered" : type
+    isEdit && isRequired === "required" ? "isAnswered" : isRequired
   );
 
+  // 當前訂購餐點的細項選擇
   const {
     state: { curDishCustomizeOption },
     dispatch,
@@ -80,39 +80,39 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
 
   function handleClick(e, payload) {
     // 單選新增
-    if (choice === "單選" && e.target.checked) {
+    if (choiceType === "single" && e.target.checked) {
       dispatch({
         type: "curDishCustomizeOption/setSingleChoice",
         payload,
       });
       // 必填
-      type === "required" && setIsAnswered("isAnswered");
+      isRequired === "required" && setIsAnswered("isAnswered");
     }
 
     // 單選刪除
-    if (choice === "單選" && !e.target.checked) {
+    if (choiceType === "single" && !e.target.checked) {
       dispatch({
         type: "curDishCustomizeOption/clearSingleChoice",
         payload,
       });
       // 必填
-      type === "required" && setIsAnswered("required");
+      isRequired === "required" && setIsAnswered("required");
     }
 
     // 多選新增
-    if (choice === "多選" && e.target.checked) {
+    if (choiceType === "multiple" && e.target.checked) {
       dispatch({
         type: "curDishCustomizeOption/addMultipleChoice",
         payload,
       });
       // 必填
-      type === "required" && setIsAnswered("isAnswered");
+      isRequired === "required" && setIsAnswered("isAnswered");
     }
 
     // 多選移除
-    if (choice === "多選" && !e.target.checked) {
+    if (choiceType === "multiple" && !e.target.checked) {
       // 如果此多選項目是必填，則在沒有選取任何值的情況下，整體樣式需恢復成未填寫狀態
-      if (type === "required") {
+      if (isRequired === "required") {
         const curDishCustomizeOptionIndex = curDishCustomizeOption.findIndex(
           (customize) => customize.customizeId === customizeId
         );
@@ -132,26 +132,30 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
 
   return (
     <Customize
-      type={type}
+      type={isRequired}
       $colorStyle={colorStyle.background[isAnswered]}
       key={customizeId}
     >
       <Heading>
         <Title>{title}</Title>
-        <RequiredLabel type={type} $colorStyle={colorStyle.label[isAnswered]}>
-          {type === "required"
+        <RequiredLabel
+          type={isRequired}
+          $colorStyle={colorStyle.label[isAnswered]}
+        >
+          {isRequired === "required"
             ? isAnswered === "isAnswered"
               ? "完成"
               : "必填"
             : "選填"}
         </RequiredLabel>
       </Heading>
-      <ChoiceLabel>{choice === "單選" ? "只能單選" : "可以多選"}</ChoiceLabel>
+      <ChoiceLabel>
+        {choiceType === "single" ? "只能單選" : "可以多選"}
+      </ChoiceLabel>
       <OptionsArea>
         {options.map((optionData) => (
           <Option
             isAnswered={isAnswered}
-            type={type}
             customizeData={customizeData}
             register={register}
             optionData={optionData}
