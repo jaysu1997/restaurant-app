@@ -47,6 +47,7 @@ function SettingFormSection({
   description = "",
   handleSubmit,
   handleReset,
+  isDirty,
   children,
 }) {
   return (
@@ -59,8 +60,10 @@ function SettingFormSection({
         {children}
       </Wrapper>
       <Footer>
-        <button>儲存</button>
-        <button type="button">取消</button>
+        <button disabled={!isDirty}>儲存</button>
+        <button type="button" onClick={handleReset} disabled={!isDirty}>
+          取消
+        </button>
       </Footer>
     </StyledSettingFormSection>
   );

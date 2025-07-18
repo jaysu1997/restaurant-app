@@ -15,10 +15,10 @@ import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
 import Modal from "../../ui/Modal";
 import { createNewIngredients } from "./createNewIngredients";
-import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
 import QueryStatusFallback from "../../ui/QueryStatusFallback";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const formFieldData = [
   {
@@ -57,7 +57,14 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   const { upsert, isUpserting } = useUpsertMenu();
   const newIngredientRef = useRef(new Map());
 
-  const { register, handleSubmit, control, setValue, getValues } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     criteriaMode: "all",
@@ -114,7 +121,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   }
 
   function onError(error) {
-    return handleRHFSubmitError(error, "餐點設定失敗");
+    console.log(error);
   }
 
   return (
@@ -128,6 +135,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
           register={register}
           control={control}
           getValues={getValues}
+          errors={errors}
         >
           <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
             <FormTypography $titleStyle="description">
@@ -165,6 +173,8 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                     }}
                   />
                 </FormFieldset>
+
+                <FormErrorsMessage fieldName={errors?.[data.inputName]} />
               </FormRow>
             ))}
 
@@ -209,6 +219,10 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                     />
                   </FormFieldset>
 
+                  <FormErrorsMessage
+                    fieldName={errors?.ingredients?.[index]?.ingredientName}
+                  />
+
                   <FormFieldset legendValue="使用數量">
                     <ControlledInput
                       type="number"
@@ -224,6 +238,10 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                       }}
                     />
                   </FormFieldset>
+
+                  <FormErrorsMessage
+                    fieldName={errors?.ingredients?.[index]?.quantity}
+                  />
                 </FormRow>
               ))}
 

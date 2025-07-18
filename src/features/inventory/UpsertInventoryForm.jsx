@@ -9,8 +9,8 @@ import StyledHotToast from "../../ui/StyledHotToast";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
 import Modal from "../../ui/Modal";
-import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
 import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const formFieldData = [
   {
@@ -26,7 +26,13 @@ const formFieldData = [
 ];
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
-  const { handleSubmit, getValues, reset, control } = useForm({
+  const {
+    handleSubmit,
+    getValues,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm({
     defaultValues: inventory || {},
   });
   const { upsert, isUpserting } = useUpsertInventory();
@@ -57,7 +63,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   }
 
   function onError(error) {
-    return handleRHFSubmitError(error, "食材設定失敗");
+    console.log(error);
   }
 
   return (
@@ -91,6 +97,8 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
                 }}
               />
             </FormFieldset>
+
+            <FormErrorsMessage fieldName={errors?.[data.inputName]} />
           </FormRow>
         ))}
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import OrderDishes from "./OrderDishes";
 import { useOrder } from "../../context/OrderContext";
 import { useForm } from "react-hook-form";
-import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
+import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { useState } from "react";
 import MiniMenu from "./MiniMenu";
@@ -16,8 +16,8 @@ import {
   generateTableNumbers,
 } from "../../utils/orderHelpers";
 import OrderForm from "../../ui/OrderForm/OrderForm";
-import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
 import useUpdateOrder from "../../hooks/data/orders/useUpdateOrder";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -34,7 +34,7 @@ const OrderInfo = styled.section`
 const Row = styled.div`
   display: grid;
   grid-template-columns: 8rem 1fr;
-  gap: 1.6rem;
+  column-gap: 1.6rem;
   min-height: 3.8rem;
   align-items: center;
 
@@ -60,7 +60,14 @@ function OrderSummaryEdit({ orderData, isEdit }) {
   const { tableNumber, pickupTime, status, paid, createdTime, orderUUID } =
     orderData;
 
-  const { register, control, watch, handleSubmit, setValue } = useForm({
+  const {
+    register,
+    control,
+    watch,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       ...orderData,
       tableNumber: tableNumber
@@ -99,7 +106,7 @@ function OrderSummaryEdit({ orderData, isEdit }) {
   }
 
   function onError(error) {
-    return handleRHFSubmitError(error, "訂單更新失敗");
+    console.log(error);
   }
 
   return (
@@ -130,7 +137,7 @@ function OrderSummaryEdit({ orderData, isEdit }) {
         <Row>
           <div>用餐方式：</div>
           <div>
-            <OrderTypeSwitch
+            <DiningMethodSwitch
               setValue={setValue}
               takeOut={takeOut}
               control={control}
@@ -152,7 +159,12 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               }}
             />
           </div>
+          <div></div>
+          <FormErrorsMessage
+            fieldName={errors?.pickupTime || errors?.tableNumber}
+          />
         </Row>
+
         <Row>
           <div>訂單狀態：</div>
           <div>
@@ -179,6 +191,8 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               }}
             />
           </div>
+          <div></div>
+          <FormErrorsMessage fieldName={errors?.status} />
         </Row>
         <Row>
           <div>付款狀態：</div>

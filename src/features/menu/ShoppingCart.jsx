@@ -5,13 +5,12 @@ import { GrClear } from "react-icons/gr";
 import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import LoadingDotMini from "../../ui/LoadingDotMini";
-import OrderTypeSwitch from "../../ui/OrderTypeSwitch";
+import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
 import {
   buildOrderData,
   calculateOrderSummary,
 } from "../../utils/orderHelpers";
 import EmptyShoppingCart from "./EmptyShoppingCart";
-import { handleRHFSubmitError } from "../../utils/handleRHFSubmitError";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
 
 const StyledShoppingCart = styled.aside`
@@ -140,12 +139,13 @@ function ShoppingCart({ inventoryData }) {
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   function onSubmit(data) {
+    console.log(data);
     const orderData = buildOrderData(dishes, data);
     createOrder(orderData);
   }
 
   function onError(error) {
-    return handleRHFSubmitError(error, "訂單建立失敗");
+    console.log(error);
   }
 
   return (
@@ -153,7 +153,7 @@ function ShoppingCart({ inventoryData }) {
       <Header>
         <h4>購物車</h4>
         <Row>
-          <OrderTypeSwitch
+          <DiningMethodSwitch
             takeOut={takeOut}
             control={control}
             setValue={setValue}

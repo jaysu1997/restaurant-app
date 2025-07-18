@@ -7,9 +7,11 @@ import FormTypography from "../../ui/FormTypography";
 import ControlledSwitch from "../../ui/ControlledSwitch";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
-  const { register, control } = useFormContext();
+  const { register, control, errors } = useFormContext();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "customize",
@@ -54,6 +56,8 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
               }}
             />
           </FormFieldset>
+
+          <FormErrorsMessage fieldName={errors?.customize?.[index]?.title} />
 
           <span>細項填寫設定：</span>
           <ControlledSwitch

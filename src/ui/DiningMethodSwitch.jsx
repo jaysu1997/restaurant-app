@@ -44,7 +44,7 @@ const Slider = styled.span`
   transition: all 0.3s;
 `;
 
-function OrderTypeSwitch({
+function DiningMethodSwitch({
   control,
   setValue,
   takeOut = false,
@@ -80,4 +80,4 @@ function OrderTypeSwitch({
   );
 }
 
-export default OrderTypeSwitch;
+export default DiningMethodSwitch;

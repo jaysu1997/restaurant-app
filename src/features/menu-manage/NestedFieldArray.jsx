@@ -6,6 +6,7 @@ import FormTypography from "../../ui/FormTypography";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 function NestedFieldArray({
   nestedIndex,
@@ -13,7 +14,7 @@ function NestedFieldArray({
   handleCreateNewItems,
   disabled,
 }) {
-  const { register, control, getValues } = useFormContext();
+  const { register, control, getValues, errors } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -60,6 +61,12 @@ function NestedFieldArray({
             />
           </FormFieldset>
 
+          <FormErrorsMessage
+            fieldName={
+              errors?.customize?.[nestedIndex]?.options?.[index]?.optionLabel
+            }
+          />
+
           <FormFieldset legendValue="選項額外加價">
             <ControlledInput
               type="number"
@@ -75,6 +82,12 @@ function NestedFieldArray({
               }}
             />
           </FormFieldset>
+
+          <FormErrorsMessage
+            fieldName={
+              errors?.customize?.[nestedIndex]?.options?.[index]?.extraPrice
+            }
+          />
 
           <FormFieldset legendValue="額外消耗食材">
             <ControlledSelect
@@ -94,6 +107,12 @@ function NestedFieldArray({
               disabled={disabled}
             />
           </FormFieldset>
+
+          <FormErrorsMessage
+            fieldName={
+              errors?.customize?.[nestedIndex]?.options?.[index]?.ingredientName
+            }
+          />
 
           <FormFieldset legendValue="食材消耗數量">
             <ControlledInput
@@ -118,6 +137,12 @@ function NestedFieldArray({
               }}
             />
           </FormFieldset>
+
+          <FormErrorsMessage
+            fieldName={
+              errors?.customize?.[nestedIndex]?.options?.[index]?.quantity
+            }
+          />
         </FormRow>
       ))}
 

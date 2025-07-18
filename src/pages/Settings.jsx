@@ -5,6 +5,8 @@ import RegularBusinessHours from "../features/settings/RegularBusinessHours.jsx"
 import SpecialBusinessHours from "../features/settings/SpecialBusinessHours.jsx";
 import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
+import useGetSettings from "../hooks/data/settings/useGetSettings.js";
+import useUpsertSetting from "../hooks/data/settings/useUpsertSetting.js";
 
 const Container = styled.div`
   display: flex;
@@ -15,26 +17,21 @@ const Container = styled.div`
 `;
 
 function Settings() {
-  const { register, handleSubmit } = useForm();
+  const { data, error, isPending, isSuccess, isError } = useGetSettings();
 
-  function onSubmit(data) {
-    console.log(data);
-  }
-
-  function onError(error) {
-    console.log(error);
-  }
+  // 之後這個拆掉
+  if (isPending) return;
 
   return (
     <>
       <PageHeader title="店鋪設定" />
 
       <Container>
-        <RegularBusinessHours />
+        <RegularBusinessHours data={data.regularOpenHours} />
 
-        {/* <SpecialBusinessHours control={control} /> */}
+        <SpecialBusinessHours data={data.specialOpenHours} />
 
-        {/* <DineInTableSettings control={control} /> */}
+        <DineInTableSettings />
 
         {/* <StoreInfo /> */}
       </Container>

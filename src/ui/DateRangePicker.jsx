@@ -1,3 +1,4 @@
+// 日期範圍選擇元件
 import styled, { css } from "styled-components";
 import { zhTW } from "react-day-picker/locale";
 import { format } from "date-fns";
@@ -74,12 +75,12 @@ const UtilityButton = styled.button`
 `;
 
 function DateRangePicker({
-  placeholder,
   startMonth,
   endMonth,
   selected,
   onSelect,
   handleValueReset,
+  disabledDate,
 }) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
   const daypickerRef = useRef(null);
@@ -134,6 +135,7 @@ function DateRangePicker({
             endMonth={endMonth}
             selected={selected}
             onSelect={onSelect}
+            disabled={disabledDate}
           />
           <Footer>
             <UtilityButton onClick={handleValueReset} disabled={!selected}>

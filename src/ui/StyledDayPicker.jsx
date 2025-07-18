@@ -64,7 +64,7 @@ const StyledDayPicker = styled(DayPicker)`
     gap: 0.5rem;
   }
 
-  .rdp-day:not(.rdp-selected):hover .rdp-day_button {
+  .rdp-day:not(.rdp-selected):not(.rdp-disabled):hover .rdp-day_button {
     border: 2px dashed #818cf8;
   }
 `;
