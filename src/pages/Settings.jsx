@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form";
 import PageHeader from "../ui/PageHeader.jsx";
 import styled from "styled-components";
 import RegularBusinessHours from "../features/settings/RegularBusinessHours.jsx";
@@ -6,7 +5,7 @@ import SpecialBusinessHours from "../features/settings/SpecialBusinessHours.jsx"
 import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
 import useGetSettings from "../hooks/data/settings/useGetSettings.js";
-import useUpsertSetting from "../hooks/data/settings/useUpsertSetting.js";
+import { useForm } from "react-hook-form";
 
 const Container = styled.div`
   display: flex;
@@ -18,6 +17,20 @@ const Container = styled.div`
 
 function Settings() {
   const { data, error, isPending, isSuccess, isError } = useGetSettings();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  function onSubmit(data) {
+    console.log(data);
+  }
+
+  function onError(error) {
+    console.log(error);
+  }
 
   // 之後這個拆掉
   if (isPending) return;
@@ -33,7 +46,7 @@ function Settings() {
 
         <DineInTableSettings />
 
-        {/* <StoreInfo /> */}
+        <StoreInfo />
       </Container>
     </>
   );

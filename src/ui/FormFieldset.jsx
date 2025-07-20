@@ -1,14 +1,18 @@
 // 表單的fieldset ui元件
 import styled from "styled-components";
+import FormErrorsMessage from "./FormErrorsMessage";
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+`;
 
 const Fieldset = styled.fieldset`
   width: 100%;
   height: min-content;
   border-radius: 6px;
   border: 2px solid rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: #fff;
 
   &:focus-within {
@@ -27,12 +31,19 @@ const Legend = styled.legend`
   color: rgba(0, 0, 0, 0.6);
 `;
 
-function FormFieldset({ legendValue = "", children }) {
+const Field = styled.div`
+  max-width: 200px;
+`;
+
+function FormFieldset({ legendValue = null, fieldName = null, children }) {
   return (
-    <Fieldset>
-      {legendValue && <Legend>{legendValue}</Legend>}
-      {children}
-    </Fieldset>
+    <Wrapper>
+      <Fieldset>
+        {legendValue && <Legend>{legendValue}</Legend>}
+        <Field>{children}</Field>
+      </Fieldset>
+      {fieldName && <FormErrorsMessage fieldName={fieldName} />}
+    </Wrapper>
   );
 }
 

@@ -7,7 +7,6 @@ import FormTypography from "../../ui/FormTypography";
 import ControlledSwitch from "../../ui/ControlledSwitch";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
   const { register, control, errors } = useFormContext();
@@ -45,7 +44,10 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
             </Button>
           </FormRow>
 
-          <FormFieldset legendValue="細項標題">
+          <FormFieldset
+            legendValue="細項標題"
+            fieldName={errors?.customize?.[index]?.title}
+          >
             <ControlledInput
               type="text"
               placeholder="請輸入細項標題(例如:加料)"
@@ -56,8 +58,6 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
               }}
             />
           </FormFieldset>
-
-          <FormErrorsMessage fieldName={errors?.customize?.[index]?.title} />
 
           <span>細項填寫設定：</span>
           <ControlledSwitch

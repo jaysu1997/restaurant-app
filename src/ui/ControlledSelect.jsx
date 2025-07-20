@@ -31,6 +31,11 @@ const selectStyle = {
   },
 };
 
+const customComponents = {
+  DropdownIndicator: () => null, // 移除下拉箭頭
+  IndicatorSeparator: () => null, // 移除箭頭前的分隔線
+};
+
 function ControlledSelect({
   name,
   control,
@@ -58,6 +63,7 @@ function ControlledSelect({
           onCreateOption={(optionValue) => {
             handleCreateNewItems(optionValue, field.name);
           }}
+          components={customComponents}
         />
       ) : (
         <Select
@@ -70,6 +76,7 @@ function ControlledSelect({
           options={options}
           isDisabled={disabled}
           placeholder={placeholder}
+          components={customComponents}
         />
       )}
     </>

@@ -3,25 +3,26 @@ import ControlledSwitch from "../../ui/ControlledSwitch";
 import SettingFormSection from "../../ui/SettingFormSection";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
-import useUpsertSetting from "../../hooks/data/settings/useUpsertSetting";
+import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 
 const Content = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 
   li {
     display: grid;
     grid-template-columns: 25rem 8.2rem 1fr 2rem;
-    grid-auto-rows: auto;
-    row-gap: 1rem;
+    grid-auto-rows: 3.8rem 2rem;
+    row-gap: 0.3rem;
     column-gap: 2rem;
     align-items: center;
+    padding-bottom: 0.3rem;
   }
 `;
 
 function RegularBusinessHours({ data = {} }) {
-  const { mutate } = useUpsertSetting();
+  const { mutate } = useUpsertSettings();
 
   const methods = useForm({
     defaultValues: { regularOpenHours: data },

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { upsertSettingApi } from "../../../services/apiSettings";
+import { upsertSettingsApi } from "../../../services/apiSettings";
 
-function useUpsertSetting() {
+function useUpsertSettings() {
   const queryClient = useQueryClient();
 
   const { mutate, isPaused, error } = useMutation({
-    mutationFn: upsertSettingApi,
-    onSuccess: (newData) => {
+    mutationFn: upsertSettingsApi,
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
     },
   });
@@ -14,4 +14,4 @@ function useUpsertSetting() {
   return { mutate, isPaused, error };
 }
 
-export default useUpsertSetting;
+export default useUpsertSettings;

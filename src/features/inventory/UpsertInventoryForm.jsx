@@ -10,7 +10,6 @@ import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
 import Modal from "../../ui/Modal";
 import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const formFieldData = [
   {
@@ -28,8 +27,6 @@ const formFieldData = [
 function UpsertInventoryForm({ inventory, onCloseModal }) {
   const {
     handleSubmit,
-    getValues,
-    reset,
     control,
     formState: { errors },
   } = useForm({
@@ -82,7 +79,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
               <FormTypography $titleStyle="highlight">*</FormTypography>
             </FormTypography>
 
-            <FormFieldset legendValue="">
+            <FormFieldset legendValue="" fieldName={errors?.[data.inputName]}>
               <ControlledInput
                 placeholder={`請輸入餐點${data.title}`}
                 type={data.inputType}
@@ -97,8 +94,6 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
                 }}
               />
             </FormFieldset>
-
-            <FormErrorsMessage fieldName={errors?.[data.inputName]} />
           </FormRow>
         ))}
 

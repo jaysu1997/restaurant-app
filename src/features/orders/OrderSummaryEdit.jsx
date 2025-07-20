@@ -37,6 +37,7 @@ const Row = styled.div`
   column-gap: 1.6rem;
   min-height: 3.8rem;
   align-items: center;
+  row-gap: 0.2rem;
 
   &:last-child {
     grid-template-columns: 1fr;
@@ -66,6 +67,7 @@ function OrderSummaryEdit({ orderData, isEdit }) {
     watch,
     handleSubmit,
     setValue,
+
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -159,9 +161,10 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               }}
             />
           </div>
-          <div></div>
+
           <FormErrorsMessage
-            fieldName={errors?.pickupTime || errors?.tableNumber}
+            fieldName={takeOut ? errors?.pickupTime : errors?.tableNumber}
+            gridColumn="2"
           />
         </Row>
 
@@ -191,8 +194,8 @@ function OrderSummaryEdit({ orderData, isEdit }) {
               }}
             />
           </div>
-          <div></div>
-          <FormErrorsMessage fieldName={errors?.status} />
+
+          <FormErrorsMessage fieldName={errors?.status} gridColumn="2" />
         </Row>
         <Row>
           <div>付款狀態：</div>

@@ -18,7 +18,6 @@ import { createNewIngredients } from "./createNewIngredients";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
 import QueryStatusFallback from "../../ui/QueryStatusFallback";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const formFieldData = [
   {
@@ -151,7 +150,10 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                   <FormTypography $titleStyle="highlight">*</FormTypography>
                 </FormTypography>
 
-                <FormFieldset legendValue="">
+                <FormFieldset
+                  legendValue=""
+                  fieldName={errors?.[data.inputName]}
+                >
                   <ControlledInput
                     type={data.inputType}
                     placeholder={`請輸入餐點${data.title}`}
@@ -173,8 +175,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                     }}
                   />
                 </FormFieldset>
-
-                <FormErrorsMessage fieldName={errors?.[data.inputName]} />
               </FormRow>
             ))}
 
@@ -206,7 +206,10 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                     )}
                   </FormRow>
 
-                  <FormFieldset legendValue="食材名稱">
+                  <FormFieldset
+                    legendValue="食材名稱"
+                    fieldName={errors?.ingredients?.[index]?.ingredientName}
+                  >
                     <ControlledSelect
                       name={`ingredients.${index}.ingredientName`}
                       control={control}
@@ -214,16 +217,15 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                       options={inventoryData}
                       handleCreateNewItems={handleCreateNewItems}
                       creatable={true}
-                      placeholder="可新增/選擇食材"
+                      placeholder="選擇現有食材或輸入新食材"
                       disabled={isUpserting}
                     />
                   </FormFieldset>
 
-                  <FormErrorsMessage
-                    fieldName={errors?.ingredients?.[index]?.ingredientName}
-                  />
-
-                  <FormFieldset legendValue="使用數量">
+                  <FormFieldset
+                    legendValue="使用數量"
+                    fieldName={errors?.ingredients?.[index]?.quantity}
+                  >
                     <ControlledInput
                       type="number"
                       placeholder="請輸入食材使用數量"
@@ -238,10 +240,6 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                       }}
                     />
                   </FormFieldset>
-
-                  <FormErrorsMessage
-                    fieldName={errors?.ingredients?.[index]?.quantity}
-                  />
                 </FormRow>
               ))}
 

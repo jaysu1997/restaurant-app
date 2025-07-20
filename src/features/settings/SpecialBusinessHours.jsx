@@ -11,19 +11,21 @@ import {
 } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
 import { addYears, endOfYear } from "date-fns";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const Content = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 
   li {
     display: grid;
     grid-template-columns: 25rem 8.2rem 1fr 2rem;
-    grid-auto-rows: auto;
-    row-gap: 1rem;
+    grid-auto-rows: 3.8rem 2rem;
+    row-gap: 0.3rem;
     column-gap: 2rem;
     align-items: center;
+    padding-bottom: 0.3rem;
   }
 `;
 
@@ -33,6 +35,11 @@ const AppendButton = styled.button`
   display: flex;
   align-items: center;
   gap: 0.2rem;
+`;
+
+const DateField = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 function SpecialBusinessHours({ data = {} }) {
@@ -45,7 +52,7 @@ function SpecialBusinessHours({ data = {} }) {
     handleSubmit,
     reset,
     control,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = methods;
 
   const {
@@ -77,20 +84,25 @@ function SpecialBusinessHours({ data = {} }) {
         <Content>
           {dayFields.map((day, dayIndex) => (
             <li key={day.id}>
-              <Controller
-                name={`specialOpenHours.${dayIndex}.dateRange`}
-                control={control}
-                render={({ field }) => (
-                  <DateRangePicker
-                    startMonth={new Date()}
-                    endMonth={endOfYear(addYears(new Date(), 10))}
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    handleValueReset={() => field.onChange("")}
-                    disabledDate={{ before: new Date() }}
-                  />
-                )}
-              />
+              <DateField>
+                <Controller
+                  name={`specialOpenHours.${dayIndex}.dateRange`}
+                  control={control}
+                  render={({ field }) => (
+                    <DateRangePicker
+                      startMonth={new Date()}
+                      endMonth={endOfYear(addYears(new Date(), 10))}
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      handleValueReset={() => field.onChange("")}
+                      disabledDate={{ before: new Date() }}
+                    />
+                  )}
+                  rules={{
+                    required: "指定日期必須填寫",
+                  }}
+                />
+              </DateField>
 
               <ControlledSwitch
                 control={control}
@@ -108,6 +120,12 @@ function SpecialBusinessHours({ data = {} }) {
                 dayIndex={dayIndex}
                 fieldArrayName="specialOpenHours"
                 removeSpecialDate={remove}
+              />
+
+              <FormErrorsMessage
+                fieldName={errors?.specialOpenHours?.[dayIndex]?.dateRange}
+                gridColumn="1"
+                gridRow="2"
               />
             </li>
           ))}

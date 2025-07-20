@@ -13,7 +13,7 @@ export async function getSettingsApi() {
   return data;
 }
 
-export async function upsertSettingApi(settingData) {
+export async function upsertSettingsApi(settingData) {
   const { data, error } = await supabase
     .from("settings")
     .upsert({ id: 1, ...settingData })

@@ -6,7 +6,6 @@ import FormTypography from "../../ui/FormTypography";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 function NestedFieldArray({
   nestedIndex,
@@ -49,7 +48,12 @@ function NestedFieldArray({
             })}
           />
 
-          <FormFieldset legendValue="選項名稱設定">
+          <FormFieldset
+            legendValue="選項名稱設定"
+            fieldName={
+              errors?.customize?.[nestedIndex]?.options?.[index]?.optionLabel
+            }
+          >
             <ControlledInput
               type="text"
               placeholder="請輸入選項名稱"
@@ -61,13 +65,12 @@ function NestedFieldArray({
             />
           </FormFieldset>
 
-          <FormErrorsMessage
+          <FormFieldset
+            legendValue="選項額外加價"
             fieldName={
-              errors?.customize?.[nestedIndex]?.options?.[index]?.optionLabel
+              errors?.customize?.[nestedIndex]?.options?.[index]?.extraPrice
             }
-          />
-
-          <FormFieldset legendValue="選項額外加價">
+          >
             <ControlledInput
               type="number"
               placeholder="請輸入選項加價"
@@ -83,13 +86,12 @@ function NestedFieldArray({
             />
           </FormFieldset>
 
-          <FormErrorsMessage
+          <FormFieldset
+            legendValue="額外消耗食材"
             fieldName={
-              errors?.customize?.[nestedIndex]?.options?.[index]?.extraPrice
+              errors?.customize?.[nestedIndex]?.options?.[index]?.ingredientName
             }
-          />
-
-          <FormFieldset legendValue="額外消耗食材">
+          >
             <ControlledSelect
               name={`customize.${nestedIndex}.options.${index}.ingredientName`}
               control={control}
@@ -108,13 +110,12 @@ function NestedFieldArray({
             />
           </FormFieldset>
 
-          <FormErrorsMessage
+          <FormFieldset
+            legendValue="食材消耗數量"
             fieldName={
-              errors?.customize?.[nestedIndex]?.options?.[index]?.ingredientName
+              errors?.customize?.[nestedIndex]?.options?.[index]?.quantity
             }
-          />
-
-          <FormFieldset legendValue="食材消耗數量">
+          >
             <ControlledInput
               type="number"
               placeholder="請輸入備料數量"
@@ -137,12 +138,6 @@ function NestedFieldArray({
               }}
             />
           </FormFieldset>
-
-          <FormErrorsMessage
-            fieldName={
-              errors?.customize?.[nestedIndex]?.options?.[index]?.quantity
-            }
-          />
         </FormRow>
       ))}
 

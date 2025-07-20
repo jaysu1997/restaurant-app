@@ -4,6 +4,7 @@ import { GoPlus } from "react-icons/go";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { useFieldArray, useForm } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
+import FormErrorsMessage from "../../ui/FormErrorsMessage";
 
 const Content = styled.ul`
   display: flex;
@@ -41,19 +42,28 @@ const AppendButton = styled.button`
   gap: 0.2rem;
 `;
 
+function generatePreview(zone, tableCount) {
+  if (!zone) return;
+  return Array.from({ length: tableCount }, (_, i) => `${zone}-${i + 1}`).join(
+    "、"
+  );
+}
+
 function DineInTableSettings() {
-  const data = [{}];
+  const data = [{ zone: "", tableCount: 0 }];
 
   const {
     control,
-    formState: { isDirty },
+    formState: { isDirty, errors },
     handleSubmit,
     reset,
+    watch,
+    setValue,
   } = useForm({
     defaultValues: { dineInTableConfig: data },
   });
 
-  const { fields } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "dineInTableConfig",
   });
@@ -79,21 +89,62 @@ function DineInTableSettings() {
           <li key={field.id}>
             {/* <h4>分區設定{dayIndex + 1}</h4> */}
             <label>分區名稱</label>
-            <ControlledInput control={control} name="area" />
+            <ControlledInput
+              control={control}
+              name={`dineInTableConfig.${index}.zone`}
+              type="text"
+              placeholder="請輸入分區名稱"
+              rules={{
+                required: "分區名稱不能空白",
+              }}
+            />
 
             <label>桌號數量</label>
-            <ControlledInput control={control} name="amount" />
-            <button>
+            <ControlledInput
+              control={control}
+              name={`dineInTableConfig.${index}.tableCount`}
+              type="number"
+              placeholder="請輸入分區總桌數"
+              rules={{
+                required: "分區總桌數不能空白",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                fields.length < 2
+                  ? setValue("dineInTableConfig", [
+                      { zone: "", tableCount: "" },
+                    ])
+                  : remove(index);
+              }}
+            >
               <MdOutlineDeleteForever size={20} />
             </button>
-            <div></div>
+            <div />
+
+            <FormErrorsMessage
+              fieldName={errors?.dineInTableConfig?.[index]?.zone}
+            />
+
+            <FormErrorsMessage
+              fieldName={errors?.dineInTableConfig?.[index]?.tableCount}
+            />
 
             <label>分區預覽</label>
-            <Preview>66666</Preview>
+            <Preview>
+              {generatePreview(
+                watch(`dineInTableConfig.${index}.zone`),
+                watch(`dineInTableConfig.${index}.tableCount`)
+              )}
+            </Preview>
           </li>
         ))}
 
-        <AppendButton>
+        <AppendButton
+          type="button"
+          onClick={() => append({ zone: "", tableCount: 1 })}
+        >
           新增分區
           <GoPlus size={18} />
         </AppendButton>

@@ -14,14 +14,9 @@ import FormErrorsMessage from "../../ui/FormErrorsMessage";
 const StyledTimeRange = styled.div`
   grid-column: 3 / 4;
   display: grid;
-  grid-template-columns: minmax(12rem, 1fr) 2rem minmax(12rem, 1fr) 2rem;
+  grid-template-columns: minmax(7.8rem, 1fr) 2rem minmax(7.8rem, 1fr) 2rem;
   align-items: center;
-  column-gap: 2rem;
-  row-gap: 1rem;
-`;
-
-const ErrorMessage = styled.span`
-  grid-column: 3 / 4;
+  column-gap: 1rem;
 `;
 
 const AppendButton = styled.button`
@@ -91,7 +86,7 @@ function validateTimeSlotField({
   });
 
   // 4. 有錯誤就不進行重疊時段檢查
-  if (slotErrors) return "有欄位尚未通過驗證";
+  if (slotErrors) return;
 
   // 5. 重疊時段檢查
   const sorted = timeSlots.toSorted((a, b) =>
@@ -218,15 +213,10 @@ function ControlledTimeRange({
             </button>
           </StyledTimeRange>
 
-          {errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[index] && (
-            <ErrorMessage>
-              <FormErrorsMessage
-                fieldName={
-                  errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[index]
-                }
-              />
-            </ErrorMessage>
-          )}
+          <FormErrorsMessage
+            fieldName={errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[index]}
+            gridColumn="3"
+          />
         </Fragment>
       ))}
 
