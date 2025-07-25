@@ -8,13 +8,13 @@ import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 const Content = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 
   li {
     display: grid;
-    grid-template-columns: 25rem 8.2rem 1fr 2rem;
-    grid-auto-rows: 3.8rem 2rem;
-    row-gap: 0.3rem;
+    grid-template-columns: 25rem minmax(8.2rem, 1fr) minmax(25.6rem, 2fr) 2rem;
+    grid-auto-rows: 3.8rem auto;
+    row-gap: 0.5rem;
     column-gap: 2rem;
     align-items: center;
     padding-bottom: 0.3rem;
@@ -34,6 +34,7 @@ function RegularBusinessHours({ data = {} }) {
     reset,
     control,
     formState: { isDirty },
+    clearErrors,
   } = methods;
 
   const { fields: dayFields } = useFieldArray({
@@ -43,6 +44,8 @@ function RegularBusinessHours({ data = {} }) {
 
   function onSubmit(data) {
     console.log("成功", data);
+
+    // 還有自動排序時段功能要添加
     mutate(data, {
       onSuccess: (newData) =>
         reset({ regularOpenHours: newData.regularOpenHours }),
@@ -83,6 +86,9 @@ function RegularBusinessHours({ data = {} }) {
                     option2: { label: "營業", value: true },
                   },
                 ]}
+                handleChange={() =>
+                  clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
+                }
               />
 
               <ControlledTimeRange

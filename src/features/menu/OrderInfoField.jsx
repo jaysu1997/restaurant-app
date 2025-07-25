@@ -6,6 +6,7 @@ import {
   generatePickupTimes,
   generateTableNumbers,
 } from "../../utils/orderHelpers";
+import FormTypography from "../../ui/FormTypography";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -15,6 +16,8 @@ const StyledOrderInfoField = styled.div`
 
   h5 {
     font-size: 1.4rem;
+    display: flex;
+    gap: 0.2rem;
   }
 
   label {
@@ -39,10 +42,13 @@ function OrderInfoField({ register, takeOut, control }) {
 
   return (
     <StyledOrderInfoField>
-      <h5>訂單備註：</h5>
+      <h5>訂單備註</h5>
       <Note register={register} />
 
-      <h5>{takeOut ? "取餐時間：" : "內用桌號："}</h5>
+      <h5>
+        {takeOut ? "取餐時間" : "內用桌號"}
+        <FormTypography $titleStyle="highlight">*</FormTypography>
+      </h5>
       <ControlledSelect
         options={optionList}
         control={control}
@@ -54,7 +60,10 @@ function OrderInfoField({ register, takeOut, control }) {
         }}
       />
 
-      <h5>付款狀態：</h5>
+      <h5>
+        付款狀態
+        <FormTypography $titleStyle="highlight">*</FormTypography>
+      </h5>
       <StyledPaidSection>
         <label htmlFor="yes">
           <input

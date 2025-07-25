@@ -28,7 +28,7 @@ const Main = styled.main`
 
 function AppLayout() {
   return (
-    <StyleAppLayout id="top">
+    <StyleAppLayout>
       <Header />
       <Navbar />
       <Body>

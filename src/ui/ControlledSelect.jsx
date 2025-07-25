@@ -13,8 +13,6 @@ const selectStyle = {
       ...baseStyles,
       border: "none",
       boxShadow: "none",
-      minHeight: "3.6rem",
-      height: "3.6rem",
       fontWeight: "400",
     }),
     menuList: (baseStyles) => ({
@@ -28,12 +26,17 @@ const selectStyle = {
       ...baseStyles,
       width: "100%",
     }),
+    control: (baseStyles) => ({
+      ...baseStyles,
+      fontWeight: "400",
+    }),
   },
 };
 
+// 移除下拉箭頭和分隔線
 const customComponents = {
-  DropdownIndicator: () => null, // 移除下拉箭頭
-  IndicatorSeparator: () => null, // 移除箭頭前的分隔線
+  DropdownIndicator: () => null,
+  IndicatorSeparator: () => null,
 };
 
 function ControlledSelect({

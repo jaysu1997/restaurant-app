@@ -6,37 +6,52 @@ import {
   MdOutlineDelete,
   MdOutlineDeleteForever,
 } from "react-icons/md";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { eachMinuteOfInterval, endOfDay, format, startOfDay } from "date-fns";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 
 const StyledTimeRange = styled.div`
   grid-column: 3 / 4;
   display: grid;
   grid-template-columns: minmax(7.8rem, 1fr) 2rem minmax(7.8rem, 1fr) 2rem;
   align-items: center;
-  column-gap: 1rem;
+  column-gap: 2rem;
 `;
 
 const AppendButton = styled.button`
   grid-column: 4;
   grid-row: 1;
+  color: #383838;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:not(:disabled):hover {
+    color: #3b82f6;
+  }
+`;
+
+const RemoveButton = styled(AppendButton)`
+  &:not(:disabled):hover {
+    color: #dc2626;
+  }
 `;
 
 // 一天的時段(每5分鐘一個選項)
 const times = [
   ...eachMinuteOfInterval(
     {
-      start: startOfDay(new Date()),
-      end: endOfDay(new Date()),
+      start: startOfDay(new Date(2025, 0, 1)),
+      end: endOfDay(new Date(2025, 0, 1)),
     },
     { step: 5 }
   ).map((time) => ({
     label: format(time, "HH:mm"),
-    value: format(time, "HH:mm"),
+    value: time,
   })),
-  { label: "23:59", value: "23:59" },
+  { label: "23:59", value: endOfDay(new Date(2025, 0, 1)) },
 ];
 
 function validateTimeSlotField({
@@ -47,76 +62,38 @@ function validateTimeSlotField({
   clearErrors,
   getValues,
 }) {
-  const basePath = `${fieldArrayName}.${dayIndex}.timeSlots`;
+  if (!isOpen) return;
 
-  // 1. 公休則清除整天錯誤
-  if (!isOpen) {
-    clearErrors(basePath);
-    return true;
-  }
+  const path = `${fieldArrayName}.${dayIndex}.timeSlots`;
+  const slots = getValues(path);
 
-  const timeSlots = getValues(basePath);
-  let slotErrors = false;
+  const normalizeData = slots.map((slot) => {
+    const { openTime, closeTime } = slot;
 
-  timeSlots.forEach((slot, index) => {
-    const open = slot?.openTime?.value;
-    const close = slot?.closeTime?.value;
-
-    // 先清除錯誤（避免殘留）
-    clearErrors(`${basePath}.${index}`);
-
-    // 2. 是否填寫完整
-    if (!open || !close) {
-      slotErrors = true;
-      setError(`${basePath}.${index}`, {
-        type: "manual",
-        message: "營業日不能設定空白未填寫的時段",
-      });
-      return;
-    }
-
-    // 3. 開始時間不能晚於結束時間
-    if (open >= close) {
-      slotErrors = true;
-      setError(`${basePath}.${index}`, {
-        type: "manual",
-        message: "結束時間必須晚於開始時間",
-      });
-    }
+    return {
+      start: openTime?.value ? new Date(openTime.value) : undefined,
+      end: closeTime?.value ? new Date(closeTime.value) : undefined,
+    };
   });
 
-  // 4. 有錯誤就不進行重疊時段檢查
-  if (slotErrors) return;
+  // 進行欄位檢查(不能空值或是休息時間比開始時間早)，並回傳通過檢查的時段
+  const validSlots = validateValues({
+    normalizeData,
+    path,
+    setError,
+    clearErrors,
+    dataType: "time",
+  });
 
-  // 5. 重疊時段檢查
-  const sorted = timeSlots.toSorted((a, b) =>
-    a.openTime.value.localeCompare(b.openTime.value)
-  );
-
-  for (let i = 1; i < sorted.length; i++) {
-    const prev = sorted[i - 1];
-    const curr = sorted[i];
-
-    if (prev.closeTime.value > curr.openTime.value) {
-      const lastIndex = timeSlots.length - 1;
-      setError(`${basePath}.${lastIndex}`, {
-        type: "manual",
-        message: "有重疊的營業時段",
-      });
-      return "有重疊的營業時段";
-    }
-  }
-
-  // 6. 最終清除整天錯誤
-  clearErrors(basePath);
-  return true;
+  // 驗證時段之間是否有重疊
+  checkOverlapConflicts({ validSlots, path, setError });
 }
 
 function ControlledTimeRange({
   control,
   dayIndex,
   fieldArrayName,
-  removeSpecialDate = () => {},
+  removeEntireFields = () => {},
 }) {
   const {
     getValues,
@@ -130,6 +107,7 @@ function ControlledTimeRange({
     name: `${fieldArrayName}.${dayIndex}.timeSlots`,
   });
 
+  // 當天有營業
   const isOpen = useWatch({
     control,
     name: `${fieldArrayName}.${dayIndex}.isOpen`,
@@ -138,71 +116,57 @@ function ControlledTimeRange({
   const isRegular = fieldArrayName === "regularOpenHours";
   const isSpecial = fieldArrayName === "specialOpenHours";
 
-  // 是否需要具備禁用按鈕以及保留一個欄位(一般營業時間需要)
-  const restricted = isRegular && !isOpen;
-
-  useEffect(
-    function () {
-      if (!isOpen) clearErrors(`${fieldArrayName}.${dayIndex}.timeSlots`);
-    },
-    [isOpen, clearErrors, dayIndex, fieldArrayName]
-  );
+  // 驗證函式
+  const validateFn = () =>
+    validateTimeSlotField({
+      fieldArrayName,
+      isOpen,
+      dayIndex,
+      setError,
+      clearErrors,
+      getValues,
+    });
 
   return (
     <>
-      {fields.map((field, index) => (
+      {fields.map((field, slotIndex) => (
         <Fragment key={field.id}>
           <StyledTimeRange>
             <ControlledSelect
               options={times}
               control={control}
-              name={`${fieldArrayName}.${dayIndex}.timeSlots.${index}.openTime`}
+              name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.openTime`}
               creatable={false}
               placeholder="開始時間"
               disabled={!isOpen}
               rules={{
-                validate: () =>
-                  validateTimeSlotField({
-                    fieldArrayName,
-                    isOpen,
-                    dayIndex,
-                    setError,
-                    clearErrors,
-                    getValues,
-                  }),
+                validate: validateFn,
               }}
             />
-
             <MdHorizontalRule size={18} />
-
             <ControlledSelect
               options={times}
               control={control}
-              name={`${fieldArrayName}.${dayIndex}.timeSlots.${index}.closeTime`}
+              name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.closeTime`}
               creatable={false}
               placeholder="休息時間"
               disabled={!isOpen}
               rules={{
-                validate: () =>
-                  validateTimeSlotField({
-                    fieldArrayName,
-                    isOpen,
-                    dayIndex,
-                    setError,
-                    clearErrors,
-                    getValues,
-                  }),
+                validate: validateFn,
               }}
             />
 
-            <button
+            <RemoveButton
               title="清除這個時段的時間"
               type="button"
-              disabled={restricted || (isRegular && fields.length === 1)}
+              disabled={isRegular && fields.length === 1}
               onClick={() => {
                 isSpecial && fields.length === 1
-                  ? removeSpecialDate(dayIndex)
-                  : remove(index);
+                  ? removeEntireFields(dayIndex)
+                  : remove(slotIndex);
+
+                // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在
+                validateFn();
               }}
             >
               {isSpecial && fields.length === 1 ? (
@@ -210,11 +174,14 @@ function ControlledTimeRange({
               ) : (
                 <MdOutlineDelete size={20} />
               )}
-            </button>
+            </RemoveButton>
           </StyledTimeRange>
 
           <FormErrorsMessage
-            fieldName={errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[index]}
+            fieldName={
+              errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[slotIndex]
+                ?.errorFallback
+            }
             gridColumn="3"
           />
         </Fragment>
@@ -223,7 +190,6 @@ function ControlledTimeRange({
       <AppendButton
         type="button"
         onClick={() => append({ openTime: "", closeTime: "" })}
-        disabled={restricted}
       >
         <MdAdd size={20} />
       </AppendButton>

@@ -38,7 +38,7 @@ function SearchFilter({ filterValue, handleValueChange, ...filters }) {
         type={inputType}
         placeholder={placeholder}
         value={filterValue}
-        onChange={(e) => handleValueChange(queryKey, e.target.value.trim())}
+        onChange={(e) => handleValueChange(queryKey, e.target.value)}
       />
       {filterValue && (
         <button onClick={() => handleValueChange(queryKey, "")}>

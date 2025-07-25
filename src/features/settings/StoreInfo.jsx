@@ -53,7 +53,7 @@ function StoreInfo() {
   return (
     <SettingFormSection
       title="店鋪資訊設定"
-      description="設定店鋪的基本資訊，包含店鋪名稱、地址、聯絡方式、統一編號，部分資訊將可能顯示在前台或訂單頁。"
+      description="設定店鋪的基本資訊，包含店鋪名稱、地址、聯絡方式、統一編號。"
       handleSubmit={handleSubmit(onSubmit, onError)}
       handleReset={() => reset({ regularOpenHours: data })}
       isDirty={isDirty}
@@ -70,7 +70,7 @@ function StoreInfo() {
               required: "分店名稱不能空白",
             }}
           />
-          <FormErrorsMessage fieldName={errors?.name} />
+          {/* <FormErrorsMessage fieldName={errors?.name} /> */}
           <label>連絡電話</label>
           <ControlledInput
             control={control}

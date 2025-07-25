@@ -36,10 +36,19 @@ const Footer = styled.footer`
   gap: 2rem;
   border-top: 1px solid #dfdfdf;
   padding: 1.6rem 3.2rem;
+`;
 
-  button {
-    font-size: 1.4rem;
-  }
+const SubmitButton = styled.button`
+  background-color: #2563eb;
+  color: #fff;
+  padding: 0.6rem 1.8rem;
+  border-radius: 4px;
+  font-weight: 500;
+`;
+
+const CancelButton = styled(SubmitButton)`
+  color: #333;
+  background-color: #eee;
 `;
 
 function SettingFormSection({
@@ -60,10 +69,10 @@ function SettingFormSection({
         {children}
       </Wrapper>
       <Footer>
-        <button disabled={!isDirty}>儲存</button>
-        <button type="button" onClick={handleReset} disabled={!isDirty}>
+        <SubmitButton disabled={false}>儲存</SubmitButton>
+        <CancelButton type="button" onClick={handleReset} disabled={!isDirty}>
           取消
-        </button>
+        </CancelButton>
       </Footer>
     </StyledSettingFormSection>
   );

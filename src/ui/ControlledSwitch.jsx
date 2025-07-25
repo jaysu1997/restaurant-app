@@ -55,7 +55,7 @@ const SwitchHandle = styled.div`
   transition: left 0.3s ease-in-out;
 `;
 
-function ControlledSwitch({ control, items }) {
+function ControlledSwitch({ control, items, handleChange }) {
   return (
     <StyledControlledSwitch>
       {items.map((item, index) => (
@@ -80,6 +80,14 @@ function ControlledSwitch({ control, items }) {
                           ? item.option2.value
                           : item.option1.value
                       );
+
+                      // 如果需要在切換value同時執行函式，就使用handleChange prop
+                      if (
+                        typeof handleChange === "function" &&
+                        !e.target.checked
+                      ) {
+                        handleChange();
+                      }
                     }}
                   />
                   <SwitchHandle $checked={checked}>

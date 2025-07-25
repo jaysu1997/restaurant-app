@@ -12,29 +12,46 @@ import {
 import SettingFormSection from "../../ui/SettingFormSection";
 import { addYears, endOfYear } from "date-fns";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 
 const Content = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 
   li {
     display: grid;
-    grid-template-columns: 25rem 8.2rem 1fr 2rem;
-    grid-auto-rows: 3.8rem 2rem;
-    row-gap: 0.3rem;
+    grid-template-columns:
+      minmax(25rem, 1fr) minmax(8.2rem, 1fr) minmax(25.6rem, 2fr)
+      2rem;
+    grid-auto-rows: 3.8rem auto;
+    row-gap: 0.5rem;
     column-gap: 2rem;
     align-items: center;
     padding-bottom: 0.3rem;
   }
 `;
 
+const EmptyMessage = styled.p`
+  color: #b0b0b0;
+  font-weight: 500;
+`;
+
 const AppendButton = styled.button`
-  justify-self: start;
   width: fit-content;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.8rem;
+  color: #3b82f6;
+  font-weight: 500;
+  padding: 0.6rem 1.8rem;
+  border-radius: 4px;
+  background-color: #dbeafe;
+
+  &:hover {
+    background-color: #bfdbfe;
+  }
 `;
 
 const DateField = styled.div`
@@ -42,16 +59,47 @@ const DateField = styled.div`
   flex-direction: column;
 `;
 
+function validateDateRangeField({ setError, clearErrors, getValues }) {
+  const path = "specialOpenHours";
+  const slots = getValues(path);
+
+  const normalizeData = slots.map((slot) => {
+    const { from, to } = slot.dateRange || {};
+
+    return {
+      start: from ? new Date(from) : undefined,
+      end: to ? new Date(to) : undefined,
+    };
+  });
+
+  // 進行欄位檢查(不能空值或是休息時間比開始時間早)，並回傳通過檢查的時段
+  const validSlots = validateValues({
+    normalizeData,
+    path,
+    setError,
+    clearErrors,
+    dataType: "date",
+  });
+
+  // 驗證時段之間是否有重疊
+  checkOverlapConflicts({ validSlots, path, setError });
+}
+
 function SpecialBusinessHours({ data = {} }) {
+  const { mutate } = useUpsertSettings();
+
   const methods = useForm({
     defaultValues: { specialOpenHours: data },
   });
 
   const {
-    register,
     handleSubmit,
     reset,
     control,
+    watch,
+    clearErrors,
+    setError,
+    getValues,
     formState: { isDirty, errors },
   } = methods;
 
@@ -66,6 +114,11 @@ function SpecialBusinessHours({ data = {} }) {
 
   function onSubmit(data) {
     console.log("成功", data);
+
+    mutate(data, {
+      onSuccess: (newData) =>
+        reset({ specialOpenHours: newData.specialOpenHours }),
+    });
   }
 
   function onError(error) {
@@ -76,12 +129,16 @@ function SpecialBusinessHours({ data = {} }) {
     <FormProvider {...methods}>
       <SettingFormSection
         title="特殊營業時間"
-        description="當遇到活動、特殊節日而需要修改店鋪的營業狀態時，可以在此處指定日期並調整營業時間，以覆蓋一般營業時間設定。"
+        description="當遇到國定假日或特殊活動需要改變營業時間，可以在此處選擇指定日期並設定營業時間，設定值將會覆蓋一般營業時間設定。"
         handleSubmit={handleSubmit(onSubmit, onError)}
         handleReset={() => reset({ specialOpenHours: data })}
         isDirty={isDirty}
       >
         <Content>
+          {dayFields.length === 0 && (
+            <EmptyMessage>目前沒有設定任何特殊營業時間</EmptyMessage>
+          )}
+
           {dayFields.map((day, dayIndex) => (
             <li key={day.id}>
               <DateField>
@@ -91,15 +148,21 @@ function SpecialBusinessHours({ data = {} }) {
                   render={({ field }) => (
                     <DateRangePicker
                       startMonth={new Date()}
-                      endMonth={endOfYear(addYears(new Date(), 10))}
+                      endMonth={endOfYear(addYears(new Date(), 5))}
                       selected={field.value}
-                      onSelect={field.onChange}
+                      onSelect={(range) => field.onChange(range ? range : "")}
                       handleValueReset={() => field.onChange("")}
                       disabledDate={{ before: new Date() }}
                     />
                   )}
                   rules={{
-                    required: "指定日期必須填寫",
+                    validate: () =>
+                      validateDateRangeField({
+                        dayIndex,
+                        setError,
+                        clearErrors,
+                        getValues,
+                      }),
                   }}
                 />
               </DateField>
@@ -113,17 +176,20 @@ function SpecialBusinessHours({ data = {} }) {
                     option2: { label: "營業", value: true },
                   },
                 ]}
+                handleChange={() =>
+                  clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
+                }
               />
 
               <ControlledTimeRange
                 control={control}
                 dayIndex={dayIndex}
                 fieldArrayName="specialOpenHours"
-                removeSpecialDate={remove}
+                removeEntireFields={remove}
               />
 
               <FormErrorsMessage
-                fieldName={errors?.specialOpenHours?.[dayIndex]?.dateRange}
+                fieldName={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
                 gridColumn="1"
                 gridRow="2"
               />
@@ -140,8 +206,8 @@ function SpecialBusinessHours({ data = {} }) {
               })
             }
           >
+            <GoPlus size={18} strokeWidth={0.6} />
             新增日期
-            <GoPlus size={18} />
           </AppendButton>
         </Content>
       </SettingFormSection>

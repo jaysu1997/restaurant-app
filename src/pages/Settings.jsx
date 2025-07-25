@@ -6,12 +6,13 @@ import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
 import useGetSettings from "../hooks/data/settings/useGetSettings.js";
 import { useForm } from "react-hook-form";
+import { areIntervalsOverlapping, parseISO } from "date-fns";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 100%;
-  gap: 2.8rem;
+  gap: 5.6rem;
   padding-bottom: 3.6rem;
 `;
 

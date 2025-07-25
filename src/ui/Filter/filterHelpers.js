@@ -59,7 +59,7 @@ function handleSearchParams(
 
         isValid = false;
       } else {
-        searchParamsValue = obj.value;
+        searchParamsValue = obj.value.trim();
       }
     }
     if (obj.type === "select" && obj.value?.value) {
