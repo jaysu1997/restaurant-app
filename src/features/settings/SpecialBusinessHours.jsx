@@ -10,10 +10,12 @@ import {
   useForm,
 } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
-import { addYears, endOfYear } from "date-fns";
+import { addYears, compareAsc, endOfYear } from "date-fns";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
+import { sortTimeSlots } from "./sortTimeSlots";
+import fadeInAnimation from "../../utils/fadeInAnimation";
 
 const Content = styled.ul`
   display: flex;
@@ -26,7 +28,7 @@ const Content = styled.ul`
       minmax(25rem, 1fr) minmax(8.2rem, 1fr) minmax(25.6rem, 2fr)
       2rem;
     grid-auto-rows: 3.8rem auto;
-    row-gap: 0.5rem;
+    row-gap: 0.4rem;
     column-gap: 2rem;
     align-items: center;
     padding-bottom: 0.3rem;
@@ -115,10 +117,17 @@ function SpecialBusinessHours({ data = {} }) {
   function onSubmit(data) {
     console.log("成功", data);
 
-    mutate(data, {
-      onSuccess: (newData) =>
-        reset({ specialOpenHours: newData.specialOpenHours }),
-    });
+    const sortedData = data.specialOpenHours.toSorted((a, b) =>
+      compareAsc(a.dateRange.from, b.dateRange.from)
+    );
+
+    mutate(
+      { specialOpenHours: sortTimeSlots(sortedData) },
+      {
+        onSuccess: (newData) =>
+          reset({ specialOpenHours: newData.specialOpenHours }),
+      }
+    );
   }
 
   function onError(error) {
@@ -140,7 +149,7 @@ function SpecialBusinessHours({ data = {} }) {
           )}
 
           {dayFields.map((day, dayIndex) => (
-            <li key={day.id}>
+            <li key={day.id} id={`specialOpenHours.${dayIndex}`}>
               <DateField>
                 <Controller
                   name={`specialOpenHours.${dayIndex}.dateRange`}
@@ -198,13 +207,15 @@ function SpecialBusinessHours({ data = {} }) {
 
           <AppendButton
             type="button"
-            onClick={() =>
+            onClick={() => {
               append({
                 dateRange: "",
                 isOpen: false,
                 timeSlots: [{ openTime: "", closeTime: "" }],
-              })
-            }
+              });
+              // 淡入欄位動畫
+              fadeInAnimation(`specialOpenHours.${dayFields.length}`);
+            }}
           >
             <GoPlus size={18} strokeWidth={0.6} />
             新增日期

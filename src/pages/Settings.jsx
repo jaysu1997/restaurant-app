@@ -42,11 +42,8 @@ function Settings() {
 
       <Container>
         <RegularBusinessHours data={data.regularOpenHours} />
-
         <SpecialBusinessHours data={data.specialOpenHours} />
-
         <DineInTableSettings />
-
         <StoreInfo />
       </Container>
     </>

@@ -9,23 +9,9 @@ const StyledFetchFailFallback = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   padding: 2rem;
   width: 100%;
   gap: 2rem;
-  animation: fadeIn 0.3s ease forwards;
-  animation-fill-mode: forwards;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 `;
 
 const Message = styled.p`
@@ -84,7 +70,7 @@ function FetchFailFallback({ error }) {
   const navigate = useNavigate();
 
   return (
-    <StyledFetchFailFallback>
+    <StyledFetchFailFallback className="fadeIn">
       {/* 離線errorSvg會死圖，所以放個備用icon */}
       {navigator.onLine ? (
         <Image src={errorSvg} alt="fetchingErrorSvg" />

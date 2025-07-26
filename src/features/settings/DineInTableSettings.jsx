@@ -5,6 +5,7 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import { useFieldArray, useForm } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import fadeInAnimation from "../../utils/fadeInAnimation";
 
 const Content = styled.ul`
   display: flex;
@@ -129,7 +130,7 @@ function DineInTableSettings() {
         )}
 
         {fields.map((field, index) => (
-          <li key={field.id}>
+          <li key={field.id} id={`dineInTableConfig.${index}`}>
             <SubTitle>內用桌號分區 - {index + 1}</SubTitle>
             <label>分區名稱</label>
             <ControlledInput
@@ -178,7 +179,11 @@ function DineInTableSettings() {
 
         <AppendButton
           type="button"
-          onClick={() => append({ zone: "", tableCount: 1 })}
+          onClick={() => {
+            append({ zone: "", tableCount: 1 });
+            // 淡入欄位動畫
+            fadeInAnimation(`dineInTableConfig.${fields.length}`);
+          }}
         >
           <GoPlus size={18} strokeWidth={0.6} />
           新增分區

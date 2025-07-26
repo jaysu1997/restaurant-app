@@ -12,7 +12,6 @@ const StyledDatePicker = styled.div`
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  max-width: 25rem;
 `;
 
 const DateField = styled.div`

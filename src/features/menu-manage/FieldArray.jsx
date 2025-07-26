@@ -7,6 +7,7 @@ import FormTypography from "../../ui/FormTypography";
 import ControlledSwitch from "../../ui/ControlledSwitch";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
+import fadeInAnimation from "../../utils/fadeInAnimation";
 
 function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
   const { register, control, errors } = useFormContext();
@@ -29,7 +30,7 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
       </FormTypography>
 
       {fields.map((field, index) => (
-        <FormRow $formRowStyle="sub" key={field.id}>
+        <FormRow $formRowStyle="sub" key={field.id} id={`customize.${index}`}>
           <FormRow $formRowStyle="subHeader">
             <FormTypography $titleStyle="subTitle">
               自訂細項 {index + 1}.
@@ -94,7 +95,7 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
       <Button
         $buttonStyle="add"
         type="button"
-        onClick={() =>
+        onClick={() => {
           append({
             title: "",
             isRequired: "optional",
@@ -110,8 +111,11 @@ function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
                 quantity: "",
               },
             ],
-          })
-        }
+          });
+
+          // 淡入欄位動畫
+          fadeInAnimation(`customize.${fields.length}`);
+        }}
       >
         新增自訂細項
       </Button>

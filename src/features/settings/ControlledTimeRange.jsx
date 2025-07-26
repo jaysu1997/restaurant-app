@@ -11,6 +11,7 @@ import { eachMinuteOfInterval, endOfDay, format, startOfDay } from "date-fns";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
+import fadeInAnimation from "../../utils/fadeInAnimation";
 
 const StyledTimeRange = styled.div`
   grid-column: 3 / 4;
@@ -131,7 +132,9 @@ function ControlledTimeRange({
     <>
       {fields.map((field, slotIndex) => (
         <Fragment key={field.id}>
-          <StyledTimeRange>
+          <StyledTimeRange
+            id={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}`}
+          >
             <ControlledSelect
               options={times}
               control={control}
@@ -189,7 +192,13 @@ function ControlledTimeRange({
 
       <AppendButton
         type="button"
-        onClick={() => append({ openTime: "", closeTime: "" })}
+        onClick={() => {
+          append({ openTime: "", closeTime: "" });
+          // 淡入欄位動畫
+          fadeInAnimation(
+            `${fieldArrayName}.${dayIndex}.timeSlots.${fields.length}`
+          );
+        }}
       >
         <MdAdd size={20} />
       </AppendButton>

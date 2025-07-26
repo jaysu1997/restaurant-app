@@ -4,6 +4,7 @@ import SettingFormSection from "../../ui/SettingFormSection";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import { sortTimeSlots } from "./sortTimeSlots";
 
 const Content = styled.ul`
   display: flex;
@@ -14,12 +15,14 @@ const Content = styled.ul`
     display: grid;
     grid-template-columns: 25rem minmax(8.2rem, 1fr) minmax(25.6rem, 2fr) 2rem;
     grid-auto-rows: 3.8rem auto;
-    row-gap: 0.5rem;
+    row-gap: 0.4rem;
     column-gap: 2rem;
     align-items: center;
     padding-bottom: 0.3rem;
   }
 `;
+
+const Test = styled.div``;
 
 function RegularBusinessHours({ data = {} }) {
   const { mutate } = useUpsertSettings();
@@ -43,13 +46,17 @@ function RegularBusinessHours({ data = {} }) {
   });
 
   function onSubmit(data) {
-    console.log("成功", data);
+    console.log(data);
 
-    // 還有自動排序時段功能要添加
-    mutate(data, {
-      onSuccess: (newData) =>
-        reset({ regularOpenHours: newData.regularOpenHours }),
-    });
+    const sortedData = sortTimeSlots(data.regularOpenHours);
+
+    mutate(
+      { regularOpenHours: sortedData },
+      {
+        onSuccess: (newData) =>
+          reset({ regularOpenHours: newData.regularOpenHours }),
+      }
+    );
   }
 
   function onError(error) {

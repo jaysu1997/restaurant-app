@@ -6,6 +6,7 @@ import FormTypography from "../../ui/FormTypography";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormFieldset from "../../ui/FormFieldset";
 import ControlledInput from "../../ui/ControlledInput";
+import fadeInAnimation from "../../utils/fadeInAnimation";
 
 function NestedFieldArray({
   nestedIndex,
@@ -23,7 +24,11 @@ function NestedFieldArray({
   return (
     <>
       {fields.map((field, index) => (
-        <FormRow $formRowStyle="nested" key={field.id}>
+        <FormRow
+          $formRowStyle="nested"
+          key={field.id}
+          id={`customize.${nestedIndex}.options.${index}`}
+        >
           <FormRow $formRowStyle="subHeader">
             <FormTypography $titleStyle="nestedTitle">
               選項 - {index + 1}
@@ -144,7 +149,7 @@ function NestedFieldArray({
       <Button
         $buttonStyle="add"
         type="button"
-        onClick={() =>
+        onClick={() => {
           append({
             optionLabel: "",
             extraPrice: "",
@@ -153,8 +158,11 @@ function NestedFieldArray({
               value: "",
             },
             quantity: "",
-          })
-        }
+          });
+
+          // 淡入欄位動畫
+          fadeInAnimation(`customize.${nestedIndex}.options.${fields.length}`);
+        }}
       >
         新增選項
       </Button>

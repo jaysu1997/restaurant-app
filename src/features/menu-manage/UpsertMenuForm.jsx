@@ -18,6 +18,7 @@ import { createNewIngredients } from "./createNewIngredients";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
 import QueryStatusFallback from "../../ui/QueryStatusFallback";
+import fadeInAnimation from "../../utils/fadeInAnimation";
 
 const formFieldData = [
   {
@@ -189,7 +190,11 @@ function UpsertMenuForm({ onCloseModal, menu }) {
               </FormTypography>
 
               {fields.map((field, index) => (
-                <FormRow $formRowStyle="sub" key={field.id}>
+                <FormRow
+                  $formRowStyle="sub"
+                  key={field.id}
+                  id={`ingredients.${index}`}
+                >
                   <FormRow $formRowStyle="subHeader">
                     <FormTypography $titleStyle="subTitle">
                       備料 {index + 1}.
@@ -246,12 +251,14 @@ function UpsertMenuForm({ onCloseModal, menu }) {
               <Button
                 $buttonStyle="add"
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   append({
                     ingredientName: "",
                     quantity: "",
-                  })
-                }
+                  });
+                  // 淡入欄位動畫
+                  fadeInAnimation(`ingredients.${fields.length}`);
+                }}
               >
                 新增備料
               </Button>
