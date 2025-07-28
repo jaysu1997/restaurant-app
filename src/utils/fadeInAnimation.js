@@ -1,6 +1,6 @@
 // 表單欄位淡入動畫(或許)
 function fadeInAnimation(elementId) {
-  return requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
     const element = document.getElementById(elementId);
 
     if (element) {

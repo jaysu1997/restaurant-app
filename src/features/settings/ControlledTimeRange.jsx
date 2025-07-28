@@ -21,7 +21,7 @@ const StyledTimeRange = styled.div`
   column-gap: 2rem;
 `;
 
-const AppendButton = styled.button`
+const RemoveButton = styled.button`
   grid-column: 4;
   grid-row: 1;
   color: #383838;
@@ -30,13 +30,13 @@ const AppendButton = styled.button`
   justify-content: center;
 
   &:not(:disabled):hover {
-    color: #3b82f6;
+    color: #dc2626;
   }
 `;
 
-const RemoveButton = styled(AppendButton)`
+const AppendButton = styled(RemoveButton)`
   &:not(:disabled):hover {
-    color: #dc2626;
+    color: #3b82f6;
   }
 `;
 

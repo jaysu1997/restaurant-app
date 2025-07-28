@@ -3,6 +3,7 @@ import ControlledInput from "../../ui/ControlledInput";
 import { useForm } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 
 const Content = styled.ul`
   display: flex;
@@ -12,8 +13,8 @@ const Content = styled.ul`
   li {
     display: grid;
     grid-template-columns: 6rem 1fr 6rem 1fr 2rem 2rem;
-    grid-auto-rows: auto;
-    row-gap: 1rem;
+    grid-auto-rows: 3.8rem 2rem;
+    row-gap: 0.4rem;
     column-gap: 2rem;
     align-items: center;
   }
@@ -24,13 +25,9 @@ const Content = styled.ul`
   }
 `;
 
-function StoreInfo() {
-  const data = {
-    name: "小王餐廳",
-    phone: "0912345678",
-    address: "台北市中山區xx路100號",
-    taxId: "12345678",
-  };
+function StoreInfo({ data = {} }) {
+  const { mutate } = useUpsertSettings();
+
   const {
     control,
     formState: { isDirty, errors },
@@ -39,11 +36,15 @@ function StoreInfo() {
     watch,
     setValue,
   } = useForm({
-    defaultValues: data,
+    defaultValues: { storeInfo: data },
   });
 
   function onSubmit(data) {
     console.log("成功", data);
+
+    mutate(data, {
+      onSuccess: (newData) => reset({ storeInfo: newData.storeInfo }),
+    });
   }
 
   function onError(error) {
@@ -55,7 +56,7 @@ function StoreInfo() {
       title="店鋪資訊設定"
       description="設定店鋪的基本資訊，包含店鋪名稱、地址、聯絡方式、統一編號。"
       handleSubmit={handleSubmit(onSubmit, onError)}
-      handleReset={() => reset({ regularOpenHours: data })}
+      handleReset={() => reset({ storeInfo: data })}
       isDirty={isDirty}
     >
       <Content>
@@ -63,30 +64,52 @@ function StoreInfo() {
           <label>分店名稱</label>
           <ControlledInput
             control={control}
-            name="name"
+            name="storeInfo.name"
             type="text"
             placeholder="請輸入分店名稱"
             rules={{
               required: "分店名稱不能空白",
             }}
           />
-          {/* <FormErrorsMessage fieldName={errors?.name} /> */}
+
           <label>連絡電話</label>
           <ControlledInput
             control={control}
-            name="phone"
-            type="number"
+            name="storeInfo.phone"
+            type="tel"
             placeholder="請輸入連絡電話"
             rules={{
               required: "連絡電話不能空白",
+              validate: (value) => {
+                const trimmed = value.trim();
+
+                const isMobile = /^09\d{8}$/.test(trimmed);
+                const isLandline = /^0[2-8]\d{7,8}$/.test(trimmed);
+
+                if (!isMobile && !isLandline) {
+                  return "請輸入正確的市話或手機號碼(純數字)";
+                }
+
+                return true;
+              },
             }}
+          />
+
+          <FormErrorsMessage
+            fieldName={errors?.storeInfo?.name}
+            gridColumn="2"
+          />
+
+          <FormErrorsMessage
+            fieldName={errors?.storeInfo?.phone}
+            gridColumn="4"
           />
         </li>
         <li>
           <label>店鋪地址</label>
           <ControlledInput
             control={control}
-            name="address"
+            name="storeInfo.address"
             type="text"
             placeholder="請輸入店鋪地址"
             rules={{
@@ -96,12 +119,24 @@ function StoreInfo() {
           <label>統一編號</label>
           <ControlledInput
             control={control}
-            name="taxId"
-            type="number"
+            name="storeInfo.taxId"
+            type="text"
             placeholder="請輸入統一編號"
             rules={{
               required: "統一編號不能空白",
+              validate: (value) => {
+                return /^\d{8}$/.test(value) || "統一編號格式錯誤";
+              },
             }}
+          />
+          <FormErrorsMessage
+            fieldName={errors?.storeInfo?.address}
+            gridColumn="2"
+          />
+
+          <FormErrorsMessage
+            fieldName={errors?.storeInfo?.taxId}
+            gridColumn="4"
           />
         </li>
       </Content>

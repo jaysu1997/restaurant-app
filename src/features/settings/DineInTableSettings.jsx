@@ -6,6 +6,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import fadeInAnimation from "../../utils/fadeInAnimation";
+import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 
 const Content = styled.ul`
   display: flex;
@@ -16,7 +17,7 @@ const Content = styled.ul`
     display: grid;
     grid-template-columns: 6rem 1fr 6rem 1fr 2rem 2rem;
     grid-auto-rows: 6rem 3.8rem 2rem 3.8rem;
-    row-gap: 0.3rem;
+    row-gap: 0.4rem;
     column-gap: 2rem;
     align-items: center;
   }
@@ -31,6 +32,9 @@ const SubTitle = styled.h4`
   grid-column: 1 / -1;
   font-size: 1.6rem;
   font-weight: 600;
+  color: #3b82f6;
+  border-bottom: 2px solid #3b82f6;
+  width: fit-content;
 `;
 
 const EmptyMessage = styled.p`
@@ -81,16 +85,27 @@ const AppendButton = styled.button`
   }
 `;
 
-function generatePreview(zone, tableCount) {
+const RemoveButton = styled.button`
+  color: #383838;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:not(:disabled):hover {
+    color: #dc2626;
+  }
+`;
+
+function generatePreview(zoneName, tableCount) {
   if (!tableCount) return;
   return Array.from(
     { length: tableCount },
-    (_, i) => `${zone}${zone ? " - " : ""}${i + 1}`
+    (_, i) => `${zoneName}${zoneName.trim() ? " - " : ""}${i + 1}`
   ).join(" , ");
 }
 
-function DineInTableSettings() {
-  const data = [{ zone: "", tableCount: 0 }];
+function DineInTableSettings({ data = {} }) {
+  const { mutate } = useUpsertSettings();
 
   const {
     control,
@@ -98,7 +113,7 @@ function DineInTableSettings() {
     handleSubmit,
     reset,
     watch,
-    setValue,
+    getValues,
   } = useForm({
     defaultValues: { dineInTableConfig: data },
   });
@@ -110,6 +125,11 @@ function DineInTableSettings() {
 
   function onSubmit(data) {
     console.log("成功", data);
+
+    mutate(data, {
+      onSuccess: (newData) =>
+        reset({ dineInTableConfig: newData.dineInTableConfig }),
+    });
   }
 
   function onError(error) {
@@ -121,7 +141,7 @@ function DineInTableSettings() {
       title="內用桌號設定"
       description="設定內用餐桌的區域分類與桌號配置，用於點餐時標記內用桌位。"
       handleSubmit={handleSubmit(onSubmit, onError)}
-      handleReset={() => reset({ regularOpenHours: data })}
+      handleReset={() => reset({ dineInTableConfig: data })}
       isDirty={isDirty}
     >
       <Content>
@@ -135,9 +155,22 @@ function DineInTableSettings() {
             <label>分區名稱</label>
             <ControlledInput
               control={control}
-              name={`dineInTableConfig.${index}.zone`}
+              name={`dineInTableConfig.${index}.zoneName`}
               type="text"
               placeholder="請輸入分區名稱(可留空)"
+              rules={{
+                validate: (value) => {
+                  const trimmedValue = value.trim();
+                  const zones = getValues("dineInTableConfig");
+
+                  const duplicate = zones.some((zone, zoneIndex) => {
+                    if (zoneIndex === index) return false; // ← 重點：略過自己
+                    return zone.zoneName.trim() === trimmedValue;
+                  });
+
+                  return !duplicate || "此欄位名稱已被使用";
+                },
+              }}
             />
             <label>桌號數量</label>
             <ControlledInput
@@ -152,11 +185,12 @@ function DineInTableSettings() {
                 },
               }}
             />
-            <button type="button" onClick={() => remove(index)}>
+            <RemoveButton type="button" onClick={() => remove(index)}>
               <MdOutlineDeleteForever size={20} />
-            </button>
+            </RemoveButton>
+
             <FormErrorsMessage
-              fieldName={errors?.dineInTableConfig?.[index]?.zone}
+              fieldName={errors?.dineInTableConfig?.[index]?.zoneName}
               gridColumn="2"
             />
             <FormErrorsMessage
@@ -168,7 +202,7 @@ function DineInTableSettings() {
               <div>
                 <p>
                   {generatePreview(
-                    watch(`dineInTableConfig.${index}.zone`),
+                    watch(`dineInTableConfig.${index}.zoneName`),
                     watch(`dineInTableConfig.${index}.tableCount`)
                   )}
                 </p>
@@ -180,7 +214,7 @@ function DineInTableSettings() {
         <AppendButton
           type="button"
           onClick={() => {
-            append({ zone: "", tableCount: 1 });
+            append({ zoneName: "", tableCount: 1 });
             // 淡入欄位動畫
             fadeInAnimation(`dineInTableConfig.${fields.length}`);
           }}
