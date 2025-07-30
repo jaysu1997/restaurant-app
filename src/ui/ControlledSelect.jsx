@@ -5,9 +5,15 @@ import CreatableSelect from "react-select/creatable";
 
 const selectStyle = {
   creatable: {
+    input: (base) => ({
+      ...base,
+      maxWidth: "100%",
+      overflow: "hidden",
+    }),
     container: (baseStyles) => ({
       ...baseStyles,
       width: "100%",
+      maxWidth: "100%",
     }),
     control: (baseStyles) => ({
       ...baseStyles,

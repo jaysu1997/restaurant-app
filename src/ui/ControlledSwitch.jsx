@@ -12,7 +12,6 @@ const StyledControlledSwitch = styled.div`
 const StyledSwitch = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.4rem;
 
   @media (max-width: 288px) {

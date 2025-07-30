@@ -1,6 +1,6 @@
 // 用來展示數據的卡片ui
 import styled from "styled-components";
-import { TbEdit, TbTrashX } from "react-icons/tb";
+import { GoTrash, GoPencil } from "react-icons/go";
 
 const Card = styled.li`
   display: grid;
@@ -56,6 +56,7 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.8rem;
   outline: 1px solid #dcdcdc;
 
   &:hover {
@@ -74,11 +75,11 @@ function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
       ))}
 
       <Button $fontColor="#0f766e" onClick={handleEditButton}>
-        <TbEdit size={16} />
+        <GoPencil size={15} strokeWidth={0.6} />
         <span>編輯</span>
       </Button>
       <Button $fontColor="#b91c1c" onClick={handleDeleteButton}>
-        <TbTrashX size={16} />
+        <GoTrash size={15} strokeWidth={0.6} />
         <span>刪除</span>
       </Button>
     </Card>

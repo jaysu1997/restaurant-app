@@ -32,7 +32,7 @@ const Legend = styled.legend`
 `;
 
 const Field = styled.div`
-  max-width: 200px;
+  max-width: 100%;
 `;
 
 function FormFieldset({ legendValue = null, fieldName = null, children }) {

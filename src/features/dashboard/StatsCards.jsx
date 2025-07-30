@@ -122,7 +122,7 @@ function StatsCards({ analyzedData }) {
       extraIconColor: trendExtraIconColor,
     },
     {
-      heading: "今日熱銷分類",
+      heading: "今日熱銷商品",
       value: todayTopDishes[0]?.name,
       cardColor: "#ffedd5",
       iconColor: "#ea580c",

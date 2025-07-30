@@ -7,22 +7,25 @@ import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { sortTimeSlots } from "./sortTimeSlots";
 
 const Content = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 3.2rem;
+  align-items: start;
 
   li {
     display: grid;
-    grid-template-columns: 25rem minmax(8.2rem, 1fr) minmax(25.6rem, 2fr) 2rem;
-    grid-auto-rows: 3.8rem auto;
+    grid-template-columns: 1fr 2rem;
+    grid-template-rows: 3.8rem auto;
     row-gap: 0.4rem;
-    column-gap: 2rem;
-    align-items: center;
+    column-gap: 1rem;
     padding-bottom: 0.3rem;
   }
-`;
 
-const Test = styled.div``;
+  label {
+    align-self: center;
+  }
+`;
 
 function RegularBusinessHours({ data = {} }) {
   const { mutate } = useUpsertSettings();
@@ -84,6 +87,12 @@ function RegularBusinessHours({ data = {} }) {
                 value={day.dayOfWeek}
               />
 
+              <ControlledTimeRange
+                control={control}
+                dayIndex={dayIndex}
+                fieldArrayName="regularOpenHours"
+              />
+
               <ControlledSwitch
                 control={control}
                 items={[
@@ -96,12 +105,6 @@ function RegularBusinessHours({ data = {} }) {
                 handleChange={() =>
                   clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
                 }
-              />
-
-              <ControlledTimeRange
-                control={control}
-                dayIndex={dayIndex}
-                fieldArrayName="regularOpenHours"
               />
             </li>
           ))}

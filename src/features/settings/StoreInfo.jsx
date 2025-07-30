@@ -6,13 +6,14 @@ import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 
 const Content = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 0.4rem;
 
   li {
     display: grid;
-    grid-template-columns: 6rem 1fr 6rem 1fr 2rem 2rem;
+    grid-template-columns: 6rem 1fr;
     grid-auto-rows: 3.8rem 2rem;
     row-gap: 0.4rem;
     column-gap: 2rem;
@@ -33,8 +34,6 @@ function StoreInfo({ data = {} }) {
     formState: { isDirty, errors },
     handleSubmit,
     reset,
-    watch,
-    setValue,
   } = useForm({
     defaultValues: { storeInfo: data },
   });
@@ -72,6 +71,13 @@ function StoreInfo({ data = {} }) {
             }}
           />
 
+          <FormErrorsMessage
+            fieldName={errors?.storeInfo?.name}
+            gridColumn="2"
+          />
+        </li>
+
+        <li>
           <label>連絡電話</label>
           <ControlledInput
             control={control}
@@ -96,15 +102,11 @@ function StoreInfo({ data = {} }) {
           />
 
           <FormErrorsMessage
-            fieldName={errors?.storeInfo?.name}
+            fieldName={errors?.storeInfo?.phone}
             gridColumn="2"
           />
-
-          <FormErrorsMessage
-            fieldName={errors?.storeInfo?.phone}
-            gridColumn="4"
-          />
         </li>
+
         <li>
           <label>店鋪地址</label>
           <ControlledInput
@@ -116,6 +118,14 @@ function StoreInfo({ data = {} }) {
               required: "店鋪地址不能空白",
             }}
           />
+
+          <FormErrorsMessage
+            fieldName={errors?.storeInfo?.address}
+            gridColumn="2"
+          />
+        </li>
+
+        <li>
           <label>統一編號</label>
           <ControlledInput
             control={control}
@@ -129,14 +139,10 @@ function StoreInfo({ data = {} }) {
               },
             }}
           />
-          <FormErrorsMessage
-            fieldName={errors?.storeInfo?.address}
-            gridColumn="2"
-          />
 
           <FormErrorsMessage
             fieldName={errors?.storeInfo?.taxId}
-            gridColumn="4"
+            gridColumn="2"
           />
         </li>
       </Content>

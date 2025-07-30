@@ -9,16 +9,17 @@ import fadeInAnimation from "../../utils/fadeInAnimation";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 
 const Content = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 2.8rem;
 
   li {
     display: grid;
-    grid-template-columns: 6rem 1fr 6rem 1fr 2rem 2rem;
-    grid-auto-rows: 6rem 3.8rem 2rem 3.8rem;
-    row-gap: 0.4rem;
-    column-gap: 2rem;
+    grid-template-columns: 6rem 1fr 2rem;
+    grid-template-rows: 6rem 3.8rem 2rem 3.8rem 2rem 3.8rem;
+    row-gap: 0.2rem;
+    column-gap: 1rem;
     align-items: center;
   }
 
@@ -33,7 +34,7 @@ const SubTitle = styled.h4`
   font-size: 1.6rem;
   font-weight: 600;
   color: #3b82f6;
-  border-bottom: 2px solid #3b82f6;
+  /* border-bottom: 2px solid #3b82f6; */
   width: fit-content;
 `;
 
@@ -43,17 +44,18 @@ const EmptyMessage = styled.p`
 `;
 
 const Preview = styled.div`
-  grid-column: 1 / 5;
+  grid-column: 1 / -2;
   display: grid;
   grid-template-columns: 6rem 1fr;
-  gap: 2rem;
+  gap: 1rem;
   align-items: center;
   height: 100%;
 
   div {
     display: flex;
     align-items: center;
-    max-width: 61.4rem;
+    max-width: 100%;
+    min-width: 0;
     padding: 0 0.8rem;
     color: #808080;
     border: 1px solid #e6e6e6;
@@ -70,7 +72,9 @@ const Preview = styled.div`
 `;
 
 const AppendButton = styled.button`
+  height: fit-content;
   width: fit-content;
+  grid-column: 1;
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -172,7 +176,17 @@ function DineInTableSettings({ data = {} }) {
                 },
               }}
             />
-            <label>桌號數量</label>
+
+            <RemoveButton type="button" onClick={() => remove(index)}>
+              <MdOutlineDeleteForever size={20} />
+            </RemoveButton>
+
+            <FormErrorsMessage
+              fieldName={errors?.dineInTableConfig?.[index]?.zoneName}
+              gridColumn="2 / -1"
+            />
+
+            <label>分區桌數</label>
             <ControlledInput
               control={control}
               name={`dineInTableConfig.${index}.tableCount`}
@@ -185,20 +199,13 @@ function DineInTableSettings({ data = {} }) {
                 },
               }}
             />
-            <RemoveButton type="button" onClick={() => remove(index)}>
-              <MdOutlineDeleteForever size={20} />
-            </RemoveButton>
 
             <FormErrorsMessage
-              fieldName={errors?.dineInTableConfig?.[index]?.zoneName}
-              gridColumn="2"
-            />
-            <FormErrorsMessage
               fieldName={errors?.dineInTableConfig?.[index]?.tableCount}
-              gridColumn="4"
+              gridColumn="2 / -1"
             />
             <Preview>
-              <label>分區預覽</label>
+              <label>桌號預覽</label>
               <div>
                 <p>
                   {generatePreview(

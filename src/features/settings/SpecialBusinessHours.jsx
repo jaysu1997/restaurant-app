@@ -18,19 +18,18 @@ import { sortTimeSlots } from "./sortTimeSlots";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 
 const Content = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  column-gap: 2.4rem;
+  row-gap: 3.2rem;
+  align-items: start;
 
   li {
     display: grid;
-    grid-template-columns:
-      minmax(25rem, 1fr) minmax(8.2rem, 1fr) minmax(25.6rem, 2fr)
-      2rem;
-    grid-auto-rows: 3.8rem auto;
+    grid-template-columns: 1fr 2rem;
+    grid-template-rows: 3.8rem auto;
     row-gap: 0.4rem;
-    column-gap: 2rem;
-    align-items: center;
+    column-gap: 1rem;
     padding-bottom: 0.3rem;
   }
 `;
@@ -41,7 +40,9 @@ const EmptyMessage = styled.p`
 `;
 
 const AppendButton = styled.button`
+  height: fit-content;
   width: fit-content;
+  grid-column: 1;
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -57,8 +58,7 @@ const AppendButton = styled.button`
 `;
 
 const DateField = styled.div`
-  display: flex;
-  flex-direction: column;
+  grid-column: 1;
 `;
 
 function validateDateRangeField({ setError, clearErrors, getValues }) {
@@ -98,7 +98,6 @@ function SpecialBusinessHours({ data = {} }) {
     handleSubmit,
     reset,
     control,
-    watch,
     clearErrors,
     setError,
     getValues,
@@ -176,6 +175,18 @@ function SpecialBusinessHours({ data = {} }) {
                 />
               </DateField>
 
+              <FormErrorsMessage
+                fieldName={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
+                gridColumn="1 / -1"
+              />
+
+              <ControlledTimeRange
+                control={control}
+                dayIndex={dayIndex}
+                fieldArrayName="specialOpenHours"
+                removeEntireFields={remove}
+              />
+
               <ControlledSwitch
                 control={control}
                 items={[
@@ -188,19 +199,6 @@ function SpecialBusinessHours({ data = {} }) {
                 handleChange={() =>
                   clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
                 }
-              />
-
-              <ControlledTimeRange
-                control={control}
-                dayIndex={dayIndex}
-                fieldArrayName="specialOpenHours"
-                removeEntireFields={remove}
-              />
-
-              <FormErrorsMessage
-                fieldName={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
-                gridColumn="1"
-                gridRow="2"
               />
             </li>
           ))}

@@ -11,9 +11,16 @@ const Wrapper = styled.section`
   display: grid;
   grid-template-columns: 32rem 1fr;
   padding: 3.2rem;
-  column-gap: 4rem;
-  row-gap: 2rem;
+  gap: 3.2rem;
   font-size: 1.4rem;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 370px) {
+    padding: 2rem 1rem;
+  }
 `;
 
 const FormHeading = styled.header`
@@ -69,7 +76,7 @@ function SettingFormSection({
         {children}
       </Wrapper>
       <Footer>
-        <SubmitButton disabled={false}>儲存</SubmitButton>
+        <SubmitButton disabled={!isDirty}>儲存</SubmitButton>
         <CancelButton type="button" onClick={handleReset} disabled={!isDirty}>
           取消
         </CancelButton>

@@ -92,7 +92,7 @@ function CartItem({ dish }) {
                   setIsOpenModal(true);
                 }}
               >
-                <GoPencil />
+                <GoPencil strokeWidth={0.6} />
               </Button>
 
               <Button
@@ -104,7 +104,7 @@ function CartItem({ dish }) {
                   });
                 }}
               >
-                <GoTrash />
+                <GoTrash strokeWidth={0.6} />
               </Button>
             </OrderAction>
           </Row>

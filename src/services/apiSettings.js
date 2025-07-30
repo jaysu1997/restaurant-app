@@ -1,6 +1,7 @@
 import { handleSupabaseError } from "../utils/handleSupabaseError";
 import supabase from "./supabase";
 
+// 取得所有店鋪設定
 export async function getSettingsApi() {
   const { data, error } = await supabase
     .from("settings")
@@ -13,6 +14,7 @@ export async function getSettingsApi() {
   return data;
 }
 
+// 更新or新增店鋪設定
 export async function upsertSettingsApi(settingData) {
   const { data, error } = await supabase
     .from("settings")

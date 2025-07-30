@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import { FiMoreHorizontal, FiEye, FiEdit2, FiTrash } from "react-icons/fi";
+import { GoKebabHorizontal, GoEye, GoPencil, GoTrash } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import {
@@ -103,7 +104,7 @@ function OrderDropdownMenu({
             handleToggle(e);
           }}
         >
-          <FiMoreHorizontal size={20} />
+          <GoKebabHorizontal size={20} strokeWidth={0.4} />
         </ToggleButton>
 
         {isOpenMenu === id && (
@@ -119,7 +120,7 @@ function OrderDropdownMenu({
                   setIsOpenMenu(false);
                 }}
               >
-                <FiEye size={16} />
+                <GoEye size={16} strokeWidth={0.4} />
                 <span>檢視訂單</span>
               </button>
             </MenuItem>
@@ -130,7 +131,7 @@ function OrderDropdownMenu({
                   setIsOpenMenu(false);
                 }}
               >
-                <FiEdit2 size={16} />
+                <GoPencil size={16} strokeWidth={0.4} />
                 <span>編輯訂單</span>
               </button>
             </MenuItem>
@@ -141,7 +142,7 @@ function OrderDropdownMenu({
                   setIsOpenModal(true);
                 }}
               >
-                <FiTrash size={16} />
+                <GoTrash size={16} strokeWidth={0.4} />
                 <span>刪除訂單</span>
               </button>
             </MenuItem>

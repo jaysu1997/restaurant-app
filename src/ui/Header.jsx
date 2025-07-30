@@ -12,6 +12,7 @@ const StyleHeader = styled.header`
   z-index: 10;
   grid-column: 1 / -1;
   padding: 0 2.4rem;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.078);
 `;
 
 const HeaderContainer = styled.div`

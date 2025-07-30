@@ -102,7 +102,7 @@ function OrderEditButton({ dishData }) {
     <>
       <ButtonGroup>
         <Button $buttonStyle="remove" onClick={() => setIsOpenModal(dishData)}>
-          <GoPencil />
+          <GoPencil strokeWidth={0.6} />
         </Button>
         <Button
           $buttonStyle="remove"
@@ -113,7 +113,7 @@ function OrderEditButton({ dishData }) {
             })
           }
         >
-          <GoTrash />
+          <GoTrash strokeWidth={0.6} />
         </Button>
       </ButtonGroup>
 
