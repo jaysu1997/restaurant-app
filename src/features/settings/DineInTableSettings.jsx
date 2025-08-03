@@ -7,6 +7,8 @@ import SettingFormSection from "../../ui/SettingFormSection";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import StyledHotToast from "../../ui/StyledHotToast";
+import { generateTableNumbers } from "../../context/settingsHelpers";
 
 const Content = styled.ul`
   display: grid;
@@ -100,14 +102,6 @@ const RemoveButton = styled.button`
   }
 `;
 
-function generatePreview(zoneName, tableCount) {
-  if (!tableCount) return;
-  return Array.from(
-    { length: tableCount },
-    (_, i) => `${zoneName}${zoneName.trim() ? " - " : ""}${i + 1}`
-  ).join(" , ");
-}
-
 function DineInTableSettings({ data = {} }) {
   const { mutate } = useUpsertSettings();
 
@@ -138,6 +132,7 @@ function DineInTableSettings({ data = {} }) {
 
   function onError(error) {
     console.log("失敗", error);
+    StyledHotToast({ type: "error", title: "設定更新失敗" });
   }
 
   return (
@@ -208,10 +203,10 @@ function DineInTableSettings({ data = {} }) {
               <label>桌號預覽</label>
               <div>
                 <p>
-                  {generatePreview(
+                  {generateTableNumbers(
                     watch(`dineInTableConfig.${index}.zoneName`),
                     watch(`dineInTableConfig.${index}.tableCount`)
-                  )}
+                  ).join(" , ")}
                 </p>
               </div>
             </Preview>

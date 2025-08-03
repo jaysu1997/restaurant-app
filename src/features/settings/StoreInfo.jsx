@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 const Content = styled.ul`
   display: grid;
@@ -48,6 +49,7 @@ function StoreInfo({ data = {} }) {
 
   function onError(error) {
     console.log("失敗", error);
+    StyledHotToast({ type: "error", title: "設定更新失敗" });
   }
 
   return (

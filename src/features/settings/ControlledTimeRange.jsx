@@ -7,11 +7,14 @@ import {
   MdOutlineDeleteForever,
 } from "react-icons/md";
 import { Fragment } from "react";
-import { eachMinuteOfInterval, endOfDay, format, startOfDay } from "date-fns";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import fadeInAnimation from "../../utils/fadeInAnimation";
+import {
+  generateTimeOptions,
+  parseTimeToDate,
+} from "../../context/settingsHelpers";
 
 const StyledTimeRange = styled.div`
   grid-column: 1;
@@ -44,19 +47,7 @@ const AppendButton = styled(RemoveButton)`
 `;
 
 // 一天的時段(每5分鐘一個選項)
-const times = [
-  ...eachMinuteOfInterval(
-    {
-      start: startOfDay(new Date(2025, 0, 1)),
-      end: endOfDay(new Date(2025, 0, 1)),
-    },
-    { step: 5 }
-  ).map((time) => ({
-    label: format(time, "HH:mm"),
-    value: time,
-  })),
-  { label: "23:59", value: endOfDay(new Date(2025, 0, 1)) },
-];
+const times = generateTimeOptions("00:00", "23:59");
 
 function validateTimeSlotField({
   fieldArrayName,
@@ -75,8 +66,8 @@ function validateTimeSlotField({
     const { openTime, closeTime } = slot;
 
     return {
-      start: openTime?.value ? new Date(openTime.value) : undefined,
-      end: closeTime?.value ? new Date(closeTime.value) : undefined,
+      start: openTime?.value ? parseTimeToDate(openTime?.value) : undefined,
+      end: closeTime?.value ? parseTimeToDate(closeTime?.value) : undefined,
     };
   });
 

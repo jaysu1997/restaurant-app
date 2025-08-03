@@ -15,6 +15,7 @@ import Order from "./pages/Order";
 import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
 import Dashboard from "./pages/Dashboard";
+import { SettingsProvider } from "./context/SettingsContext";
 // 這個要調回3次重試
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,7 +33,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// 或許可以加入自訂餐廳名稱，字體顏色，logo的功能
+// 後續可能需要把元件和函式以及檔案和資料夾都需要重構
 export default function App() {
   // 全域禁用number input的預設滾輪事件
   useEffect(() => {
@@ -61,23 +62,25 @@ export default function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
 
-      <OrderProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="/menu" element={<Menu />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/order/:orderId" element={<Order />} />
-              <Route path="/order-edit/:orderId" element={<Order />} />
-              <Route path="/menu-manage" element={<MenuManage />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/settings" element={<Settings />} />
-            </Route>
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </OrderProvider>
+      <SettingsProvider>
+        <OrderProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<AppLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/order/:orderId" element={<Order />} />
+                <Route path="/order-edit/:orderId" element={<Order />} />
+                <Route path="/menu-manage" element={<MenuManage />} />
+                <Route path="/inventory" element={<Inventory />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </OrderProvider>
+      </SettingsProvider>
 
       <Toaster
         position="top-center"

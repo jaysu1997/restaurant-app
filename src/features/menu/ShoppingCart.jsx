@@ -12,6 +12,8 @@ import {
 } from "../../utils/orderHelpers";
 import EmptyShoppingCart from "./EmptyShoppingCart";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
+import { useSettings } from "../../context/SettingsContext";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
@@ -114,6 +116,8 @@ const SubmitButton = styled.button`
 `;
 
 function ShoppingCart({ inventoryData }) {
+  const { settings } = useSettings();
+
   const {
     state: { dishes, curOrderPage },
     dispatch,
@@ -139,9 +143,16 @@ function ShoppingCart({ inventoryData }) {
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   function onSubmit(data) {
-    console.log(data);
-    const orderData = buildOrderData(dishes, data);
-    createOrder(orderData);
+    if (settings.isOpen) {
+      const orderData = buildOrderData(dishes, data);
+      createOrder(orderData);
+    } else {
+      StyledHotToast({
+        type: "error",
+        title: "訂單建立失敗",
+        content: "當前並非店鋪營業時段",
+      });
+    }
   }
 
   function onError(error) {

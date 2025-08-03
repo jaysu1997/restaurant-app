@@ -10,12 +10,13 @@ import {
   useForm,
 } from "react-hook-form";
 import SettingFormSection from "../../ui/SettingFormSection";
-import { addYears, compareAsc, endOfYear } from "date-fns";
+import { addYears, compareAsc, endOfYear, isAfter, isToday } from "date-fns";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
 import fadeInAnimation from "../../utils/fadeInAnimation";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 const Content = styled.ul`
   display: grid;
@@ -91,7 +92,12 @@ function SpecialBusinessHours({ data = {} }) {
   const { mutate } = useUpsertSettings();
 
   const methods = useForm({
-    defaultValues: { specialOpenHours: data },
+    defaultValues: {
+      specialOpenHours: data.filter((date) => {
+        const start = date.dateRange.from;
+        return isToday(start) || isAfter(start, new Date());
+      }),
+    },
   });
 
   const {
@@ -131,6 +137,7 @@ function SpecialBusinessHours({ data = {} }) {
 
   function onError(error) {
     console.log("失敗", error);
+    StyledHotToast({ type: "error", title: "設定更新失敗" });
   }
 
   return (
@@ -155,6 +162,7 @@ function SpecialBusinessHours({ data = {} }) {
                   control={control}
                   render={({ field }) => (
                     <DateRangePicker
+                      defaultMonth={field.value?.from}
                       startMonth={new Date()}
                       endMonth={endOfYear(addYears(new Date(), 5))}
                       selected={field.value}

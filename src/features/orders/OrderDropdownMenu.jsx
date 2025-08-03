@@ -34,7 +34,8 @@ const Menu = styled.ul`
   top: ${(props) => props.$position}px;
   right: 0;
   background: #fff;
-  box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e3e5e7;
   border-radius: 6px;
   padding: 0.8rem 0;
   display: flex;

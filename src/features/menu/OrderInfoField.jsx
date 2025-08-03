@@ -2,11 +2,9 @@
 import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import Note from "../../ui/Note";
-import {
-  generatePickupTimes,
-  generateTableNumbers,
-} from "../../utils/orderHelpers";
 import FormTypography from "../../ui/FormTypography";
+import QueryStatusFallback from "../../ui/QueryStatusFallback";
+import { useSettings } from "../../context/SettingsContext";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -35,10 +33,7 @@ const StyledPaidSection = styled.div`
 `;
 
 function OrderInfoField({ register, takeOut, control }) {
-  // 用餐方式的select選項
-  const optionList = takeOut
-    ? generatePickupTimes("10:00", "24:00")
-    : generateTableNumbers(10);
+  const { settings } = useSettings();
 
   return (
     <StyledOrderInfoField>
@@ -50,7 +45,7 @@ function OrderInfoField({ register, takeOut, control }) {
         <FormTypography $titleStyle="highlight">*</FormTypography>
       </h5>
       <ControlledSelect
-        options={optionList}
+        options={takeOut ? settings.pickupTime : settings.dineInTable}
         control={control}
         name={takeOut ? "pickupTime" : "tableNumber"}
         creatable={false}

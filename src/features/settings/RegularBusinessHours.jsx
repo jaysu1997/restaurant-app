@@ -5,6 +5,7 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { sortTimeSlots } from "./sortTimeSlots";
+import StyledHotToast from "../../ui/StyledHotToast";
 
 const Content = styled.ul`
   display: grid;
@@ -64,6 +65,7 @@ function RegularBusinessHours({ data = {} }) {
 
   function onError(error) {
     console.log("失敗", error);
+    StyledHotToast({ type: "error", title: "設定更新失敗" });
   }
 
   return (

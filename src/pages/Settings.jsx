@@ -4,7 +4,8 @@ import RegularBusinessHours from "../features/settings/RegularBusinessHours.jsx"
 import SpecialBusinessHours from "../features/settings/SpecialBusinessHours.jsx";
 import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
-import useGetSettings from "../hooks/data/settings/useGetSettings.js";
+import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
+import { useSettings } from "../context/SettingsContext.jsx";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,21 +15,24 @@ const Container = styled.div`
 `;
 
 function Settings() {
-  const { data, error, isPending, isSuccess, isError } = useGetSettings();
-
-  // 之後這個拆掉
-  if (isPending) return;
+  const { data, error, isPending, isError } = useSettings();
 
   return (
     <>
       <PageHeader title="店鋪設定" />
 
-      <Container>
-        <RegularBusinessHours data={data.regularOpenHours} />
-        <SpecialBusinessHours data={data.specialOpenHours} />
-        <DineInTableSettings data={data.dineInTableConfig} />
-        <StoreInfo data={data.storeInfo} />
-      </Container>
+      <QueryStatusFallback
+        isPending={isPending}
+        isError={isError}
+        error={error}
+      >
+        <Container>
+          <RegularBusinessHours data={data.regularOpenHours} />
+          <SpecialBusinessHours data={data.specialOpenHours} />
+          <DineInTableSettings data={data.dineInTableConfig} />
+          <StoreInfo data={data.storeInfo} />
+        </Container>
+      </QueryStatusFallback>
     </>
   );
 }

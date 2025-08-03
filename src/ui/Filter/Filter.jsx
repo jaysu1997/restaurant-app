@@ -47,9 +47,10 @@ const FilterContainer = styled.div`
   flex-direction: column;
   gap: 1.6rem;
   background-color: #fff;
-  box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   width: min(95dvw, 28rem);
+  border: 1px solid #e3e5e7;
 `;
 
 const FilterTitle = styled.h3`

@@ -45,17 +45,24 @@ const DateField = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
-  background-color: #fff;
-  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.25);
+const StyledPopup = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  border-radius: 6px;
-  padding: 1.3rem;
   position: absolute;
   top: 5rem;
   z-index: 2;
+  width: 100%;
+  justify-content: center;
+`;
+
+const Wrapper = styled.div`
+  background-color: #fff;
+  border: 1px solid #e3e5e7;
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+  border-radius: 6px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Footer = styled.footer`
@@ -74,6 +81,7 @@ const UtilityButton = styled.button`
 `;
 
 function DateRangePicker({
+  defaultMonth,
   startMonth,
   endMonth,
   selected,
@@ -123,29 +131,32 @@ function DateRangePicker({
       </DateField>
 
       {isOpenDayPicker && (
-        <Wrapper ref={daypickerRef}>
-          <StyledDayPicker
-            animate
-            captionLayout="dropdown"
-            mode="range"
-            weekStartsOn={0}
-            locale={zhTW}
-            startMonth={startMonth}
-            endMonth={endMonth}
-            selected={selected}
-            onSelect={onSelect}
-            disabled={disabledDate}
-          />
-          <Footer>
-            <UtilityButton onClick={handleValueReset} disabled={!selected}>
-              清除
-            </UtilityButton>
+        <StyledPopup>
+          <Wrapper ref={daypickerRef}>
+            <StyledDayPicker
+              animate
+              captionLayout="dropdown"
+              mode="range"
+              weekStartsOn={0}
+              locale={zhTW}
+              defaultMonth={defaultMonth || new Date()}
+              startMonth={startMonth}
+              endMonth={endMonth}
+              selected={selected}
+              onSelect={onSelect}
+              disabled={disabledDate}
+            />
+            <Footer>
+              <UtilityButton onClick={handleValueReset} disabled={!selected}>
+                清除
+              </UtilityButton>
 
-            <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
-              確認
-            </UtilityButton>
-          </Footer>
-        </Wrapper>
+              <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
+                確認
+              </UtilityButton>
+            </Footer>
+          </Wrapper>
+        </StyledPopup>
       )}
     </StyledDatePicker>
   );
