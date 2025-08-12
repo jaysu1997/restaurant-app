@@ -26,7 +26,7 @@ const Menus = styled.ul`
   padding-bottom: 3.6rem;
 `;
 
-function MenuView({ menusData, inventoryData }) {
+function MenuView({ menusData }) {
   // 取得所有菜單數據
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
@@ -54,7 +54,7 @@ function MenuView({ menusData, inventoryData }) {
             />
           ))}
         </Menus>
-        <ShoppingCart inventoryData={inventoryData} />
+        <ShoppingCart />
       </Container>
 
       {isOpenModal.type === "OrderForm" && (

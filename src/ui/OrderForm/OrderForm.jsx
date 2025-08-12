@@ -25,7 +25,8 @@ const Container = styled.div`
   flex-direction: column;
   padding: 2rem;
   gap: 2.4rem;
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 `;
 
 const Price = styled.span`

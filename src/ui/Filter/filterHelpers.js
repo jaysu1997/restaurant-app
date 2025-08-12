@@ -12,7 +12,7 @@ function getInitialFilterState(searchParams, filtersConfig) {
     let value = "";
 
     if (searchParams.get(queryKey)) {
-      if (type === "search") {
+      if (type === "input") {
         value = searchParams.get(queryKey);
       }
       if (type === "select") {
@@ -44,13 +44,18 @@ function handleSearchParams(
 
   for (const [key, obj] of Object.entries(tempFilters)) {
     let searchParamsValue = "";
-    if (obj.type === "search" && obj.value) {
-      // 如果輸入數據限定為number，需要進行正整數判定
-      const { inputType = "text", title } = filtersConfig.find(
+
+    // 篩選輸入類型為input所要進行的處理方式
+    if (obj.type === "input" && obj.value) {
+      const { inputType, title } = filtersConfig.find(
         (filter) => filter.queryKey === key
       );
 
-      if (inputType === "number" && !isValidPositiveInteger(obj.value, "")) {
+      // 如果輸入數據限定為number，需要進行正整數判定
+      if (
+        inputType === "number" &&
+        !isValidPositiveInteger(Number(obj.value), "")
+      ) {
         StyledHotToast({
           type: "error",
           title: "篩選失敗",
@@ -62,9 +67,13 @@ function handleSearchParams(
         searchParamsValue = obj.value.trim();
       }
     }
+
+    // 篩選輸入類型為select所要進行的處理方式
     if (obj.type === "select" && obj.value?.value) {
       searchParamsValue = obj.value.value;
     }
+
+    // 篩選輸入類型為datePicker所要進行的處理方式
     if (obj.type === "datePicker" && obj.value?.from && obj.value?.to) {
       searchParamsValue = `${format(obj.value.from, "yyyy-MM-dd")}_${format(
         obj.value.to,

@@ -1,11 +1,9 @@
 import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
 import CartItem from "./CartItem";
-import { GrClear } from "react-icons/gr";
 import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import LoadingDotMini from "../../ui/LoadingDotMini";
-import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
 import {
   buildOrderData,
   calculateOrderSummary,
@@ -40,8 +38,8 @@ const Header = styled.header`
   z-index: 1;
 
   h4 {
-    font-size: 3.2rem;
-    margin-bottom: 1.6rem;
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -59,24 +57,6 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-`;
-
-const ClearAllButton = styled.button`
-  color: #e63946;
-  border: 1px solid #e63946;
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  background-color: transparent;
-  border-radius: 15px;
-  height: 2.4rem;
-  padding: 0.3rem 0.6rem;
-
-  span {
-    font-size: 1.4rem;
-    line-height: 1.6;
-    font-weight: 600;
-  }
 `;
 
 const Footer = styled.footer`
@@ -115,12 +95,11 @@ const SubmitButton = styled.button`
   }
 `;
 
-function ShoppingCart({ inventoryData }) {
-  const { settings } = useSettings();
+function ShoppingCart() {
+  const { settings, status } = useSettings();
 
   const {
     state: { dishes, curOrderPage },
-    dispatch,
   } = useOrder();
 
   const {
@@ -143,16 +122,19 @@ function ShoppingCart({ inventoryData }) {
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   function onSubmit(data) {
-    if (settings.isOpen) {
-      const orderData = buildOrderData(dishes, data);
-      createOrder(orderData);
-    } else {
-      StyledHotToast({
-        type: "error",
-        title: "訂單建立失敗",
-        content: "當前並非店鋪營業時段",
-      });
-    }
+    // 非營業時段不能建立訂單
+    // if (!settings.isBusinessDay) {
+    //   StyledHotToast({
+    //     type: "error",
+    //     title: "訂單建立失敗",
+    //     content: "當前並非店鋪營業時段",
+    //   });
+
+    //   return;
+    // }
+
+    const orderData = buildOrderData(dishes, data);
+    createOrder(orderData);
   }
 
   function onError(error) {
@@ -163,29 +145,6 @@ function ShoppingCart({ inventoryData }) {
     <StyledShoppingCart>
       <Header>
         <h4>購物車</h4>
-        <Row>
-          <DiningMethodSwitch
-            takeOut={takeOut}
-            control={control}
-            setValue={setValue}
-            isDisabled={dishes.length === 0}
-          />
-          {dishes.length !== 0 && isCreatingOrder && (
-            <ClearAllButton
-              onClick={() => {
-                dispatch({ type: "order/reset" });
-                dispatch({
-                  type: "inventory/setAll",
-                  payload: inventoryData,
-                });
-                reset();
-              }}
-            >
-              <GrClear size={14} />
-              <span>清空</span>
-            </ClearAllButton>
-          )}
-        </Row>
       </Header>
 
       {dishes.length !== 0 && isCreatingOrder ? (
@@ -198,32 +157,36 @@ function ShoppingCart({ inventoryData }) {
             register={register}
             control={control}
             takeOut={takeOut}
+            setValue={setValue}
+            dishes={dishes}
           />
         </ShoppingList>
       ) : (
         <EmptyShoppingCart />
       )}
 
-      <Footer>
-        <Row>
-          <span>總計</span>
-        </Row>
-        <Row>
-          <span>{`${isCreatingOrder ? totalServings : 0}份餐點`}</span>
-          <span className="emphasize">{`$ ${
-            isCreatingOrder ? totalPrice : 0
-          }`}</span>
-        </Row>
+      {dishes.length !== 0 && isCreatingOrder && (
+        <Footer>
+          <Row>
+            <span>總計</span>
+          </Row>
+          <Row>
+            <span>{`${isCreatingOrder ? totalServings : 0}份餐點`}</span>
+            <span className="emphasize">{`$ ${
+              isCreatingOrder ? totalPrice : 0
+            }`}</span>
+          </Row>
 
-        <Row>
-          <SubmitButton
-            disabled={dishes.length === 0 || orderCreating || !isValid}
-            onClick={handleSubmit(onSubmit, onError)}
-          >
-            {orderCreating ? <LoadingDotMini /> : "提交"}
-          </SubmitButton>
-        </Row>
-      </Footer>
+          <Row>
+            <SubmitButton
+              disabled={dishes.length === 0 || orderCreating || !isValid}
+              onClick={handleSubmit(onSubmit, onError)}
+            >
+              {orderCreating ? <LoadingDotMini /> : "提交"}
+            </SubmitButton>
+          </Row>
+        </Footer>
+      )}
     </StyledShoppingCart>
   );
 }

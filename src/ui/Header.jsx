@@ -41,7 +41,7 @@ function Header() {
     <StyleHeader>
       <HeaderContainer>
         <LogoStyle>
-          <Img src="logo.png" alt="logo" />
+          <Img src="/logo.png" alt="logo" />
           <h1>Aurora Bites</h1>
         </LogoStyle>
         <User />

@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { GiShoppingCart } from "react-icons/gi";
 
 const StyledEmptyShoppingCart = styled.div`
-  max-height: 12rem;
+  max-height: 0;
+  max-height: 58.7rem;
   display: flex;
   flex: 1;
   flex-direction: column;

@@ -4,6 +4,7 @@ import PageHeader from "../ui/PageHeader";
 import styled from "styled-components";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useAnalyzedOrders from "../hooks/data/orders/useAnalyzedOrders";
+import StoreStatusBadge from "../ui/StoreStatusBadge ";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +23,10 @@ function Dashboard() {
 
   return (
     <>
-      <PageHeader title="營運總覽" />
+      <PageHeader title="營運總覽">
+        <StoreStatusBadge isOpenNow={true} />
+      </PageHeader>
+
       <QueryStatusFallback
         isPending={analyzedDataIsPending}
         isError={analyzedDataIsError}
@@ -33,7 +37,7 @@ function Dashboard() {
             <StatsCharts analyzedData={analyzedData} />
           </Container>
         )}
-      ></QueryStatusFallback>
+      />
     </>
   );
 }

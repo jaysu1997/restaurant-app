@@ -23,7 +23,7 @@ const Container = styled.ul`
 const filtersConfig = [
   {
     title: "食材名稱",
-    type: "search",
+    type: "input",
     inputType: "text",
     queryKey: "name",
     placeholder: "搜尋食材名稱",

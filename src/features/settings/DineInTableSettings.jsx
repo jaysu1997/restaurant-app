@@ -9,6 +9,7 @@ import fadeInAnimation from "../../utils/fadeInAnimation";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import StyledHotToast from "../../ui/StyledHotToast";
 import { generateTableNumbers } from "../../context/settingsHelpers";
+import { isValidPositiveInteger } from "../../utils/orderHelpers";
 
 const Content = styled.ul`
   display: grid;
@@ -190,7 +191,7 @@ function DineInTableSettings({ data = {} }) {
               rules={{
                 required: "分區總桌數不能空白",
                 validate: (value) => {
-                  return /^[1-9]\d*$/.test(value) || "請輸入正整數";
+                  return isValidPositiveInteger(value, "請輸入正整數");
                 },
               }}
             />

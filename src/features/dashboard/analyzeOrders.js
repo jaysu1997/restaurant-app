@@ -98,7 +98,7 @@ function analyzeOrders(orders) {
     // 統計今日訂單數據
     if (!isToday(createdTime)) continue;
 
-    todayOrders.push(order);
+    todayOrders.unshift(order);
 
     // 今日各小時訂單筆數統計
     updateHourlyOrders(hourlyOrderCounts, createdTime);

@@ -28,7 +28,7 @@ const Content = styled.ul`
   }
 `;
 
-function RegularBusinessHours({ data = {} }) {
+function RegularOpenHours({ data = {} }) {
   const { mutate } = useUpsertSettings();
 
   const methods = useForm({
@@ -99,7 +99,7 @@ function RegularBusinessHours({ data = {} }) {
                 control={control}
                 items={[
                   {
-                    name: `regularOpenHours.${dayIndex}.isOpen`,
+                    name: `regularOpenHours.${dayIndex}.isBusinessDay`,
                     option1: { label: "公休", value: false },
                     option2: { label: "營業", value: true },
                   },
@@ -116,4 +116,4 @@ function RegularBusinessHours({ data = {} }) {
   );
 }
 
-export default RegularBusinessHours;
+export default RegularOpenHours;

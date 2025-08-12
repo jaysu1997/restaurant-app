@@ -8,10 +8,10 @@ import QueryStatusFallback from "../ui/QueryStatusFallback";
 const filtersConfig = [
   {
     title: "取餐號碼",
-    type: "search",
+    type: "input",
     inputType: "number",
     queryKey: "pickupNumber",
-    placeholder: "搜尋取餐號碼",
+    placeholder: "搜尋取餐號碼(不含#)",
   },
   {
     title: "訂單建立時間",

@@ -62,6 +62,7 @@ const DateField = styled.div`
   grid-column: 1;
 `;
 
+// 檢查日期是否有重疊或其他錯誤
 function validateDateRangeField({ setError, clearErrors, getValues }) {
   const path = "specialOpenHours";
   const slots = getValues(path);
@@ -88,13 +89,13 @@ function validateDateRangeField({ setError, clearErrors, getValues }) {
   checkOverlapConflicts({ validSlots, path, setError });
 }
 
-function SpecialBusinessHours({ data = {} }) {
+function SpecialOpenHours({ data = {} }) {
   const { mutate } = useUpsertSettings();
 
   const methods = useForm({
     defaultValues: {
       specialOpenHours: data.filter((date) => {
-        const start = date.dateRange.from;
+        const start = date.dateRange.to;
         return isToday(start) || isAfter(start, new Date());
       }),
     },
@@ -199,7 +200,7 @@ function SpecialBusinessHours({ data = {} }) {
                 control={control}
                 items={[
                   {
-                    name: `specialOpenHours.${dayIndex}.isOpen`,
+                    name: `specialOpenHours.${dayIndex}.isBusinessDay`,
                     option1: { label: "公休", value: false },
                     option2: { label: "營業", value: true },
                   },
@@ -216,7 +217,7 @@ function SpecialBusinessHours({ data = {} }) {
             onClick={() => {
               append({
                 dateRange: "",
-                isOpen: false,
+                isBusinessDay: false,
                 timeSlots: [{ openTime: "", closeTime: "" }],
               });
               // 淡入欄位動畫
@@ -232,4 +233,4 @@ function SpecialBusinessHours({ data = {} }) {
   );
 }
 
-export default SpecialBusinessHours;
+export default SpecialOpenHours;

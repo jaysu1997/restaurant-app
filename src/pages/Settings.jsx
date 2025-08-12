@@ -1,11 +1,12 @@
 import PageHeader from "../ui/PageHeader.jsx";
 import styled from "styled-components";
-import RegularBusinessHours from "../features/settings/RegularBusinessHours.jsx";
-import SpecialBusinessHours from "../features/settings/SpecialBusinessHours.jsx";
+import RegularOpenHours from "../features/settings/RegularOpenHours.jsx";
+import SpecialOpenHours from "../features/settings/SpecialOpenHours.jsx";
 import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
 import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
 import { useSettings } from "../context/SettingsContext.jsx";
+import StoreStatusBadge from "../ui/StoreStatusBadge .jsx";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -15,11 +16,16 @@ const Container = styled.div`
 `;
 
 function Settings() {
-  const { data, error, isPending, isError } = useSettings();
+  const { data, status, error, isPending, isError } = useSettings();
 
   return (
     <>
-      <PageHeader title="店鋪設定" />
+      <PageHeader title="店鋪設定">
+        <StoreStatusBadge
+          isOpenNow={status.isOpenNow}
+          tooltip={status.tooltip}
+        />
+      </PageHeader>
 
       <QueryStatusFallback
         isPending={isPending}
@@ -27,8 +33,8 @@ function Settings() {
         error={error}
       >
         <Container>
-          <RegularBusinessHours data={data.regularOpenHours} />
-          <SpecialBusinessHours data={data.specialOpenHours} />
+          <RegularOpenHours data={data.regularOpenHours} />
+          <SpecialOpenHours data={data.specialOpenHours} />
           <DineInTableSettings data={data.dineInTableConfig} />
           <StoreInfo data={data.storeInfo} />
         </Container>

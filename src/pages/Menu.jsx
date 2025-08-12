@@ -6,6 +6,8 @@ import useGetMenus from "../hooks/data/menus/useGetMenus";
 
 function Menu() {
   const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
+
+  // 執行此custom hook的目的是取得庫存數據並更新orderReducer
   const {
     inventoryData,
     inventoryIsPending,
@@ -29,9 +31,7 @@ function Menu() {
           buttonText: "新增餐點",
           redirectTo: "/menu-manage",
         }}
-        render={() => (
-          <MenuView menusData={menusData} inventoryData={inventoryData} />
-        )}
+        render={() => <MenuView menusData={menusData} />}
       />
     </>
   );

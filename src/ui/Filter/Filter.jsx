@@ -107,6 +107,7 @@ function Filter({ filtersConfig }) {
   const initialFilterState = getInitialFilterState(searchParams, filtersConfig);
   // 臨時存放篩選條件值的地方
   const [tempFilters, setTempFilters] = useState(initialFilterState);
+  // 篩選modal的展開折疊控制
   const [isContainerOpen, setIsContainerOpen] = useState(false);
   const filterContainerRef = useRef(null);
 
@@ -130,7 +131,7 @@ function Filter({ filtersConfig }) {
   const filterComponents = {
     select: SelectFilter,
     datePicker: DateRangeFilter,
-    search: SearchFilter,
+    input: SearchFilter,
   };
 
   // 處理篩選器輸入值更新的功能

@@ -11,10 +11,8 @@ import ControlledSelect from "../../ui/ControlledSelect";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import fadeInAnimation from "../../utils/fadeInAnimation";
-import {
-  generateTimeOptions,
-  parseTimeToDate,
-} from "../../context/settingsHelpers";
+import { generateTimeOptions } from "../../context/settingsHelpers";
+import { endOfDay, startOfDay } from "date-fns";
 
 const StyledTimeRange = styled.div`
   grid-column: 1;
@@ -46,18 +44,21 @@ const AppendButton = styled(RemoveButton)`
   }
 `;
 
-// 一天的時段(每5分鐘一個選項)
-const times = generateTimeOptions("00:00", "23:59");
+// 一天的時段(每10分鐘一個選項)
+const times = generateTimeOptions(
+  startOfDay(new Date(2025, 0, 1)),
+  endOfDay(new Date(2025, 0, 1))
+);
 
 function validateTimeSlotField({
   fieldArrayName,
-  isOpen,
+  isBusinessDay,
   dayIndex,
   setError,
   clearErrors,
   getValues,
 }) {
-  if (!isOpen) return;
+  if (!isBusinessDay) return;
 
   const path = `${fieldArrayName}.${dayIndex}.timeSlots`;
   const slots = getValues(path);
@@ -66,8 +67,8 @@ function validateTimeSlotField({
     const { openTime, closeTime } = slot;
 
     return {
-      start: openTime?.value ? parseTimeToDate(openTime?.value) : undefined,
-      end: closeTime?.value ? parseTimeToDate(closeTime?.value) : undefined,
+      start: openTime?.value,
+      end: closeTime?.value,
     };
   });
 
@@ -103,9 +104,9 @@ function ControlledTimeRange({
   });
 
   // 當天有營業
-  const isOpen = useWatch({
+  const isBusinessDay = useWatch({
     control,
-    name: `${fieldArrayName}.${dayIndex}.isOpen`,
+    name: `${fieldArrayName}.${dayIndex}.isBusinessDay`,
   });
 
   const isRegular = fieldArrayName === "regularOpenHours";
@@ -115,7 +116,7 @@ function ControlledTimeRange({
   const validateFn = () =>
     validateTimeSlotField({
       fieldArrayName,
-      isOpen,
+      isBusinessDay,
       dayIndex,
       setError,
       clearErrors,
@@ -148,7 +149,7 @@ function ControlledTimeRange({
               name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.openTime`}
               creatable={false}
               placeholder="開始時間"
-              disabled={!isOpen}
+              disabled={!isBusinessDay}
               rules={{
                 validate: validateFn,
               }}
@@ -160,7 +161,7 @@ function ControlledTimeRange({
               name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.closeTime`}
               creatable={false}
               placeholder="休息時間"
-              disabled={!isOpen}
+              disabled={!isBusinessDay}
               rules={{
                 validate: validateFn,
               }}
@@ -176,7 +177,7 @@ function ControlledTimeRange({
                 : remove(slotIndex);
 
               // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在
-              validateFn();
+              fields.length > 1 && validateFn();
             }}
           >
             {isSpecial && fields.length === 1 ? (

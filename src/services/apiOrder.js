@@ -24,7 +24,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
     .select("*", {
       count: "exact",
     })
-    .order("createdTime", { ascending: true });
+    .order("createdTime", { ascending: false });
 
   if (createdTime) {
     const { from, to } = createdTime;

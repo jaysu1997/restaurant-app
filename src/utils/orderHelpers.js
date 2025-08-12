@@ -49,7 +49,7 @@ function calculateOrderSummary(order) {
   return { totalServings, totalPrice };
 }
 
-// 生成外帶取餐時間
+// 生成外帶取餐時間(這個應該也是要刪除)
 function generatePickupTimes(startTime, endTime) {
   const result = [];
 
@@ -80,7 +80,7 @@ function generatePickupTimes(startTime, endTime) {
   return result;
 }
 
-// 內用桌號選項生成
+// 內用桌號選項生成(這邊的之後要刪除)
 function generateTableNumbers(count) {
   return Array.from({ length: count }, (_, i) => ({
     label: String(i + 1),

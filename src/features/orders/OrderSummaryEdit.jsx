@@ -49,7 +49,7 @@ const Row = styled.div`
   }
 `;
 
-// 新增餐點的按鈕需要再調整樣式
+// 新增餐點的按鈕需要再調整樣式，以及在更新訂單和刪除訂單時，需要注意到底是否需要更新庫存(這樣的更新是否合理?)，以我目前的想法是，第一種是可以統一彈出視窗詢問是否要退回之前就訂單消耗的食材。第二種方法是根據狀態來自動判別，如果是準備中的餐點(那可以選擇自動退回，或是彈出視窗選擇)，如果是被標記為已交付，或是待交付，則按照邏輯來說，是一定不能退回來才對，所以不用問，也不用退
 function OrderSummaryEdit({ orderData, isEdit }) {
   const { updateOrder, updating } = useUpdateOrder();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -67,7 +67,6 @@ function OrderSummaryEdit({ orderData, isEdit }) {
     watch,
     handleSubmit,
     setValue,
-
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -97,13 +96,14 @@ function OrderSummaryEdit({ orderData, isEdit }) {
 
   const takeOut = watch("diningMethod") === "takeOut";
 
-  // 用餐方式的select選項
+  // 用餐方式的select選項(這邊的方法之後應該要淘汰)
   const optionList = takeOut
     ? generatePickupTimes("10:00", "24:00")
     : generateTableNumbers(10);
 
   function onSubmit(data) {
     const orderData = buildOrderData(dishes, data);
+    console.log(orderData);
     updateOrder(orderData);
   }
 
