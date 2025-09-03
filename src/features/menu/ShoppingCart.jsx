@@ -3,15 +3,13 @@ import { useOrder } from "../../context/OrderContext";
 import CartItem from "./CartItem";
 import { useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
-import LoadingDotMini from "../../ui/LoadingDotMini";
 import {
   buildOrderData,
   calculateOrderSummary,
 } from "../../utils/orderHelpers";
 import EmptyShoppingCart from "./EmptyShoppingCart";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
-import { useSettings } from "../../context/SettingsContext";
-import StyledHotToast from "../../ui/StyledHotToast";
+import ButtonSpinner from "../../ui/ButtonSpinner";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
@@ -95,9 +93,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-function ShoppingCart() {
-  const { settings, status } = useSettings();
-
+function ShoppingCart({ settingsData }) {
   const {
     state: { dishes, curOrderPage },
   } = useOrder();
@@ -117,23 +113,13 @@ function ShoppingCart() {
   // 因為munu和edit-order共用相同useReducer，所以在切換頁面時可能出現ui渲染閃爍問題，因此增加判別條件解決閃爍(讓購物車ui只渲染點餐頁面的數據)
   const isCreatingOrder = curOrderPage === "/menu";
 
-  const takeOut = watch("diningMethod") === "takeOut";
+  const takeOut = watch("diningMethod") === "外帶";
 
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   function onSubmit(data) {
-    // 非營業時段不能建立訂單
-    // if (!settings.isBusinessDay) {
-    //   StyledHotToast({
-    //     type: "error",
-    //     title: "訂單建立失敗",
-    //     content: "當前並非店鋪營業時段",
-    //   });
-
-    //   return;
-    // }
-
     const orderData = buildOrderData(dishes, data);
+
     createOrder(orderData);
   }
 
@@ -159,6 +145,7 @@ function ShoppingCart() {
             takeOut={takeOut}
             setValue={setValue}
             dishes={dishes}
+            settingsData={settingsData}
           />
         </ShoppingList>
       ) : (
@@ -182,7 +169,7 @@ function ShoppingCart() {
               disabled={dishes.length === 0 || orderCreating || !isValid}
               onClick={handleSubmit(onSubmit, onError)}
             >
-              {orderCreating ? <LoadingDotMini /> : "提交"}
+              {orderCreating ? <ButtonSpinner /> : "提交"}
             </SubmitButton>
           </Row>
         </Footer>

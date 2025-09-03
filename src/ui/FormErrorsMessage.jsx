@@ -7,12 +7,22 @@ const StyledErrorsMessage = styled.p`
   padding: 0 0.2rem;
   font-size: 1.3rem;
   font-weight: 500;
+  min-height: ${({ $minHeight }) => `${$minHeight}rem`};
 `;
 
-function FormErrorsMessage({ fieldName, gridColumn = null, gridRow = null }) {
+function FormErrorsMessage({
+  errors,
+  minHeight = 0,
+  gridColumn = null,
+  gridRow = null,
+}) {
   return (
-    <StyledErrorsMessage $gridColumn={gridColumn} $gridRow={gridRow}>
-      {fieldName?.message}
+    <StyledErrorsMessage
+      $minHeight={minHeight}
+      $gridColumn={gridColumn}
+      $gridRow={gridRow}
+    >
+      {errors?.message}
     </StyledErrorsMessage>
   );
 }

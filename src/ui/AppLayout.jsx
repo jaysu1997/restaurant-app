@@ -22,6 +22,7 @@ const Main = styled.main`
   width: min(120rem, 100%, 95dvw);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 3.2rem;
   margin: 0 auto;
 `;

@@ -3,26 +3,27 @@ import { Controller } from "react-hook-form";
 import styled from "styled-components";
 
 const StyledToggleSwitch = styled.label`
-  height: 3.2rem;
-  width: 9.6rem;
+  user-select: none;
+  height: 3.8rem;
+  width: 12.6rem;
+  padding: 0.5rem;
   background-color: #d6d3d1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.3rem;
   position: relative;
   border-radius: 999px;
   overflow: hidden;
   cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
 
   input:checked + span {
-    transform: translateX(4.5rem);
+    transform: translateX(5.8rem);
   }
 `;
 
 const Option = styled.div`
-  height: 2.6rem;
-  width: 9rem;
+  height: 100%;
+  width: 100%;
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -35,12 +36,12 @@ const Option = styled.div`
 
 const Slider = styled.span`
   position: absolute;
-  height: 2.6rem;
-  width: 4.5rem;
+  height: 2.8rem;
+  width: 5.8rem;
   background-color: #fff;
-  border-radius: 15px;
-  top: 0.3rem;
-  left: 0.3rem;
+  border-radius: 999px;
+  top: 0.5rem;
+  left: 0.5rem;
   transition: all 0.3s;
 `;
 
@@ -54,15 +55,15 @@ function DiningMethodSwitch({
     <Controller
       name="diningMethod"
       control={control}
-      defaultValue={takeOut ? "takeOut" : "dineIn"}
+      defaultValue={takeOut ? "外帶" : "內用"}
       render={({ field }) => (
         <StyledToggleSwitch $disabled={isDisabled}>
           <input
             type="checkbox"
             hidden
-            checked={field.value === "takeOut"}
+            checked={field.value === "外帶"}
             onChange={(e) => {
-              field.onChange(e.target.checked ? "takeOut" : "dineIn");
+              field.onChange(e.target.checked ? "外帶" : "內用");
               setValue(takeOut ? "pickupTime" : "tableNumber", null);
             }}
             disabled={isDisabled}

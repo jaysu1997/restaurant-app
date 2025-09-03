@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
-import LoadingDotMini from "./LoadingDotMini";
+import ButtonSpinner from "./ButtonSpinner";
 import useGetFilterMenuData from "../hooks/data/menus/useGetFilterData";
 import QueryStatusFallback from "./QueryStatusFallback";
 
@@ -115,6 +115,7 @@ const ButtonRow = styled.div`
   gap: 0.6rem;
 `;
 
+// 執行食材獲取的功能或許需要優化，目前這看起來有點醜，未來應該要分割
 function ConfirmDelete({
   onCloseModal,
   data,
@@ -173,7 +174,7 @@ function ConfirmDelete({
                 });
               }}
             >
-              {isDeleting ? <LoadingDotMini /> : "刪除"}
+              {isDeleting ? <ButtonSpinner /> : "刪除"}
             </Button>
           </ButtonRow>
         </QueryStatusFallback>

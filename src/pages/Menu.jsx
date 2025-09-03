@@ -3,8 +3,11 @@ import MenuView from "../features/menu/MenuView";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
+import { useSettings } from "../context/SettingsContext";
 
 function Menu() {
+  const { settings, settingsError, settingsIsPending, settingsIsError } =
+    useSettings();
   const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
 
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
@@ -19,9 +22,9 @@ function Menu() {
     <>
       <PageHeader title="點餐系統" />
       <QueryStatusFallback
-        isPending={menusIsPending || inventoryIsPending}
-        isError={menusIsError || inventoryIsError}
-        error={menusError || inventoryError}
+        isPending={menusIsPending || inventoryIsPending || settingsIsPending}
+        isError={menusIsError || inventoryIsError || settingsIsError}
+        error={menusError || inventoryError || settingsError}
         isEmpty={
           (Array.isArray(menusData) && menusData?.length === 0) ||
           (Array.isArray(inventoryData) && inventoryData?.length === 0)
@@ -31,7 +34,9 @@ function Menu() {
           buttonText: "新增餐點",
           redirectTo: "/menu-manage",
         }}
-        render={() => <MenuView menusData={menusData} />}
+        render={() => (
+          <MenuView menusData={menusData} settingsData={settings} />
+        )}
       />
     </>
   );

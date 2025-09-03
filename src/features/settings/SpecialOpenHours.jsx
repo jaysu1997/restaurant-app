@@ -185,7 +185,7 @@ function SpecialOpenHours({ data = {} }) {
               </DateField>
 
               <FormErrorsMessage
-                fieldName={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
+                errors={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
                 gridColumn="1 / -1"
               />
 

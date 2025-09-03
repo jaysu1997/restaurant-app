@@ -5,12 +5,13 @@ import styled from "styled-components";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useAnalyzedOrders from "../hooks/data/orders/useAnalyzedOrders";
 import StoreStatusBadge from "../ui/StoreStatusBadge ";
+import { useSettings } from "../context/SettingsContext";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.8rem;
-  padding-bottom: 3.6rem;
+  width: 100%;
 `;
 
 function Dashboard() {
@@ -21,10 +22,15 @@ function Dashboard() {
     analyzedDataError,
   } = useAnalyzedOrders();
 
+  const { status } = useSettings();
+
   return (
     <>
       <PageHeader title="營運總覽">
-        <StoreStatusBadge isOpenNow={true} />
+        <StoreStatusBadge
+          isOpenNow={status.isOpenNow}
+          tooltip={status.tooltip}
+        />
       </PageHeader>
 
       <QueryStatusFallback

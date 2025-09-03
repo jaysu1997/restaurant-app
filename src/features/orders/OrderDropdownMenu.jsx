@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { useRef, useState } from "react";
-import { FiMoreHorizontal, FiEye, FiEdit2, FiTrash } from "react-icons/fi";
+import { useState } from "react";
 import { GoKebabHorizontal, GoEye, GoPencil, GoTrash } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
@@ -9,10 +8,7 @@ import {
   formatPickupNumber,
 } from "../../utils/orderHelpers";
 import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
-
-const MenuContainer = styled.div`
-  position: relative;
-`;
+import DropdownMenu from "../../ui/DropdownMenu";
 
 const ToggleButton = styled.button`
   display: flex;
@@ -29,127 +25,51 @@ const ToggleButton = styled.button`
   }
 `;
 
-const Menu = styled.ul`
-  position: absolute;
-  top: ${(props) => props.$position}px;
-  right: 0;
-  background: #fff;
-  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e3e5e7;
-  border-radius: 6px;
-  padding: 0.8rem 0;
-  display: flex;
-  flex-direction: column;
-  visibility: ${(props) => (props.$isOpenMenu ? "visible" : "hidden")};
-  transition: visibility 0.5s;
-  z-index: 1;
-`;
-
-const MenuItem = styled.li`
-  width: 14rem;
-
-  &:hover {
-    background: #f0f0f0;
-  }
-
-  button {
-    width: 100%;
-    height: fit-content;
-    padding: 1rem 2rem;
-    gap: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-  }
-`;
-
-function OrderDropdownMenu({
-  orderData,
-  isOpenMenu,
-  setIsOpenMenu,
-  activeMenuRef,
-}) {
+function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
   const { mutate, isPending } = useDeleteOrder();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [position, setPosition] = useState(null);
-  const toggleRef = useRef(null);
   const navigate = useNavigate();
+
   const { id, pickupNumber, createdTime } = orderData;
 
   function handleToggle(e) {
     e.stopPropagation();
     setIsOpenMenu((isOpenMenu) => (isOpenMenu === id ? false : id));
-
-    const toggleRect = toggleRef.current.getBoundingClientRect();
-    const menuHeight = 133;
-    const spacing = 6;
-
-    // 根據<Menu />展開後是否會超出視窗可是範圍來決定Y軸定位
-    const idealBottom = toggleRect.bottom + spacing + menuHeight;
-    const shouldOpenUpward = idealBottom > window.innerHeight;
-
-    setPosition(
-      shouldOpenUpward
-        ? -spacing - menuHeight
-        : toggleRef.current.offsetHeight + spacing
-    );
   }
+
+  const itemsConfig = [
+    {
+      name: "檢視訂單",
+      icon: GoEye,
+      handleClick: () => navigate(`/order/${id}`),
+    },
+    {
+      name: "編輯訂單",
+      icon: GoPencil,
+      handleClick: () => navigate(`/order-edit/${id}`),
+    },
+    {
+      name: "刪除訂單",
+      icon: GoTrash,
+      handleClick: () => setIsOpenModal(true),
+    },
+  ];
 
   return (
     <>
-      <MenuContainer>
+      <DropdownMenu
+        itemsConfig={itemsConfig}
+        open={isOpenMenu === id}
+        setIsOpenMenu={setIsOpenMenu}
+        isOpenMenu={isOpenMenu}
+      >
         <ToggleButton
-          ref={toggleRef}
           $isActive={isOpenMenu === id}
-          onClick={(e) => {
-            handleToggle(e);
-          }}
+          onClick={(e) => handleToggle(e)}
         >
           <GoKebabHorizontal size={20} strokeWidth={0.4} />
         </ToggleButton>
-
-        {isOpenMenu === id && (
-          <Menu
-            ref={activeMenuRef}
-            $isOpenMenu={isOpenMenu}
-            $position={position}
-          >
-            <MenuItem>
-              <button
-                onClick={() => {
-                  navigate(`/order/${id}`);
-                  setIsOpenMenu(false);
-                }}
-              >
-                <GoEye size={16} strokeWidth={0.4} />
-                <span>檢視訂單</span>
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => {
-                  navigate(`/order-edit/${id}`);
-                  setIsOpenMenu(false);
-                }}
-              >
-                <GoPencil size={16} strokeWidth={0.4} />
-                <span>編輯訂單</span>
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => {
-                  setIsOpenMenu(false);
-                  setIsOpenModal(true);
-                }}
-              >
-                <GoTrash size={16} strokeWidth={0.4} />
-                <span>刪除訂單</span>
-              </button>
-            </MenuItem>
-          </Menu>
-        )}
-      </MenuContainer>
+      </DropdownMenu>
 
       {isOpenModal && (
         <ConfirmDelete

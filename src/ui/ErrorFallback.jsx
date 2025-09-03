@@ -34,7 +34,7 @@ const Box = styled.div`
   }
 `;
 
-// 這還需要再做修正
+// 這還需要再做修正(這是react error boundary 的 fallback ui)
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <>

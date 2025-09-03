@@ -49,45 +49,6 @@ function calculateOrderSummary(order) {
   return { totalServings, totalPrice };
 }
 
-// 生成外帶取餐時間(這個應該也是要刪除)
-function generatePickupTimes(startTime, endTime) {
-  const result = [];
-
-  // 至少預留20分鐘的準備餐點時間
-  const now = addMinutes(new Date(), 20);
-
-  const parseTime = (timeStr) => {
-    const [hour, minute] = timeStr.split(":").map(Number);
-    const date = new Date();
-    return setMinutes(setHours(date, hour), minute);
-  };
-
-  let start = parseTime(startTime);
-  const end = parseTime(endTime);
-
-  // 如果 start 比 20 分鐘後還早，就從 20 分鐘後的時間開始
-  if (isBefore(start, now)) {
-    const roundedMinutes = Math.ceil(now.getMinutes() / 5) * 5;
-    start = setMinutes(now, roundedMinutes);
-  }
-
-  while (!isBefore(end, start)) {
-    const timeStr = format(start, "HH:mm");
-    result.push({ label: timeStr, value: timeStr });
-    start = addMinutes(start, 5);
-  }
-
-  return result;
-}
-
-// 內用桌號選項生成(這邊的之後要刪除)
-function generateTableNumbers(count) {
-  return Array.from({ length: count }, (_, i) => ({
-    label: String(i + 1),
-    value: String(i + 1),
-  }));
-}
-
 // 檢查庫存剩餘數量是否充足
 function compareInventory({
   previousIngredientsUsage,
@@ -174,8 +135,6 @@ export {
   formatPickupNumber,
   calculateOrderSummary,
   summarizeMealChoices,
-  generatePickupTimes,
-  generateTableNumbers,
   compareInventory,
   buildOrderData,
   isValidPositiveInteger,

@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import FieldArray from "./FieldArray";
 import FormTable from "../../ui/FormTable";
 import { IoCloseSharp } from "react-icons/io5";
-import LoadingDotMini from "../../ui/LoadingDotMini";
+import ButtonSpinner from "../../ui/ButtonSpinner";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
 import FormTypography from "../../ui/FormTypography";
@@ -53,6 +53,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     inventoryError,
     inventoryIsError,
   } = useGetInventory(false);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { upsert, isUpserting } = useUpsertMenu();
   const newIngredientRef = useRef(new Map());
@@ -286,7 +287,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
                 type="submit"
                 disabled={isUpserting}
               >
-                {isUpserting ? <LoadingDotMini /> : "儲存"}
+                {isUpserting ? <ButtonSpinner /> : "儲存"}
               </Button>
             </FormRow>
           </FormTable>

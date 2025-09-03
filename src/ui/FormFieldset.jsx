@@ -42,7 +42,7 @@ function FormFieldset({ legendValue = null, fieldName = null, children }) {
         {legendValue && <Legend>{legendValue}</Legend>}
         <Field>{children}</Field>
       </Fieldset>
-      {fieldName && <FormErrorsMessage fieldName={fieldName} />}
+      {fieldName && <FormErrorsMessage errors={fieldName} />}
     </Wrapper>
   );
 }

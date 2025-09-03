@@ -188,7 +188,7 @@ function ControlledTimeRange({
           </RemoveButton>
 
           <FormErrorsMessage
-            fieldName={
+            errors={
               errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[slotIndex]
                 ?.errorFallback
             }

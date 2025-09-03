@@ -73,10 +73,7 @@ function StoreInfo({ data = {} }) {
             }}
           />
 
-          <FormErrorsMessage
-            fieldName={errors?.storeInfo?.name}
-            gridColumn="2"
-          />
+          <FormErrorsMessage errors={errors?.storeInfo?.name} gridColumn="2" />
         </li>
 
         <li>
@@ -103,10 +100,7 @@ function StoreInfo({ data = {} }) {
             }}
           />
 
-          <FormErrorsMessage
-            fieldName={errors?.storeInfo?.phone}
-            gridColumn="2"
-          />
+          <FormErrorsMessage errors={errors?.storeInfo?.phone} gridColumn="2" />
         </li>
 
         <li>
@@ -122,7 +116,7 @@ function StoreInfo({ data = {} }) {
           />
 
           <FormErrorsMessage
-            fieldName={errors?.storeInfo?.address}
+            errors={errors?.storeInfo?.address}
             gridColumn="2"
           />
         </li>
@@ -142,10 +136,7 @@ function StoreInfo({ data = {} }) {
             }}
           />
 
-          <FormErrorsMessage
-            fieldName={errors?.storeInfo?.taxId}
-            gridColumn="2"
-          />
+          <FormErrorsMessage errors={errors?.storeInfo?.taxId} gridColumn="2" />
         </li>
       </Content>
     </SettingFormSection>

@@ -13,7 +13,7 @@ import QueryStatusFallback from "../ui/QueryStatusFallback";
 
 const Container = styled.ul`
   display: grid;
-  max-width: 100%;
+  width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   justify-content: space-between;
   gap: 4rem;

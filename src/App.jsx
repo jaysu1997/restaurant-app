@@ -16,13 +16,15 @@ import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
 import Dashboard from "./pages/Dashboard";
 import { SettingsProvider } from "./context/SettingsContext";
-// 這個要調回3次重試
+import SignIn from "./pages/SignIn";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import Account from "./pages/Account";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      // retry: 3,
-      retry: false,
+      retry: 3,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },
@@ -35,7 +37,7 @@ const queryClient = new QueryClient({
 
 // 後續可能需要把元件和函式以及檔案和資料夾都需要重構
 export default function App() {
-  // 全域禁用number input的預設滾輪事件
+  // 全域禁用number input的預設滾輪事件(後續或許需要改成設計一個number input元件，統一禁用滾動事件，而不是全域監聽)
   useEffect(() => {
     // 當滾輪事件是發生在number input上時，移除焦點
     const handleWheel = (e) => {
@@ -62,25 +64,33 @@ export default function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
 
-      <SettingsProvider>
-        <OrderProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="/menu" element={<Menu />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/order/:orderId" element={<Order />} />
-                <Route path="/order-edit/:orderId" element={<Order />} />
-                <Route path="/menu-manage" element={<MenuManage />} />
-                <Route path="/inventory" element={<Inventory />} />
-                <Route path="/settings" element={<Settings />} />
-              </Route>
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </OrderProvider>
-      </SettingsProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            element={
+              <ProtectedRoute>
+                <SettingsProvider>
+                  <OrderProvider>
+                    <AppLayout />
+                  </OrderProvider>
+                </SettingsProvider>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/order/:orderId" element={<Order />} />
+            <Route path="/order-edit/:orderId" element={<Order />} />
+            <Route path="/menu-manage" element={<MenuManage />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/account" element={<Account />} />
+          </Route>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
 
       <Toaster
         position="top-center"

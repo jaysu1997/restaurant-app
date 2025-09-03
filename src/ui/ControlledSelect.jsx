@@ -19,13 +19,17 @@ const selectStyle = {
       ...baseStyles,
       border: "none",
       boxShadow: "none",
-      fontWeight: "400",
+      fontSize: "1.4rem",
+      fontWeight: "500",
     }),
     menuList: (baseStyles) => ({
       ...baseStyles,
       maxHeight: "30dvh",
-      overflowY: "auto",
+      fontSize: "1.4rem",
+      fontWeight: "500",
+      color: "#000",
     }),
+    menuPortal: (baseStyles) => ({ ...baseStyles, zIndex: 9999 }),
   },
   notCreatable: {
     container: (baseStyles) => ({
@@ -34,8 +38,16 @@ const selectStyle = {
     }),
     control: (baseStyles) => ({
       ...baseStyles,
-      fontWeight: "400",
+      fontSize: "1.4rem",
+      fontWeight: "500",
     }),
+    menuList: (baseStyles) => ({
+      ...baseStyles,
+      fontSize: "1.4rem",
+      fontWeight: "500",
+      color: "#000",
+    }),
+    menuPortal: (baseStyles) => ({ ...baseStyles, zIndex: 9999 }),
   },
 };
 
@@ -45,6 +57,7 @@ const customComponents = {
   IndicatorSeparator: () => null,
 };
 
+// 這裡的元件樣式或許需要再調整，有些混亂
 function ControlledSelect({
   name,
   control,
@@ -67,6 +80,7 @@ function ControlledSelect({
           options={options}
           isClearable
           isDisabled={disabled}
+          menuPortalTarget={document.body}
           menuPosition="fixed"
           placeholder={placeholder}
           onCreateOption={(optionValue) => {

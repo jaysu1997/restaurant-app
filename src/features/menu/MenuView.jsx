@@ -7,7 +7,6 @@ import ShoppingCart from "./ShoppingCart";
 import OrderForm from "../../ui/OrderForm/OrderForm";
 
 const Container = styled.div`
-  max-width: 120rem;
   display: grid;
   grid-template-columns: minmax(0, 96rem) 21.6rem;
   grid-template-rows: auto 1fr;
@@ -26,7 +25,7 @@ const Menus = styled.ul`
   padding-bottom: 3.6rem;
 `;
 
-function MenuView({ menusData }) {
+function MenuView({ menusData, settingsData }) {
   // 取得所有菜單數據
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
@@ -54,7 +53,7 @@ function MenuView({ menusData }) {
             />
           ))}
         </Menus>
-        <ShoppingCart />
+        <ShoppingCart settingsData={settingsData} />
       </Container>
 
       {isOpenModal.type === "OrderForm" && (

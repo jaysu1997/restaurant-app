@@ -9,6 +9,7 @@ import {
   isBefore,
   isTomorrow,
   isWithinInterval,
+  max,
   set,
   startOfDay,
 } from "date-fns";
@@ -108,17 +109,17 @@ export function getOpenHoursInfo(settingsData, date) {
   return todayOpenHours;
 }
 
-// 根據輸入的起迄時間，生成間隔10分鐘的時間選項列
+// 根據輸入的起迄時間，生成間隔5分鐘的時間選項列
 export function generateTimeOptions(start, end) {
   const timeOptions = eachMinuteOfInterval(
     { start: start, end: end },
-    { step: 10 }
+    { step: 5 }
   ).map((time) => ({
-    label: formatToHourMinute(time),
+    label: `${isTomorrow(time) ? "明天 " : ""}${formatToHourMinute(time)}`,
     value: time,
   }));
 
-  // 23:59需要自己手動添加
+  // 如果結束營業時間是23:59，需要自己手動添加
   if (formatToHourMinute(end) === "23:59") {
     timeOptions.push({ label: formatToHourMinute(end), value: end });
   }
@@ -130,39 +131,38 @@ export function generateTimeOptions(start, end) {
 export function generatePickupTimeOptions(todayOpenInfo) {
   if (!todayOpenInfo.isBusinessDay) return [];
 
+  // 當前時間
   const now = new Date();
-  const earliestPickupTime = addMinutes(now, 20);
+  // 最快取餐時間(至少需要預留15分鐘準備時間)
+  const minuteRemainder = now.getMinutes() % 5;
+  const earliestPickupTime = addMinutes(
+    now,
+    minuteRemainder === 0 ? 15 : 20 - minuteRemainder
+  );
 
-  // 先篩選掉已經經過的營業時段
   const pickupTime = todayOpenInfo.timeSlots
     .filter((slot) => {
+      // 先篩選掉已經超過的營業時段
       const { closeTime } = slot;
 
-      return !isBefore(closeTime.value, earliestPickupTime);
+      return !isBefore(closeTime.value, now);
     })
     .flatMap((slot) => {
-      const start = slot.openTime.value;
-      const end = slot.closeTime.value;
+      // 生成取餐時間所需要的起迄時間(預設為該營業時段的起訖時間)
+      let start = slot.openTime.value;
+      let end = slot.closeTime.value;
+
+      // 如果最快取餐時間在該營業時段的起訖時間之內，則以最快取餐時間取代起始時間
+      if (isWithinInterval(earliestPickupTime, { start, end })) {
+        start = earliestPickupTime;
+      }
+
+      // 若當前仍在營業時段內，但最快取餐時間超過休息時間，則保留休息時間點讓點餐功能仍可以使用，至於是否接單則自己決定
+      if (earliestPickupTime >= end) start = end;
+
+      // 生成當前營業時段的常規取餐時間選項
       return generateTimeOptions(start, end);
     });
-
-  if (
-    pickupTime.length !== 0 &&
-    isWithinInterval(earliestPickupTime, {
-      start: pickupTime[0].value,
-      end: pickupTime.at(-1).value,
-    })
-  ) {
-    const result = pickupTime.findIndex((option) =>
-      isAfter(option.value, earliestPickupTime)
-    );
-
-    pickupTime.splice(0, result);
-    pickupTime.unshift({
-      label: formatToHourMinute(earliestPickupTime),
-      value: earliestPickupTime,
-    });
-  }
 
   return pickupTime;
 }
@@ -176,16 +176,20 @@ export function getOpenStatus(todayOpenInfo) {
 
   const { isBusinessDay, timeSlots } = todayOpenInfo;
 
+  // 公休日
   if (!isBusinessDay) return { isOpenNow, tooltip, nextUpdateTime };
 
   for (const slot of timeSlots) {
     const open = slot.openTime.value;
     const close = slot.closeTime.value;
 
+    // 休息中
     if (open > now) {
       nextUpdateTime = open;
       tooltip = `${formatToHourMinute(open)} 開始營業`;
       break;
+
+      // 營業中
     } else if (isWithinInterval(now, { start: open, end: close })) {
       isOpenNow = true;
       nextUpdateTime = close;
@@ -194,7 +198,9 @@ export function getOpenStatus(todayOpenInfo) {
       tooltip = `${tomorrow ? "明日 " : ""}${formatToHourMinute(close)} 休息`;
       break;
     }
+    // 營業時段都已經結束(打烊)
     tooltip = "今日已打烊";
   }
+
   return { isOpenNow, tooltip, nextUpdateTime };
 }

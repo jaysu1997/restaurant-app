@@ -9,6 +9,7 @@ import {
   BiSliderAlt,
 } from "react-icons/bi";
 import { scrollToTop } from "../utils/scrollToTop";
+import useUser from "../hooks/data/auth/useUser";
 
 const StyleNav = styled.nav`
   border-right: 1px solid #dcdcdc;
@@ -21,6 +22,10 @@ const StyleNav = styled.nav`
   width: 24rem;
   overflow-y: auto;
   scrollbar-width: thin;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const NavList = styled.ul`
@@ -65,6 +70,14 @@ const StyleNavLink = styled(NavLink)`
   }
 `;
 
+const SignUpButton = styled.button`
+  margin-top: auto;
+  margin-bottom: 3.2rem;
+  background-color: aliceblue;
+  width: 15rem;
+  padding: 1rem 2rem;
+`;
+
 const navigationsLink = [
   { to: "/", icon: <BiChalkboard />, title: "營運總覽" },
   { to: "menu", icon: <BiFork />, title: "點餐系統" },
@@ -75,6 +88,10 @@ const navigationsLink = [
 ];
 
 function Navbar() {
+  const { user } = useUser();
+  const userRole = user?.user_metadata?.user_role;
+  const isManager = userRole === "店長";
+
   return (
     <StyleNav>
       <NavList>
@@ -87,6 +104,7 @@ function Navbar() {
           </li>
         ))}
       </NavList>
+      {isManager && <SignUpButton>新增員工</SignUpButton>}
     </StyleNav>
   );
 }

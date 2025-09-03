@@ -5,10 +5,10 @@ import { getSettingsApi } from "../../../services/apiSettings";
 function useGetSettings() {
   const {
     data = {},
-    error,
-    isPending,
-    isSuccess,
-    isError,
+    error: settingsError,
+    isPending: settingsIsPending,
+    isSuccess: settingsIsSuccess,
+    isError: settingsIsError,
   } = useQuery({
     queryKey: ["settings"],
     queryFn: getSettingsApi,
@@ -16,10 +16,10 @@ function useGetSettings() {
 
   return {
     data,
-    error,
-    isPending,
-    isSuccess,
-    isError,
+    settingsError,
+    settingsIsPending,
+    settingsIsSuccess,
+    settingsIsError,
   };
 }
 

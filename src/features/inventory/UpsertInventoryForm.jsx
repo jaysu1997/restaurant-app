@@ -3,7 +3,7 @@ import FormTable from "../../ui/FormTable";
 import FormTypography from "../../ui/FormTypography";
 import FormRow from "../../ui/FormRow";
 import Button from "../../ui/Button";
-import LoadingDotMini from "../../ui/LoadingDotMini";
+import ButtonSpinner from "../../ui/ButtonSpinner";
 import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui/StyledHotToast";
 import FormFieldset from "../../ui/FormFieldset";
@@ -107,7 +107,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
             取消
           </Button>
           <Button $buttonStyle="submit" type="submit" disabled={isUpserting}>
-            {isUpserting ? <LoadingDotMini /> : "儲存"}
+            {isUpserting ? <ButtonSpinner /> : "儲存"}
           </Button>
         </FormRow>
       </FormTable>

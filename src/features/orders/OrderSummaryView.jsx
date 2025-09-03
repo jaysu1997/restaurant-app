@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Tag from "../../ui/Tag";
 import OrderDishes from "./OrderDishes";
 import OrderOperation from "./OrderOperation";
+// 這裡的format可能需要整理(變成通用助手或是統一成一個函式)
 import { formatCreatedTime } from "../../utils/orderHelpers";
+import { formatToHourMinute } from "../../context/settingsHelpers";
 
 const OrderInfo = styled.section`
   background-color: #fff;
@@ -67,17 +69,11 @@ function OrderSummaryView({ orderData, isEdit }) {
       <OrderInfo>
         <Row>
           <div>用餐方式：</div>
-          <div>{diningMethod === "dineIn" ? "內用" : "外帶"}</div>
+          <div>{diningMethod}</div>
         </Row>
         <Row>
-          <div>{diningMethod === "dineIn" ? "內用桌號：" : "取餐時間："}</div>
-          <div>{tableNumber || pickupTime}</div>
-        </Row>
-        <Row>
-          <div>訂單狀態：</div>
-          <div>
-            <Tag $tagStatus={status}>{status}</Tag>
-          </div>
+          <div>{diningMethod === "內用" ? "內用桌號：" : "取餐時間："}</div>
+          <div>{tableNumber || formatToHourMinute(pickupTime)}</div>
         </Row>
         <Row>
           <div>付款狀態：</div>
@@ -85,6 +81,13 @@ function OrderSummaryView({ orderData, isEdit }) {
             <Tag $tagStatus={paid}>{paid}</Tag>
           </div>
         </Row>
+        <Row>
+          <div>訂單狀態：</div>
+          <div>
+            <Tag $tagStatus={status}>{status}</Tag>
+          </div>
+        </Row>
+
         <Row>
           <div>訂單備註：</div>
           <div>{note || "無"}</div>

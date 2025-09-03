@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import OrderRow from "./OrderRow";
 import OrderDropdownMenu from "./OrderDropdownMenu";
-import useClickOutside from "../../hooks/ui/useClickOutside";
 
 const OrderContainer = styled.div`
   width: 100%;
@@ -14,6 +13,7 @@ const OrderContainer = styled.div`
 
   @media (max-width: 768px) {
     border: none;
+    box-shadow: none;
   }
 `;
 
@@ -50,10 +50,6 @@ const OrderBody = styled.section`
 
 function OrdersTable({ ordersData }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const activeMenuRef = useRef(null);
-
-  // 在父元件監聽點擊外部時關閉菜單(避免大量註冊事件監聽)
-  useClickOutside(activeMenuRef, isOpenMenu, setIsOpenMenu, false);
 
   return (
     <OrderContainer>
@@ -74,7 +70,6 @@ function OrdersTable({ ordersData }) {
               orderData={orderData}
               isOpenMenu={isOpenMenu}
               setIsOpenMenu={setIsOpenMenu}
-              activeMenuRef={activeMenuRef}
             />
           </OrderRow>
         ))}

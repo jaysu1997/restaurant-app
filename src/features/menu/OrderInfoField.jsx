@@ -3,20 +3,14 @@ import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import Note from "../../ui/Note";
 import FormTypography from "../../ui/FormTypography";
-import { useSettings } from "../../context/SettingsContext";
 import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
+import { generatePickupTimeOptions } from "../../context/settingsHelpers";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
-`;
-
-const StyledPaidSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
 `;
 
 const Row = styled.div`
@@ -29,17 +23,22 @@ const Row = styled.div`
     display: flex;
     gap: 0.2rem;
   }
-
-  label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-  }
 `;
 
-function OrderInfoField({ register, takeOut, control, setValue, dishes }) {
-  const { settings, status } = useSettings();
+function OrderInfoField({
+  register,
+  takeOut,
+  control,
+  setValue,
+  dishes,
+  settingsData,
+}) {
+  const pickupTimeOptions = generatePickupTimeOptions(
+    settingsData.todayOpenInfo
+  );
+
+  const isDisabled =
+    !settingsData.todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
 
   return (
     <StyledOrderInfoField>
@@ -59,11 +58,20 @@ function OrderInfoField({ register, takeOut, control, setValue, dishes }) {
           <FormTypography $titleStyle="highlight">*</FormTypography>
         </h5>
         <ControlledSelect
-          options={takeOut ? settings.pickupTime : settings.dineInTableOptions}
+          options={
+            takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
+          }
           control={control}
           name={takeOut ? "pickupTime" : "tableNumber"}
           creatable={false}
-          placeholder={takeOut ? "選擇取餐時間" : "選擇桌號"}
+          placeholder={
+            !isDisabled
+              ? takeOut
+                ? "選擇取餐時間"
+                : "選擇桌號"
+              : "非營業時間無法點餐"
+          }
+          disabled={isDisabled}
           rules={{
             required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
           }}
@@ -75,26 +83,20 @@ function OrderInfoField({ register, takeOut, control, setValue, dishes }) {
           付款狀態
           <FormTypography $titleStyle="highlight">*</FormTypography>
         </h5>
-        <StyledPaidSection>
-          <label htmlFor="yes">
-            <input
-              type="radio"
-              id="yes"
-              value="已付款"
-              {...register("paid", { required: "請選擇付款狀態" })}
-            />
-            <span>已付款</span>
-          </label>
-          <label htmlFor="no">
-            <input
-              type="radio"
-              id="no"
-              value="未付款"
-              {...register("paid", { required: "請選擇付款狀態" })}
-            />
-            <span>未付款</span>
-          </label>
-        </StyledPaidSection>
+        <ControlledSelect
+          options={[
+            { label: "已付款", value: "已付款" },
+            { label: "未付款", value: "未付款" },
+          ]}
+          control={control}
+          name="paid"
+          creatable={false}
+          placeholder="請選擇付款狀態"
+          disabled={isDisabled}
+          rules={{
+            required: "請選擇付款狀態",
+          }}
+        />
       </Row>
 
       <Row>

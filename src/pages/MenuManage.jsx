@@ -13,7 +13,7 @@ import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 
 const Container = styled.ul`
   display: grid;
-  max-width: 100%;
+  width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;

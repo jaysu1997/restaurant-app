@@ -1,91 +1,74 @@
 import styled from "styled-components";
 
-export const BadgeWrapper = styled.div`
-  display: inline-block;
+const BadgeWrapper = styled.div`
   position: relative;
-  font-size: 14px;
-`;
-
-export const TooltipWrapper = styled.div`
-  position: relative;
+  font-size: 1.4rem;
 
   &:hover > div:last-child {
     opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+    transform: translateY(1rem);
   }
 `;
 
-export const Badge = styled.div`
+const Badge = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  gap: 0.6rem;
+  padding: 0.4rem 1.2rem;
   font-weight: 500;
   border-radius: 999px;
   background-color: ${({ $isBusinessDay }) =>
     $isBusinessDay ? "#d1fae5" : "#e5e7eb"};
   color: ${({ $isBusinessDay }) => ($isBusinessDay ? "#047857" : "#6b7280")};
-  cursor: default;
-
-  svg {
-    stroke: currentColor;
-    width: 16px;
-    height: 16px;
-  }
 
   @media (max-width: 480px) {
-    font-size: 13px;
-    padding: 3px 8px;
+    font-size: 1.3rem;
+    padding: 0.3rem 1rem;
   }
 `;
 
-export const Indicator = styled.span`
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
+const Indicator = styled.span`
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
   background-color: ${({ $isBusinessDay }) =>
     $isBusinessDay ? "#10b981" : "#9ca3af"};
 `;
 
-export const Tooltip = styled.div`
+const Tooltip = styled.div`
   position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%) translateY(8px);
+  bottom: -100%;
+  right: 0px;
   background-color: #111827;
   color: white;
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 6px;
+  font-size: 1.2rem;
+  padding: 0.6rem 1rem;
+  border-radius: 2px;
   white-space: nowrap;
   opacity: 0;
-  pointer-events: none;
   transition: all 0.2s ease;
   z-index: 10;
 
   &::after {
     content: "";
     position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -6px;
+    bottom: 100%;
+    right: 10px;
     border-width: 6px;
     border-style: solid;
-    border-color: #111827 transparent transparent transparent;
+    border-color: transparent transparent #111827 transparent;
   }
 `;
 
-function StoreStatusBadge({ isOpenNow = true, tooltip = "10:00" }) {
+// 當前營業狀態ui與tooltip
+function StoreStatusBadge({ isOpenNow = false, tooltip = "今日公休" }) {
   return (
     <BadgeWrapper>
-      <TooltipWrapper>
-        <Badge $isBusinessDay={isOpenNow}>
-          <Indicator $isBusinessDay={isOpenNow} />
-          {isOpenNow ? "營業中" : "休息中"}
-        </Badge>
-        {tooltip && <Tooltip>{tooltip}</Tooltip>}
-      </TooltipWrapper>
+      <Badge $isBusinessDay={isOpenNow}>
+        <Indicator $isBusinessDay={isOpenNow} />
+        {isOpenNow ? "營業中" : "休息中"}
+      </Badge>
+      {tooltip && <Tooltip>{tooltip}</Tooltip>}
     </BadgeWrapper>
   );
 }

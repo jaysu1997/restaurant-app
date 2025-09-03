@@ -12,7 +12,7 @@ const StyledPagination = styled.footer`
   justify-content: center;
   align-items: center;
   gap: 1.6rem;
-  padding: 2rem 0.5rem 3.6rem;
+  padding: 3.6rem 0.5rem;
   font-size: 1.4rem;
 `;
 

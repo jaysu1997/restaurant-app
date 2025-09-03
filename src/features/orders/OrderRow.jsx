@@ -12,7 +12,7 @@ const StyledOrderRow = styled.div`
     2.8rem;
   align-items: center;
   justify-items: start;
-  gap: 0.8rem;
+  gap: 1rem;
   padding: 1.6rem;
   border-top: 1px solid #f3f4f6;
   background-color: #fff;
@@ -26,8 +26,6 @@ const StyledOrderRow = styled.div`
   }
 
   @media (max-width: 768px) {
-    display: grid;
-    gap: 1rem;
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "createdTime action"
@@ -115,8 +113,7 @@ const StyledOrderRow = styled.div`
 
 const DiningMethod = styled.span`
   font-size: 1.4rem;
-  color: ${(props) =>
-    props.$diningMethod === "dineIn" ? "#1e88e5" : "#43a047"};
+  color: ${(props) => (props.$diningMethod === "內用" ? "#1e88e5" : "#43a047")};
   font-weight: 700;
 `;
 
@@ -125,7 +122,7 @@ function OrderRow({ orderData, children }) {
     <StyledOrderRow>
       <div data-order-type>
         <DiningMethod $diningMethod={orderData.diningMethod}>
-          {`[${orderData.diningMethod === "takeOut" ? "外帶" : "內用"}]`}
+          {`[${orderData.diningMethod}]`}
         </DiningMethod>
       </div>
 

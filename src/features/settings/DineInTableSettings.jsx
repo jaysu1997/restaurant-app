@@ -178,7 +178,7 @@ function DineInTableSettings({ data = {} }) {
             </RemoveButton>
 
             <FormErrorsMessage
-              fieldName={errors?.dineInTableConfig?.[index]?.zoneName}
+              errors={errors?.dineInTableConfig?.[index]?.zoneName}
               gridColumn="2 / -1"
             />
 
@@ -197,7 +197,7 @@ function DineInTableSettings({ data = {} }) {
             />
 
             <FormErrorsMessage
-              fieldName={errors?.dineInTableConfig?.[index]?.tableCount}
+              errors={errors?.dineInTableConfig?.[index]?.tableCount}
               gridColumn="2 / -1"
             />
             <Preview>

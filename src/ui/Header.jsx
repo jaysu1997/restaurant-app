@@ -1,6 +1,7 @@
 // 網站頂部
 import styled from "styled-components";
 import User from "./User";
+import Logo from "./Logo";
 
 const StyleHeader = styled.header`
   width: 100%;
@@ -11,41 +12,20 @@ const StyleHeader = styled.header`
   top: 0;
   z-index: 10;
   grid-column: 1 / -1;
-  padding: 0 2.4rem;
+  /* padding: 0 2.4rem; */
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.078);
-`;
 
-const HeaderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 24rem 1fr;
+  justify-items: center;
   align-items: center;
-  height: 100%;
-`;
-
-const LogoStyle = styled.div`
-  display: flex;
-  align-items: center;
-
-  h1 {
-    color: #ea580c;
-    font-size: 2rem;
-  }
-`;
-
-const Img = styled.img`
-  height: 6rem;
 `;
 
 function Header() {
   return (
     <StyleHeader>
-      <HeaderContainer>
-        <LogoStyle>
-          <Img src="/logo.png" alt="logo" />
-          <h1>Aurora Bites</h1>
-        </LogoStyle>
-        <User />
-      </HeaderContainer>
+      <Logo />
+      <User />
     </StyleHeader>
   );
 }

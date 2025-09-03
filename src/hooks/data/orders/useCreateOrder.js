@@ -18,7 +18,9 @@ function useCreateOrder(reset) {
     onSuccess: (data) => {
       StyledHotToast({
         type: "success",
-        title: `取餐單號${formatPickupNumber(data.order.pickupNumber)}建立成功`,
+        title: `取餐單號 ${formatPickupNumber(
+          data.order.pickupNumber
+        )} 建立成功`,
       });
 
       dispatch({ type: "order/reset" });
