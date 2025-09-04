@@ -1,7 +1,8 @@
 // 網站頂部
 import styled from "styled-components";
-import User from "./User";
+
 import Logo from "./Logo";
+import User from "../features/account/User";
 
 const StyleHeader = styled.header`
   width: 100%;

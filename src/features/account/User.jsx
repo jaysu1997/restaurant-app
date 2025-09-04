@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import defaultAvatar from "../assets/default-user.png";
+import defaultAvatar from "../../assets/default-user.png";
 import { useNavigate } from "react-router-dom";
-import useUser from "../hooks/data/auth/useUser";
 import { RiArrowRightSLine } from "react-icons/ri";
-import DropdownMenu from "./DropdownMenu";
 import { GoPerson, GoSignOut } from "react-icons/go";
 import { useState } from "react";
-import useSignOut from "../hooks/data/auth/useSignOut";
+import useSignOut from "../../hooks/data/auth/useSignOut";
+import useUser from "../../hooks/data/auth/useUser";
+import DropdownMenu from "../../ui/DropdownMenu";
 
 const StyledUser = styled.div`
   padding: 0 2.4rem;

@@ -63,6 +63,7 @@ const Field = styled.div`
   }
 `;
 
+// input嘗試重複使用
 const Input = styled.input`
   font-size: 1.4rem;
   border: 1px solid #ddd;
@@ -74,16 +75,6 @@ const Input = styled.input`
     border-color: transparent;
     outline: 2px solid #3b82f6;
   }
-`;
-
-const ToggleButton = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 1rem;
-  z-index: 1;
-  display: flex;
-  align-items: center;
 `;
 
 const SignInButton = styled.button`
@@ -100,7 +91,6 @@ const SignInButton = styled.button`
 // 登入頁面UI元件
 function SignIn() {
   const navigate = useNavigate();
-  const [isHidden, setIsHidden] = useState(true);
   const { signIn, isPending } = useSignIn();
   const { user, userIsPending } = useUser();
 
@@ -151,6 +141,7 @@ function SignIn() {
           <div>
             <Input
               disabled={isPending}
+              autoComplete="username"
               id="email"
               {...register("email", {
                 required: "信箱必須填寫",
@@ -167,31 +158,19 @@ function SignIn() {
         <Field>
           <label htmlFor="password">密碼</label>
           <PasswordInput
-            disabled={isPending}
-            id="password"
-            {...register("password", {
-              required: "密碼必須填寫",
-              minLength: { value: 8, message: "密碼至少 8 碼" },
-            })}
+            render={(type) => (
+              <Input
+                id="password"
+                type={type}
+                autoComplete="current-password"
+                disabled={isPending}
+                {...register("password", {
+                  required: "密碼必須填寫",
+                  minLength: { value: 8, message: "密碼至少 8 碼" },
+                })}
+              />
+            )}
           />
-          {/* <div>
-            <Input
-            type={isHidden ? "password" : "text"}
-            disabled={isPending}
-              id="password"
-              {...register("password", {
-                required: "密碼必須填寫",
-                minLength: { value: 8, message: "密碼至少 8 碼" },
-              })}
-            />
-            <ToggleButton
-              type="button"
-              onClick={() => setIsHidden((prev) => !prev)}
-            >
-              {isHidden ? <HiEye size={18} /> : <HiEyeSlash size={18} />}
-            </ToggleButton>
-          </div> */}
-
           <FormErrorsMessage errors={errors?.password} minHeight={2} />
         </Field>
         <SignInButton disabled={isPending}>

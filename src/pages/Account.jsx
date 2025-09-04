@@ -3,6 +3,7 @@ import PageHeader from "../ui/PageHeader";
 import { LuUserRoundPen, LuKeyRound } from "react-icons/lu";
 import UserProfileSetting from "../features/account/UserProfileSetting";
 import UpdatePassword from "../features/account/UpdatePassword";
+import useUser from "../hooks/data/auth/useUser";
 
 const AccountLayout = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const SectionTitle = styled.h3`
 `;
 
 function Account() {
-  // const { signOut } = useSignOut();
+  const { user } = useUser();
 
   return (
     <AccountLayout>
@@ -49,7 +50,7 @@ function Account() {
           個人資料
           <LuUserRoundPen />
         </SectionTitle>
-        <UserProfileSetting />
+        <UserProfileSetting userData={user} />
       </Section>
 
       <Section>
@@ -57,7 +58,7 @@ function Account() {
           變更密碼
           <LuKeyRound />
         </SectionTitle>
-        <UpdatePassword />
+        <UpdatePassword userData={user} />
       </Section>
     </AccountLayout>
   );

@@ -38,8 +38,6 @@ export async function getCurrentUserApi() {
   const { data: session, error: sessionError } =
     await supabase.auth.getSession();
 
-  console.log("getSession");
-
   handleSupabaseError(sessionError);
 
   // 不存在的話回傳null
@@ -47,8 +45,6 @@ export async function getCurrentUserApi() {
 
   // 如果本機存在Session的話，則可以使用getUser功能獲取用戶數據(可用來驗證用戶是否獲得授權)
   const { data: user, error: userError } = await supabase.auth.getUser();
-
-  console.log("getUser");
 
   handleSupabaseError(userError);
 
@@ -85,6 +81,26 @@ export async function upsertAvatarFileApi(updateAvatarPayload) {
 export async function updateUserProfileApi(userProFileData) {
   const { data, error } = await supabase.auth.updateUser({
     data: userProFileData,
+  });
+
+  handleSupabaseError(error);
+
+  return data;
+}
+
+// 更新用戶密碼
+export async function updateUserPasswordApi(userCredentials) {
+  const { email, currentPassword, newPassword } = userCredentials;
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password: currentPassword,
+  });
+
+  handleSupabaseError(signInError);
+
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword,
   });
 
   handleSupabaseError(error);

@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
 
@@ -6,6 +6,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
+// 這個沒用到，但或許可以變成Wrapper底下的input{}樣式
 const Input = styled.input`
   font-size: 1.4rem;
   border: 1px solid #ddd;
@@ -29,20 +30,19 @@ const ToggleButton = styled.button`
   align-items: center;
 `;
 
-const PasswordInput = forwardRef(({ ...rest }, ref) => {
-  console.log(rest);
+// 密碼input ui元件
+function PasswordInput({ render }) {
   const [isHidden, setIsHidden] = useState(true);
+  const type = isHidden ? "password" : "text";
 
   return (
     <Wrapper>
-      <Input ref={ref} type={isHidden ? "password" : "text"} {...rest} />
+      {render(type)}
       <ToggleButton type="button" onClick={() => setIsHidden((prev) => !prev)}>
-        {isHidden ? <HiEye size={18} /> : <HiEyeSlash size={18} />}
+        {isHidden ? <HiEyeSlash size={18} /> : <HiEye size={18} />}
       </ToggleButton>
     </Wrapper>
   );
-});
+}
 
-PasswordInput.displayName = "PasswordInput";
-
-export { PasswordInput };
+export default PasswordInput;

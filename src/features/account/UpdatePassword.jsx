@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import UpdateUserAvatar from "./UpdateUserAvatar";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { useForm } from "react-hook-form";
-import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
-import useUser from "../../hooks/data/auth/useUser";
 import ButtonSpinner from "../../ui/ButtonSpinner";
 import StyledHotToast from "../../ui/StyledHotToast";
+import PasswordInput from "../../ui/PasswordInput";
+import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
@@ -55,19 +54,44 @@ const CancelButton = styled(SubmitButton)`
   background-color: #eee;
 `;
 
-// 需要加入等待?
-function UpdatePassword() {
-  const { isPending } = useUpdateUserProfile();
+function UpdatePassword({ userData }) {
+  const { mutate, isPending } = useUpdateUserPassword();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-  } = useForm();
+    watch,
+    setError,
+  } = useForm({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
 
   function onSubmit(data) {
-    console.log(data);
+    const { currentPassword, newPassword } = data;
+
+    const userCredentials = {
+      email: userData.email,
+      currentPassword,
+      newPassword,
+    };
+
+    mutate(userCredentials, {
+      onError: (error) => {
+        // 現有密碼輸入錯誤
+        if (error.code === "invalid_credentials") {
+          setError("currentPassword", {
+            type: "custom",
+            message: "密碼不正確",
+          });
+        }
+      },
+    });
   }
 
   function onError(error) {
@@ -78,15 +102,55 @@ function UpdatePassword() {
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <label>現有密碼</label>
-      {/* 之後可以製作一個密碼input，可重複使用的 */}
-      <Input {...register("currentPassword")} />
-      <FormErrorsMessage errors={errors?.user_role} gridColumn={2} />
+      <PasswordInput
+        render={(type) => (
+          <Input
+            type={type}
+            autoComplete="current-password"
+            {...register("currentPassword", {
+              required: "請輸入現有密碼",
+              minLength: { value: 8, message: "密碼至少要有8碼" },
+            })}
+          />
+        )}
+      />
+      <FormErrorsMessage errors={errors?.currentPassword} gridColumn={2} />
       <label>新的密碼</label>
-      <Input {...register("newPassword")} />
-      <FormErrorsMessage errors={errors?.user_name} gridColumn={2} />
+      <PasswordInput
+        render={(type) => (
+          <Input
+            type={type}
+            autoComplete="new-password"
+            {...register("newPassword", {
+              required: "請輸入新的密碼",
+              minLength: { value: 8, message: "密碼至少要有8碼" },
+              validate: (value) => {
+                const currentPassword = watch("currentPassword");
+                return value !== currentPassword || "新密碼不能與舊密碼相同";
+              },
+            })}
+          />
+        )}
+      />
+      <FormErrorsMessage errors={errors?.newPassword} gridColumn={2} />
       <label>確認新密碼</label>
-      <Input {...register("confirmPassword")} />
-      <FormErrorsMessage errors={errors?.personal_phone} gridColumn={2} />
+      <PasswordInput
+        render={(type) => (
+          <Input
+            type={type}
+            autoComplete="new-password"
+            {...register("confirmPassword", {
+              required: "請再次輸入新密碼",
+              minLength: { value: 8, message: "密碼至少要有8碼" },
+              validate: (value) => {
+                const newPassword = watch("newPassword");
+                return value === newPassword || "兩次輸入的新密碼不一致";
+              },
+            })}
+          />
+        )}
+      />
+      <FormErrorsMessage errors={errors?.confirmPassword} gridColumn={2} />
 
       <Footer>
         <SubmitButton disabled={!isDirty || isPending}>

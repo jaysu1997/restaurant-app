@@ -3,7 +3,6 @@ import UpdateUserAvatar from "./UpdateUserAvatar";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { useForm } from "react-hook-form";
 import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
-import useUser from "../../hooks/data/auth/useUser";
 import ButtonSpinner from "../../ui/ButtonSpinner";
 import StyledHotToast from "../../ui/StyledHotToast";
 
@@ -51,10 +50,7 @@ const CancelButton = styled(SubmitButton)`
   background-color: #eee;
 `;
 
-// 需要加入等待?
-function UserProfileSetting() {
-  const { userIsPending, user } = useUser();
-
+function UserProfileSetting({ userData }) {
   const { mutate, isPending } = useUpdateUserProfile();
   const {
     register,
@@ -63,8 +59,8 @@ function UserProfileSetting() {
     reset,
   } = useForm({
     defaultValues: {
-      user_name: user?.user_metadata?.user_name,
-      personal_phone: user?.user_metadata?.personal_phone,
+      user_name: userData?.user_metadata?.user_name,
+      personal_phone: userData?.user_metadata?.personal_phone,
     },
   });
 
@@ -89,7 +85,7 @@ function UserProfileSetting() {
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <label>用戶頭像</label>
-      <UpdateUserAvatar userData={user} />
+      <UpdateUserAvatar userData={userData} />
       <FormErrorsMessage errors={errors?.user_role} gridColumn={2} />
       <label>名稱</label>
       <Input
