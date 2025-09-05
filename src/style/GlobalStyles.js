@@ -93,6 +93,7 @@ export const GlobalStyles = styled.createGlobalStyle`
     color: #dc2626;
   }
 
+  /* 淡入動畫 */
   .fadeIn {
     opacity: 0;
     animation: fadeIn 0.3s ease forwards;

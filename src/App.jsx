@@ -36,28 +36,30 @@ const queryClient = new QueryClient({
 });
 
 // 後續可能需要把元件和函式以及檔案和資料夾都需要重構
+
+// 還有error boundary的fallback ui要設計,以及404的ui應該更需要更改
 export default function App() {
   // 全域禁用number input的預設滾輪事件(後續或許需要改成設計一個number input元件，統一禁用滾動事件，而不是全域監聽)
-  useEffect(() => {
-    // 當滾輪事件是發生在number input上時，移除焦點
-    const handleWheel = (e) => {
-      if (
-        document.activeElement.type === "number" &&
-        document.activeElement === e.target
-      ) {
-        e.target.blur(); // 移除焦點
-        e.preventDefault(); // 阻止滾輪改變 input 值
-      }
-    };
+  // useEffect(() => {
+  //   // 當滾輪事件是發生在number input上時，移除焦點
+  //   const handleWheel = (e) => {
+  //     if (
+  //       document.activeElement.type === "number" &&
+  //       document.activeElement === e.target
+  //     ) {
+  //       e.target.blur(); // 移除焦點
+  //       e.preventDefault(); // 阻止滾輪改變 input 值
+  //     }
+  //   };
 
-    // 添加全域滾輪事件監聽
-    window.addEventListener("wheel", handleWheel, { passive: false });
+  //   // 添加全域滾輪事件監聽
+  //   window.addEventListener("wheel", handleWheel, { passive: false });
 
-    // 清除監聽器
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+  //   // 清除監聽器
+  //   return () => {
+  //     window.removeEventListener("wheel", handleWheel);
+  //   };
+  // }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
