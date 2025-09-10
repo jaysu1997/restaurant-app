@@ -108,7 +108,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
 
     // 執行表單數據上傳
     upsert(upsertData, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         StyledHotToast({
           type: "success",
           title: `餐點設定${menu ? "更新" : "新增"}成功`,

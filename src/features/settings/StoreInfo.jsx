@@ -7,23 +7,24 @@ import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import StyledHotToast from "../../ui/StyledHotToast";
 
 const Content = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
-  column-gap: 2.4rem;
-  row-gap: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 
   li {
     display: grid;
-    grid-template-columns: 6rem 1fr;
-    grid-auto-rows: 3.8rem 2rem;
-    row-gap: 0.4rem;
-    column-gap: 2rem;
+    grid-template-rows: auto 3.8rem 2rem;
+    row-gap: 0.3rem;
     align-items: center;
+  }
+
+  label {
+    padding-bottom: 0.3rem;
   }
 
   input {
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 `;
 
@@ -55,31 +56,17 @@ function StoreInfo({ data = {} }) {
   return (
     <SettingFormSection
       title="店鋪資訊設定"
-      description="設定店鋪的基本資訊，包含店鋪名稱、地址、聯絡方式、統一編號。"
+      description="設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。"
       handleSubmit={handleSubmit(onSubmit, onError)}
       handleReset={() => reset({ storeInfo: data })}
       isDirty={isDirty}
     >
       <Content>
         <li>
-          <label>分店名稱</label>
+          <label htmlFor="phone">連絡電話</label>
           <ControlledInput
             control={control}
-            name="storeInfo.name"
-            type="text"
-            placeholder="請輸入分店名稱"
-            rules={{
-              required: "分店名稱不能空白",
-            }}
-          />
-
-          <FormErrorsMessage errors={errors?.storeInfo?.name} gridColumn="2" />
-        </li>
-
-        <li>
-          <label>連絡電話</label>
-          <ControlledInput
-            control={control}
+            id="phone"
             name="storeInfo.phone"
             type="tel"
             placeholder="請輸入連絡電話"
@@ -100,13 +87,14 @@ function StoreInfo({ data = {} }) {
             }}
           />
 
-          <FormErrorsMessage errors={errors?.storeInfo?.phone} gridColumn="2" />
+          <FormErrorsMessage errors={errors?.storeInfo?.phone} />
         </li>
 
         <li>
-          <label>店鋪地址</label>
+          <label htmlFor="address">店鋪地址</label>
           <ControlledInput
             control={control}
+            id="address"
             name="storeInfo.address"
             type="text"
             placeholder="請輸入店鋪地址"
@@ -115,18 +103,16 @@ function StoreInfo({ data = {} }) {
             }}
           />
 
-          <FormErrorsMessage
-            errors={errors?.storeInfo?.address}
-            gridColumn="2"
-          />
+          <FormErrorsMessage errors={errors?.storeInfo?.address} />
         </li>
 
         <li>
-          <label>統一編號</label>
+          <label htmlFor="taxId">統一編號</label>
           <ControlledInput
             control={control}
+            id="taxId"
             name="storeInfo.taxId"
-            type="text"
+            type="number"
             placeholder="請輸入統一編號"
             rules={{
               required: "統一編號不能空白",
@@ -135,8 +121,7 @@ function StoreInfo({ data = {} }) {
               },
             }}
           />
-
-          <FormErrorsMessage errors={errors?.storeInfo?.taxId} gridColumn="2" />
+          <FormErrorsMessage errors={errors?.storeInfo?.taxId} />
         </li>
       </Content>
     </SettingFormSection>

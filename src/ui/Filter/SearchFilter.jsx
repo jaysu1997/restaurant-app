@@ -35,10 +35,17 @@ function SearchFilter({ filterValue, handleValueChange, ...filters }) {
   return (
     <StyledSearchFilter>
       <input
-        type={inputType}
+        type="text"
         placeholder={placeholder}
         value={filterValue}
-        onChange={(e) => handleValueChange(queryKey, e.target.value)}
+        onChange={(e) => {
+          const finalValue =
+            inputType === "number"
+              ? e.target.value.replace(/\D/g, "")
+              : e.target.value;
+
+          handleValueChange(queryKey, finalValue);
+        }}
       />
       {filterValue && (
         <button onClick={() => handleValueChange(queryKey, "")}>

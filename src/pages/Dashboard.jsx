@@ -12,6 +12,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 2.8rem;
   width: 100%;
+  padding-bottom: 3.6rem;
 `;
 
 function Dashboard() {

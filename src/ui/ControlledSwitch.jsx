@@ -29,8 +29,8 @@ const StyledSwitch = styled.div`
 const SwitchContainer = styled.label`
   display: flex;
   align-items: center;
-  width: 50px;
-  height: 26px;
+  width: 5rem;
+  height: 2.6rem;
   background: ${(props) => (props.$checked ? "#007bff" : "#ccc")};
   border-radius: 999px;
   cursor: pointer;
@@ -41,10 +41,10 @@ const SwitchContainer = styled.label`
 // 滑動圓圈
 const SwitchHandle = styled.div`
   position: absolute;
-  top: 3px;
-  left: ${(props) => (props.$checked ? "26px" : "3px")};
-  width: 20px;
-  height: 20px;
+  top: 0.3rem;
+  left: ${(props) => (props.$checked ? "2.6rem" : "0.3rem")};
+  width: 2rem;
+  height: 2rem;
   background: white;
   border-radius: 50%;
   display: flex;

@@ -7,24 +7,35 @@ import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { sortTimeSlots } from "./sortTimeSlots";
 import StyledHotToast from "../../ui/StyledHotToast";
 
-const Content = styled.ul`
+const BusinessPeriodList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+`;
+
+const BusinessPeriodItem = styled.li`
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  column-gap: 2.4rem;
-  row-gap: 3.2rem;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 3.2rem;
 
-  li {
-    display: grid;
-    grid-template-columns: 1fr 2rem;
-    grid-template-rows: 3.8rem auto;
-    row-gap: 0.4rem;
-    column-gap: 1rem;
-    padding-bottom: 0.3rem;
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
   }
+`;
 
-  label {
-    align-self: center;
+const DateField = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 3.8rem;
+  row-gap: 0.6rem;
+  padding-bottom: 0.6rem;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
   }
 `;
 
@@ -72,45 +83,47 @@ function RegularOpenHours({ data = {} }) {
     <FormProvider {...methods}>
       <SettingFormSection
         title="一般營業時間"
-        description="設定在非國定假日期間的每週固定營業時間，系統將依此顯示店鋪的營業狀態。"
+        description="設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。"
         handleSubmit={handleSubmit(onSubmit, onError)}
         handleReset={() => reset({ regularOpenHours: data })}
         isDirty={isDirty}
       >
-        <Content>
+        <BusinessPeriodList>
           {dayFields.map((day, dayIndex) => (
-            <li key={day.id}>
-              <label htmlFor={day.dayOfWeek}>{day.label}</label>
-              <input
-                id={day.dayOfWeek}
-                type="text"
-                hidden
-                {...register(`regularOpenHours.${dayIndex}.dayOfWeek`)}
-                value={day.dayOfWeek}
-              />
+            <BusinessPeriodItem key={day.id}>
+              <DateField>
+                <label htmlFor={day.dayOfWeek}>{day.label}</label>
+                <input
+                  id={day.dayOfWeek}
+                  type="text"
+                  hidden
+                  {...register(`regularOpenHours.${dayIndex}.dayOfWeek`)}
+                  value={day.dayOfWeek}
+                />
+
+                <ControlledSwitch
+                  control={control}
+                  items={[
+                    {
+                      name: `regularOpenHours.${dayIndex}.isBusinessDay`,
+                      option1: { label: "公休", value: false },
+                      option2: { label: "營業", value: true },
+                    },
+                  ]}
+                  handleChange={() =>
+                    clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
+                  }
+                />
+              </DateField>
 
               <ControlledTimeRange
                 control={control}
                 dayIndex={dayIndex}
                 fieldArrayName="regularOpenHours"
               />
-
-              <ControlledSwitch
-                control={control}
-                items={[
-                  {
-                    name: `regularOpenHours.${dayIndex}.isBusinessDay`,
-                    option1: { label: "公休", value: false },
-                    option2: { label: "營業", value: true },
-                  },
-                ]}
-                handleChange={() =>
-                  clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
-                }
-              />
-            </li>
+            </BusinessPeriodItem>
           ))}
-        </Content>
+        </BusinessPeriodList>
       </SettingFormSection>
     </FormProvider>
   );

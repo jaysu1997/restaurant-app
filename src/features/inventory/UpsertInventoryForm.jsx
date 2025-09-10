@@ -45,7 +45,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
     };
 
     upsert(inventoryData, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         StyledHotToast({
           type: "success",
           title: `庫存食材設定${inventory ? "更新" : "新增"}成功`,

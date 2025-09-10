@@ -1,11 +1,6 @@
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import styled from "styled-components";
-import {
-  MdAdd,
-  MdHorizontalRule,
-  MdOutlineDelete,
-  MdOutlineDeleteForever,
-} from "react-icons/md";
+import { MdAdd, MdHorizontalRule, MdOutlineDelete } from "react-icons/md";
 import { Fragment } from "react";
 import ControlledSelect from "../../ui/ControlledSelect";
 import FormErrorsMessage from "../../ui/FormErrorsMessage";
@@ -14,13 +9,18 @@ import fadeInAnimation from "../../utils/fadeInAnimation";
 import { generateTimeOptions } from "../../context/settingsHelpers";
 import { endOfDay, startOfDay } from "date-fns";
 
-const StyledTimeRange = styled.div`
-  grid-column: 1;
-  display: grid;
-  grid-template-columns: minmax(7.8rem, 1fr) 1.4rem minmax(7.8rem, 1fr);
-  align-items: center;
-  justify-content: end;
-  column-gap: 0.6rem;
+const StyledTimeRange = styled.ul`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.3rem;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(7.8rem, 1fr) 1.4rem minmax(7.8rem, 1fr) 2rem;
+    grid-template-rows: 3.8rem auto;
+    align-items: center;
+    column-gap: 0.6rem;
+  }
 `;
 
 const RemoveButton = styled.button`
@@ -36,15 +36,12 @@ const RemoveButton = styled.button`
 `;
 
 const AppendButton = styled(RemoveButton)`
-  grid-row: 1;
-  grid-column: 2;
-
   &:not(:disabled):hover {
     color: #3b82f6;
   }
 `;
 
-// 一天的時段(每10分鐘一個選項)
+// 一天的時段(每5分鐘一個選項)
 const times = generateTimeOptions(
   startOfDay(new Date(2025, 0, 1)),
   endOfDay(new Date(2025, 0, 1))
@@ -85,12 +82,7 @@ function validateTimeSlotField({
   checkOverlapConflicts({ validSlots, path, setError });
 }
 
-function ControlledTimeRange({
-  control,
-  dayIndex,
-  fieldArrayName,
-  removeEntireFields = () => {},
-}) {
+function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
   const {
     getValues,
     formState: { errors },
@@ -109,9 +101,6 @@ function ControlledTimeRange({
     name: `${fieldArrayName}.${dayIndex}.isBusinessDay`,
   });
 
-  const isRegular = fieldArrayName === "regularOpenHours";
-  const isSpecial = fieldArrayName === "specialOpenHours";
-
   // 驗證函式
   const validateFn = () =>
     validateTimeSlotField({
@@ -124,25 +113,10 @@ function ControlledTimeRange({
     });
 
   return (
-    <>
-      <AppendButton
-        type="button"
-        onClick={() => {
-          append({ openTime: "", closeTime: "" });
-          // 淡入欄位動畫
-          fadeInAnimation(
-            `${fieldArrayName}.${dayIndex}.timeSlots.${fields.length}`
-          );
-        }}
-      >
-        <MdAdd size={20} />
-      </AppendButton>
-
+    <StyledTimeRange>
       {fields.map((field, slotIndex) => (
         <Fragment key={field.id}>
-          <StyledTimeRange
-            id={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}`}
-          >
+          <li id={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}`}>
             <ControlledSelect
               options={times}
               control={control}
@@ -166,26 +140,38 @@ function ControlledTimeRange({
                 validate: validateFn,
               }}
             />
-          </StyledTimeRange>
-          <RemoveButton
-            title="清除這個時段的時間"
-            type="button"
-            disabled={isRegular && fields.length === 1}
-            onClick={() => {
-              isSpecial && fields.length === 1
-                ? removeEntireFields(dayIndex)
-                : remove(slotIndex);
 
-              // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在
-              fields.length > 1 && validateFn();
-            }}
-          >
-            {isSpecial && fields.length === 1 ? (
-              <MdOutlineDeleteForever size={20} />
-            ) : (
-              <MdOutlineDelete size={20} />
+            {slotIndex === 0 && (
+              <AppendButton
+                type="button"
+                onClick={() => {
+                  append({ openTime: "", closeTime: "" });
+                  // 淡入欄位動畫
+                  fadeInAnimation(
+                    `${fieldArrayName}.${dayIndex}.timeSlots.${fields.length}`
+                  );
+                }}
+              >
+                <MdAdd size={20} />
+              </AppendButton>
             )}
-          </RemoveButton>
+
+            {slotIndex !== 0 && (
+              <RemoveButton
+                title="清除這個時段的時間"
+                type="button"
+                disabled={fields.length === 1}
+                onClick={() => {
+                  remove(slotIndex);
+
+                  // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在
+                  fields.length > 1 && validateFn();
+                }}
+              >
+                <MdOutlineDelete size={20} />
+              </RemoveButton>
+            )}
+          </li>
 
           <FormErrorsMessage
             errors={
@@ -196,7 +182,7 @@ function ControlledTimeRange({
           />
         </Fragment>
       ))}
-    </>
+    </StyledTimeRange>
   );
 }
 

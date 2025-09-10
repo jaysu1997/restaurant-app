@@ -6,10 +6,6 @@ const tagStyles = {
     background-color: #e0e0e0;
     color: #333;
   `,
-  待取餐: css`
-    background-color: #e9ddf7;
-    color: #5c2e91;
-  `,
   已完成: css`
     background-color: #d9f2e3;
     color: #0f703c;

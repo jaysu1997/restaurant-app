@@ -7,6 +7,7 @@ const StyleAppLayout = styled.div`
   display: grid;
   grid-template-rows: 6.4rem 1fr;
   grid-template-columns: auto 1fr;
+  /* grid-template-columns: 1fr; */
   min-height: 100dvh;
   width: 100%;
   max-width: 192rem;
@@ -19,7 +20,7 @@ const Body = styled.div`
 `;
 
 const Main = styled.main`
-  width: min(120rem, 100%, 95dvw);
+  width: min(120rem, 100%);
   display: flex;
   flex-direction: column;
   align-items: center;

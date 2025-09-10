@@ -203,7 +203,6 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
             <ControlledSelect
               options={[
                 { label: "準備中", value: "準備中" },
-                { label: "待取餐", value: "待取餐" },
                 { label: "已完成", value: "已完成" },
               ]}
               control={control}

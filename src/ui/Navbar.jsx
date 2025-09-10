@@ -87,6 +87,7 @@ const navigationsLink = [
   { to: "/settings", icon: <BiSliderAlt />, title: "店鋪設定" },
 ];
 
+// 這裡需要再加上一個新增帳號的按鈕
 function Navbar() {
   const { user } = useUser();
   const userRole = user?.user_metadata?.user_role;

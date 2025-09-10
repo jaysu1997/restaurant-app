@@ -17,27 +17,40 @@ import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 import StyledHotToast from "../../ui/StyledHotToast";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
-const Content = styled.ul`
+const BusinessPeriodList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+`;
+
+const BusinessPeriodItem = styled.li`
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  column-gap: 2.4rem;
-  row-gap: 3.2rem;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.6rem;
 
-  li {
-    display: grid;
-    grid-template-columns: 1fr 2rem;
-    grid-template-rows: 3.8rem auto;
-    row-gap: 0.4rem;
-    column-gap: 1rem;
-    padding-bottom: 0.3rem;
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
   }
 `;
 
 const EmptyMessage = styled.p`
   color: #b0b0b0;
   font-weight: 500;
+`;
+
+const RemoveButton = styled.button`
+  color: #383838;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+
+  &:not(:disabled):hover {
+    color: #dc2626;
+  }
 `;
 
 const AppendButton = styled.button`
@@ -53,13 +66,21 @@ const AppendButton = styled.button`
   border-radius: 4px;
   background-color: #dbeafe;
 
+  margin-top: 1.6rem;
+
   &:hover {
     background-color: #bfdbfe;
   }
 `;
 
 const DateField = styled.div`
-  grid-column: 1;
+  display: grid;
+  grid-template-columns: minmax(20rem, 1fr) 2rem;
+  grid-template-rows: 3.8rem;
+  grid-auto-rows: min-content;
+  column-gap: 0.6rem;
+  row-gap: 0.3rem;
+  padding-bottom: 0.6rem;
 `;
 
 // 檢查日期是否有重疊或其他錯誤
@@ -145,18 +166,21 @@ function SpecialOpenHours({ data = {} }) {
     <FormProvider {...methods}>
       <SettingFormSection
         title="特殊營業時間"
-        description="當遇到國定假日或特殊活動需要改變營業時間，可以在此處選擇指定日期並設定營業時間，設定值將會覆蓋一般營業時間設定。"
+        description="需要臨時調整特定日期的營業時段，可在此處添加設定，設定值會覆蓋一般營業時間。"
         handleSubmit={handleSubmit(onSubmit, onError)}
         handleReset={() => reset({ specialOpenHours: data })}
         isDirty={isDirty}
       >
-        <Content>
+        <BusinessPeriodList>
           {dayFields.length === 0 && (
             <EmptyMessage>目前沒有設定任何特殊營業時間</EmptyMessage>
           )}
 
           {dayFields.map((day, dayIndex) => (
-            <li key={day.id} id={`specialOpenHours.${dayIndex}`}>
+            <BusinessPeriodItem
+              key={day.id}
+              id={`specialOpenHours.${dayIndex}`}
+            >
               <DateField>
                 <Controller
                   name={`specialOpenHours.${dayIndex}.dateRange`}
@@ -182,34 +206,37 @@ function SpecialOpenHours({ data = {} }) {
                       }),
                   }}
                 />
-              </DateField>
 
-              <FormErrorsMessage
-                errors={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
-                gridColumn="1 / -1"
-              />
+                <RemoveButton onClick={() => remove(dayIndex)}>
+                  <MdOutlineDeleteForever size={20} />
+                </RemoveButton>
+
+                <FormErrorsMessage
+                  errors={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
+                  gridColumn="1 / -1"
+                />
+
+                <ControlledSwitch
+                  control={control}
+                  items={[
+                    {
+                      name: `specialOpenHours.${dayIndex}.isBusinessDay`,
+                      option1: { label: "公休", value: false },
+                      option2: { label: "營業", value: true },
+                    },
+                  ]}
+                  handleChange={() =>
+                    clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
+                  }
+                />
+              </DateField>
 
               <ControlledTimeRange
                 control={control}
                 dayIndex={dayIndex}
                 fieldArrayName="specialOpenHours"
-                removeEntireFields={remove}
               />
-
-              <ControlledSwitch
-                control={control}
-                items={[
-                  {
-                    name: `specialOpenHours.${dayIndex}.isBusinessDay`,
-                    option1: { label: "公休", value: false },
-                    option2: { label: "營業", value: true },
-                  },
-                ]}
-                handleChange={() =>
-                  clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
-                }
-              />
-            </li>
+            </BusinessPeriodItem>
           ))}
 
           <AppendButton
@@ -227,7 +254,7 @@ function SpecialOpenHours({ data = {} }) {
             <GoPlus size={18} strokeWidth={0.6} />
             新增日期
           </AppendButton>
-        </Content>
+        </BusinessPeriodList>
       </SettingFormSection>
     </FormProvider>
   );

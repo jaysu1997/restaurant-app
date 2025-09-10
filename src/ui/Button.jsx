@@ -74,7 +74,7 @@ const type = {
     font-weight: 500;
     padding: 0.8rem 1.6rem;
     border: 1px solid #2563eb;
-    border-radius: 6px;
+    border-radius: 4px;
     color: #2563eb;
     background-color: #fff;
 

@@ -14,9 +14,9 @@ import QueryStatusFallback from "../ui/QueryStatusFallback";
 const Container = styled.ul`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(15.4rem, 1fr));
   justify-content: space-between;
-  gap: 4rem;
+  gap: 2.4rem;
   padding-bottom: 3.6rem;
 `;
 

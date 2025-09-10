@@ -128,7 +128,14 @@ function Pagination({ curPage, maxPage }) {
       </PaginationControls>
       <JumpSection>
         <span>前往</span>
-        <input type="number" ref={inputRef} onKeyDown={handleKeyDown} />
+        <input
+          type="text"
+          ref={inputRef}
+          onChange={(e) => {
+            e.target.value = e.target.value.replace(/\D/g, "");
+          }}
+          onKeyDown={handleKeyDown}
+        />
         <span>頁</span>
         <button onClick={handleSubmit} role="submit">
           GO

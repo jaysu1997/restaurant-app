@@ -142,13 +142,11 @@ function ServingsControl({
       </CountButton>
 
       <CountInputField
-        type="number"
+        type="text"
         $size={size}
         value={servings}
         onChange={(e) => {
-          setServings(
-            e.target.value !== "" ? Number(e.target.value) : e.target.value
-          );
+          setServings(e.target.value.replace(/\D/g, ""));
         }}
         onBlur={() =>
           handleServingsChange(Math.max(1, Number(servings)), dishData)

@@ -9,20 +9,18 @@ import StyledDayPicker from "./StyledDayPicker";
 
 const StyledDatePicker = styled.div`
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
 `;
 
 const DateField = styled.div`
   height: 3.8rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.2rem;
   padding: 0.2rem 0.8rem;
   width: 100%;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 4px;
   background-color: #fff;
   cursor: pointer;
 
@@ -36,11 +34,11 @@ const DateField = styled.div`
   input {
     font-size: 1.4rem;
     width: 100%;
+    max-width: 160px;
     cursor: pointer;
   }
 
-  span {
-    display: inline-flex;
+  svg {
     color: #3b82f6;
   }
 `;
@@ -59,7 +57,7 @@ const Wrapper = styled.div`
   border: 1px solid #e3e5e7;
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
   gap: 1rem;
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 1.2rem;
   display: flex;
   flex-direction: column;
@@ -95,7 +93,10 @@ function DateRangePicker({
   useClickOutside(daypickerRef, isOpenDayPicker, setIsOpenDayPicker, true);
 
   function formatRangeDate(selectedDate) {
-    return `${format(selectedDate, "yyyy/MM/dd")}`;
+    return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
+      selectedDate.to,
+      "yyyy/MM/dd"
+    )}`;
   }
 
   return (
@@ -106,28 +107,12 @@ function DateRangePicker({
       >
         <input
           name="startDate"
-          value={selected ? formatRangeDate(selected?.from) : ""}
-          placeholder="開始日期"
+          value={selected ? formatRangeDate(selected) : ""}
+          placeholder="選擇日期範圍"
           readOnly
         />
-        <span>
-          <PiCalendar size={20} />
-        </span>
-      </DateField>
-      <span>至</span>
-      <DateField
-        $isActive={isOpenDayPicker}
-        onClick={() => setIsOpenDayPicker(true)}
-      >
-        <input
-          name="endDate"
-          value={selected ? formatRangeDate(selected?.to) : ""}
-          placeholder="結束日期"
-          readOnly
-        />
-        <span>
-          <PiCalendar size={20} />
-        </span>
+
+        <PiCalendar size={20} />
       </DateField>
 
       {isOpenDayPicker && (

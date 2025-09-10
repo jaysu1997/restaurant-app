@@ -10,23 +10,29 @@ const Input = styled.input`
   padding: 0 0.8rem;
   height: 3.8rem;
   border-radius: 6px;
+
+  /* &:focus {
+    border-color: #2684ff;
+    box-shadow: 0 0 0 1px #2684ff;
+  } */
 `;
 
-function ControlledInput({ control, name, rules, type, placeholder }) {
+function ControlledInput({ control, id, name, rules, type, placeholder }) {
   const { field } = useController({ name, control, rules });
 
   // 使用Controller後，RHF提供的valueAsNumber好像會失效，所以必須使用onChange手動轉換value型別
   return (
     <Input
       {...field}
-      type={type}
+      id={id}
+      type={type === "number" ? "text" : type}
       placeholder={placeholder}
-      // 一開始沒獲得值會因為undefined而跳出非受控與受控元件切換的錯誤訊息，所以先加上一個空字串
-      value={field.value ?? ""}
+      // 一開始沒獲得值會因為undefined而跳出非受控與受控元件切換的錯誤訊息，所以先加上一個空字串(這個或許可以不用)
+      value={field.value}
       onChange={(e) => {
         const finalValue =
-          type === "number" && e.target.value !== ""
-            ? Number(e.target.value)
+          type === "number" || type === "tel"
+            ? e.target.value.replace(/\D/g, "")
             : e.target.value;
 
         field.onChange(finalValue);

@@ -8,7 +8,6 @@ import {
   ResponsiveContainer,
   Text,
   CartesianGrid,
-  LabelList,
 } from "recharts";
 
 const EmptyState = styled.p`

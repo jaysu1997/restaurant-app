@@ -12,23 +12,26 @@ import { generateTableNumbers } from "../../context/settingsHelpers";
 import { isValidPositiveInteger } from "../../utils/orderHelpers";
 
 const Content = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
-  column-gap: 2.4rem;
-  row-gap: 2.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
 
   li {
     display: grid;
-    grid-template-columns: 6rem 1fr 2rem;
-    grid-template-rows: 6rem 3.8rem 2rem 3.8rem 2rem 3.8rem;
-    row-gap: 0.2rem;
-    column-gap: 1rem;
-    align-items: center;
+    grid-template-columns: 1fr 1fr 2rem;
+    grid-template-rows: auto 6rem 2rem 6rem;
+    column-gap: 0.6rem;
+    row-gap: 0.3rem;
+    align-items: end;
+  }
+
+  label {
+    padding-bottom: 0.3rem;
   }
 
   input {
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 `;
 
@@ -37,8 +40,7 @@ const SubTitle = styled.h4`
   font-size: 1.6rem;
   font-weight: 600;
   color: #3b82f6;
-  /* border-bottom: 2px solid #3b82f6; */
-  width: fit-content;
+  padding-bottom: 1.2rem;
 `;
 
 const EmptyMessage = styled.p`
@@ -46,13 +48,18 @@ const EmptyMessage = styled.p`
   font-weight: 500;
 `;
 
+const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+`;
+
 const Preview = styled.div`
   grid-column: 1 / -2;
-  display: grid;
-  grid-template-columns: 6rem 1fr;
-  gap: 1rem;
-  align-items: center;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
 
   div {
     display: flex;
@@ -64,7 +71,7 @@ const Preview = styled.div`
     border: 1px solid #e6e6e6;
     background-color: #f2f2f2;
     border-radius: 4px;
-    height: 100%;
+    height: 3.8rem;
   }
 
   p {
@@ -97,6 +104,7 @@ const RemoveButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 3.8rem;
 
   &:not(:disabled):hover {
     color: #dc2626;
@@ -121,6 +129,8 @@ function DineInTableSettings({ data = {} }) {
     control,
     name: "dineInTableConfig",
   });
+
+  const zoneCount = watch("dineInTableConfig");
 
   function onSubmit(data) {
     console.log("成功", data);
@@ -151,27 +161,50 @@ function DineInTableSettings({ data = {} }) {
 
         {fields.map((field, index) => (
           <li key={field.id} id={`dineInTableConfig.${index}`}>
-            <SubTitle>內用桌號分區 - {index + 1}</SubTitle>
-            <label>分區名稱</label>
-            <ControlledInput
-              control={control}
-              name={`dineInTableConfig.${index}.zoneName`}
-              type="text"
-              placeholder="請輸入分區名稱(可留空)"
-              rules={{
-                validate: (value) => {
-                  const trimmedValue = value.trim();
-                  const zones = getValues("dineInTableConfig");
+            <SubTitle>
+              內用桌號分區{zoneCount.length === 1 ? "" : ` - ${index + 1}`}
+            </SubTitle>
 
-                  const duplicate = zones.some((zone, zoneIndex) => {
-                    if (zoneIndex === index) return false; // ← 重點：略過自己
-                    return zone.zoneName.trim() === trimmedValue;
-                  });
+            <Field>
+              <label htmlFor={`${index}.zoneName`}>分區名稱</label>
+              <ControlledInput
+                control={control}
+                id={`${index}.zoneName`}
+                name={`dineInTableConfig.${index}.zoneName`}
+                type="text"
+                placeholder="分區名稱"
+                rules={{
+                  validate: (value) => {
+                    const trimmedValue = value.trim();
+                    const zones = getValues("dineInTableConfig");
 
-                  return !duplicate || "此欄位名稱已被使用";
-                },
-              }}
-            />
+                    const duplicate = zones.some((zone, zoneIndex) => {
+                      if (zoneIndex === index) return false; // ← 重點：略過自己
+                      return zone.zoneName.trim() === trimmedValue;
+                    });
+
+                    return !duplicate || "此名稱已被使用";
+                  },
+                }}
+              />
+            </Field>
+
+            <Field>
+              <label htmlFor={`${index}.tableCount`}>分區桌數</label>
+              <ControlledInput
+                control={control}
+                id={`${index}.tableCount`}
+                name={`dineInTableConfig.${index}.tableCount`}
+                type="number"
+                placeholder="分區總桌數"
+                rules={{
+                  required: "總桌數不能空白",
+                  validate: (value) => {
+                    return isValidPositiveInteger(value, "請輸入正整數");
+                  },
+                }}
+              />
+            </Field>
 
             <RemoveButton type="button" onClick={() => remove(index)}>
               <MdOutlineDeleteForever size={20} />
@@ -179,26 +212,12 @@ function DineInTableSettings({ data = {} }) {
 
             <FormErrorsMessage
               errors={errors?.dineInTableConfig?.[index]?.zoneName}
-              gridColumn="2 / -1"
-            />
-
-            <label>分區桌數</label>
-            <ControlledInput
-              control={control}
-              name={`dineInTableConfig.${index}.tableCount`}
-              type="number"
-              placeholder="請輸入分區總桌數"
-              rules={{
-                required: "分區總桌數不能空白",
-                validate: (value) => {
-                  return isValidPositiveInteger(value, "請輸入正整數");
-                },
-              }}
+              gridColumn="1 / 2"
             />
 
             <FormErrorsMessage
               errors={errors?.dineInTableConfig?.[index]?.tableCount}
-              gridColumn="2 / -1"
+              gridColumn="2 / 3"
             />
             <Preview>
               <label>桌號預覽</label>

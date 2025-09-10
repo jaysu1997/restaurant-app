@@ -7,6 +7,14 @@ import StoreInfo from "../features/settings/StoreInfo.jsx";
 import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
 import { useSettings } from "../context/SettingsContext.jsx";
 
+const SettingsLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 3.2rem;
+  width: 100%;
+  max-width: 60rem;
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -20,7 +28,7 @@ function Settings() {
     useSettings();
 
   return (
-    <>
+    <SettingsLayout>
       <PageHeader title="店鋪設定" />
 
       <QueryStatusFallback
@@ -35,7 +43,7 @@ function Settings() {
           <StoreInfo data={data.storeInfo} />
         </Container>
       </QueryStatusFallback>
-    </>
+    </SettingsLayout>
   );
 }
 

@@ -47,25 +47,7 @@ function handleSearchParams(
 
     // 篩選輸入類型為input所要進行的處理方式
     if (obj.type === "input" && obj.value) {
-      const { inputType, title } = filtersConfig.find(
-        (filter) => filter.queryKey === key
-      );
-
-      // 如果輸入數據限定為number，需要進行正整數判定
-      if (
-        inputType === "number" &&
-        !isValidPositiveInteger(Number(obj.value), "")
-      ) {
-        StyledHotToast({
-          type: "error",
-          title: "篩選失敗",
-          content: `${title}只能輸入正整數`,
-        });
-
-        isValid = false;
-      } else {
-        searchParamsValue = obj.value.trim();
-      }
+      searchParamsValue = obj.value.trim();
     }
 
     // 篩選輸入類型為select所要進行的處理方式
