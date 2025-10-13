@@ -35,7 +35,7 @@ const Price = styled.span`
   font-size: 1.6rem;
 `;
 
-const Title = styled.h3`
+const Title = styled.h5`
   font-size: 1.8rem;
   font-weight: 600;
   letter-spacing: 0.1rem;
@@ -177,7 +177,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
 
       dispatch({
         type: isEdit ? "dishes/updateDish" : "dishes/addDish",
-        payload: isEdit ? { ...dishData, previousIngredientsUsage } : dishData,
+        payload: isEdit ? { dishData, previousIngredientsUsage } : dishData,
       });
 
       onCloseModal();
@@ -192,7 +192,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
               <li key={index}>
                 {ingredient.maxCapacity === 0
                   ? `${ingredient.name}已用完`
-                  : `${ingredient.name}不足（最多供應${ingredient.maxCapacity}份）`}
+                  : `${ingredient.name}（剩${ingredient.maxCapacity}份）`}
               </li>
             ))}
           </ul>
@@ -226,8 +226,9 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
               />
             ))}
 
-          <Title>餐點備註</Title>
-          <Note register={register} />
+          <Note register={register}>
+            <Title>餐點備註</Title>
+          </Note>
         </Container>
 
         <Footer>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { GoPlus } from "react-icons/go";
-import DateRangePicker from "../../ui/DateRangePicker";
-import ControlledSwitch from "../../ui/ControlledSwitch";
+import DateRangePicker from "../../ui-old/DateRangePicker";
+import ControlledSwitch from "../../ui-old/ControlledSwitch";
 import ControlledTimeRange from "./ControlledTimeRange";
 import {
   Controller,
@@ -9,14 +9,14 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import SettingFormSection from "../../ui/SettingFormSection";
+import SettingFormSection from "../../ui-old/SettingFormSection";
 import { addYears, compareAsc, endOfYear, isAfter, isToday } from "date-fns";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
 import fadeInAnimation from "../../utils/fadeInAnimation";
-import StyledHotToast from "../../ui/StyledHotToast";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 import { MdOutlineDeleteForever } from "react-icons/md";
 
 const BusinessPeriodList = styled.ul`

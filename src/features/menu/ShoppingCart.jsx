@@ -9,7 +9,7 @@ import {
 } from "../../utils/orderHelpers";
 import EmptyShoppingCart from "./EmptyShoppingCart";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
-import ButtonSpinner from "../../ui/ButtonSpinner";
+import ButtonSpinner from "../../ui-old/ButtonSpinner";
 
 const StyledShoppingCart = styled.aside`
   grid-column: 2 / 3;
@@ -21,9 +21,9 @@ const StyledShoppingCart = styled.aside`
   justify-content: space-between;
   border-radius: 6px;
   font-size: 1.4rem;
-  height: min(64.8rem, calc(100dvh - 17.8rem));
+  height: min(64.8rem, calc(100dvh - 18.4rem));
   position: sticky;
-  top: 17.8rem;
+  top: 18.4rem;
   overflow: hidden;
 `;
 
@@ -95,7 +95,8 @@ const SubmitButton = styled.button`
 
 function ShoppingCart({ settingsData }) {
   const {
-    state: { dishes, curOrderPage },
+    state: { dishes, inventoryMap },
+    dispatch,
   } = useOrder();
 
   const {
@@ -108,10 +109,7 @@ function ShoppingCart({ settingsData }) {
     formState: { isValid },
   } = useForm();
 
-  const { createOrder, orderCreating } = useCreateOrder(reset);
-
-  // 因為munu和edit-order共用相同useReducer，所以在切換頁面時可能出現ui渲染閃爍問題，因此增加判別條件解決閃爍(讓購物車ui只渲染點餐頁面的數據)
-  const isCreatingOrder = curOrderPage === "/menu";
+  const { createOrder, orderCreating } = useCreateOrder();
 
   const takeOut = watch("diningMethod") === "外帶";
 
@@ -120,7 +118,12 @@ function ShoppingCart({ settingsData }) {
   function onSubmit(data) {
     const orderData = buildOrderData(dishes, data);
 
-    createOrder(orderData);
+    createOrder(orderData, {
+      onSuccess: () => {
+        dispatch({ type: "order/reset" });
+        reset();
+      },
+    });
   }
 
   function onError(error) {
@@ -133,7 +136,7 @@ function ShoppingCart({ settingsData }) {
         <h4>購物車</h4>
       </Header>
 
-      {dishes.length !== 0 && isCreatingOrder ? (
+      {dishes.length !== 0 ? (
         <ShoppingList>
           {dishes.map((dish) => (
             <CartItem dish={dish} key={dish.uniqueId} />
@@ -152,16 +155,14 @@ function ShoppingCart({ settingsData }) {
         <EmptyShoppingCart />
       )}
 
-      {dishes.length !== 0 && isCreatingOrder && (
+      {dishes.length !== 0 && (
         <Footer>
           <Row>
             <span>總計</span>
           </Row>
           <Row>
-            <span>{`${isCreatingOrder ? totalServings : 0}份餐點`}</span>
-            <span className="emphasize">{`$ ${
-              isCreatingOrder ? totalPrice : 0
-            }`}</span>
+            <span>{`${totalServings}份餐點`}</span>
+            <span className="emphasize">{`$ ${totalPrice}`}</span>
           </Row>
 
           <Row>

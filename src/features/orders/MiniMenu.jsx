@@ -1,9 +1,11 @@
 // 訂單編輯頁面的迷你菜單
 import styled from "styled-components";
-import Modal from "../../ui/Modal";
+import Modal from "../../ui-old/Modal";
 import useGetMenus from "../../hooks/data/menus/useGetMenus";
-import QueryStatusFallback from "../../ui/QueryStatusFallback";
+import QueryStatusFallback from "../../ui-old/QueryStatusFallback";
 import CategoryGroup from "./CategoryGroup";
+import { useState } from "react";
+import OrderForm from "../../ui-old/OrderForm/OrderForm";
 
 const StyledMiniMenu = styled.div`
   display: flex;
@@ -19,7 +21,7 @@ const MenuList = styled.ul`
   gap: 1.6rem;
 `;
 
-// 將餐點案分類整理
+// 將餐點按照分類整理
 function groupDishesByCategory(dishes) {
   return Object.values(
     dishes.reduce((acc, dish) => {
@@ -35,43 +37,62 @@ function groupDishesByCategory(dishes) {
   );
 }
 
-function MiniMenu({ setIsOpenModal }) {
+function MiniMenu() {
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
 
-  const groupedMenus = menusData ? groupDishesByCategory(menusData) : [];
-
   return (
-    <Modal
-      onCloseModal={() => setIsOpenModal(false)}
-      modalHeader="菜單"
-      maxWidth={36}
-    >
-      <StyledMiniMenu>
-        <QueryStatusFallback
-          isPending={menusIsPending}
-          isError={menusIsError}
-          error={menusError}
-          isEmpty={Array.isArray(menusData) && menusData.length === 0}
-          emptyState={{
-            message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
-            buttonText: "新增餐點",
-            redirectTo: "/menu-manage",
-          }}
-          render={() => (
-            <MenuList>
-              {groupedMenus.map((menu) => (
-                <CategoryGroup
-                  key={menu.category}
-                  category={menu.category}
-                  dishes={menu.dishes}
-                  onSelect={setIsOpenModal}
-                />
-              ))}
-            </MenuList>
-          )}
+    <>
+      {/* 這個按鈕的樣式需要修正 */}
+      <button
+        style={{ width: "fit-content" }}
+        onClick={() => setIsOpenModal({ type: "MiniMenu", data: null })}
+      >
+        新增餐點
+      </button>
+
+      {isOpenModal.type === "MiniMenu" && (
+        <Modal
+          onCloseModal={() => setIsOpenModal(false)}
+          modalHeader="菜單"
+          maxWidth={36}
+        >
+          <StyledMiniMenu>
+            <QueryStatusFallback
+              isPending={menusIsPending}
+              isError={menusIsError}
+              error={menusError}
+              isEmpty={Array.isArray(menusData) && menusData.length === 0}
+              emptyState={{
+                message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
+                buttonText: "新增餐點",
+                redirectTo: "/menu-manage",
+              }}
+              render={() => (
+                <MenuList>
+                  {groupDishesByCategory(menusData).map((menu) => (
+                    <CategoryGroup
+                      key={menu.category}
+                      category={menu.category}
+                      dishes={menu.dishes}
+                      onSelect={setIsOpenModal}
+                    />
+                  ))}
+                </MenuList>
+              )}
+            />
+          </StyledMiniMenu>
+        </Modal>
+      )}
+
+      {isOpenModal.type === "OrderForm" && (
+        <OrderForm
+          dishData={isOpenModal.data}
+          isEdit={false}
+          onCloseModal={() => setIsOpenModal(false)}
         />
-      </StyledMiniMenu>
-    </Modal>
+      )}
+    </>
   );
 }
 

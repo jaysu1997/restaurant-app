@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import Button from "../../ui/Button";
-import ServingsControl from "../../ui/ServingsControl";
+import Button from "../../ui-old/Button";
+import ServingsControl from "../../ui-old/ServingsControl";
 import { useEffect, useRef, useState } from "react";
 import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import { summarizeMealChoices } from "../../utils/orderHelpers";
-import OrderForm from "../../ui/OrderForm/OrderForm";
+import OrderForm from "../../ui-old/OrderForm/OrderForm";
 
 const OrderCardWrapper = styled.li`
   list-style: none;

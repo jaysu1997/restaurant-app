@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { GlobalStyles } from "./style/GlobalStyles";
-import AppLayout from "./ui/AppLayout";
+import AppLayout from "./ui-old/AppLayout";
 import Menu from "./pages/Menu";
 import Orders from "./pages/Orders";
 import MenuManage from "./pages/MenuManage";
@@ -16,7 +15,7 @@ import "react-day-picker/style.css";
 import Dashboard from "./pages/Dashboard";
 import { SettingsProvider } from "./context/SettingsContext";
 import SignIn from "./pages/SignIn";
-import ProtectedRoute from "./ui/ProtectedRoute";
+import ProtectedRoute from "./ui-old/ProtectedRoute";
 import Account from "./pages/Account";
 
 const queryClient = new QueryClient({
@@ -36,12 +35,13 @@ const queryClient = new QueryClient({
 
 // 後續可能需要把元件和函式以及檔案和資料夾都需要重構
 
+// 像是登入功能中的密碼欄位，絕對定位的button會和input內的輸入內容重疊，記得要改成div外框，然後input和button並列
+
 // 還有error boundary的fallback ui要設計,以及404的ui應該更需要更改
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <GlobalStyles />
 
       <BrowserRouter>
         <Routes>
@@ -49,18 +49,30 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <SettingsProvider>
-                  <OrderProvider>
-                    <AppLayout />
-                  </OrderProvider>
+                  <AppLayout />
                 </SettingsProvider>
               </ProtectedRoute>
             }
           >
             <Route index element={<Dashboard />} />
-            <Route path="/menu" element={<Menu />} />
+            <Route
+              path="/menu"
+              element={
+                <OrderProvider key="create">
+                  <Menu />
+                </OrderProvider>
+              }
+            />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/order/:orderId" element={<Order />} />
-            <Route path="/order-edit/:orderId" element={<Order />} />
+            <Route path="/orders/:orderId" element={<Order />} />
+            <Route
+              path="/orders/:orderId/edit"
+              element={
+                <OrderProvider key="edit">
+                  <Order />
+                </OrderProvider>
+              }
+            />
             <Route path="/menu-manage" element={<MenuManage />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/settings" element={<Settings />} />

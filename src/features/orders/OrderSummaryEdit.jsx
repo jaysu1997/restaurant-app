@@ -1,61 +1,44 @@
 // 訂單詳情(編輯)
-import styled from "styled-components";
 import OrderDishes from "./OrderDishes";
 import { useOrder } from "../../context/OrderContext";
 import { useForm } from "react-hook-form";
-import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
-import ControlledSelect from "../../ui/ControlledSelect";
-import { useState } from "react";
+import DiningMethodSwitch from "../../ui-old/DiningMethodSwitch";
+import ControlledSelect from "../../ui-old/ControlledSelect";
+import { useEffect } from "react";
 import MiniMenu from "./MiniMenu";
-import Note from "../../ui/Note";
+import Note from "../../ui-old/Note";
 import OrderOperation from "./OrderOperation";
 import { buildOrderData, formatCreatedTime } from "../../utils/orderHelpers";
-import OrderForm from "../../ui/OrderForm/OrderForm";
 import useUpdateOrder from "../../hooks/data/orders/useUpdateOrder";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import {
   generatePickupTimeOptions,
   formatToHourMinute,
 } from "../../context/settingsHelpers";
+import useGetInventory from "../../hooks/data/inventory/useGetInventory";
+import QueryStatusFallback from "../../ui-old/QueryStatusFallback";
+import { toOption } from "../../utils/selectHelpers";
+import StyledHotToast from "../../ui-old/StyledHotToast";
+import OrderCard from "./OrderCard";
+import ContentContainer from "../../ui/ContentContainer";
 
-const OrderInfo = styled.section`
-  background-color: #fff;
-  border: 1px solid #f3f4f6;
-  border-radius: 6px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 1.4rem 2.8rem;
-  height: fit-content;
-`;
-
-const Row = styled.div`
-  display: grid;
-  grid-template-columns: 8rem 1fr;
-  column-gap: 1.6rem;
-  min-height: 3.8rem;
-  align-items: center;
-  row-gap: 0.2rem;
-
-  &:last-child {
-    grid-template-columns: 1fr;
-  }
-
-  div {
-    /* overflow: hidden; */
-    overflow-wrap: break-word;
-  }
-`;
-
-// 新增餐點的按鈕需要再調整樣式，以及在更新訂單和刪除訂單時，需要注意到底是否需要更新庫存(這樣的更新是否合理?)，以我目前的想法是，第一種是可以統一彈出視窗詢問是否要退回之前就訂單消耗的食材。第二種方法是根據狀態來自動判別，如果是準備中的餐點(那可以選擇自動退回，或是彈出視窗選擇)，如果是被標記為已交付，或是待交付，則按照邏輯來說，是一定不能退回來才對，所以不用問，也不用退
-function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
+function OrderSummaryEdit({ orderData, settingsData }) {
   const { updateOrder, updating } = useUpdateOrder();
-  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const {
     state: { dishes },
+    dispatch,
   } = useOrder();
+
+  const { inventoryIsPending, inventoryError, inventoryIsError } =
+    useGetInventory(dispatch);
+
+  useEffect(() => {
+    dispatch({
+      type: "order/edit",
+      payload: orderData,
+    });
+  }, [dispatch, orderData]);
 
   const { tableNumber, pickupTime, status, paid, createdTime, orderUUID } =
     orderData;
@@ -70,26 +53,10 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
   } = useForm({
     defaultValues: {
       ...orderData,
-      tableNumber: tableNumber
-        ? {
-            label: tableNumber,
-            value: tableNumber,
-          }
-        : null,
-      pickupTime: pickupTime
-        ? {
-            label: formatToHourMinute(pickupTime),
-            value: pickupTime,
-          }
-        : null,
-      status: {
-        label: status,
-        value: status,
-      },
-      paid: {
-        label: paid,
-        value: paid,
-      },
+      tableNumber: toOption(tableNumber),
+      pickupTime: toOption(pickupTime, formatToHourMinute(pickupTime)),
+      status: toOption(status),
+      paid: toOption(paid),
     },
   });
 
@@ -104,42 +71,43 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
 
   function onSubmit(data) {
     const orderData = buildOrderData(dishes, data);
-    console.log(orderData);
+    console.log();
     updateOrder(orderData);
   }
 
   function onError(error) {
     console.log(error);
+    StyledHotToast({ type: "error", title: "訂單更新失敗" });
   }
 
   return (
-    <>
-      <OrderInfo>
-        <Row>
-          <div>建立時間：</div>
-          <div>{formatCreatedTime(createdTime)}</div>
-        </Row>
-        <Row>
-          <div>訂單編號：</div>
-          <div>{orderUUID}</div>
-        </Row>
-        <Row>
-          <div>訂購餐點：</div>
-          {/* 這個按鈕的樣式需要修正 */}
-          <button
-            style={{ width: "fit-content" }}
-            onClick={() => setIsOpenModal({ type: "MiniMenu", data: null })}
-          >
-            新增餐點
-          </button>
-        </Row>
-        <OrderDishes dishData={dishes} isEdit={isEdit} />
-      </OrderInfo>
-
-      <OrderInfo>
-        <Row>
-          <div>用餐方式：</div>
+    <QueryStatusFallback
+      isPending={inventoryIsPending}
+      isError={inventoryIsError}
+      error={inventoryError}
+    >
+      <ContentContainer>
+        <OrderCard>
           <div>
+            <label>建立時間：</label>
+            <span>{formatCreatedTime(createdTime)}</span>
+          </div>
+          <div>
+            <label>訂單編號：</label>
+            <span>{orderUUID}</span>
+          </div>
+          <div>
+            <label>訂購餐點：</label>
+            <MiniMenu />
+          </div>
+          <OrderDishes dishData={dishes} isEdit={true} />
+        </OrderCard>
+      </ContentContainer>
+
+      <ContentContainer>
+        <OrderCard>
+          <div>
+            <label>用餐方式：</label>
             <DiningMethodSwitch
               setValue={setValue}
               takeOut={takeOut}
@@ -147,10 +115,8 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
               isDisabled={dishes.length === 0}
             />
           </div>
-        </Row>
-        <Row>
-          <div>{takeOut ? "取餐時間：" : "內用桌號："}</div>
           <div>
+            <label>{takeOut ? "取餐時間：" : "內用桌號："}</label>
             <ControlledSelect
               options={
                 takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
@@ -163,31 +129,29 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
                   ? takeOut
                     ? "選擇取餐時間"
                     : "選擇桌號"
-                  : "非營業時間無法點餐"
+                  : "非營業時間"
               }
               disabled={isDisabled}
               rules={{
                 required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
               }}
             />
+
+            <FormErrorsMessage
+              errors={takeOut ? errors?.pickupTime : errors?.tableNumber}
+              gridColumn="2"
+            />
           </div>
 
-          <FormErrorsMessage
-            errors={takeOut ? errors?.pickupTime : errors?.tableNumber}
-            gridColumn="2"
-          />
-        </Row>
-
-        <Row>
-          <div>付款狀態：</div>
           <div>
+            <label>付款狀態：</label>
             <ControlledSelect
               options={[
                 { label: "已付款", value: "已付款" },
                 { label: "未付款", value: "未付款" },
               ]}
               control={control}
-              name={"paid"}
+              name="paid"
               creatable={false}
               placeholder="付款狀態"
               rules={{
@@ -195,18 +159,16 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
               }}
             />
           </div>
-        </Row>
 
-        <Row>
-          <div>訂單狀態：</div>
           <div>
+            <label>訂單狀態：</label>
             <ControlledSelect
               options={[
                 { label: "準備中", value: "準備中" },
                 { label: "已完成", value: "已完成" },
               ]}
               control={control}
-              name={"status"}
+              name="status"
               creatable={false}
               placeholder="訂單狀態"
               rules={{
@@ -215,22 +177,23 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
                   // 假設如果沒付款就不能選「已完成」
                   const paid = watch("paid")?.value;
                   if (value?.value === "已完成" && paid !== "已付款") {
-                    return "訂單未付款，不能標記訂單狀態為已完成";
+                    return "訂單尚未付款";
                   }
                   return true;
                 },
               }}
             />
+
+            <FormErrorsMessage errors={errors?.status} gridColumn="2" />
           </div>
+        </OrderCard>
+      </ContentContainer>
 
-          <FormErrorsMessage errors={errors?.status} gridColumn="2" />
-        </Row>
-
-        <Row>
-          <div>訂單備註：</div>
-          <Note register={register} />
-        </Row>
-      </OrderInfo>
+      <ContentContainer>
+        <Note register={register}>
+          <label>訂單備註：</label>
+        </Note>
+      </ContentContainer>
 
       <OrderOperation
         isEdit={true}
@@ -238,19 +201,7 @@ function OrderSummaryEdit({ orderData, isEdit, settingsData }) {
         orderData={orderData}
         handleSubmit={handleSubmit(onSubmit, onError)}
       />
-
-      {isOpenModal.type === "MiniMenu" && (
-        <MiniMenu setIsOpenModal={setIsOpenModal} />
-      )}
-
-      {isOpenModal.type === "OrderForm" && (
-        <OrderForm
-          dishData={isOpenModal.data}
-          isEdit={false}
-          onCloseModal={() => setIsOpenModal(false)}
-        />
-      )}
-    </>
+    </QueryStatusFallback>
   );
 }
 

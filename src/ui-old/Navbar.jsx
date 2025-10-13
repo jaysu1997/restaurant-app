@@ -21,7 +21,7 @@ const StyleNav = styled.nav`
   max-height: calc(100dvh - 6.4rem);
   width: 24rem;
   overflow-y: auto;
-  scrollbar-width: thin;
+  /* scrollbar-width: thin; */
 
   display: flex;
   flex-direction: column;

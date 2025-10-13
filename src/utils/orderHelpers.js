@@ -1,13 +1,5 @@
 // 這裡可能有不少函式之後可能要移到別的資料夾，因為這些函式並非全域通用
-import {
-  addMinutes,
-  isBefore,
-  format,
-  setMinutes,
-  setHours,
-  isValid,
-  parse,
-} from "date-fns";
+import { format, isValid, parse } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
 // 將訂單建立時間格式化
@@ -58,7 +50,7 @@ function compareInventory({
 }) {
   const result = [];
 
-  // 如果有更新點餐選項設定，先把之前消耗的食材加回庫存
+  // 如果是更新已訂購點餐，先把之前消耗的食材加回庫存
   if (previousIngredientsUsage) {
     previousIngredientsUsage.usageMap.forEach((value, key) => {
       inventoryMap.set(

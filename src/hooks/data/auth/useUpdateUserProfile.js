@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUserProfileApi } from "../../../services/apiAuth";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 
 // 更新user的資料
 function useUpdateUserProfile() {

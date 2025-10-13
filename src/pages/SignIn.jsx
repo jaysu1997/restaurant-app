@@ -2,25 +2,17 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import useSignIn from "../hooks/data/auth/useSignIn";
 import useUser from "../hooks/data/auth/useUser";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ButtonSpinner from "../ui/ButtonSpinner";
-import FormErrorsMessage from "../ui/FormErrorsMessage";
-import PasswordInput from "../ui/PasswordInput";
-
-const SignInLayout = styled.main`
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1.6rem;
-  padding: 3.6rem 0;
-`;
+import ButtonSpinner from "../ui-old/ButtonSpinner";
+import FormErrorsMessage from "../ui-old/FormErrorsMessage";
+import PasswordInput from "../ui-old/PasswordInput";
+import StandaloneLayout from "../ui/StandaloneLayout";
+import FormInput from "../ui/FormInput";
 
 const Logo = styled.img`
   width: 9.6rem;
-  height: 9.6rem;
+  height: auto;
 `;
 
 const Heading = styled.h3`
@@ -32,7 +24,7 @@ const SignInFailMessage = styled.div`
   border: 1px solid #f87171;
   border-radius: 6px;
   color: #dc2626;
-  width: clamp(0px, 32rem, 90dvw);
+  width: clamp(0px, 32rem, 100%);
   padding: 1rem;
   display: flex;
   justify-content: center;
@@ -42,7 +34,7 @@ const SignInFailMessage = styled.div`
 `;
 
 const SignInForm = styled.form`
-  width: clamp(0px, 32rem, 90dvw);
+  width: clamp(0px, 32rem, 100%);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -57,33 +49,30 @@ const Field = styled.div`
   label {
     font-weight: 600;
   }
-
-  div {
-    position: relative;
-  }
 `;
 
 // input嘗試重複使用
-const Input = styled.input`
-  font-size: 1.4rem;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 6px;
-  width: 100%;
+// const Input = styled.input`
+//   font-size: 1.4rem;
+//   border: 1px solid #ddd;
+//   padding: 0.2rem 0.8rem;
+//   height: 3.8rem;
+//   border-radius: 6px;
+//   width: 100%;
 
-  &:focus {
-    border-color: transparent;
-    outline: 2px solid #3b82f6;
-  }
-`;
+//   &:focus {
+//     border-color: transparent;
+//     outline: 2px solid #3b82f6;
+//   }
+// `;
 
 const SignInButton = styled.button`
-  height: 4rem;
+  height: 3.8rem;
   background-color: #000;
   color: #fff;
   font-size: 1.4rem;
   font-weight: 500;
-  padding: 1rem 1.4rem;
+  padding: 0.4rem 1.4rem;
   margin-top: 1.4rem;
   border-radius: 6px;
 `;
@@ -129,7 +118,7 @@ function SignIn() {
   if (userIsPending || user) return null;
 
   return (
-    <SignInLayout>
+    <StandaloneLayout>
       <Logo src="/logo.webp" alt="logo" />
       <Heading>登入 Aurora Bites</Heading>
       {errors?.root && (
@@ -138,46 +127,42 @@ function SignIn() {
       <SignInForm onSubmit={handleSubmit(onSubmit, onError)}>
         <Field>
           <label htmlFor="email">信箱</label>
-          <div>
-            <Input
-              disabled={isPending}
-              autoComplete="username"
-              id="email"
-              {...register("email", {
-                required: "信箱必須填寫",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "信箱格式錯誤",
-                },
-              })}
-            />
-          </div>
 
-          <FormErrorsMessage errors={errors?.email} minHeight={2} />
+          <FormInput
+            disabled={isPending}
+            autoComplete="username"
+            id="email"
+            {...register("email", {
+              required: "信箱必須填寫",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "信箱格式錯誤",
+              },
+            })}
+            errors={errors?.email}
+          />
+
+          {/* <FormErrorsMessage errors={errors?.email} minHeight={2} /> */}
         </Field>
         <Field>
           <label htmlFor="password">密碼</label>
           <PasswordInput
-            render={(type) => (
-              <Input
-                id="password"
-                type={type}
-                autoComplete="current-password"
-                disabled={isPending}
-                {...register("password", {
-                  required: "密碼必須填寫",
-                  minLength: { value: 8, message: "密碼至少 8 碼" },
-                })}
-              />
-            )}
+            id="password"
+            autoComplete="current-password"
+            disabled={isPending}
+            {...register("password", {
+              required: "密碼必須填寫",
+              minLength: { value: 8, message: "密碼至少8碼" },
+            })}
+            errors={errors?.password}
           />
-          <FormErrorsMessage errors={errors?.password} minHeight={2} />
+          {/* <FormErrorsMessage errors={errors?.password} minHeight={2} /> */}
         </Field>
         <SignInButton disabled={isPending}>
           {isPending ? <ButtonSpinner /> : "登入"}
         </SignInButton>
       </SignInForm>
-    </SignInLayout>
+    </StandaloneLayout>
   );
 }
 

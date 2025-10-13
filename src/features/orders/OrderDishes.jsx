@@ -5,11 +5,11 @@ import {
 } from "../../utils/orderHelpers";
 import { FiMinus } from "react-icons/fi";
 import { GoTrash, GoPencil } from "react-icons/go";
-import Button from "../../ui/Button";
+import Button from "../../ui-old/Button";
 import styled from "styled-components";
 import { useState } from "react";
 import { useOrder } from "../../context/OrderContext";
-import OrderForm from "../../ui/OrderForm/OrderForm";
+import OrderForm from "../../ui-old/OrderForm/OrderForm";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -18,10 +18,14 @@ const OrderDishesList = styled.ul`
 
 const OrderDishRow = styled.li`
   display: grid;
-  grid-template-columns: ${(props) =>
-    props.$isEdit
-      ? "2.6rem minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 0.5fr) minmax(0px, 0.5fr)"
-      : "minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 0.5fr) minmax(0px, 0.5fr)"};
+  grid-template-columns: ${(props) => `
+    ${props.$isEdit ? "2.6rem " : ""}
+    minmax(0px, 1fr)
+    minmax(0px, 1fr)
+    minmax(0px, 1fr)
+    minmax(0px, 0.5fr)
+    minmax(0px, 0.5fr)
+  `};
 
   column-gap: 1rem;
   padding: 1rem;
@@ -34,16 +38,9 @@ const OrderDishRow = styled.li`
     font-weight: 400;
   }
 
-  &:not(:first-child):not(:last-child) {
+  &:not(:first-child) {
     min-height: 8.1rem;
     border-bottom: 1px solid #dcdcdc;
-  }
-
-  &:last-child {
-    display: flex;
-    margin-left: auto;
-    font-size: 1.8rem;
-    font-weight: 600;
   }
 `;
 
@@ -51,6 +48,15 @@ const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+`;
+
+const OrderSummary = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.8rem;
+  font-weight: 600;
+  padding: 1rem;
+  column-gap: 1rem;
 `;
 
 function OrderDishes({ dishData, isEdit }) {
@@ -68,29 +74,23 @@ function OrderDishes({ dishData, isEdit }) {
       </OrderDishRow>
 
       {dishData.map((dish) => (
-        <OrderDishItem dishData={dish} isEdit={isEdit} key={dish.uniqueId} />
+        <OrderDishRow $isEdit={isEdit} key={dish.uniqueId}>
+          {isEdit && <OrderEditButton dishData={dish} />}
+          <span>{dish.name}</span>
+          <span>{summarizeMealChoices(dish) || <FiMinus />}</span>
+          <span>{dish.note || <FiMinus />}</span>
+          <span>{dish.servings}份</span>
+          <span>$ {dish.itemTotalPrice * dish.servings}</span>
+        </OrderDishRow>
       ))}
 
-      <OrderDishRow>
+      <OrderSummary>
         <span>總計：</span>
         <span>{totalServings} 份餐點</span>
         <span>,</span>
         <span className="emphasize">${totalPrice}</span>
-      </OrderDishRow>
+      </OrderSummary>
     </OrderDishesList>
-  );
-}
-
-function OrderDishItem({ dishData, isEdit }) {
-  return (
-    <OrderDishRow $isEdit={isEdit}>
-      {isEdit && <OrderEditButton dishData={dishData} />}
-      <span>{dishData.name}</span>
-      <span>{summarizeMealChoices(dishData) || <FiMinus />}</span>
-      <span>{dishData.note || <FiMinus />}</span>
-      <span>{dishData.servings}份</span>
-      <span>$ {dishData.itemTotalPrice * dishData.servings}</span>
-    </OrderDishRow>
   );
 }
 

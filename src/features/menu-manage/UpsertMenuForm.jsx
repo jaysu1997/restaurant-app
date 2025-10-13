@@ -2,22 +2,22 @@
 import { useFieldArray, useForm, FormProvider } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import FieldArray from "./FieldArray";
-import FormTable from "../../ui/FormTable";
+import FormTable from "../../ui-old/FormTable";
 import { IoCloseSharp } from "react-icons/io5";
-import ButtonSpinner from "../../ui/ButtonSpinner";
-import Button from "../../ui/Button";
-import FormRow from "../../ui/FormRow";
-import FormTypography from "../../ui/FormTypography";
-import ControlledSelect from "../../ui/ControlledSelect";
-import StyledHotToast from "../../ui/StyledHotToast";
+import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import Button from "../../ui-old/Button";
+import FormRow from "../../ui-old/FormRow";
+import FormTypography from "../../ui-old/FormTypography";
+import ControlledSelect from "../../ui-old/ControlledSelect";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 import { useRef } from "react";
-import FormFieldset from "../../ui/FormFieldset";
-import ControlledInput from "../../ui/ControlledInput";
-import Modal from "../../ui/Modal";
+import FormFieldset from "../../ui-old/FormFieldset";
+import ControlledInput from "../../ui-old/ControlledInput";
+import Modal from "../../ui-old/Modal";
 import { createNewIngredients } from "./createNewIngredients";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
-import QueryStatusFallback from "../../ui/QueryStatusFallback";
+import QueryStatusFallback from "../../ui-old/QueryStatusFallback";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 
 const formFieldData = [
@@ -52,7 +52,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     inventoryIsPending,
     inventoryError,
     inventoryIsError,
-  } = useGetInventory(false);
+  } = useGetInventory();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const { upsert, isUpserting } = useUpsertMenu();

@@ -1,11 +1,11 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoCloseSharp } from "react-icons/io5";
-import Button from "../../ui/Button";
-import FormRow from "../../ui/FormRow";
-import FormTypography from "../../ui/FormTypography";
-import ControlledSelect from "../../ui/ControlledSelect";
-import FormFieldset from "../../ui/FormFieldset";
-import ControlledInput from "../../ui/ControlledInput";
+import Button from "../../ui-old/Button";
+import FormRow from "../../ui-old/FormRow";
+import FormTypography from "../../ui-old/FormTypography";
+import ControlledSelect from "../../ui-old/ControlledSelect";
+import FormFieldset from "../../ui-old/FormFieldset";
+import ControlledInput from "../../ui-old/ControlledInput";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 
 function NestedFieldArray({
@@ -15,7 +15,6 @@ function NestedFieldArray({
   disabled,
 }) {
   const { register, control, getValues, errors } = useFormContext();
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: `customize.${nestedIndex}.options`,

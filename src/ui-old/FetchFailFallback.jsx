@@ -3,6 +3,8 @@ import errorSvg from "../assets/error.svg";
 import Image from "./Image";
 import { FaTriangleExclamation } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import HomeButton from "../ui/HomeButton";
+import ReloadButton from "../ui/ReloadButton";
 
 const StyledFetchFailFallback = styled.section`
   display: flex;
@@ -33,37 +35,24 @@ const ButtonGroup = styled.div`
   gap: 3.6rem;
 `;
 
-const ReloadButton = styled.button`
-  background-color: #2563eb;
-  color: #fff;
-  border-radius: 6px;
-  padding: 1rem 2rem;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+// const ReloadButton = styled.button`
+//   background-color: #2563eb;
+//   color: #fff;
+//   border-radius: 6px;
+//   padding: 1rem 2rem;
+//   font-size: 1.4rem;
+//   cursor: pointer;
+//   transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: #1e40af;
-  }
+//   &:hover {
+//     background-color: #1e40af;
+//   }
 
-  &:focus {
-    outline: 2px solid #93c5fd;
-    outline-offset: 2px;
-  }
-`;
-
-const HomeButton = styled(ReloadButton)`
-  background-color: #dc2626;
-
-  &:hover {
-    background-color: #b91c1c;
-  }
-
-  &:focus {
-    outline: 2px solid #fca5a5;
-    outline-offset: 2px;
-  }
-`;
+//   &:focus {
+//     outline: 2px solid #93c5fd;
+//     outline-offset: 2px;
+//   }
+// `;
 
 // 數據獲取失敗fallback ui
 function FetchFailFallback({ error }) {

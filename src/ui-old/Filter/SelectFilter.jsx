@@ -10,6 +10,9 @@ function SelectFilter({ filterValue, handleValueChange, ...filters }) {
       onChange={(e) => handleValueChange(queryKey, e)}
       placeholder={placeholder}
       isSearchable={false}
+      components={{
+        IndicatorSeparator: () => null,
+      }}
       styles={{
         control: (baseStyles) => ({
           ...baseStyles,

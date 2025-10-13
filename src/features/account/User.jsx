@@ -6,7 +6,7 @@ import { GoPerson, GoSignOut } from "react-icons/go";
 import { useState } from "react";
 import useSignOut from "../../hooks/data/auth/useSignOut";
 import useUser from "../../hooks/data/auth/useUser";
-import DropdownMenu from "../../ui/DropdownMenu";
+import DropdownMenu from "../../ui-old/DropdownMenu";
 
 const StyledUser = styled.div`
   padding: 0 2.4rem;

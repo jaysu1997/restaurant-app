@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import ControlledInput from "../../ui/ControlledInput";
+import ControlledInput from "../../ui-old/ControlledInput";
 import { GoPlus } from "react-icons/go";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { useFieldArray, useForm } from "react-hook-form";
-import SettingFormSection from "../../ui/SettingFormSection";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import SettingFormSection from "../../ui-old/SettingFormSection";
+import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
-import StyledHotToast from "../../ui/StyledHotToast";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 import { generateTableNumbers } from "../../context/settingsHelpers";
 import { isValidPositiveInteger } from "../../utils/orderHelpers";
 

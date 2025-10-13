@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import UpdateUserAvatar from "./UpdateUserAvatar";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import { useForm } from "react-hook-form";
 import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
-import ButtonSpinner from "../../ui/ButtonSpinner";
-import StyledHotToast from "../../ui/StyledHotToast";
+import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`

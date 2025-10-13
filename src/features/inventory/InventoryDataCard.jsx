@@ -1,6 +1,6 @@
 import { useState } from "react";
-import DataDisplayCard from "../../ui/DataDisplayCard";
-import ConfirmDelete from "../../ui/ConfirmDelete";
+import DataDisplayCard from "../../ui-old/DataDisplayCard";
+import ConfirmDelete from "../../ui-old/ConfirmDelete";
 import UpsertInventoryForm from "./UpsertInventoryForm";
 import useDeleteInventory from "../../hooks/data/inventory/useDeleteInventory";
 

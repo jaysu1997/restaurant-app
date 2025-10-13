@@ -1,17 +1,9 @@
 import styled from "styled-components";
-
-// 這個外框或許可以變成一個通用ui元件
-const StyledSettingSection = styled.section`
-  background: #fff;
-  border: 1px solid #dfdfdf;
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-`;
+import ContentContainer from "../ui/ContentContainer";
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  padding: 2.4rem;
   gap: 3.2rem;
   font-size: 1.4rem;
 `;
@@ -32,7 +24,7 @@ const FormHeading = styled.header`
 
 const Footer = styled.footer`
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 2rem;
 `;
 
@@ -58,7 +50,7 @@ function SettingFormSection({
   children,
 }) {
   return (
-    <StyledSettingSection>
+    <ContentContainer>
       <Form onSubmit={handleSubmit}>
         <FormHeading>
           <h3>{title}</h3>
@@ -74,7 +66,7 @@ function SettingFormSection({
           </CancelButton>
         </Footer>
       </Form>
-    </StyledSettingSection>
+    </ContentContainer>
   );
 }
 

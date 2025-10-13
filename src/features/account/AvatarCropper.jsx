@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Modal from "../../ui/Modal";
+import Modal from "../../ui-old/Modal";
 import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
 import useUpsertUserAvatar from "../../hooks/data/auth/useUpsertUserAvatar";
-import ButtonSpinner from "../../ui/ButtonSpinner";
-import StyledHotToast from "../../ui/StyledHotToast";
+import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 
 const Wrapper = styled.section`
   width: min(56rem, 95dvw);

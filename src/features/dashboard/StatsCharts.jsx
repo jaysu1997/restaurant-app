@@ -3,23 +3,21 @@ import TodayOrderList from "./TodayOrderList";
 import RevenueTrendChart from "./RevenueTrendChart";
 import PeakHoursChart from "./PeakHoursChart";
 import TopDishesChart from "./TopDishesChart";
+import ContentContainer from "../../ui/ContentContainer";
 
 const StatsChartRow = styled.section`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 40rem;
+  grid-auto-rows: 40rem;
   gap: 2.8rem;
 `;
 
 const StatsChart = styled.article`
-  border-radius: 6px;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  padding: 2.4rem;
   gap: 2rem;
-  background-color: #fff;
-  border: 1px solid #dfdfdf;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  height: 100%;
 `;
 
 const ChartHeading = styled.h3`
@@ -54,10 +52,12 @@ function StatsCharts({ analyzedData }) {
         const Chart = item.chart;
 
         return (
-          <StatsChart key={index}>
-            <ChartHeading>{item.heading}</ChartHeading>
-            <Chart analyzedData={analyzedData} />
-          </StatsChart>
+          <ContentContainer key={index}>
+            <StatsChart>
+              <ChartHeading>{item.heading}</ChartHeading>
+              <Chart analyzedData={analyzedData} />
+            </StatsChart>
+          </ContentContainer>
         );
       })}
     </StatsChartRow>

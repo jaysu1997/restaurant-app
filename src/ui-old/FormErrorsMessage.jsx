@@ -10,6 +10,7 @@ const StyledErrorsMessage = styled.p`
   min-height: ${({ $minHeight }) => `${$minHeight}rem`};
 `;
 
+// 個地方使用的prop value可能需要整理，有的只依靠grid設定高度，有的則是有使用min-height
 function FormErrorsMessage({
   errors,
   minHeight = 0,

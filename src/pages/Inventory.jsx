@@ -2,14 +2,14 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
-import Button from "../ui/Button";
+import Button from "../ui-old/Button";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../ui-old/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
-import Filter from "../ui/Filter/Filter";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import Filter from "../ui-old/Filter/Filter";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 
 const Container = styled.ul`
   display: grid;
@@ -71,7 +71,7 @@ function Inventory() {
     inventoryIsPending,
     inventoryError,
     inventoryIsError,
-  } = useGetInventory(false);
+  } = useGetInventory();
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");

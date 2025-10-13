@@ -25,6 +25,7 @@ function ControlledInput({ control, id, name, rules, type, placeholder }) {
     <Input
       {...field}
       id={id}
+      // number input會有瀏覽器預設的滾動功能和上下鍵，所以改用text input + 正整數正則取代
       type={type === "number" ? "text" : type}
       placeholder={placeholder}
       // 一開始沒獲得值會因為undefined而跳出非受控與受控元件切換的錯誤訊息，所以先加上一個空字串(這個或許可以不用)

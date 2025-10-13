@@ -6,21 +6,10 @@ export const initialState = {
   curDishCustomizeOption: [],
   // 存放食材庫存數據
   inventoryMap: new Map(),
-  // 當前使用此useReducer的頁面
-  curOrderPage: "/menu",
-  // 存放訂單原本食材消耗總量(OrderSummaryEdit需要)
-  previousTotalIngredientsUsage: new Map(),
 };
 
 export function reducer(state, action) {
   switch (action.type) {
-    case "page/setCurrent": {
-      // 避免訂單更新建立和訂單編輯互相影響(因為是同一個useReducer + context api)
-      const newState =
-        action.payload === state.curOrderPage ? state : initialState;
-
-      return { ...newState, curOrderPage: action.payload };
-    }
     // 將所有的庫存數據暫時存放到state中
     case "inventory/setAll": {
       const newInventoryMap = new Map();
@@ -31,28 +20,9 @@ export function reducer(state, action) {
         newInventoryMap.set(name, remainingQuantity);
       });
 
-      // 先加回已建立訂單所使用的食材
-      if (state.previousTotalIngredientsUsage.size > 0) {
-        state.previousTotalIngredientsUsage.forEach((quantity, name) => {
-          newInventoryMap.set(name, newInventoryMap.get(name) + quantity);
-        });
-      }
-
-      // 如果在重新存入庫存數據的時候已經有訂單數據，則需要先把訂單使用到的食材扣除
-      if (state.dishes.length !== 0) {
-        state.dishes.forEach((dish) => {
-          dish.ingredientsUsage.forEach((quantity, name) => {
-            newInventoryMap.set(
-              name,
-              newInventoryMap.get(name) - quantity * dish.servings
-            );
-          });
-        });
-      }
-
       return { ...state, inventoryMap: newInventoryMap };
     }
-    // orderForm初始化
+    // OrderForm初始化
     case "orderForm/init": {
       return {
         ...state,
@@ -141,11 +111,12 @@ export function reducer(state, action) {
       });
 
       console.log(newState);
+
       return newState;
     }
     // 編輯餐點數據
     case "dishes/updateDish": {
-      const { previousIngredientsUsage, ...dishData } = action.payload;
+      const { dishData, previousIngredientsUsage } = action.payload;
       const newState = structuredClone(state);
       const dishIndex = newState.dishes.findIndex(
         (dish) => dish.uniqueId === dishData.uniqueId
@@ -226,21 +197,16 @@ export function reducer(state, action) {
     }
     // 編輯已建立訂單，需要先轉換數據格式以及紀錄訂單已消耗的食材
     case "order/edit": {
-      const { dishes, totalIngredientsUsage } = action.payload;
+      const { dishes } = action.payload;
 
       const dishesData = dishes.map((curDish) => ({
         ...curDish,
         ingredientsUsage: new Map(Object.entries(curDish.ingredientsUsage)),
       }));
 
-      const previousTotalIngredientsUsage = new Map(
-        Object.entries(totalIngredientsUsage)
-      );
-
       return {
         ...state,
         dishes: dishesData,
-        previousTotalIngredientsUsage,
       };
     }
 

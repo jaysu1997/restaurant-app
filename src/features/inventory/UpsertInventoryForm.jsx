@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
-import FormTable from "../../ui/FormTable";
-import FormTypography from "../../ui/FormTypography";
-import FormRow from "../../ui/FormRow";
-import Button from "../../ui/Button";
-import ButtonSpinner from "../../ui/ButtonSpinner";
+import FormTable from "../../ui-old/FormTable";
+import FormTypography from "../../ui-old/FormTypography";
+import FormRow from "../../ui-old/FormRow";
+import Button from "../../ui-old/Button";
+import ButtonSpinner from "../../ui-old/ButtonSpinner";
 import { useSearchParams } from "react-router-dom";
-import StyledHotToast from "../../ui/StyledHotToast";
-import FormFieldset from "../../ui/FormFieldset";
-import ControlledInput from "../../ui/ControlledInput";
-import Modal from "../../ui/Modal";
+import StyledHotToast from "../../ui-old/StyledHotToast";
+import FormFieldset from "../../ui-old/FormFieldset";
+import ControlledInput from "../../ui-old/ControlledInput";
+import Modal from "../../ui-old/Modal";
 import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
 
 const formFieldData = [

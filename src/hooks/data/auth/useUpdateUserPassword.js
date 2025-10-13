@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { updateUserPasswordApi } from "../../../services/apiAuth";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 import useSignOut from "./useSignOut";
 
 // 更新用戶密碼

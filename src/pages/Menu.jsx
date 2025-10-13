@@ -1,14 +1,17 @@
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../ui-old/PageHeader";
 import MenuView from "../features/menu/MenuView";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
 import { useSettings } from "../context/SettingsContext";
+import { useOrder } from "../context/OrderContext";
 
 function Menu() {
   const { settings, settingsError, settingsIsPending, settingsIsError } =
     useSettings();
   const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
+
+  const { dispatch } = useOrder();
 
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
   const {
@@ -16,7 +19,7 @@ function Menu() {
     inventoryIsPending,
     inventoryError,
     inventoryIsError,
-  } = useGetInventory(true);
+  } = useGetInventory(dispatch);
 
   return (
     <>

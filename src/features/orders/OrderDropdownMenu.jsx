@@ -2,13 +2,13 @@ import styled from "styled-components";
 import { useState } from "react";
 import { GoKebabHorizontal, GoEye, GoPencil, GoTrash } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
-import ConfirmDelete from "../../ui/ConfirmDelete";
+import ConfirmDelete from "../../ui-old/ConfirmDelete";
 import {
   formatCreatedTime,
   formatPickupNumber,
 } from "../../utils/orderHelpers";
 import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
-import DropdownMenu from "../../ui/DropdownMenu";
+import DropdownMenu from "../../ui-old/DropdownMenu";
 
 const ToggleButton = styled.button`
   display: flex;
@@ -41,12 +41,12 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
     {
       name: "檢視訂單",
       icon: GoEye,
-      handleClick: () => navigate(`/order/${id}`),
+      handleClick: () => navigate(`/orders/${id}`),
     },
     {
       name: "編輯訂單",
       icon: GoPencil,
-      handleClick: () => navigate(`/order-edit/${id}`),
+      handleClick: () => navigate(`/orders/${id}/edit`),
     },
     {
       name: "刪除訂單",

@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { useForm } from "react-hook-form";
-import ButtonSpinner from "../../ui/ButtonSpinner";
-import StyledHotToast from "../../ui/StyledHotToast";
-import PasswordInput from "../../ui/PasswordInput";
+import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import StyledHotToast from "../../ui-old/StyledHotToast";
+import PasswordInput from "../../ui-old/PasswordInput";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
 
 // 以下這些ui或許都能夠做成重複使用的版本
@@ -11,7 +10,7 @@ const Form = styled.form`
   display: grid;
   grid-template-columns: 8rem 1fr;
   column-gap: 1rem;
-  grid-template-rows: repeat(3, 3.8rem 2.8rem);
+  /* grid-template-rows: repeat(3, 3.8rem 2.8rem); */
   font-size: 1.4rem;
   font-weight: 500;
   align-items: center;
@@ -19,17 +18,6 @@ const Form = styled.form`
   div {
     position: relative;
   }
-`;
-
-const Input = styled.input`
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  font-size: 1.4rem;
-  font-weight: 400;
-  padding: 0 0.8rem;
-  height: 3.8rem;
-  border-radius: 6px;
 `;
 
 const Footer = styled.footer`
@@ -103,54 +91,47 @@ function UpdatePassword({ userData }) {
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <label>現有密碼</label>
       <PasswordInput
-        render={(type) => (
-          <Input
-            type={type}
-            autoComplete="current-password"
-            {...register("currentPassword", {
-              required: "請輸入現有密碼",
-              minLength: { value: 8, message: "密碼至少要有8碼" },
-            })}
-          />
-        )}
+        id="password"
+        autoComplete="current-password"
+        disabled={isPending}
+        {...register("currentPassword", {
+          required: "密碼必須填寫",
+          minLength: { value: 8, message: "密碼至少8碼" },
+        })}
+        errors={errors?.currentPassword}
       />
-      <FormErrorsMessage errors={errors?.currentPassword} gridColumn={2} />
+
       <label>新的密碼</label>
       <PasswordInput
-        render={(type) => (
-          <Input
-            type={type}
-            autoComplete="new-password"
-            {...register("newPassword", {
-              required: "請輸入新的密碼",
-              minLength: { value: 8, message: "密碼至少要有8碼" },
-              validate: (value) => {
-                const currentPassword = watch("currentPassword");
-                return value !== currentPassword || "新密碼不能與舊密碼相同";
-              },
-            })}
-          />
-        )}
+        id="newPassword"
+        autoComplete="new-password"
+        disabled={isPending}
+        {...register("newPassword", {
+          required: "請輸入新的密碼",
+          minLength: { value: 8, message: "密碼至少要有8碼" },
+          validate: (value) => {
+            const currentPassword = watch("currentPassword");
+            return value !== currentPassword || "新密碼不能與舊密碼相同";
+          },
+        })}
+        errors={errors?.newPassword}
       />
-      <FormErrorsMessage errors={errors?.newPassword} gridColumn={2} />
+
       <label>確認新密碼</label>
       <PasswordInput
-        render={(type) => (
-          <Input
-            type={type}
-            autoComplete="new-password"
-            {...register("confirmPassword", {
-              required: "請再次輸入新密碼",
-              minLength: { value: 8, message: "密碼至少要有8碼" },
-              validate: (value) => {
-                const newPassword = watch("newPassword");
-                return value === newPassword || "兩次輸入的新密碼不一致";
-              },
-            })}
-          />
-        )}
+        id="confirmPassword"
+        autoComplete="new-password"
+        disabled={isPending}
+        {...register("confirmPassword", {
+          required: "請再次輸入新密碼",
+          minLength: { value: 8, message: "密碼至少要有8碼" },
+          validate: (value) => {
+            const newPassword = watch("newPassword");
+            return value === newPassword || "兩次輸入的新密碼不一致";
+          },
+        })}
+        errors={errors?.confirmPassword}
       />
-      <FormErrorsMessage errors={errors?.confirmPassword} gridColumn={2} />
 
       <Footer>
         <SubmitButton disabled={!isDirty || isPending}>

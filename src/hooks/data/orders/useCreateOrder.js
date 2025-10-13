@@ -1,12 +1,10 @@
 // 建立新的訂單
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrderApi } from "../../../services/apiOrder";
-import StyledHotToast from "../../../ui/StyledHotToast";
-import { useOrder } from "../../../context/OrderContext";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 import { formatPickupNumber } from "../../../utils/orderHelpers";
 
-function useCreateOrder(reset) {
-  const { dispatch } = useOrder();
+function useCreateOrder() {
   const queryClient = useQueryClient();
 
   const {
@@ -23,8 +21,6 @@ function useCreateOrder(reset) {
         )} 建立成功`,
       });
 
-      dispatch({ type: "order/reset" });
-      reset();
       queryClient.invalidateQueries(["orders", "inventory"]);
     },
     onError: (error) => {

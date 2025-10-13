@@ -1,11 +1,3 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ```
 Aurora-Bites-main
@@ -14,19 +6,28 @@ Aurora-Bites-main
 ├─ package-lock.json
 ├─ package.json
 ├─ public
-│  └─ logo.png
-├─ README.md
+│  └─ logo.webp
 ├─ src
 │  ├─ App.jsx
 │  ├─ assets
+│  │  ├─ default-user.png
 │  │  ├─ empty-state.svg
-│  │  ├─ empty-state1.svg
-│  │  ├─ error.svg
-│  │  └─ man.png
+│  │  └─ error.svg
+│  ├─ components
+│  │  └─ DropdownMenu
 │  ├─ context
 │  │  ├─ OrderContext.jsx
-│  │  └─ orderReducer.js
+│  │  ├─ orderReducer.js
+│  │  ├─ SettingsContext.jsx
+│  │  └─ settingsHelpers.js
 │  ├─ features
+│  │  ├─ account
+│  │  │  ├─ AvatarCropper.jsx
+│  │  │  ├─ Slider.jsx
+│  │  │  ├─ UpdatePassword.jsx
+│  │  │  ├─ UpdateUserAvatar.jsx
+│  │  │  ├─ User.jsx
+│  │  │  └─ UserProfileSetting.jsx
 │  │  ├─ dashboard
 │  │  │  ├─ analyzeOrders.js
 │  │  │  ├─ PeakHoursChart.jsx
@@ -64,16 +65,21 @@ Aurora-Bites-main
 │  │  └─ settings
 │  │     ├─ ControlledTimeRange.jsx
 │  │     ├─ DineInTableSettings.jsx
-│  │     ├─ RegularBusinessHours.jsx
+│  │     ├─ RegularOpenHours.jsx
 │  │     ├─ sortTimeSlots.js
-│  │     ├─ SpecialBusinessHours.jsx
+│  │     ├─ SpecialOpenHours.jsx
 │  │     ├─ StoreInfo.jsx
 │  │     └─ validateOverlap.js
 │  ├─ hooks
 │  │  ├─ data
 │  │  │  ├─ auth
 │  │  │  │  ├─ useSignIn.js
-│  │  │  │  └─ useSignUp.js
+│  │  │  │  ├─ useSignOut.js
+│  │  │  │  ├─ useSignUp.js
+│  │  │  │  ├─ useUpdateUserPassword.js
+│  │  │  │  ├─ useUpdateUserProfile.js
+│  │  │  │  ├─ useUpsertUserAvatar.js
+│  │  │  │  └─ useUser.js
 │  │  │  ├─ inventory
 │  │  │  │  ├─ useDeleteInventory.js
 │  │  │  │  ├─ useGetInventory.js
@@ -97,6 +103,7 @@ Aurora-Bites-main
 │  │     └─ useClickOutside.js
 │  ├─ main.jsx
 │  ├─ pages
+│  │  ├─ Account.jsx
 │  │  ├─ Dashboard.jsx
 │  │  ├─ Inventory.jsx
 │  │  ├─ Menu.jsx
@@ -104,7 +111,8 @@ Aurora-Bites-main
 │  │  ├─ Order.jsx
 │  │  ├─ Orders.jsx
 │  │  ├─ PageNotFound.jsx
-│  │  └─ Settings.jsx
+│  │  ├─ Settings.jsx
+│  │  └─ SignIn.jsx
 │  ├─ services
 │  │  ├─ apiAuth.js
 │  │  ├─ apiInventory.js
@@ -117,6 +125,7 @@ Aurora-Bites-main
 │  ├─ ui
 │  │  ├─ AppLayout.jsx
 │  │  ├─ Button.jsx
+│  │  ├─ ButtonSpinner.jsx
 │  │  ├─ ConfirmDelete.jsx
 │  │  ├─ ControlledInput.jsx
 │  │  ├─ ControlledSelect.jsx
@@ -125,6 +134,7 @@ Aurora-Bites-main
 │  │  ├─ DateRangePicker.jsx
 │  │  ├─ DiningMethodSwitch.jsx
 │  │  ├─ DishCard.jsx
+│  │  ├─ DropdownMenu.jsx
 │  │  ├─ EmptyStateFallback.jsx
 │  │  ├─ ErrorFallback.jsx
 │  │  ├─ FetchFailFallback.jsx
@@ -141,12 +151,12 @@ Aurora-Bites-main
 │  │  ├─ FormTypography.jsx
 │  │  ├─ Header.jsx
 │  │  ├─ Image.jsx
-│  │  ├─ LoadingDotMini.jsx
-│  │  ├─ LoadingSpinner.jsx
+│  │  ├─ LoadingBars.jsx
 │  │  ├─ Logo.jsx
 │  │  ├─ Modal.jsx
 │  │  ├─ Navbar.jsx
 │  │  ├─ Note.jsx
+│  │  ├─ NumericInput.jsx
 │  │  ├─ OrderForm
 │  │  │  ├─ CustomizeArea.jsx
 │  │  │  ├─ Option.jsx
@@ -154,13 +164,15 @@ Aurora-Bites-main
 │  │  │  └─ orderFormHelpers.js
 │  │  ├─ PageHeader.jsx
 │  │  ├─ Pagination.jsx
+│  │  ├─ PasswordInput.jsx
+│  │  ├─ ProtectedRoute.jsx
 │  │  ├─ QueryStatusFallback.jsx
 │  │  ├─ ServingsControl.jsx
 │  │  ├─ SettingFormSection.jsx
+│  │  ├─ StoreStatusBadge .jsx
 │  │  ├─ StyledDayPicker.jsx
 │  │  ├─ StyledHotToast.jsx
-│  │  ├─ Tag.jsx
-│  │  └─ User.jsx
+│  │  └─ Tag.jsx
 │  └─ utils
 │     ├─ fadeInAnimation.js
 │     ├─ handleSupabaseError.js

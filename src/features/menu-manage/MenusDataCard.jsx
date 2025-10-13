@@ -1,9 +1,9 @@
 // 菜單設定數據表單
 import { FiMinus } from "react-icons/fi";
-import DataDisplayCard from "../../ui/DataDisplayCard";
+import DataDisplayCard from "../../ui-old/DataDisplayCard";
 import { useState } from "react";
 import UpsertMenuForm from "./UpsertMenuForm";
-import ConfirmDelete from "../../ui/ConfirmDelete";
+import ConfirmDelete from "../../ui-old/ConfirmDelete";
 import useDeleteMenu from "../../hooks/data/menus/useDeleteMenu";
 
 function MenusDataCard({ menu }) {

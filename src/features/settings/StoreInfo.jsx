@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import ControlledInput from "../../ui/ControlledInput";
+import ControlledInput from "../../ui-old/ControlledInput";
 import { useForm } from "react-hook-form";
-import SettingFormSection from "../../ui/SettingFormSection";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import SettingFormSection from "../../ui-old/SettingFormSection";
+import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
-import StyledHotToast from "../../ui/StyledHotToast";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 
 const Content = styled.ul`
   display: flex;

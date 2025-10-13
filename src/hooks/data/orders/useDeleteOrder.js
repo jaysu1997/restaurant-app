@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 import { deleteOrderApi } from "../../../services/apiOrder";
 import { useNavigate } from "react-router-dom";
 

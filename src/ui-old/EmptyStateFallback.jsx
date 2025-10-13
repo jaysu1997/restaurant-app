@@ -2,6 +2,7 @@ import styled from "styled-components";
 import emptyState from "../assets/empty-state.svg";
 import Image from "./Image";
 import { useNavigate } from "react-router-dom";
+import ReloadButton from "../ui/ReloadButton";
 
 const StyledEmptyStateFallback = styled.section`
   display: flex;
@@ -20,25 +21,6 @@ const Message = styled.p`
 const SubMessage = styled.p`
   font-size: 1.4rem;
   color: #6b7280;
-`;
-
-const ReloadButton = styled.button`
-  background-color: #2563eb;
-  color: #fff;
-  border-radius: 6px;
-  padding: 1rem 2rem;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #1e40af;
-  }
-
-  &:focus {
-    outline: 2px solid #93c5fd;
-    outline-offset: 2px;
-  }
 `;
 
 // 數據獲取結果為無的fallback ui

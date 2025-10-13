@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import ControlledSwitch from "../../ui/ControlledSwitch";
-import SettingFormSection from "../../ui/SettingFormSection";
+import ControlledSwitch from "../../ui-old/ControlledSwitch";
+import SettingFormSection from "../../ui-old/SettingFormSection";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { sortTimeSlots } from "./sortTimeSlots";
-import StyledHotToast from "../../ui/StyledHotToast";
+import StyledHotToast from "../../ui-old/StyledHotToast";
 
 const BusinessPeriodList = styled.ul`
   display: flex;

@@ -2,9 +2,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 import SwiperBar from "./SwiperBar";
-import DishCard from "../../ui/DishCard";
+import DishCard from "../../ui-old/DishCard";
 import ShoppingCart from "./ShoppingCart";
-import OrderForm from "../../ui/OrderForm/OrderForm";
+import OrderForm from "../../ui-old/OrderForm/OrderForm";
 
 const Container = styled.div`
   display: grid;

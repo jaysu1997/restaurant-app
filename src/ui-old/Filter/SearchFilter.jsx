@@ -3,12 +3,11 @@ import { IoCloseCircle } from "react-icons/io5";
 
 // 搜尋框
 const StyledSearchFilter = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 3.6rem;
+  align-items: center;
   border-radius: 4px;
   border: 1px solid #ccc;
-  padding: 0.2rem 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
   height: 3.8rem;
   width: 100%;
   max-width: 100%;
@@ -19,6 +18,7 @@ const StyledSearchFilter = styled.div`
   }
 
   input {
+    padding: 0.2rem 0.8rem;
     font-size: 1.4rem;
     width: 100%;
   }
@@ -26,6 +26,7 @@ const StyledSearchFilter = styled.div`
   button {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
   }
 `;
 

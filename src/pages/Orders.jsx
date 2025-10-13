@@ -1,9 +1,9 @@
 import OrdersTable from "../features/orders/OrdersTable";
 import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
-import Filter from "../ui/Filter/Filter";
-import PageHeader from "../ui/PageHeader";
-import Pagination from "../ui/Pagination";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import Filter from "../ui-old/Filter/Filter";
+import PageHeader from "../ui-old/PageHeader";
+import Pagination from "../ui-old/Pagination";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 
 const filtersConfig = [
   {

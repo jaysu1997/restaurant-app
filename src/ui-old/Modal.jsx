@@ -7,7 +7,7 @@ const Overlay = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: 999;
   background-color: rgba(0, 0, 0, 0.2);
   top: 0;
   left: 0;
@@ -102,10 +102,11 @@ function Modal({
 }) {
   // 用來處理使用原生滾動軸時，打開Modal後出現body仍然可以滾動的問題
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    // 鎖垂直滾動
+    document.documentElement.style.overflowY = "hidden";
 
     return () => {
-      document.body.style.overflow = "auto";
+      document.documentElement.style.overflowY = "scroll";
     };
   }, []);
 

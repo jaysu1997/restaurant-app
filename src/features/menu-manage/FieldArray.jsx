@@ -1,12 +1,12 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import NestedFieldArray from "./NestedFieldArray";
 import { IoCloseSharp } from "react-icons/io5";
-import Button from "../../ui/Button";
-import FormRow from "../../ui/FormRow";
-import FormTypography from "../../ui/FormTypography";
-import ControlledSwitch from "../../ui/ControlledSwitch";
-import FormFieldset from "../../ui/FormFieldset";
-import ControlledInput from "../../ui/ControlledInput";
+import Button from "../../ui-old/Button";
+import FormRow from "../../ui-old/FormRow";
+import FormTypography from "../../ui-old/FormTypography";
+import ControlledSwitch from "../../ui-old/ControlledSwitch";
+import FormFieldset from "../../ui-old/FormFieldset";
+import ControlledInput from "../../ui-old/ControlledInput";
 import fadeInAnimation from "../../utils/fadeInAnimation";
 
 function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {

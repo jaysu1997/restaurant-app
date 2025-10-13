@@ -5,9 +5,10 @@ const StyledPageHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 5.2rem;
 `;
 
-const PageTitle = styled.h2`
+const PageTitle = styled.h1`
   font-size: 3.2rem;
 `;
 

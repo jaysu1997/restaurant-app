@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { FaArrowRight } from "react-icons/fa";
-import Tag from "../../ui/Tag";
+import Tag from "../../ui-old/Tag";
 import { formatPickupNumber } from "../../utils/orderHelpers";
 import { useNavigate } from "react-router-dom";
 
 const OrderList = styled.ul`
-  max-height: 30rem;
+  height: 30rem;
+
   padding-right: 1.5rem;
   overflow-y: auto;
-  scrollbar-width: thin;
 `;
 
 const Order = styled.li`
@@ -27,9 +27,9 @@ const Order = styled.li`
     auto;
 
   align-items: center;
-
   padding: 1.5rem 0;
   gap: 1.5rem;
+  /* font-size: 1.4rem; */
 
   & > span {
     overflow: hidden;
@@ -63,7 +63,7 @@ const Order = styled.li`
 `;
 
 const EmptyState = styled.p`
-  height: 100%;
+  height: 30rem;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -95,10 +95,10 @@ function TodayOrderList({ analyzedData }) {
           <span>{`$${order.totalPrice}`}</span>
           <button
             onClick={() =>
-              navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
+              navigate(`/orders/${order.id}`, { state: { from: "dashboard" } })
             }
           >
-            <span>詳情</span>
+            <span>檢視</span>
             <FaArrowRight size={13} />
           </button>
         </Order>

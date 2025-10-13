@@ -11,7 +11,7 @@ import {
 } from "recharts";
 
 const EmptyState = styled.p`
-  height: 100%;
+  height: 30rem;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -40,7 +40,7 @@ function CustomYAxisTick({ x, y, payload }) {
 
 // 今日熱銷餐點圖表
 function TopDishesChart({ analyzedData }) {
-  const { todayTopDishes } = analyzedData;
+  let { todayTopDishes } = analyzedData;
 
   if (todayTopDishes.length === 0)
     return <EmptyState>今日尚無任何訂單</EmptyState>;

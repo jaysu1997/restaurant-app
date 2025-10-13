@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useState } from "react";
-import ConfirmDelete from "../../ui/ConfirmDelete";
+import ConfirmDelete from "../../ui-old/ConfirmDelete";
 import { scrollToTop } from "../../utils/scrollToTop";
 import {
   formatCreatedTime,
@@ -10,6 +10,7 @@ import {
 import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
 
 const Footer = styled.footer`
+  grid-column: 1;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -60,7 +61,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $fontColor="#fff"
             $hoverBgColor="#047857"
             onClick={() => {
-              navigate(`/order-edit/${orderId}`);
+              navigate(`/orders/${orderId}/edit`);
               scrollToTop();
             }}
           >

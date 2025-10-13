@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Tag from "../../ui/Tag";
+import Tag from "../../ui-old/Tag";
 import {
   formatCreatedTime,
   formatPickupNumber,

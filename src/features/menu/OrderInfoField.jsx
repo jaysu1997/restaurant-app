@@ -1,9 +1,9 @@
 // 購物車中下方的訂購訊息欄位
 import styled from "styled-components";
-import ControlledSelect from "../../ui/ControlledSelect";
-import Note from "../../ui/Note";
-import FormTypography from "../../ui/FormTypography";
-import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
+import ControlledSelect from "../../ui-old/ControlledSelect";
+import Note from "../../ui-old/Note";
+import FormTypography from "../../ui-old/FormTypography";
+import DiningMethodSwitch from "../../ui-old/DiningMethodSwitch";
 import { generatePickupTimeOptions } from "../../context/settingsHelpers";
 
 const StyledOrderInfoField = styled.div`
@@ -16,12 +16,13 @@ const StyledOrderInfoField = styled.div`
 const Row = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 0.6rem;
 
-  h5 {
+  label {
     font-size: 1.4rem;
     display: flex;
     gap: 0.2rem;
+    font-weight: 600;
   }
 `;
 
@@ -43,7 +44,7 @@ function OrderInfoField({
   return (
     <StyledOrderInfoField>
       <Row>
-        <h5>用餐方式</h5>
+        <label>用餐方式</label>
         <DiningMethodSwitch
           takeOut={takeOut}
           control={control}
@@ -53,10 +54,10 @@ function OrderInfoField({
       </Row>
 
       <Row>
-        <h5>
+        <label>
           {takeOut ? "取餐時間" : "內用桌號"}
           <FormTypography $titleStyle="highlight">*</FormTypography>
-        </h5>
+        </label>
         <ControlledSelect
           options={
             takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
@@ -79,10 +80,10 @@ function OrderInfoField({
       </Row>
 
       <Row>
-        <h5>
+        <label>
           付款狀態
           <FormTypography $titleStyle="highlight">*</FormTypography>
-        </h5>
+        </label>
         <ControlledSelect
           options={[
             { label: "已付款", value: "已付款" },
@@ -100,8 +101,9 @@ function OrderInfoField({
       </Row>
 
       <Row>
-        <h5>訂單備註</h5>
-        <Note register={register} />
+        <Note register={register}>
+          <label>訂單備註</label>
+        </Note>
       </Row>
     </StyledOrderInfoField>
   );

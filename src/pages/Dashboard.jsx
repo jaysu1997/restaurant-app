@@ -1,10 +1,10 @@
 import StatsCards from "../features/dashboard/StatsCards";
 import StatsCharts from "../features/dashboard/StatsCharts";
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../ui-old/PageHeader";
 import styled from "styled-components";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 import useAnalyzedOrders from "../hooks/data/orders/useAnalyzedOrders";
-import StoreStatusBadge from "../ui/StoreStatusBadge ";
+import StoreStatusBadge from "../ui-old/StoreStatusBadge ";
 import { useSettings } from "../context/SettingsContext";
 
 const Container = styled.div`

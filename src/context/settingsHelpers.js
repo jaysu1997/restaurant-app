@@ -114,14 +114,19 @@ export function generateTimeOptions(start, end) {
   const timeOptions = eachMinuteOfInterval(
     { start: start, end: end },
     { step: 5 }
-  ).map((time) => ({
-    label: `${isTomorrow(time) ? "明天 " : ""}${formatToHourMinute(time)}`,
-    value: time,
-  }));
+  ).map((time) => {
+    return {
+      label: `${isTomorrow(time) ? "明天 " : ""}${formatToHourMinute(time)}`,
+      value: time,
+    };
+  });
 
   // 如果結束營業時間是23:59，需要自己手動添加
   if (formatToHourMinute(end) === "23:59") {
-    timeOptions.push({ label: formatToHourMinute(end), value: end });
+    timeOptions.push({
+      label: `${isTomorrow(end) ? "明天 " : ""}${formatToHourMinute(end)}`,
+      value: end,
+    });
   }
 
   return timeOptions;
