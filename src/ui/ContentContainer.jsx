@@ -7,7 +7,7 @@ const ContentContainer = styled.div`
   padding: 2.4rem;
   border-radius: 6px;
 
-  /* 需要修正 */
+  /* 需要修正(或許) */
   height: fit-content;
 `;
 

@@ -8,7 +8,6 @@ import {
   BiFridge,
   BiSliderAlt,
 } from "react-icons/bi";
-import { scrollToTop } from "../utils/scrollToTop";
 import useUser from "../hooks/data/auth/useUser";
 
 const StyleNav = styled.nav`
@@ -21,7 +20,6 @@ const StyleNav = styled.nav`
   max-height: calc(100dvh - 6.4rem);
   width: 24rem;
   overflow-y: auto;
-  /* scrollbar-width: thin; */
 
   display: flex;
   flex-direction: column;
@@ -98,7 +96,7 @@ function Navbar() {
       <NavList>
         {navigationsLink.map((nav) => (
           <li key={nav.title}>
-            <StyleNavLink to={nav.to} onClick={() => scrollToTop()}>
+            <StyleNavLink to={nav.to}>
               {nav.icon}
               <span>{nav.title}</span>
             </StyleNavLink>

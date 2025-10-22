@@ -1,7 +1,7 @@
 import OrdersTable from "../features/orders/OrdersTable";
 import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
 import Filter from "../ui-old/Filter/Filter";
-import PageHeader from "../ui-old/PageHeader";
+import PageHeader from "../ui/PageHeader";
 import Pagination from "../ui-old/Pagination";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 

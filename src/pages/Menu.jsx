@@ -1,4 +1,4 @@
-import PageHeader from "../ui-old/PageHeader";
+import PageHeader from "../ui/PageHeader";
 import MenuView from "../features/menu/MenuView";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";

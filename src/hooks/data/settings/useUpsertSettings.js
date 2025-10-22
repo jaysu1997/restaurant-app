@@ -6,7 +6,7 @@ import StyledHotToast from "../../../ui-old/StyledHotToast";
 function useUpsertSettings() {
   const queryClient = useQueryClient();
 
-  const { mutate, isPaused, error } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: upsertSettingsApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
@@ -17,7 +17,7 @@ function useUpsertSettings() {
     },
   });
 
-  return { mutate, isPaused, error };
+  return { mutate, isPending, error };
 }
 
 export default useUpsertSettings;

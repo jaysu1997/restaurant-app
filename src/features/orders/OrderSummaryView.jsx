@@ -1,5 +1,5 @@
 // 訂單詳情(檢視)
-import Tag from "../../ui-old/Tag";
+import Tag from "../../ui/Tag";
 import OrderDishes from "./OrderDishes";
 import OrderOperation from "./OrderOperation";
 // 這裡的format可能需要整理(變成通用助手或是統一成一個函式)

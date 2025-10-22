@@ -11,6 +11,7 @@ export async function getInventoryApi() {
   handleSupabaseError(error);
 
   return data;
+  // return [];
 }
 
 // 根據輸入的食材名稱，取得所有備料和選項有使用指定食材的餐點

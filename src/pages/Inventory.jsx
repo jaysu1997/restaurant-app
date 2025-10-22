@@ -2,14 +2,14 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { BsFileEarmarkPlus } from "react-icons/bs";
-import Button from "../ui-old/Button";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
-import PageHeader from "../ui-old/PageHeader";
+import PageHeader from "../ui/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import Filter from "../ui-old/Filter/Filter";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback";
+import Button from "../ui/Button";
 
 const Container = styled.ul`
   display: grid;
@@ -17,7 +17,6 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(15.4rem, 1fr));
   justify-content: space-between;
   gap: 2.4rem;
-  padding-bottom: 3.6rem;
 `;
 
 const filtersConfig = [
@@ -93,7 +92,9 @@ function Inventory() {
       <PageHeader title="庫存管理">
         <Filter filtersConfig={filtersConfig} />
         <Button
-          $buttonStyle="createNewItem"
+          $type="primary"
+          $size="sm"
+          $rounded="full"
           onClick={() => setIsOpenModal(true)}
         >
           <BsFileEarmarkPlus size={18} />
@@ -105,7 +106,10 @@ function Inventory() {
         isPending={inventoryIsPending}
         isError={inventoryIsError}
         error={inventoryError}
-        isEmpty={Array.isArray(inventoryData) && inventoryData?.length === 0}
+        isEmpty={
+          (Array.isArray(inventoryData) && inventoryData?.length === 0) ||
+          displayInventoryData?.length === 0
+        }
         emptyState={{
           message: emptyStateMessage,
         }}

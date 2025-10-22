@@ -9,36 +9,37 @@ import {
 } from "../../utils/orderHelpers";
 import EmptyShoppingCart from "./EmptyShoppingCart";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
-import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import ButtonSpinner from "../../ui/ButtonSpinner";
+import Button from "../../ui/Button";
 
 const StyledShoppingCart = styled.aside`
-  grid-column: 2 / 3;
-  grid-row: 1 / -1;
   border: 1px solid #dcdcdc;
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 6px;
-  font-size: 1.4rem;
+
   height: min(64.8rem, calc(100dvh - 18.4rem));
-  position: sticky;
-  top: 18.4rem;
+  width: 21.6rem;
   overflow: hidden;
+
+  top: 18.4rem;
+  position: fixed;
+  left: calc(50% + 50.4rem);
+
+  @media (max-width: 91.25em) {
+    left: auto;
+    right: 1rem;
+  }
 `;
 
 const Header = styled.header`
-  display: flex;
-  flex-direction: column;
   padding: 0.8rem 1.6rem;
   border-bottom: 1px solid #dcdcdc;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
   z-index: 1;
-
-  h4 {
-    font-size: 2.8rem;
-    margin-bottom: 1rem;
-  }
+  font-size: 2.8rem;
+  font-weight: 600;
 `;
 
 const ShoppingList = styled.ul`
@@ -46,6 +47,7 @@ const ShoppingList = styled.ul`
   flex-direction: column;
   padding: 0 1.6rem;
   height: 100%;
+  font-size: 1.4rem;
   overflow-y: scroll;
   scrollbar-width: thin;
 `;
@@ -71,31 +73,12 @@ const Footer = styled.footer`
   padding: 1.6rem;
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
   gap: 1.2rem;
-  font-size: 1.6rem;
   font-weight: 600;
-`;
-
-const SubmitButton = styled.button`
-  height: 3.2rem;
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 999px;
-  background-color: #1d4ed8;
-  color: #fff;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-
-  &:not(:disabled):hover {
-    background-color: #2563eb;
-  }
 `;
 
 function ShoppingCart({ settingsData }) {
   const {
-    state: { dishes, inventoryMap },
+    state: { dishes },
     dispatch,
   } = useOrder();
 
@@ -132,9 +115,7 @@ function ShoppingCart({ settingsData }) {
 
   return (
     <StyledShoppingCart>
-      <Header>
-        <h4>購物車</h4>
-      </Header>
+      <Header>購物車</Header>
 
       {dishes.length !== 0 ? (
         <ShoppingList>
@@ -166,12 +147,17 @@ function ShoppingCart({ settingsData }) {
           </Row>
 
           <Row>
-            <SubmitButton
+            <Button
+              $type="primary"
+              $size="xl"
+              $rounded="sm"
+              $isLoading={orderCreating}
               disabled={dishes.length === 0 || orderCreating || !isValid}
               onClick={handleSubmit(onSubmit, onError)}
             >
-              {orderCreating ? <ButtonSpinner /> : "提交"}
-            </SubmitButton>
+              <span>提交</span>
+              {orderCreating && <ButtonSpinner />}
+            </Button>
           </Row>
         </Footer>
       )}

@@ -7,6 +7,7 @@ import SearchFilter from "./SearchFilter";
 import DateRangeFilter from "./DateRangeFilter";
 import useClickOutside from "../../hooks/ui/useClickOutside";
 import { getInitialFilterState, handleSearchParams } from "./filterHelpers";
+import Button from "../../ui/Button";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -144,8 +145,10 @@ function Filter({ filtersConfig }) {
 
   return (
     <StyledFilter>
-      <ToggleButton
-        $isActive={0}
+      <Button
+        $type="secondary"
+        $size="sm"
+        $rounded="full"
         onClick={() =>
           setIsContainerOpen((isContainerOpen) => {
             if (!isContainerOpen) {
@@ -161,7 +164,7 @@ function Filter({ filtersConfig }) {
           <TbFilter size={18} />
         )}
         篩選數據
-      </ToggleButton>
+      </Button>
 
       {isContainerOpen && (
         <FilterContainer ref={filterContainerRef}>

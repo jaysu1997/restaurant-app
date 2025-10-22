@@ -3,12 +3,12 @@ import TodayOrderList from "./TodayOrderList";
 import RevenueTrendChart from "./RevenueTrendChart";
 import PeakHoursChart from "./PeakHoursChart";
 import TopDishesChart from "./TopDishesChart";
-import ContentContainer from "../../ui/ContentContainer";
+import SectionContainer from "../../ui/SectionContainer";
 
 const StatsChartRow = styled.section`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 40rem;
+  grid-auto-rows: 42rem;
   gap: 2.8rem;
 `;
 
@@ -18,11 +18,6 @@ const StatsChart = styled.article`
   gap: 2rem;
   width: 100%;
   height: 100%;
-`;
-
-const ChartHeading = styled.h3`
-  font-size: 2rem;
-  font-weight: 600;
 `;
 
 // 圖表
@@ -52,12 +47,11 @@ function StatsCharts({ analyzedData }) {
         const Chart = item.chart;
 
         return (
-          <ContentContainer key={index}>
+          <SectionContainer title={item.heading} key={index}>
             <StatsChart>
-              <ChartHeading>{item.heading}</ChartHeading>
               <Chart analyzedData={analyzedData} />
             </StatsChart>
-          </ContentContainer>
+          </SectionContainer>
         );
       })}
     </StatsChartRow>

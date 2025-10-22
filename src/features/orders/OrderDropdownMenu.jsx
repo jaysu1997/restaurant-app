@@ -41,12 +41,12 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
     {
       name: "檢視訂單",
       icon: GoEye,
-      handleClick: () => navigate(`/orders/${id}`),
+      handleClick: () => navigate(`/order/${id}`),
     },
     {
       name: "編輯訂單",
       icon: GoPencil,
-      handleClick: () => navigate(`/orders/${id}/edit`),
+      handleClick: () => navigate(`/order/${id}/edit`),
     },
     {
       name: "刪除訂單",

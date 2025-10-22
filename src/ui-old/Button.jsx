@@ -12,7 +12,7 @@ const type = {
     padding: 0.6rem 1.2rem;
     background-color: #1d4ed8;
     color: #fff;
-    box-shadow: 0 0px 15px 2px rgba(96, 165, 250, 0.5);
+    box-shadow: 0 0px 10px 20px rgba(96, 165, 250, 0.05);
 
     &:hover {
       background-color: #3b82f6;

@@ -2,7 +2,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useState } from "react";
 import ConfirmDelete from "../../ui-old/ConfirmDelete";
-import { scrollToTop } from "../../utils/scrollToTop";
 import {
   formatCreatedTime,
   formatPickupNumber,
@@ -48,10 +47,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $fontColor="#fff"
             $hoverBgColor="#047857"
             disabled={disabeldSubmit}
-            onClick={() => {
-              handleSubmit();
-              scrollToTop();
-            }}
+            onClick={() => handleSubmit()}
           >
             儲存
           </Button>
@@ -60,10 +56,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $bgColor="#059669"
             $fontColor="#fff"
             $hoverBgColor="#047857"
-            onClick={() => {
-              navigate(`/orders/${orderId}/edit`);
-              scrollToTop();
-            }}
+            onClick={() => navigate(`/order/${orderId}/edit`)}
           >
             編輯
           </Button>
@@ -81,7 +74,9 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $bgColor="#e7e5e4"
             $fontColor="#333"
             $hoverBgColor="#d6d3d1"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              navigate(-1);
+            }}
           >
             取消更新
           </Button>
@@ -90,7 +85,9 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
             $bgColor="#e7e5e4"
             $fontColor="#333"
             $hoverBgColor="#d6d3d1"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              navigate(-1);
+            }}
           >
             {from === "dashboard" ? "返回首頁" : "返回列表"}
           </Button>

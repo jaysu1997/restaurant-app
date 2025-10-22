@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import defaultAvatar from "../../assets/default-user.png";
 import { useNavigate } from "react-router-dom";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { GoPerson, GoSignOut } from "react-icons/go";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import useSignOut from "../../hooks/data/auth/useSignOut";
 import useUser from "../../hooks/data/auth/useUser";
 import DropdownMenu from "../../ui-old/DropdownMenu";
+import UserAvatar from "../../ui/UserAvatar";
 
 const StyledUser = styled.div`
   padding: 0 2.4rem;
@@ -37,17 +37,6 @@ const UserButton = styled.button`
     color: #374151;
     transition: transform 0.3s;
   }
-`;
-
-const UserAvatar = styled.img`
-  grid-row: 1 / -1;
-  display: block;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  object-position: center;
 `;
 
 const UserName = styled.span`
@@ -105,10 +94,7 @@ function User() {
             setIsOpenMenu((isOpenMenu) => !isOpenMenu);
           }}
         >
-          <UserAvatar
-            src={avatarFile ? avatarUrl : defaultAvatar}
-            alt="userAvatar"
-          />
+          <UserAvatar avatarUrl={avatarUrl} />
           <UserName>{userName}</UserName>
           <UserRole>{userRole}</UserRole>
           <RiArrowRightSLine size={22} />

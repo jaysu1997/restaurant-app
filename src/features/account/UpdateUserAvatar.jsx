@@ -2,30 +2,28 @@ import { useState } from "react";
 import styled from "styled-components";
 import AvatarCropper from "./AvatarCropper";
 import { MdUpload } from "react-icons/md";
+import UserAvatar from "../../ui/UserAvatar";
+import SectionContainer from "../../ui/SectionContainer";
+import ButtonAdd from "../../ui/ButtonAdd";
 
-const ChooseFile = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 1.4rem;
-  font-weight: 500;
-  border: 1px solid #2563eb;
-  color: #2563eb;
-  width: fit-content;
-  height: 3.8rem;
-  padding: 0.8rem 1.2rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
+const StyledUpdateUserAvatar = styled.div`
+  display: grid;
+  grid-template-columns: 9.6rem 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 1.6rem;
+  row-gap: 0.8rem;
+  height: 9.6rem;
 
-  &:hover {
-    background-color: #eff6ff;
+  & label {
+    align-self: end;
   }
 `;
 
 function UpdateUserAvatar({ userData }) {
   const [imgUrl, setImgUrl] = useState(undefined);
+
+  const avatarFile = userData?.user_metadata?.avatar_file;
+  const avatarUrl = `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/${avatarFile}`;
 
   function handleSelectFile(e) {
     const fileLength = e.target.files.length;
@@ -49,11 +47,17 @@ function UpdateUserAvatar({ userData }) {
   }
 
   return (
-    <>
-      <ChooseFile htmlFor="avatar">
-        <MdUpload size={19} />
-        選擇新頭像
-      </ChooseFile>
+    <SectionContainer>
+      <StyledUpdateUserAvatar>
+        <UserAvatar avatarUrl={avatarUrl} />
+
+        <ButtonAdd as="label" htmlFor="avatar" role="avatarUploadButton">
+          <MdUpload size={19} />
+          選擇新頭像
+        </ButtonAdd>
+
+        <span>必須是 JPEG、PNG、GIF 檔。</span>
+      </StyledUpdateUserAvatar>
 
       <input
         id="avatar"
@@ -71,7 +75,7 @@ function UpdateUserAvatar({ userData }) {
           onCloseModal={handleCloseModal}
         />
       )}
-    </>
+    </SectionContainer>
   );
 }
 

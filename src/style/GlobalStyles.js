@@ -21,6 +21,12 @@ import * as styled from "styled-components";
 // shadow
 // rgba(0, 0, 0, 0.04)
 
+// border-radius
+// 4px
+// 6px
+// 999px
+// 50%
+
 export const GlobalStyles = styled.createGlobalStyle`
   /* :root {
     --color-white: #fff;
@@ -59,6 +65,15 @@ export const GlobalStyles = styled.createGlobalStyle`
     min-height: 100dvh;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+  }
+
   input,
   textarea,
   select,
@@ -74,13 +89,12 @@ export const GlobalStyles = styled.createGlobalStyle`
     list-style: none;
   }
 
+  /* 後續或許可以針對button、input這些很常使用的tag進行總整理，把一些通用樣式設定寫在此處或是通用component中 */
   /* 或許需要修改 */
   button {
     cursor: pointer;
     border: none;
-
     background-color: transparent;
-    transition: all 0.3s;
 
     &:disabled {
       opacity: 0.5;

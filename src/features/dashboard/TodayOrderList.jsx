@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FaArrowRight } from "react-icons/fa";
-import Tag from "../../ui-old/Tag";
+import Tag from "../../ui/Tag";
 import { formatPickupNumber } from "../../utils/orderHelpers";
 import { useNavigate } from "react-router-dom";
 
@@ -95,7 +95,7 @@ function TodayOrderList({ analyzedData }) {
           <span>{`$${order.totalPrice}`}</span>
           <button
             onClick={() =>
-              navigate(`/orders/${order.id}`, { state: { from: "dashboard" } })
+              navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
             }
           >
             <span>檢視</span>

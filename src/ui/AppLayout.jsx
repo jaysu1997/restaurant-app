@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import Header from "./Header";
+import Header from "../ui-old/Header";
 import { Outlet } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navbar from "../ui-old/Navbar";
 
 const StyleAppLayout = styled.div`
   display: grid;
@@ -16,7 +16,7 @@ const StyleAppLayout = styled.div`
 
 const Body = styled.div`
   width: 100%;
-  padding: 3.6rem 1rem 0;
+  padding: 3.6rem 1rem;
 `;
 
 const Main = styled.main`

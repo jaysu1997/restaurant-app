@@ -6,6 +6,8 @@ import { useRef, useState } from "react";
 import useClickOutside from "../hooks/ui/useClickOutside";
 import { PiCalendar } from "react-icons/pi";
 import StyledDayPicker from "./StyledDayPicker";
+// 這個icon或許更適合
+import { LuCalendarRange } from "react-icons/lu";
 
 const StyledDatePicker = styled.div`
   position: relative;

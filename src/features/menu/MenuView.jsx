@@ -22,7 +22,6 @@ const Menus = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
   height: fit-content;
-  padding-bottom: 3.6rem;
 `;
 
 function MenuView({ menusData, settingsData }) {

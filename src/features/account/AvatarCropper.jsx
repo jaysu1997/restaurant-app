@@ -4,8 +4,9 @@ import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
 import useUpsertUserAvatar from "../../hooks/data/auth/useUpsertUserAvatar";
-import ButtonSpinner from "../../ui-old/ButtonSpinner";
 import StyledHotToast from "../../ui-old/StyledHotToast";
+import ButtonSubmit from "../../ui/ButtonSubmit";
+import ButtonCancel from "../../ui/ButtonCancel";
 
 const Wrapper = styled.section`
   width: min(56rem, 95dvw);
@@ -28,21 +29,6 @@ const Footer = styled.footer`
 const ButtonGroup = styled.div`
   display: inline-flex;
   gap: 1.2rem;
-`;
-
-const SubmitButton = styled.button`
-  background-color: #2563eb;
-  color: #fff;
-  padding: 0.6rem 1.8rem;
-  font-weight: 500;
-  width: 6.4rem;
-  height: 3.6rem;
-  border-radius: 999px;
-`;
-
-const CancelButton = styled(SubmitButton)`
-  color: #333;
-  background-color: #eee;
 `;
 
 // 使用Canvas將裁切區域轉成Blob Url
@@ -139,12 +125,8 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
       <Footer>
         <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
         <ButtonGroup>
-          <SubmitButton onClick={handleSave} disabled={isPending}>
-            {isPending ? <ButtonSpinner /> : "儲存"}
-          </SubmitButton>
-          <CancelButton onClick={onCloseModal} disabled={isPending}>
-            取消
-          </CancelButton>
+          <ButtonSubmit isLoading={isPending} onClick={handleSave} />
+          <ButtonCancel onClick={onCloseModal} disabled={isPending} />
         </ButtonGroup>
       </Footer>
     </Modal>

@@ -2,9 +2,9 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
-import Button from "../ui-old/Button.jsx";
+import Button from "../ui/Button";
 import { BsFileEarmarkPlus } from "react-icons/bs";
-import PageHeader from "../ui-old/PageHeader.jsx";
+import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 import Filter from "../ui-old/Filter/Filter.jsx";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback.jsx";
@@ -17,7 +17,6 @@ const Container = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
   justify-content: space-between;
   gap: 4rem;
-  padding-bottom: 3.6rem;
 `;
 
 function filterData(menusData, nameSearchParams, categorySearchParams) {
@@ -88,7 +87,9 @@ function MenuManage() {
       <PageHeader title="菜單設定">
         <Filter filtersConfig={filtersConfig} />
         <Button
-          $buttonStyle="createNewItem"
+          $type="primary"
+          $size="sm"
+          $rounded="full"
           onClick={() => setIsOpenModal(true)}
         >
           <BsFileEarmarkPlus size={18} />

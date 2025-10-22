@@ -4,11 +4,21 @@ import useSignIn from "../hooks/data/auth/useSignIn";
 import useUser from "../hooks/data/auth/useUser";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ButtonSpinner from "../ui-old/ButtonSpinner";
-import FormErrorsMessage from "../ui-old/FormErrorsMessage";
-import PasswordInput from "../ui-old/PasswordInput";
-import StandaloneLayout from "../ui/StandaloneLayout";
+import ButtonSpinner from "../ui/ButtonSpinner";
+import PasswordInput from "../components/PasswordInput";
 import FormInput from "../ui/FormInput";
+import Button from "../ui/Button";
+
+const StyledSignIn = styled.div`
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3.2rem;
+  padding: 3.6rem 1rem;
+`;
 
 const Logo = styled.img`
   width: 9.6rem;
@@ -47,34 +57,12 @@ const Field = styled.div`
   font-size: 1.4rem;
 
   label {
-    font-weight: 600;
+    font-weight: 500;
   }
 `;
 
-// input嘗試重複使用
-// const Input = styled.input`
-//   font-size: 1.4rem;
-//   border: 1px solid #ddd;
-//   padding: 0.2rem 0.8rem;
-//   height: 3.8rem;
-//   border-radius: 6px;
-//   width: 100%;
-
-//   &:focus {
-//     border-color: transparent;
-//     outline: 2px solid #3b82f6;
-//   }
-// `;
-
-const SignInButton = styled.button`
-  height: 3.8rem;
-  background-color: #000;
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: 500;
-  padding: 0.4rem 1.4rem;
-  margin-top: 1.4rem;
-  border-radius: 6px;
+const MarginTop = styled.div`
+  margin-top: 2rem;
 `;
 
 // 登入頁面UI元件
@@ -118,20 +106,22 @@ function SignIn() {
   if (userIsPending || user) return null;
 
   return (
-    <StandaloneLayout>
+    <StyledSignIn>
       <Logo src="/logo.webp" alt="logo" />
       <Heading>登入 Aurora Bites</Heading>
+
+      {/* 登入失敗提示訊息ui */}
       {errors?.root && (
         <SignInFailMessage>{errors?.root?.message}</SignInFailMessage>
       )}
+
       <SignInForm onSubmit={handleSubmit(onSubmit, onError)}>
         <Field>
-          <label htmlFor="email">信箱</label>
-
           <FormInput
+            label="信箱"
+            id="email"
             disabled={isPending}
             autoComplete="username"
-            id="email"
             {...register("email", {
               required: "信箱必須填寫",
               pattern: {
@@ -141,12 +131,11 @@ function SignIn() {
             })}
             errors={errors?.email}
           />
-
-          {/* <FormErrorsMessage errors={errors?.email} minHeight={2} /> */}
         </Field>
+
         <Field>
-          <label htmlFor="password">密碼</label>
           <PasswordInput
+            label="密碼"
             id="password"
             autoComplete="current-password"
             disabled={isPending}
@@ -156,13 +145,21 @@ function SignIn() {
             })}
             errors={errors?.password}
           />
-          {/* <FormErrorsMessage errors={errors?.password} minHeight={2} /> */}
         </Field>
-        <SignInButton disabled={isPending}>
-          {isPending ? <ButtonSpinner /> : "登入"}
-        </SignInButton>
+        <MarginTop>
+          <Button
+            $type="primary"
+            $size="xl"
+            $rounded="sm"
+            $isLoading={isPending}
+            disabled={isPending}
+          >
+            <span>登入</span>
+            {isPending && <ButtonSpinner />}
+          </Button>
+        </MarginTop>
       </SignInForm>
-    </StandaloneLayout>
+    </StyledSignIn>
   );
 }
 

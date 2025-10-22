@@ -22,7 +22,9 @@ const StyleModal = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${({ $maxWidth }) => `min(${$maxWidth}rem, 95dvw)`};
+  /* 原本為90dvh，看看100dvh的效果 */
   max-height: 90dvh;
+  /* max-height: 100dvh; */
   margin: 0 0.6rem;
   background-color: #fff;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);

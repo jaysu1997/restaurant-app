@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import FieldArray from "./FieldArray";
 import FormTable from "../../ui-old/FormTable";
 import { IoCloseSharp } from "react-icons/io5";
-import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import ButtonSpinner from "../../ui/ButtonSpinner";
 import Button from "../../ui-old/Button";
 import FormRow from "../../ui-old/FormRow";
 import FormTypography from "../../ui-old/FormTypography";

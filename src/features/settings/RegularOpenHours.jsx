@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import ControlledSwitch from "../../ui-old/ControlledSwitch";
-import SettingFormSection from "../../ui-old/SettingFormSection";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { sortTimeSlots } from "./sortTimeSlots";
 import StyledHotToast from "../../ui-old/StyledHotToast";
+import SectionContainer from "../../ui/SectionContainer";
+import { LuClock } from "react-icons/lu";
 
 const BusinessPeriodList = styled.ul`
   display: flex;
@@ -40,7 +41,7 @@ const DateField = styled.div`
 `;
 
 function RegularOpenHours({ data = {} }) {
-  const { mutate } = useUpsertSettings();
+  const { mutate, isPending } = useUpsertSettings();
 
   const methods = useForm({
     defaultValues: { regularOpenHours: data },
@@ -81,50 +82,56 @@ function RegularOpenHours({ data = {} }) {
 
   return (
     <FormProvider {...methods}>
-      <SettingFormSection
+      <SectionContainer
         title="一般營業時間"
-        description="設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。"
-        handleSubmit={handleSubmit(onSubmit, onError)}
-        handleReset={() => reset({ regularOpenHours: data })}
-        isDirty={isDirty}
+        icon={<LuClock />}
+        caption="設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。"
+        form={{
+          formId: "regularOpenHours",
+          handleReset: () => reset({ regularOpenHours: data }),
+          isDirty,
+          isUpdating: isPending,
+        }}
       >
-        <BusinessPeriodList>
-          {dayFields.map((day, dayIndex) => (
-            <BusinessPeriodItem key={day.id}>
-              <DateField>
-                <label htmlFor={day.dayOfWeek}>{day.label}</label>
-                <input
-                  id={day.dayOfWeek}
-                  type="text"
-                  hidden
-                  {...register(`regularOpenHours.${dayIndex}.dayOfWeek`)}
-                  value={day.dayOfWeek}
-                />
+        <form id="regularOpenHours" onSubmit={handleSubmit(onSubmit, onError)}>
+          <BusinessPeriodList>
+            {dayFields.map((day, dayIndex) => (
+              <BusinessPeriodItem key={day.id}>
+                <DateField>
+                  <label htmlFor={day.dayOfWeek}>{day.label}</label>
+                  <input
+                    id={day.dayOfWeek}
+                    type="text"
+                    hidden
+                    {...register(`regularOpenHours.${dayIndex}.dayOfWeek`)}
+                    value={day.dayOfWeek}
+                  />
 
-                <ControlledSwitch
+                  <ControlledSwitch
+                    control={control}
+                    items={[
+                      {
+                        name: `regularOpenHours.${dayIndex}.isBusinessDay`,
+                        option1: { label: "公休", value: false },
+                        option2: { label: "營業", value: true },
+                      },
+                    ]}
+                    handleChange={() =>
+                      clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
+                    }
+                  />
+                </DateField>
+
+                <ControlledTimeRange
                   control={control}
-                  items={[
-                    {
-                      name: `regularOpenHours.${dayIndex}.isBusinessDay`,
-                      option1: { label: "公休", value: false },
-                      option2: { label: "營業", value: true },
-                    },
-                  ]}
-                  handleChange={() =>
-                    clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
-                  }
+                  dayIndex={dayIndex}
+                  fieldArrayName="regularOpenHours"
                 />
-              </DateField>
-
-              <ControlledTimeRange
-                control={control}
-                dayIndex={dayIndex}
-                fieldArrayName="regularOpenHours"
-              />
-            </BusinessPeriodItem>
-          ))}
-        </BusinessPeriodList>
-      </SettingFormSection>
+              </BusinessPeriodItem>
+            ))}
+          </BusinessPeriodList>
+        </form>
+      </SectionContainer>
     </FormProvider>
   );
 }

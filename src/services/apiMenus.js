@@ -11,6 +11,7 @@ export async function getMenusApi() {
   handleSupabaseError(error);
 
   return data;
+  // return [];
 }
 
 // 新增or更新單筆menu數據

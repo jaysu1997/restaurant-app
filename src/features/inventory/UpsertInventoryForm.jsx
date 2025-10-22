@@ -3,7 +3,7 @@ import FormTable from "../../ui-old/FormTable";
 import FormTypography from "../../ui-old/FormTypography";
 import FormRow from "../../ui-old/FormRow";
 import Button from "../../ui-old/Button";
-import ButtonSpinner from "../../ui-old/ButtonSpinner";
+import ButtonSpinner from "../../ui/ButtonSpinner";
 import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import FormFieldset from "../../ui-old/FormFieldset";

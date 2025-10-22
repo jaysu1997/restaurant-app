@@ -1,4 +1,4 @@
-import PageHeader from "../ui-old/PageHeader.jsx";
+import PageHeader from "../ui/PageHeader.jsx";
 import styled from "styled-components";
 import RegularOpenHours from "../features/settings/RegularOpenHours.jsx";
 import SpecialOpenHours from "../features/settings/SpecialOpenHours.jsx";
@@ -15,14 +15,6 @@ const SettingsLayout = styled.div`
   max-width: 60rem;
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 4rem;
-  padding-bottom: 3.6rem;
-`;
-
 function Settings() {
   const { data, settingsError, settingsIsPending, settingsIsError } =
     useSettings();
@@ -36,12 +28,10 @@ function Settings() {
         isError={settingsIsError}
         error={settingsError}
       >
-        <Container>
-          <RegularOpenHours data={data.regularOpenHours} />
-          <SpecialOpenHours data={data.specialOpenHours} />
-          <DineInTableSettings data={data.dineInTableConfig} />
-          <StoreInfo data={data.storeInfo} />
-        </Container>
+        <RegularOpenHours data={data.regularOpenHours} />
+        <SpecialOpenHours data={data.specialOpenHours} />
+        <DineInTableSettings data={data.dineInTableConfig} />
+        <StoreInfo data={data.storeInfo} />
       </QueryStatusFallback>
     </SettingsLayout>
   );

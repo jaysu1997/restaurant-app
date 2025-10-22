@@ -13,7 +13,7 @@ import {
 
 const StyledStatsCardRow = styled.section`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(19.2rem, 1fr));
   gap: 2.8rem;
 `;
 
@@ -29,6 +29,9 @@ const StatCard = styled.article`
   background-color: ${(props) => props.$bgColor};
   border: 1px solid ${(props) => props.$bgColor};
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const StatIcon = styled.span`
@@ -46,7 +49,7 @@ const StatIcon = styled.span`
 const StatHeading = styled.h6`
   grid-area: heading;
   color: #6b7280;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 600;
   align-self: end;
 `;

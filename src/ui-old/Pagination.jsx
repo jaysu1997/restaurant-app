@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
-import { scrollToTop } from "../utils/scrollToTop";
+import { useRef } from "react";
 import { GoDotFill } from "react-icons/go";
 import { isValidPositiveInteger } from "../utils/orderHelpers";
 
@@ -77,13 +76,6 @@ const JumpSection = styled.div`
 function Pagination({ curPage, maxPage }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef(null);
-
-  useEffect(
-    function () {
-      scrollToTop();
-    },
-    [curPage]
-  );
 
   function handlePagination(value) {
     const inputValue = isValidPositiveInteger(Number(value), 1);

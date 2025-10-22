@@ -8,8 +8,9 @@ const StyledPageHeader = styled.header`
   height: 5.2rem;
 `;
 
-const PageTitle = styled.h1`
+const PageHeading = styled.h1`
   font-size: 3.2rem;
+  font-weight: 700;
 `;
 
 const PageActions = styled.div`
@@ -20,7 +21,7 @@ const PageActions = styled.div`
 function PageHeader({ title, children }) {
   return (
     <StyledPageHeader>
-      <PageTitle>{title}</PageTitle>
+      <PageHeading>{title}</PageHeading>
       <PageActions>{children}</PageActions>
     </StyledPageHeader>
   );

@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AppLayout from "./ui-old/AppLayout";
+import AppLayout from "./ui/AppLayout";
 import Menu from "./pages/Menu";
 import Orders from "./pages/Orders";
 import MenuManage from "./pages/MenuManage";
@@ -17,12 +17,14 @@ import { SettingsProvider } from "./context/SettingsContext";
 import SignIn from "./pages/SignIn";
 import ProtectedRoute from "./ui-old/ProtectedRoute";
 import Account from "./pages/Account";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      retry: 3,
+      // retry: 3,
+      retry: false,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },
@@ -33,9 +35,9 @@ const queryClient = new QueryClient({
   },
 });
 
-// 後續可能需要把元件和函式以及檔案和資料夾都需要重構
+// 還有需要註冊使用者的功能
 
-// 像是登入功能中的密碼欄位，絕對定位的button會和input內的輸入內容重疊，記得要改成div外框，然後input和button並列
+// 後續可能需要把元件和函式以及檔案和資料夾都需要重構
 
 // 還有error boundary的fallback ui要設計,以及404的ui應該更需要更改
 export default function App() {
@@ -44,6 +46,7 @@ export default function App() {
       <ReactQueryDevtools initialIsOpen={false} />
 
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route
             element={
@@ -64,9 +67,9 @@ export default function App() {
               }
             />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/orders/:orderId" element={<Order />} />
+            <Route path="/order/:orderId" element={<Order />} />
             <Route
-              path="/orders/:orderId/edit"
+              path="/order/:orderId/edit"
               element={
                 <OrderProvider key="edit">
                   <Order />

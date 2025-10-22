@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
 import styled from "styled-components";
-import PageHeader from "../ui-old/PageHeader";
+import PageHeader from "../ui/PageHeader";
 import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback";

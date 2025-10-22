@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
 import { RiArrowRightSLine } from "react-icons/ri";
-import ButtonSpinner from "./ButtonSpinner";
+import ButtonSpinner from "../ui/ButtonSpinner";
 import useGetFilterMenuData from "../hooks/data/menus/useGetFilterData";
 import QueryStatusFallback from "./QueryStatusFallback";
 
