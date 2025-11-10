@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { IoIosClose } from "react-icons/io";
-import { useEffect } from "react";
+import useScrollLock from "../hooks/ui/useScrollLock";
 
 const Overlay = styled.div`
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: 999;
-  background-color: rgba(0, 0, 0, 0.2);
-  top: 0;
-  left: 0;
+  background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(2px);
   display: flex;
   justify-content: center;
@@ -22,9 +22,7 @@ const StyleModal = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${({ $maxWidth }) => `min(${$maxWidth}rem, 95dvw)`};
-  /* 原本為90dvh，看看100dvh的效果 */
   max-height: 90dvh;
-  /* max-height: 100dvh; */
   margin: 0 0.6rem;
   background-color: #fff;
   box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
@@ -59,7 +57,7 @@ const Title = styled.h2`
   white-space: nowrap;
 `;
 
-const Button = styled.button`
+const CloseButton = styled.button`
   width: 2.8rem;
   height: 2.8rem;
   color: #334155;
@@ -102,24 +100,16 @@ function Modal({
   maxWidth = 56,
   scrollBar = true,
 }) {
-  // 用來處理使用原生滾動軸時，打開Modal後出現body仍然可以滾動的問題
-  useEffect(() => {
-    // 鎖垂直滾動
-    document.documentElement.style.overflowY = "hidden";
-
-    return () => {
-      document.documentElement.style.overflowY = "scroll";
-    };
-  }, []);
+  useScrollLock(0, true, onCloseModal);
 
   return createPortal(
     <Overlay>
       <StyleModal $maxWidth={maxWidth}>
         <Header>
           <Title $textColor={headerColor}>{modalHeader}</Title>
-          <Button onClick={onCloseModal}>
+          <CloseButton onClick={onCloseModal}>
             <IoIosClose size={28} />
-          </Button>
+          </CloseButton>
         </Header>
         <Content $scrollbar={scrollBar}>{children}</Content>
       </StyleModal>

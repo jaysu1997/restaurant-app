@@ -22,15 +22,14 @@ function MenusDataCard({ menu }) {
 
   // 卡片展示格式
   const menuDataFormat = [
-    { head: "名稱", body: name, twoColumns: false },
-    { head: "分類", body: category, twoColumns: false },
-    { head: "售價", body: price, twoColumns: false },
-    { head: "折扣", body: discount || <FiMinus />, twoColumns: false },
-    { head: "食材", body: ingredientList?.join(", "), twoColumns: true },
+    { head: "名稱", body: name },
+    { head: "分類", body: category },
+    { head: "售價", body: price },
+    { head: "折扣", body: discount ? `-${discount}` : 0 },
+    { head: "食材", body: ingredientList?.join(", ") },
     {
       head: "細項",
       body: customizeList?.join(", ") || <FiMinus />,
-      twoColumns: true,
     },
   ];
 

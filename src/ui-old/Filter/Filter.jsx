@@ -13,24 +13,6 @@ const StyledFilter = styled.div`
   position: relative;
 `;
 
-const ToggleButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 1.4rem;
-  font-weight: 500;
-  padding: 0.8rem 1.6rem;
-  border: 1px solid #2563eb;
-  border-radius: 4px;
-  color: #2563eb;
-  background-color: #fff;
-
-  &:hover {
-    background-color: #eef2ff;
-  }
-`;
-
 const StyledFilterCheckIcon = styled(TbFilterCheck)`
   path:last-of-type {
     stroke: red;
@@ -163,7 +145,7 @@ function Filter({ filtersConfig }) {
         ) : (
           <TbFilter size={18} />
         )}
-        篩選數據
+        <span>篩選數據</span>
       </Button>
 
       {isContainerOpen && (

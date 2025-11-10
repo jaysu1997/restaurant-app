@@ -39,7 +39,6 @@ export const GlobalStyles = styled.createGlobalStyle`
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    scrollbar-width: thin;
   }
 
   *:disabled {
@@ -50,7 +49,6 @@ export const GlobalStyles = styled.createGlobalStyle`
   html {
     font-size: 62.5%;
     scrollbar-gutter: stable;
-    scrollbar-width: auto;
     overflow-y: scroll;
   }
 
@@ -87,6 +85,10 @@ export const GlobalStyles = styled.createGlobalStyle`
 
   li {
     list-style: none;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   /* 後續或許可以針對button、input這些很常使用的tag進行總整理，把一些通用樣式設定寫在此處或是通用component中 */

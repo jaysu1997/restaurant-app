@@ -1,69 +1,56 @@
 import styled from "styled-components";
 import {
-  LuReceiptText,
-  LuBanknote,
+  LuClipboardList,
+  LuCircleDollarSign,
   LuTrendingUpDown,
-  LuFlame,
   LuMinus,
+  LuTrophy,
+  LuArrowBigDown,
+  LuArrowBigUp,
 } from "react-icons/lu";
-import {
-  TbArrowBigUpLinesFilled,
-  TbArrowBigDownLinesFilled,
-} from "react-icons/tb";
 
 const StyledStatsCardRow = styled.section`
   display: grid;
-  grid-template-columns: repeat(4, minmax(19.2rem, 1fr));
+  grid-template-columns: repeat(4, minmax(15rem, 1fr));
   gap: 2.8rem;
+
+  @media (max-width: 48em) {
+    grid-template-columns: repeat(2, minmax(15rem, 1fr));
+    gap: 2rem;
+  }
 `;
 
 const StatCard = styled.article`
   border-radius: 6px;
   padding: 2rem;
   display: grid;
-  grid-template-areas:
-    "icon heading"
-    "icon value";
-  grid-template-columns: 6rem 1fr;
-  column-gap: 1.4rem;
+  grid-template-columns: auto 2rem;
+  grid-template-rows: auto auto;
+  column-gap: 1rem;
+  row-gap: 0.6rem;
   background-color: ${(props) => props.$bgColor};
   border: 1px solid ${(props) => props.$bgColor};
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 
-  overflow: hidden;
-  white-space: nowrap;
-`;
-
-const StatIcon = styled.span`
-  grid-area: icon;
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  color: #fff;
-  background-color: ${(props) => props.$bgColor || "inherit"};
-  color: ${(props) => props.$iconColor || "#fff"};
 `;
 
 const StatHeading = styled.h6`
-  grid-area: heading;
   color: #6b7280;
-  font-size: 1.4rem;
-  font-weight: 600;
-  align-self: end;
+  font-size: 1.3rem;
+  font-weight: 500;
 `;
 
 const StatData = styled.div`
-  grid-area: value;
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  max-width: 16.5rem;
+  min-width: 0;
 
   span {
-    font-size: 2.2rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -79,58 +66,34 @@ function StatsCards({ analyzedData }) {
   const { todayOrderCounts, todayRevenue, todayRevenueTrend, todayTopDishes } =
     analyzedData;
 
-  const { trendValue, trendExtraIcon, trendExtraIconColor } = (() => {
-    if (todayRevenueTrend === 0)
-      return {
-        trendValue: "無變化",
-        trendExtraIcon: "",
-        trendExtraIconColor: "",
-      };
-
-    const isPositive = todayRevenueTrend > 0;
-    return {
-      trendValue: `${isPositive ? "+" : "-"} $${Math.abs(todayRevenueTrend)}`,
-      trendExtraIcon: isPositive
-        ? TbArrowBigUpLinesFilled
-        : TbArrowBigDownLinesFilled,
-      trendExtraIconColor: isPositive ? "#22c55e" : "#f43f5e",
-    };
-  })();
-
   const statCardItems = [
     {
       heading: "今日訂單總數",
       value: todayOrderCounts,
       cardColor: "#dbeafe",
       iconColor: "#2563eb",
-      icon: LuReceiptText,
-      iconSize: 24,
+      icon: LuClipboardList,
     },
     {
       heading: "今日營收金額",
       value: `$ ${todayRevenue}`,
       cardColor: "#dcfce7",
       iconColor: "#16a34a",
-      icon: LuBanknote,
-      iconSize: 28,
+      icon: LuCircleDollarSign,
     },
     {
       heading: "今日營收趨勢",
-      value: trendValue,
+      value: `$ ${todayRevenueTrend}`,
       cardColor: "#f3e8ff",
       iconColor: "#9333ea",
       icon: LuTrendingUpDown,
-      iconSize: 24,
-      extraIcon: trendExtraIcon,
-      extraIconColor: trendExtraIconColor,
     },
     {
       heading: "今日熱銷商品",
       value: todayTopDishes[0]?.name,
       cardColor: "#ffedd5",
       iconColor: "#ea580c",
-      icon: LuFlame,
-      iconSize: 24,
+      icon: LuTrophy,
     },
   ];
 
@@ -138,14 +101,12 @@ function StatsCards({ analyzedData }) {
     <StyledStatsCardRow>
       {statCardItems.map((item, index) => {
         const Icon = item.icon;
-        const ExtraIcon = item?.extraIcon;
 
         return (
           <StatCard $bgColor={item.cardColor} key={index}>
-            <StatIcon $bgColor={item.iconColor}>
-              <Icon size={item.iconSize} />
-            </StatIcon>
             <StatHeading>{item.heading}</StatHeading>
+            <Icon size={20} color={item.iconColor} />
+
             <StatData>
               <span>
                 {!item.value && item.value !== 0 ? (
@@ -158,11 +119,13 @@ function StatsCards({ analyzedData }) {
                 )}
               </span>
 
-              {item?.extraIcon && (
-                <StatIcon $iconColor={item.extraIconColor}>
-                  <ExtraIcon size={24} />
-                </StatIcon>
-              )}
+              {item.heading === "今日營收趨勢" ? (
+                todayRevenueTrend >= 0 ? (
+                  <LuArrowBigUp color="#22c55e" fill="#22c55e" size={24} />
+                ) : (
+                  <LuArrowBigDown color="#f43f5e" fill="#f43f5e" size={24} />
+                )
+              ) : undefined}
             </StatData>
           </StatCard>
         );

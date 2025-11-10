@@ -1,22 +1,31 @@
+import Navbar from "../components/Navbar";
 import styled from "styled-components";
 import Header from "../ui-old/Header";
 import { Outlet } from "react-router-dom";
-import Navbar from "../ui-old/Navbar";
+import { useState } from "react";
 
 const StyleAppLayout = styled.div`
   display: grid;
   grid-template-rows: 6.4rem 1fr;
   grid-template-columns: auto 1fr;
-  /* grid-template-columns: 1fr; */
+
   min-height: 100dvh;
   width: 100%;
   max-width: 192rem;
   margin: 0 auto;
+
+  @media (max-width: 64em) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Body = styled.div`
   width: 100%;
-  padding: 3.6rem 1rem;
+  padding: 3.6rem 2.4rem;
+
+  @media (max-width: 50em) {
+    padding: 3.6rem 1rem;
+  }
 `;
 
 const Main = styled.main`
@@ -29,10 +38,12 @@ const Main = styled.main`
 `;
 
 function AppLayout() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <StyleAppLayout>
-      <Header />
-      <Navbar />
+      <Header setIsOpen={setIsOpen} />
+      <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Body>
         <Main>
           <Outlet />

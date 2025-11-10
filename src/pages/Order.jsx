@@ -10,11 +10,15 @@ import { useSettings } from "../context/SettingsContext";
 
 const StyledOrderSummary = styled.div`
   display: grid;
-  grid-template-columns: minmax(0px, 1fr) minmax(0px, 28rem);
-  gap: 4rem;
+  grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
+  gap: 2.4rem;
   padding: 0 0 3.6rem;
   font-weight: 500;
   width: 100%;
+
+  @media (max-width: 50em) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const OrderHeader = styled.header`

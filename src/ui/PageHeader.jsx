@@ -16,6 +16,12 @@ const PageHeading = styled.h1`
 const PageActions = styled.div`
   display: flex;
   gap: 1rem;
+
+  @media (max-width: 30em) {
+    & > div > button > span {
+      display: none;
+    }
+  }
 `;
 
 function PageHeader({ title, children }) {

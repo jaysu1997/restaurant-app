@@ -36,9 +36,6 @@ function OrderSummaryView({ orderData }) {
             <span>{orderUUID}</span>
           </div>
 
-          <div>
-            <label>訂購餐點：</label>
-          </div>
           <OrderDishes dishData={dishes} isEdit={false} />
         </OrderCard>
       </ContentContainer>

@@ -10,14 +10,10 @@ const StatsChartRow = styled.section`
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 42rem;
   gap: 2.8rem;
-`;
 
-const StatsChart = styled.article`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-  height: 100%;
+  @media (max-width: 48em) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 // 圖表
@@ -48,9 +44,7 @@ function StatsCharts({ analyzedData }) {
 
         return (
           <SectionContainer title={item.heading} key={index}>
-            <StatsChart>
-              <Chart analyzedData={analyzedData} />
-            </StatsChart>
+            <Chart analyzedData={analyzedData} />
           </SectionContainer>
         );
       })}

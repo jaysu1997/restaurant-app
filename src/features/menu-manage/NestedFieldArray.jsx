@@ -6,7 +6,7 @@ import FormTypography from "../../ui-old/FormTypography";
 import ControlledSelect from "../../ui-old/ControlledSelect";
 import FormFieldset from "../../ui-old/FormFieldset";
 import ControlledInput from "../../ui-old/ControlledInput";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 
 function NestedFieldArray({
   nestedIndex,

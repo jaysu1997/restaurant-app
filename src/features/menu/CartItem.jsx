@@ -28,7 +28,6 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  line-height: 1.8rem;
 `;
 
 const OrderName = styled.h4`
@@ -117,12 +116,11 @@ function CartItem({ dish }) {
 
           {dish.note && (
             <Row>
-              <Note>{`"${dish.note}"`}</Note>
+              <Note>&quot;{dish.note}&quot;</Note>
             </Row>
           )}
 
           <Row>
-            <OrderPrice>$ {dishTotalPrice}</OrderPrice>
             <ServingsControl
               type="sm"
               servings={servings}
@@ -130,6 +128,7 @@ function CartItem({ dish }) {
               dishData={dish}
               liveUpdate={true}
             />
+            <OrderPrice>$ {dishTotalPrice}</OrderPrice>
           </Row>
         </OrderCard>
       </OrderCardWrapper>

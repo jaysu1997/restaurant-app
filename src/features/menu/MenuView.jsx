@@ -12,6 +12,11 @@ const Container = styled.div`
   grid-template-rows: auto 1fr;
   gap: 2.4rem;
   width: 100%;
+
+  @media (max-width: 50em) {
+    grid-template-columns: 1fr;
+    padding-bottom: 3.6rem;
+  }
 `;
 
 const Menus = styled.ul`

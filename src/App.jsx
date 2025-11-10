@@ -18,6 +18,7 @@ import SignIn from "./pages/SignIn";
 import ProtectedRoute from "./ui-old/ProtectedRoute";
 import Account from "./pages/Account";
 import ScrollToTop from "./components/ScrollToTop";
+import SignUp from "./pages/SignUp";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,7 +38,7 @@ const queryClient = new QueryClient({
 
 // 還有需要註冊使用者的功能
 
-// 後續可能需要把元件和函式以及檔案和資料夾都需要重構
+// 後續可能需要把元件和函式以及檔案和資料夾都需要重構(styled元件命名需要再檢查修正，很多是臨時命名而已，還有可以統一的樣式就拆解，現在購物車的程式碼多到爆)
 
 // 還有error boundary的fallback ui要設計,以及404的ui應該更需要更改
 export default function App() {
@@ -80,6 +81,7 @@ export default function App() {
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/signup" element={<SignUp />} />
           </Route>
           <Route path="/signin" element={<SignIn />} />
           <Route path="*" element={<PageNotFound />} />

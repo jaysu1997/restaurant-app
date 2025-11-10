@@ -20,7 +20,9 @@ function summarizeMealChoices(dish) {
     .reduce((acc, cur) => {
       if (cur.detail.length === 0) return acc;
 
-      acc.push(cur.detail.map((detail) => detail.optionLabel));
+      cur.detail.forEach((curOption) => {
+        acc.push(curOption.optionLabel);
+      });
 
       return acc;
     }, [])

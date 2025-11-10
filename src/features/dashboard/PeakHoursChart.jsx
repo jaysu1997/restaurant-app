@@ -25,7 +25,7 @@ function PeakHoursChart({ analyzedData }) {
           interval="equidistantPreserveStart"
           tick={{ fontSize: 12 }}
         />
-        <YAxis allowDecimals={false} width={55} tick={{ fontSize: 14 }} />
+        <YAxis width={55} allowDecimals={false} tick={{ fontSize: 12 }} />
         <Tooltip
           separator=""
           formatter={(value) => [` ${value} 筆訂單`, "總計建立"]}

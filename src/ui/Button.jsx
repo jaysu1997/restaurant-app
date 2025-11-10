@@ -60,6 +60,7 @@ const rounded = {
 };
 
 const Button = styled.button`
+  cursor: pointer;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -82,7 +83,11 @@ const Button = styled.button`
 
   ${({ $type }) => type[$type]}
   ${({ $size }) => size[$size]}
-  ${({ $rounded }) => rounded[$rounded]}
+  ${({ $rounded }) => rounded[$rounded]} /* @container (width < 12rem) {
+    span {
+      display: none;
+    }
+  } */
 `;
 
 export default Button;

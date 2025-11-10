@@ -14,9 +14,8 @@ import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 const Container = styled.ul`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  justify-content: space-between;
-  gap: 4rem;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  gap: 3.6rem;
 `;
 
 function filterData(menusData, nameSearchParams, categorySearchParams) {
@@ -85,7 +84,6 @@ function MenuManage() {
   return (
     <>
       <PageHeader title="菜單設定">
-        <Filter filtersConfig={filtersConfig} />
         <Button
           $type="primary"
           $size="sm"
@@ -95,6 +93,7 @@ function MenuManage() {
           <BsFileEarmarkPlus size={18} />
           <span>新增餐點</span>
         </Button>
+        <Filter filtersConfig={filtersConfig} />
       </PageHeader>
 
       <QueryStatusFallback

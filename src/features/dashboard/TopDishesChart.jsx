@@ -68,12 +68,7 @@ function TopDishesChart({ analyzedData }) {
           unit="份"
           allowDecimals={false}
         />
-        <YAxis
-          type="category"
-          dataKey="name"
-          tick={<CustomYAxisTick />}
-          width={55}
-        />
+        <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} />
         <Tooltip
           separator=""
           cursor={false}

@@ -1,4 +1,3 @@
-
 ```
 Aurora-Bites-main
 ├─ eslint.config.js
@@ -174,7 +173,7 @@ Aurora-Bites-main
 │  │  ├─ StyledHotToast.jsx
 │  │  └─ Tag.jsx
 │  └─ utils
-│     ├─ fadeInAnimation.js
+│     ├─ {fadeInAnimation}.js
 │     ├─ handleSupabaseError.js
 │     ├─ orderHelpers.js
 │     └─ scrollToTop.js

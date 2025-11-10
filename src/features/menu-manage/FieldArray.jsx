@@ -7,7 +7,7 @@ import FormTypography from "../../ui-old/FormTypography";
 import ControlledSwitch from "../../ui-old/ControlledSwitch";
 import FormFieldset from "../../ui-old/FormFieldset";
 import ControlledInput from "../../ui-old/ControlledInput";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 
 function FieldArray({ disabled, inventoryData, handleCreateNewItems }) {
   const { register, control, errors } = useFormContext();

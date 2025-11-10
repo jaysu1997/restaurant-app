@@ -18,7 +18,7 @@ import { createNewIngredients } from "./createNewIngredients";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
 import QueryStatusFallback from "../../ui-old/QueryStatusFallback";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 
 const formFieldData = [
   {

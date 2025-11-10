@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import DiningMethodSwitch from "../../ui-old/DiningMethodSwitch";
 import ControlledSelect from "../../ui-old/ControlledSelect";
 import { useEffect } from "react";
-import MiniMenu from "./MiniMenu";
 import Note from "../../ui-old/Note";
 import OrderOperation from "./OrderOperation";
 import { buildOrderData, formatCreatedTime } from "../../utils/orderHelpers";
@@ -96,10 +95,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
             <label>訂單編號：</label>
             <span>{orderUUID}</span>
           </div>
-          <div>
-            <label>訂購餐點：</label>
-            <MiniMenu />
-          </div>
+
           <OrderDishes dishData={dishes} isEdit={true} />
         </OrderCard>
       </ContentContainer>

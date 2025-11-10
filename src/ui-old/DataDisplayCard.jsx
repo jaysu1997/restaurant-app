@@ -19,7 +19,8 @@ const Card = styled.li`
 `;
 
 const TableRow = styled.div`
-  ${(props) => props.$twoColumns && "grid-column: 1 / -1;"}
+  grid-column: 1 / -1;
+
   display: grid;
   grid-template-columns: min-content 1fr;
   white-space: nowrap;
@@ -68,7 +69,7 @@ function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
   return (
     <Card>
       {dataFormat.map((data) => (
-        <TableRow $twoColumns={data.twoColumns} key={data.head}>
+        <TableRow key={data.head}>
           <TableHead>{data.head}</TableHead>
           <TableBody>{data.body}</TableBody>
         </TableRow>

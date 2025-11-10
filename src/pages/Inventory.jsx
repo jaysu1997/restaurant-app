@@ -14,9 +14,8 @@ import Button from "../ui/Button";
 const Container = styled.ul`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(15.4rem, 1fr));
-  justify-content: space-between;
-  gap: 2.4rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 3.6rem;
 `;
 
 const filtersConfig = [
@@ -90,16 +89,18 @@ function Inventory() {
   return (
     <>
       <PageHeader title="庫存管理">
+        <div>
+          <Button
+            $type="primary"
+            $size="sm"
+            $rounded="full"
+            onClick={() => setIsOpenModal(true)}
+          >
+            <BsFileEarmarkPlus size={18} />
+            <span>新增食材</span>
+          </Button>
+        </div>
         <Filter filtersConfig={filtersConfig} />
-        <Button
-          $type="primary"
-          $size="sm"
-          $rounded="full"
-          onClick={() => setIsOpenModal(true)}
-        >
-          <BsFileEarmarkPlus size={18} />
-          <span>新增食材</span>
-        </Button>
       </PageHeader>
 
       <QueryStatusFallback

@@ -37,15 +37,21 @@ const ReadOnlyText = styled.span`
   word-break: break-word;
 `;
 
-function Note({ register, children, readOnly = false, value }) {
+function Note({
+  register,
+  children,
+  readOnly = false,
+  value,
+  maxLength = 100,
+}) {
   return (
     <StyledNote>
       {children}
       {readOnly && <ReadOnlyText>{value || "無"}</ReadOnlyText>}
       {!readOnly && (
         <TextArea
-          maxLength="100"
-          placeholder="備註內容最多100個字"
+          maxLength={maxLength}
+          placeholder={`備註內容最多${maxLength}個字`}
           {...register("note")}
         />
       )}

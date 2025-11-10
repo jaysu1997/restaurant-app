@@ -14,7 +14,7 @@ import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import SectionContainer from "../../ui/SectionContainer";

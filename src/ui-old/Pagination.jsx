@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
 import { useSearchParams } from "react-router-dom";
 import { useRef } from "react";
-import { GoDotFill } from "react-icons/go";
 import { isValidPositiveInteger } from "../utils/orderHelpers";
+import Dot from "../ui/Dot";
 
 const StyledPagination = styled.footer`
   display: flex;
@@ -108,7 +108,7 @@ function Pagination({ curPage, maxPage }) {
           <BiSolidLeftArrow size={16} />
         </button>
         <strong>{curPage}</strong>
-        <GoDotFill size={10} />
+        <Dot $size={1} />
         <span>共 {maxPage} 頁</span>
         <button
           type="button"

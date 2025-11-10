@@ -226,7 +226,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
               />
             ))}
 
-          <Note register={register}>
+          <Note register={register} maxLength={20}>
             <Title>餐點備註</Title>
           </Note>
         </Container>

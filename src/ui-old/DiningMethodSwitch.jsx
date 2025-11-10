@@ -5,7 +5,8 @@ import styled from "styled-components";
 const StyledToggleSwitch = styled.label`
   user-select: none;
   height: 3.8rem;
-  width: 12.6rem;
+  width: 100%;
+  max-width: 12rem;
   padding: 0.5rem;
   background-color: #d6d3d1;
   display: flex;
@@ -17,7 +18,7 @@ const StyledToggleSwitch = styled.label`
   cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
 
   input:checked + span {
-    transform: translateX(5.8rem);
+    transform: translateX(100%);
   }
 `;
 
@@ -37,7 +38,7 @@ const Option = styled.div`
 const Slider = styled.span`
   position: absolute;
   height: 2.8rem;
-  width: 5.8rem;
+  width: calc((100% - 1rem) / 2);
   background-color: #fff;
   border-radius: 999px;
   top: 0.5rem;

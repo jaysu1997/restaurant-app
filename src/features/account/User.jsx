@@ -9,9 +9,8 @@ import DropdownMenu from "../../ui-old/DropdownMenu";
 import UserAvatar from "../../ui/UserAvatar";
 
 const StyledUser = styled.div`
-  padding: 0 2.4rem;
+  margin-right: 1rem;
   margin-left: auto;
-  /* width: 100%; */
 `;
 
 const UserButton = styled.button`
@@ -22,7 +21,7 @@ const UserButton = styled.button`
   align-content: center;
   align-items: center;
   column-gap: 1rem;
-  padding: 0.8rem 0.2rem;
+  padding: 1rem;
   border-radius: 6px;
   margin-left: auto;
 
@@ -37,10 +36,22 @@ const UserButton = styled.button`
     color: #374151;
     transition: transform 0.3s;
   }
+
+  @media (max-width: 50em) {
+    height: fit-content;
+    grid-template-columns: 3.6rem;
+    grid-template-rows: 3.6rem;
+    padding: 0.8rem;
+
+    span,
+    svg {
+      display: none;
+    }
+  }
 `;
 
 const UserName = styled.span`
-  max-width: 20ch;
+  max-width: 10ch;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

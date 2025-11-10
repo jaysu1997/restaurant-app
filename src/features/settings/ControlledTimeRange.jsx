@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import ControlledSelect from "../../ui-old/ControlledSelect";
 import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 import { generateTimeOptions } from "../../context/settingsHelpers";
 import { endOfDay, startOfDay } from "date-fns";
 

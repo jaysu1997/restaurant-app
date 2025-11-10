@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { GoPlus } from "react-icons/go";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { useFieldArray, useForm } from "react-hook-form";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import { generateTableNumbers } from "../../context/settingsHelpers";
@@ -10,7 +10,6 @@ import { isValidPositiveInteger } from "../../utils/orderHelpers";
 import SectionContainer from "../../ui/SectionContainer";
 import { LuUtensils } from "react-icons/lu";
 import FormInput from "../../ui/FormInput";
-import Button from "../../ui/Button";
 import ButtonAdd from "../../ui/ButtonAdd";
 
 const Content = styled.ul`

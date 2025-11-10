@@ -24,6 +24,7 @@ function Menu() {
   return (
     <>
       <PageHeader title="點餐系統" />
+
       <QueryStatusFallback
         isPending={menusIsPending || inventoryIsPending || settingsIsPending}
         isError={menusIsError || inventoryIsError || settingsIsError}
