@@ -14,7 +14,7 @@ function formatPickupNumber(pickupNumber) {
   return `# ${String(pickupNumber).padStart(4, "0")}`;
 }
 
-// 訂單單一餐點的所有自訂細項選擇彙整
+// 訂單單一餐點的所有自訂項目選擇彙整
 function summarizeMealChoices(dish) {
   return dish.customizeDetail
     .reduce((acc, cur) => {
@@ -113,6 +113,7 @@ function buildOrderData(dishes, data) {
 }
 
 // 驗證是否為正整數(否則回傳預設值)
+// 這部分或許可以把所有number input都改成不需要在輸入時驗證，只需要在提交時驗證就好
 function isValidPositiveInteger(value, defaultValue = 1) {
   return /^[1-9]\d*$/.test(value) ? Number(value) : defaultValue;
 }

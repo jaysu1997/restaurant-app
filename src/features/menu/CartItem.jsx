@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import Button from "../../ui-old/Button";
 import ServingsControl from "../../ui-old/ServingsControl";
 import { useEffect, useRef, useState } from "react";
-import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import { summarizeMealChoices } from "../../utils/orderHelpers";
 import OrderForm from "../../ui-old/OrderForm/OrderForm";
+import Button from "../../ui/Button";
+import { Trash2, SquarePen } from "lucide-react";
 
 const OrderCardWrapper = styled.li`
   list-style: none;
@@ -86,16 +86,16 @@ function CartItem({ dish }) {
             <OrderName>{dish.name}</OrderName>
             <OrderAction>
               <Button
-                $buttonStyle="remove"
+                $variant="ghost"
                 onClick={() => {
                   setIsOpenModal(true);
                 }}
               >
-                <GoPencil strokeWidth={0.6} />
+                <SquarePen size={14} />
               </Button>
 
               <Button
-                $buttonStyle="remove"
+                $variant="ghost"
                 onClick={() => {
                   dispatch({
                     type: "dishes/removeDish",
@@ -103,7 +103,7 @@ function CartItem({ dish }) {
                   });
                 }}
               >
-                <GoTrash strokeWidth={0.6} />
+                <Trash2 size={14} />
               </Button>
             </OrderAction>
           </Row>

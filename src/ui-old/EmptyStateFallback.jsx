@@ -1,6 +1,5 @@
 import EmptyState from "../assets/empty-state.svg?react";
 import { useNavigate } from "react-router-dom";
-import ButtonReload from "../ui/ButtonReload";
 import StatusView from "../ui/StatusView";
 
 // 數據獲取結果為無的fallback ui
@@ -21,12 +20,9 @@ function EmptyStateFallback({
     <StatusView
       img={<EmptyState role="img" aria-label="沒有相關數據圖示" />}
       heading="沒有相關數據"
-      caption={message}
-      action={
-        buttonText && (
-          <ButtonReload onClick={handleClick}>{buttonText}</ButtonReload>
-        )
-      }
+      description={message}
+      actionFn={buttonText && handleClick}
+      actionLabel={buttonText}
     />
   );
 }

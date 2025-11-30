@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
-import { LuUserRoundPen } from "react-icons/lu";
 import FormInput from "../../ui/FormInput";
+import { UserRoundPen } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
@@ -30,16 +31,13 @@ function UserProfileSetting({ userData }) {
   });
 
   function onSubmit(data) {
-    mutate(
-      { ...data, user_role: "店員" },
-      {
-        onSuccess: (newData) =>
-          reset({
-            user_name: newData.user.user_metadata.user_name,
-            personal_phone: newData.user.user_metadata.personal_phone,
-          }),
-      }
-    );
+    mutate(data, {
+      onSuccess: (newData) =>
+        reset({
+          user_name: newData.user.user_metadata.user_name,
+          personal_phone: newData.user.user_metadata.personal_phone,
+        }),
+    });
   }
 
   function onError(error) {
@@ -50,7 +48,7 @@ function UserProfileSetting({ userData }) {
   return (
     <SectionContainer
       title="個人資料"
-      icon={<LuUserRoundPen />}
+      icon={<UserRoundPen size={20} />}
       form={{
         formId: "userProfile",
         handleReset: () => reset(),
@@ -59,43 +57,51 @@ function UserProfileSetting({ userData }) {
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="userProfile">
-        <FormInput
+        <FormFieldLayout
           id="userName"
           label="用戶名稱"
-          disabled={isPending}
-          {...register("user_name", {
-            required: "用戶名稱不可空白",
-            maxLength: {
-              value: 20,
-              message: "名稱長度必須在20個字元以內",
-            },
-            setValueAs: (value) => value.trim(),
-          })}
           errors={errors?.user_name}
-        />
+        >
+          <FormInput
+            id="userName"
+            disabled={isPending}
+            {...register("user_name", {
+              required: "用戶名稱不可空白",
+              maxLength: {
+                value: 20,
+                message: "名稱長度必須在20個字元以內",
+              },
+              setValueAs: (value) => value.trim(),
+            })}
+          />
+        </FormFieldLayout>
 
-        <FormInput
+        <FormFieldLayout
           id="userPhone"
           label="連絡電話"
-          disabled={isPending}
-          {...register("personal_phone", {
-            required: "連絡電話不能空白",
-            validate: (value) => {
-              // 電話號碼的驗證或許可以設計成helpers
-              const trimmed = value.trim();
-
-              const isMobile = /^09\d{8}$/.test(trimmed);
-              const isLandline = /^0[2-8]\d{7,8}$/.test(trimmed);
-
-              if (!isMobile && !isLandline) {
-                return "請輸入正確的市話或手機號碼(純數字)";
-              }
-
-              return true;
-            },
-          })}
           errors={errors?.personal_phone}
-        />
+        >
+          <FormInput
+            id="userPhone"
+            disabled={isPending}
+            {...register("personal_phone", {
+              required: "連絡電話不能空白",
+              validate: (value) => {
+                // 電話號碼的驗證或許可以設計成helpers
+                const trimmed = value.trim();
+
+                const isMobile = /^09\d{8}$/.test(trimmed);
+                const isLandline = /^0[2-8]\d{7,8}$/.test(trimmed);
+
+                if (!isMobile && !isLandline) {
+                  return "請輸入正確的市話或手機號碼(純數字)";
+                }
+
+                return true;
+              },
+            })}
+          />
+        </FormFieldLayout>
       </Form>
     </SectionContainer>
   );

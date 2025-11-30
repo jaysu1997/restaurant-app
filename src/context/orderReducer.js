@@ -2,7 +2,7 @@
 export const initialState = {
   // 存放訂單所有餐點數據
   dishes: [],
-  // 臨時存放當前餐點細項選擇數據
+  // 臨時存放當前餐點自訂項目選擇數據
   curDishCustomizeOption: [],
   // 存放食材庫存數據
   inventoryMap: new Map(),

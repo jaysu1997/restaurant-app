@@ -20,7 +20,9 @@ import { toOption } from "../../utils/selectHelpers";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
+// 這裡的樣式需要修正(整體布局都需要)
 function OrderSummaryEdit({ orderData, settingsData }) {
   const { updateOrder, updating } = useUpdateOrder();
 
@@ -113,74 +115,77 @@ function OrderSummaryEdit({ orderData, settingsData }) {
           </div>
           <div>
             <label>{takeOut ? "取餐時間：" : "內用桌號："}</label>
-            <ControlledSelect
-              options={
-                takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
-              }
-              control={control}
-              name={takeOut ? "pickupTime" : "tableNumber"}
-              creatable={false}
-              placeholder={
-                !isDisabled
-                  ? takeOut
-                    ? "選擇取餐時間"
-                    : "選擇桌號"
-                  : "非營業時間"
-              }
-              disabled={isDisabled}
-              rules={{
-                required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
-              }}
-            />
-
-            <FormErrorsMessage
+            <FormFieldLayout
               errors={takeOut ? errors?.pickupTime : errors?.tableNumber}
-              gridColumn="2"
-            />
+            >
+              <ControlledSelect
+                options={
+                  takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
+                }
+                control={control}
+                name={takeOut ? "pickupTime" : "tableNumber"}
+                creatable={false}
+                placeholder={
+                  !isDisabled
+                    ? takeOut
+                      ? "選擇取餐時間"
+                      : "選擇桌號"
+                    : "非營業時間"
+                }
+                disabled={isDisabled}
+                rules={{
+                  required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
+                }}
+              />
+            </FormFieldLayout>
+
+            <FormErrorsMessage gridColumn="2" />
           </div>
 
           <div>
             <label>付款狀態：</label>
-            <ControlledSelect
-              options={[
-                { label: "已付款", value: "已付款" },
-                { label: "未付款", value: "未付款" },
-              ]}
-              control={control}
-              name="paid"
-              creatable={false}
-              placeholder="付款狀態"
-              rules={{
-                required: "請選擇付款狀態",
-              }}
-            />
+            <FormFieldLayout>
+              <ControlledSelect
+                options={[
+                  { label: "已付款", value: "已付款" },
+                  { label: "未付款", value: "未付款" },
+                ]}
+                control={control}
+                name="paid"
+                creatable={false}
+                placeholder="付款狀態"
+                rules={{
+                  required: "請選擇付款狀態",
+                }}
+              />
+            </FormFieldLayout>
           </div>
 
           <div>
             <label>訂單狀態：</label>
-            <ControlledSelect
-              options={[
-                { label: "準備中", value: "準備中" },
-                { label: "已完成", value: "已完成" },
-              ]}
-              control={control}
-              name="status"
-              creatable={false}
-              placeholder="訂單狀態"
-              rules={{
-                required: "請選擇訂單狀態",
-                validate: (value) => {
-                  // 假設如果沒付款就不能選「已完成」
-                  const paid = watch("paid")?.value;
-                  if (value?.value === "已完成" && paid !== "已付款") {
-                    return "訂單尚未付款";
-                  }
-                  return true;
-                },
-              }}
-            />
-
-            <FormErrorsMessage errors={errors?.status} gridColumn="2" />
+            <FormFieldLayout errors={errors?.status}>
+              <ControlledSelect
+                options={[
+                  { label: "準備中", value: "準備中" },
+                  { label: "已完成", value: "已完成" },
+                ]}
+                control={control}
+                name="status"
+                creatable={false}
+                placeholder="訂單狀態"
+                rules={{
+                  required: "請選擇訂單狀態",
+                  validate: (value) => {
+                    // 假設如果沒付款就不能選「已完成」
+                    const paid = watch("paid")?.value;
+                    if (value?.value === "已完成" && paid !== "已付款") {
+                      return "訂單尚未付款";
+                    }
+                    return true;
+                  },
+                }}
+              />
+            </FormFieldLayout>
           </div>
         </OrderCard>
       </ContentContainer>

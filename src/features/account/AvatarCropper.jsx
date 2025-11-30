@@ -125,7 +125,11 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
       <Footer>
         <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
         <ButtonGroup>
-          <ButtonSubmit isLoading={isPending} onClick={handleSave} />
+          <ButtonSubmit
+            isLoading={isPending}
+            disabled={isPending}
+            onClick={handleSave}
+          />
           <ButtonCancel onClick={onCloseModal} disabled={isPending} />
         </ButtonGroup>
       </Footer>

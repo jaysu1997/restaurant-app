@@ -1,5 +1,4 @@
 // 菜單設定數據表單
-import { FiMinus } from "react-icons/fi";
 import DataDisplayCard from "../../ui-old/DataDisplayCard";
 import { useState } from "react";
 import UpsertMenuForm from "./UpsertMenuForm";
@@ -28,8 +27,8 @@ function MenusDataCard({ menu }) {
     { head: "折扣", body: discount ? `-${discount}` : 0 },
     { head: "食材", body: ingredientList?.join(", ") },
     {
-      head: "細項",
-      body: customizeList?.join(", ") || <FiMinus />,
+      head: "選項",
+      body: customizeList?.join(", ") || null,
     },
   ];
 

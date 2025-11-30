@@ -35,6 +35,9 @@ const MenuItem = styled.li`
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
   }
 `;
 
@@ -65,7 +68,7 @@ function DropdownMenu({
                     setIsOpenMenu(false);
                   }}
                 >
-                  <Icon size={16} strokeWidth={0.4} />
+                  <Icon size={18} strokeWidth={2} />
                   <span>{item.name}</span>
                 </button>
               </MenuItem>

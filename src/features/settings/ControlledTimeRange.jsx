@@ -1,6 +1,5 @@
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import styled from "styled-components";
-import { MdAdd, MdHorizontalRule, MdOutlineDelete } from "react-icons/md";
 import { Fragment } from "react";
 import ControlledSelect from "../../ui-old/ControlledSelect";
 import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
@@ -8,6 +7,7 @@ import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { fadeInAnimation } from "../../utils/dom";
 import { generateTimeOptions } from "../../context/settingsHelpers";
 import { endOfDay, startOfDay } from "date-fns";
+import { Trash2, Plus, Minus } from "lucide-react";
 
 const StyledTimeRange = styled.ul`
   display: flex;
@@ -128,7 +128,7 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
                 validate: validateFn,
               }}
             />
-            <MdHorizontalRule size={14} />
+            <Minus size={14} />
             <ControlledSelect
               options={times}
               control={control}
@@ -152,7 +152,7 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
                   );
                 }}
               >
-                <MdAdd size={20} />
+                <Plus size={20} />
               </AppendButton>
             )}
 
@@ -168,7 +168,7 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
                   fields.length > 1 && validateFn();
                 }}
               >
-                <MdOutlineDelete size={20} />
+                <Trash2 size={20} />
               </RemoveButton>
             )}
           </li>

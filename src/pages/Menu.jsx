@@ -29,10 +29,7 @@ function Menu() {
         isPending={menusIsPending || inventoryIsPending || settingsIsPending}
         isError={menusIsError || inventoryIsError || settingsIsError}
         error={menusError || inventoryError || settingsError}
-        isEmpty={
-          (Array.isArray(menusData) && menusData?.length === 0) ||
-          (Array.isArray(inventoryData) && inventoryData?.length === 0)
-        }
+        isEmpty={Array.isArray(menusData) && menusData?.length === 0}
         emptyState={{
           message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點",
           buttonText: "新增餐點",

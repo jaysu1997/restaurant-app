@@ -3,15 +3,13 @@ import {
   summarizeMealChoices,
   calculateOrderSummary,
 } from "../../utils/orderHelpers";
-import { FiMinus } from "react-icons/fi";
-import { GoTrash, GoPencil } from "react-icons/go";
-import Button from "../../ui-old/Button";
+import { Pencil, Trash2, Minus } from "lucide-react";
 import styled from "styled-components";
 import { useState } from "react";
 import { useOrder } from "../../context/OrderContext";
 import OrderForm from "../../ui-old/OrderForm/OrderForm";
 import MiniMenu from "./MiniMenu";
-import Dot from "../../ui/Dot";
+import Button from "../../ui/Button";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -48,7 +46,7 @@ const OrderDishRow = styled.li`
     text-overflow: ellipsis;
   }
 
-  [data-value="細項"] {
+  [data-value="項目"] {
     grid-row: 2;
   }
 
@@ -68,7 +66,7 @@ const OrderDishRow = styled.li`
       display: none;
     }
 
-    [data-value="細項"] {
+    [data-value="項目"] {
       grid-row: 2;
       grid-column: 1 / -1;
     }
@@ -109,19 +107,19 @@ const ButtonGroup = styled.div`
 
 const OrderSummary = styled.div`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: space-between;
   font-size: 1.8rem;
   font-weight: 600;
   padding: 1rem 0;
-  column-gap: 1rem;
-  row-gap: 2rem;
+  gap: 1rem;
   flex-wrap: wrap;
 
   & > div {
     display: inline-flex;
     gap: 1rem;
     align-items: center;
+    margin-left: auto;
   }
 `;
 
@@ -140,9 +138,9 @@ function OrderDishes({ dishData, isEdit }) {
       {dishData.map((dish) => (
         <OrderDishRow key={dish.uniqueId}>
           <span data-value="餐點">{dish.name}</span>
-          <Customize data-value="細項">{summarizeMealChoices(dish)}</Customize>
+          <Customize data-value="項目">{summarizeMealChoices(dish)}</Customize>
           <Customize data-value="備註">
-            {dish.note ? `" ${dish.note} "` : <FiMinus size={14} />}
+            {dish.note ? `" ${dish.note} "` : <Minus size={14} />}
           </Customize>
           <span data-value="數量">{dish.servings} 份</span>
           <span data-value="金額">$ {dish.itemTotalPrice * dish.servings}</span>
@@ -151,13 +149,13 @@ function OrderDishes({ dishData, isEdit }) {
       ))}
 
       <OrderSummary>
+        {isEdit && <MiniMenu />}
         <div>
           <span>總計：</span>
           <span>共 {totalServings} 份</span>
           <span>,</span>
           <span className="emphasize">$ {totalPrice}</span>
         </div>
-        {isEdit && <MiniMenu />}
       </OrderSummary>
     </OrderDishesList>
   );
@@ -170,11 +168,11 @@ function OrderEditButton({ dishData }) {
   return (
     <>
       <ButtonGroup data-value="操作">
-        <Button $buttonStyle="remove" onClick={() => setIsOpenModal(dishData)}>
-          <GoPencil strokeWidth={0.6} />
+        <Button $variant="ghost" onClick={() => setIsOpenModal(dishData)}>
+          <Pencil size={14} />
         </Button>
         <Button
-          $buttonStyle="remove"
+          $variant="ghost"
           onClick={() =>
             dispatch({
               type: "dishes/removeDish",
@@ -182,7 +180,7 @@ function OrderEditButton({ dishData }) {
             })
           }
         >
-          <GoTrash strokeWidth={0.6} />
+          <Trash2 size={14} />
         </Button>
       </ButtonGroup>
 

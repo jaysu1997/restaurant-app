@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import Caption from "./Caption";
+import Description from "./Description";
+import Button from "./Button";
 
 const StyledStatusView = styled.div`
   width: 100%;
@@ -22,21 +23,21 @@ const Img = styled.div`
   }
 `;
 
-const ButtonGroup = styled.footer`
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-`;
-
 // 狀態ui(404、error)
-function StatusView({ minHeight, img, heading, caption, action }) {
+function StatusView({
+  minHeight,
+  img,
+  heading,
+  description,
+  actionFn,
+  actionLabel,
+}) {
   return (
     <StyledStatusView className="fadeIn" $minHeight={minHeight}>
       <Img>{img}</Img>
       <h2>{heading}</h2>
-      <Caption>{caption}</Caption>
-      <ButtonGroup>{action}</ButtonGroup>
+      <Description>{description}</Description>
+      {actionFn && <Button onClick={actionFn}>{actionLabel}</Button>}
     </StyledStatusView>
   );
 }

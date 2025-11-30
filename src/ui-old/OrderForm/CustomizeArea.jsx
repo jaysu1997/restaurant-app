@@ -67,12 +67,12 @@ const OptionsArea = styled.div`
 function CustomizeArea({ customizeData, register, isEdit = false }) {
   const { choiceType, customizeId, isRequired, title, options } = customizeData;
 
-  // 用來控制細項CSS樣式(填寫狀態)
+  // 用來控制項目CSS樣式(填寫狀態)
   const [isAnswered, setIsAnswered] = useState(
     isEdit && isRequired === "required" ? "isAnswered" : isRequired
   );
 
-  // 當前訂購餐點的細項選擇
+  // 當前訂購餐點的項目選擇
   const {
     state: { curDishCustomizeOption },
     dispatch,

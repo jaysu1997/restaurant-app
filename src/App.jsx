@@ -38,9 +38,12 @@ const queryClient = new QueryClient({
 
 // 還有需要註冊使用者的功能
 
+// 還有一些css中有使用中文作為data-set，好像改成英文會好一點，id可能也是?但如果需要引用到偽元素中，則繼續使用中文
+
 // 後續可能需要把元件和函式以及檔案和資料夾都需要重構(styled元件命名需要再檢查修正，很多是臨時命名而已，還有可以統一的樣式就拆解，現在購物車的程式碼多到爆)
 
 // 還有error boundary的fallback ui要設計,以及404的ui應該更需要更改
+// error的按鈕ui需要更改，主要建議行為，返回首頁使用primary button，次要功能則使用text button(重新整理)，然後有些功能可能根本不需要用到action button
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>

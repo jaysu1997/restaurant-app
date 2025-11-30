@@ -2,7 +2,7 @@ import Button from "./Button";
 
 function ButtonCancel({ ...rest }) {
   return (
-    <Button $type="secondary" $size="sm" $rounded="full" {...rest}>
+    <Button $variant="outline" type="button" {...rest}>
       取消
     </Button>
   );

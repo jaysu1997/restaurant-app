@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { RiArrowRightSLine } from "react-icons/ri";
-import { GoPerson, GoSignOut } from "react-icons/go";
 import { useState } from "react";
 import useSignOut from "../../hooks/data/auth/useSignOut";
 import useUser from "../../hooks/data/auth/useUser";
 import DropdownMenu from "../../ui-old/DropdownMenu";
 import UserAvatar from "../../ui/UserAvatar";
+import { UserRound, LogOut, ChevronRight } from "lucide-react";
 
 const StyledUser = styled.div`
   margin-right: 1rem;
@@ -80,12 +79,12 @@ function User() {
   const itemsConfig = [
     {
       name: "用戶設定",
-      icon: GoPerson,
+      icon: UserRound,
       handleClick: () => navigate("/account"),
     },
     {
       name: "登出",
-      icon: GoSignOut,
+      icon: LogOut,
       handleClick: () => signOut(),
     },
   ];
@@ -108,7 +107,7 @@ function User() {
           <UserAvatar avatarUrl={avatarUrl} />
           <UserName>{userName}</UserName>
           <UserRole>{userRole}</UserRole>
-          <RiArrowRightSLine size={22} />
+          <ChevronRight size={20} strokeWidth={2.4} />
         </UserButton>
       </DropdownMenu>
     </StyledUser>

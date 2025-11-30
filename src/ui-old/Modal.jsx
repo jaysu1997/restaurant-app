@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { createPortal } from "react-dom";
-import { IoIosClose } from "react-icons/io";
 import useScrollLock from "../hooks/ui/useScrollLock";
+import { X } from "lucide-react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -25,7 +25,7 @@ const StyleModal = styled.div`
   max-height: 90dvh;
   margin: 0 0.6rem;
   background-color: #fff;
-  box-shadow: 0 2rem 2rem 0.2rem rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 20px 2px rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   overflow: hidden;
   justify-content: center;
@@ -37,8 +37,7 @@ const Header = styled.header`
   border-bottom: 1px solid #e5e7eb;
   padding: 1rem 2rem;
   justify-content: space-between;
-  height: 5.2rem;
-  flex-shrink: 0;
+  min-height: 5.7rem;
   align-items: center;
   z-index: 1;
   width: 100%;
@@ -60,7 +59,7 @@ const Title = styled.h2`
 const CloseButton = styled.button`
   width: 2.8rem;
   height: 2.8rem;
-  color: #334155;
+  color: #000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,14 +73,14 @@ const CloseButton = styled.button`
     right: 0;
     bottom: 0;
 
-    border: 1px solid #334155;
+    border: 1px solid #374151;
     border-radius: 50%;
     transition: all 0.3s;
   }
 
   &:hover::before {
     transform: scale(1.1);
-    box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -108,7 +107,7 @@ function Modal({
         <Header>
           <Title $textColor={headerColor}>{modalHeader}</Title>
           <CloseButton onClick={onCloseModal}>
-            <IoIosClose size={28} />
+            <X size={16} />
           </CloseButton>
         </Header>
         <Content $scrollbar={scrollBar}>{children}</Content>

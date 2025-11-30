@@ -11,11 +11,10 @@ import EmptyShoppingCart from "./EmptyShoppingCart";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
 import ButtonSpinner from "../../ui/ButtonSpinner";
 import Button from "../../ui/Button";
-import { TiShoppingCart } from "react-icons/ti";
 import { useState } from "react";
-import { IoIosClose } from "react-icons/io";
 import useScrollLock from "../../hooks/ui/useScrollLock";
 import Dot from "../../ui/Dot";
+import { X, ShoppingCart as ShoppingCartIcon } from "lucide-react";
 
 const StyledShoppingCart = styled.aside`
   position: fixed;
@@ -70,7 +69,7 @@ const Header = styled.header`
 
   @media (max-width: 50em) {
     button {
-      display: block;
+      display: flex;
     }
   }
 `;
@@ -151,7 +150,7 @@ const CartOpenButton = styled.button`
 const CloseButton = styled.button`
   width: 2.8rem;
   height: 2.8rem;
-  color: #334155;
+  color: #000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -165,14 +164,14 @@ const CloseButton = styled.button`
     right: 0;
     bottom: 0;
 
-    border: 1px solid #334155;
+    border: 1px solid #374151;
     border-radius: 50%;
     transition: all 0.3s;
   }
 
   &:hover::before {
     transform: scale(1.1);
-    box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -225,7 +224,7 @@ function ShoppingCart({ settingsData }) {
           <h3>購物車</h3>
 
           <CloseButton onClick={() => setIsOpen(false)}>
-            <IoIosClose size={28} />
+            <X size={16} />
           </CloseButton>
         </Header>
 
@@ -260,9 +259,8 @@ function ShoppingCart({ settingsData }) {
 
             <Row>
               <Button
-                $type="primary"
-                $size="xl"
-                $rounded="sm"
+                type="submit"
+                $isFullWidth
                 $isLoading={orderCreating}
                 disabled={dishes.length === 0 || orderCreating || !isValid}
                 onClick={handleSubmit(onSubmit, onError)}
@@ -277,7 +275,7 @@ function ShoppingCart({ settingsData }) {
 
       {dishes.length !== 0 && (
         <CartOpenButton onClick={() => setIsOpen(true)}>
-          <TiShoppingCart size={22} />
+          <ShoppingCartIcon size={18} />
           <Dot $size={0.8} />
           <span>{`共 ${totalServings} 份`}</span>
           <Dot $size={0.8} />

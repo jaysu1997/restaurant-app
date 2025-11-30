@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { GoPlus } from "react-icons/go";
-import { MdOutlineDeleteForever } from "react-icons/md";
 import { useFieldArray, useForm } from "react-hook-form";
 import { fadeInAnimation } from "../../utils/dom";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
@@ -8,9 +6,10 @@ import StyledHotToast from "../../ui-old/StyledHotToast";
 import { generateTableNumbers } from "../../context/settingsHelpers";
 import { isValidPositiveInteger } from "../../utils/orderHelpers";
 import SectionContainer from "../../ui/SectionContainer";
-import { LuUtensils } from "react-icons/lu";
 import FormInput from "../../ui/FormInput";
-import ButtonAdd from "../../ui/ButtonAdd";
+import Button from "../../ui/Button";
+import { Plus, Trash2, Utensils } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 const Content = styled.ul`
   display: flex;
@@ -22,17 +21,20 @@ const Content = styled.ul`
     grid-template-columns: 1fr 1fr 2rem;
     grid-template-rows: auto auto auto auto;
     column-gap: 0.6rem;
-    row-gap: 0.4rem;
+
     align-items: center;
   }
 `;
 
+// 或許這個title也可以重複使用
 const SubTitle = styled.h4`
   grid-column: 1 / -1;
   font-size: 1.6rem;
   font-weight: 600;
-  color: #3b82f6;
-  padding-bottom: 1.2rem;
+  color: #6366f1;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #6366f1;
+  width: fit-content;
 `;
 
 const EmptyMessage = styled.p`
@@ -74,7 +76,7 @@ const RemoveButton = styled.button`
   justify-content: center;
   height: 3.8rem;
 
-  &:not(:disabled):hover {
+  &:hover {
     color: #dc2626;
   }
 `;
@@ -99,8 +101,6 @@ function DineInTableSettings({ data = {} }) {
     name: "dineInTableConfig",
   });
 
-  const zoneCount = watch("dineInTableConfig");
-
   function onSubmit(data) {
     console.log("成功", data);
 
@@ -118,8 +118,8 @@ function DineInTableSettings({ data = {} }) {
   return (
     <SectionContainer
       title="內用桌號設定"
-      icon={<LuUtensils />}
-      caption="設定內用餐桌的區域分類與桌號配置，用於點餐時標記內用桌位。"
+      icon={<Utensils size={20} />}
+      description="設定內用餐桌的區域分類與桌號配置，用於點餐時標記內用桌位。"
       form={{
         formId: "dineInTableConfig",
         handleReset: () => reset({ dineInTableConfig: data }),
@@ -127,16 +127,17 @@ function DineInTableSettings({ data = {} }) {
         isUpdating: isPending,
       }}
       additionalAction={
-        <ButtonAdd
+        <Button
+          $variant="text"
           onClick={() => {
             append({ zoneName: "", tableCount: 1 });
             // 淡入欄位動畫
             fadeInAnimation(`dineInTableConfig.${fields.length}`);
           }}
         >
-          <GoPlus size={18} strokeWidth={0.6} />
+          <Plus size={20} />
           新增分區
-        </ButtonAdd>
+        </Button>
       }
     >
       <form id="dineInTableConfig" onSubmit={handleSubmit(onSubmit, onError)}>
@@ -147,47 +148,51 @@ function DineInTableSettings({ data = {} }) {
 
           {fields.map((field, index) => (
             <li key={field.id} id={`dineInTableConfig.${index}`}>
-              <SubTitle>
-                內用桌號分區{zoneCount.length === 1 ? "" : ` - ${index + 1}`}
-              </SubTitle>
+              <SubTitle>內用桌號分區 {index + 1}</SubTitle>
 
-              <FormInput
-                label="分區名稱"
+              <FormFieldLayout
                 id={`${index}.zoneName`}
-                type="text"
-                placeholder="分區名稱"
-                {...register(`dineInTableConfig.${index}.zoneName`, {
-                  validate: (value) => {
-                    const trimmedValue = value.trim();
-                    const zones = getValues("dineInTableConfig");
-
-                    const duplicate = zones.some((zone, zoneIndex) => {
-                      if (zoneIndex === index) return false; // ← 重點：略過自己
-                      return zone.zoneName.trim() === trimmedValue;
-                    });
-
-                    return !duplicate || "此名稱已被使用";
-                  },
-                })}
+                label="分區名稱"
                 errors={errors?.dineInTableConfig?.[index]?.zoneName}
-              />
+              >
+                <FormInput
+                  id={`${index}.zoneName`}
+                  placeholder="分區名稱"
+                  {...register(`dineInTableConfig.${index}.zoneName`, {
+                    validate: (value) => {
+                      const trimmedValue = value.trim();
+                      const zones = getValues("dineInTableConfig");
 
-              <FormInput
-                label="分區桌數"
+                      const duplicate = zones.some((zone, zoneIndex) => {
+                        if (zoneIndex === index) return false; // ← 重點：略過自己
+                        return zone.zoneName.trim() === trimmedValue;
+                      });
+
+                      return !duplicate || "此名稱已被使用";
+                    },
+                  })}
+                />
+              </FormFieldLayout>
+
+              <FormFieldLayout
                 id={`${index}.tableCount`}
-                type="number"
-                placeholder="分區總桌數"
-                {...register(`dineInTableConfig.${index}.tableCount`, {
-                  required: "總桌數不能空白",
-                  validate: (value) => {
-                    return isValidPositiveInteger(value, "請輸入正整數");
-                  },
-                })}
+                label="分區桌數"
                 errors={errors?.dineInTableConfig?.[index]?.tableCount}
-              />
+              >
+                <FormInput
+                  id={`${index}.tableCount`}
+                  placeholder="分區總桌數"
+                  {...register(`dineInTableConfig.${index}.tableCount`, {
+                    required: "總桌數不能空白",
+                    validate: (value) => {
+                      return isValidPositiveInteger(value, "請輸入正整數");
+                    },
+                  })}
+                />
+              </FormFieldLayout>
 
               <RemoveButton type="button" onClick={() => remove(index)}>
-                <MdOutlineDeleteForever size={20} />
+                <Trash2 size={20} />
               </RemoveButton>
 
               <Preview>

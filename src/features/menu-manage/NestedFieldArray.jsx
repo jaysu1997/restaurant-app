@@ -1,12 +1,11 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { IoCloseSharp } from "react-icons/io5";
-import Button from "../../ui-old/Button";
-import FormRow from "../../ui-old/FormRow";
-import FormTypography from "../../ui-old/FormTypography";
 import ControlledSelect from "../../ui-old/ControlledSelect";
-import FormFieldset from "../../ui-old/FormFieldset";
-import ControlledInput from "../../ui-old/ControlledInput";
 import { fadeInAnimation } from "../../utils/dom";
+import { FormHeading, FormList, FromListItem } from "../../ui/FormLayout";
+import FormInput from "../../ui/FormInput";
+import Button from "../../ui/Button";
+import { Plus, Trash2 } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 function NestedFieldArray({
   nestedIndex,
@@ -21,28 +20,20 @@ function NestedFieldArray({
   });
 
   return (
-    <>
+    <FormList>
       {fields.map((field, index) => (
-        <FormRow
-          $formRowStyle="nested"
+        <FromListItem
           key={field.id}
           id={`customize.${nestedIndex}.options.${index}`}
         >
-          <FormRow $formRowStyle="subHeader">
-            <FormTypography $titleStyle="nestedTitle">
-              選項 - {index + 1}
-            </FormTypography>
-
+          <FormHeading>
+            選項 - {index + 1}
             {fields.length - 1 !== 0 && (
-              <Button
-                $buttonStyle="remove"
-                type="button"
-                onClick={() => remove(index)}
-              >
-                <IoCloseSharp />
+              <Button $variant="ghost" onClick={() => remove(index)}>
+                <Trash2 size={16} />
               </Button>
             )}
-          </FormRow>
+          </FormHeading>
 
           {/* 選項的id */}
           <input
@@ -52,47 +43,49 @@ function NestedFieldArray({
             })}
           />
 
-          <FormFieldset
-            legendValue="選項名稱設定"
-            fieldName={
+          <FormFieldLayout
+            id={`customize.${nestedIndex}.options.${index}.optionLabel`}
+            label="選項名稱設定"
+            errors={
               errors?.customize?.[nestedIndex]?.options?.[index]?.optionLabel
             }
           >
-            <ControlledInput
-              type="text"
+            <FormInput
+              id={`customize.${nestedIndex}.options.${index}.optionLabel`}
               placeholder="請輸入選項名稱"
-              control={control}
-              name={`customize.${nestedIndex}.options.${index}.optionLabel`}
-              rules={{
-                required: "選項名稱不能空白",
-              }}
+              {...register(
+                `customize.${nestedIndex}.options.${index}.optionLabel`,
+                { required: "選項名稱不能空白" }
+              )}
             />
-          </FormFieldset>
+          </FormFieldLayout>
 
-          <FormFieldset
-            legendValue="選項額外加價"
-            fieldName={
+          <FormFieldLayout
+            id={`customize.${nestedIndex}.options.${index}.extraPrice`}
+            label="選項額外加價"
+            errors={
               errors?.customize?.[nestedIndex]?.options?.[index]?.extraPrice
             }
           >
-            <ControlledInput
-              type="number"
+            <FormInput
+              id={`customize.${nestedIndex}.options.${index}.extraPrice`}
               placeholder="請輸入選項加價"
-              control={control}
-              name={`customize.${nestedIndex}.options.${index}.extraPrice`}
-              rules={{
-                required: "選項額外加價不能空白",
-                min: {
-                  value: 0,
-                  message: `加價不能為負數`,
-                },
-              }}
+              {...register(
+                `customize.${nestedIndex}.options.${index}.extraPrice`,
+                {
+                  required: "選項額外加價不能空白",
+                  min: {
+                    value: 0,
+                    message: `加價不能為負數`,
+                  },
+                }
+              )}
             />
-          </FormFieldset>
+          </FormFieldLayout>
 
-          <FormFieldset
-            legendValue="額外消耗食材"
-            fieldName={
+          <FormFieldLayout
+            label="額外消耗食材"
+            errors={
               errors?.customize?.[nestedIndex]?.options?.[index]?.ingredientName
             }
           >
@@ -112,42 +105,43 @@ function NestedFieldArray({
               placeholder="可新增/選擇食材"
               disabled={disabled}
             />
-          </FormFieldset>
+          </FormFieldLayout>
 
-          <FormFieldset
-            legendValue="食材消耗數量"
-            fieldName={
+          <FormFieldLayout
+            id={`customize.${nestedIndex}.options.${index}.quantity`}
+            label="食材消耗數量"
+            errors={
               errors?.customize?.[nestedIndex]?.options?.[index]?.quantity
             }
           >
-            <ControlledInput
-              type="number"
+            <FormInput
+              id={`customize.${nestedIndex}.options.${index}.quantity`}
               placeholder="請輸入備料數量"
-              control={control}
-              name={`customize.${nestedIndex}.options.${index}.quantity`}
-              rules={{
-                required: "食材消耗數量不能空白",
-                validate: (value) => {
-                  // 如果有使用額外消耗食材就不能將消耗量設為0
-                  const ingredient = getValues(
-                    `customize.${nestedIndex}.options.${index}.ingredientName`
-                  )?.value;
+              {...register(
+                `customize.${nestedIndex}.options.${index}.quantity`,
+                {
+                  required: "食材消耗數量不能空白",
+                  validate: (value) => {
+                    // 如果有使用額外消耗食材就不能將消耗量設為0
+                    const ingredient = getValues(
+                      `customize.${nestedIndex}.options.${index}.ingredientName`
+                    )?.value;
 
-                  if (ingredient === "") {
-                    return value < 0 ? "食材消耗數量不能少於0" : true;
-                  } else {
-                    return value < 1 ? "食材消耗數量不能少於1" : true;
-                  }
-                },
-              }}
+                    if (ingredient === "") {
+                      return value < 0 ? "食材消耗數量不能少於0" : true;
+                    } else {
+                      return value < 1 ? "食材消耗數量不能少於1" : true;
+                    }
+                  },
+                }
+              )}
             />
-          </FormFieldset>
-        </FormRow>
+          </FormFieldLayout>
+        </FromListItem>
       ))}
 
       <Button
-        $buttonStyle="add"
-        type="button"
+        $variant="text"
         onClick={() => {
           append({
             optionLabel: "",
@@ -163,9 +157,10 @@ function NestedFieldArray({
           fadeInAnimation(`customize.${nestedIndex}.options.${fields.length}`);
         }}
       >
+        <Plus size={18} />
         新增選項
       </Button>
-    </>
+    </FormList>
   );
 }
 

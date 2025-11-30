@@ -15,7 +15,7 @@ const StyledToggleSwitch = styled.label`
   position: relative;
   border-radius: 999px;
   overflow: hidden;
-  cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
+  cursor: pointer;
 
   input:checked + span {
     transform: translateX(100%);

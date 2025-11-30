@@ -41,10 +41,6 @@ export const GlobalStyles = styled.createGlobalStyle`
     margin: 0;
   }
 
-  *:disabled {
-    cursor: not-allowed;
-  }
-
   /* 頁面主滾動條用正常寬度 */
   html {
     font-size: 62.5%;
@@ -100,6 +96,7 @@ export const GlobalStyles = styled.createGlobalStyle`
 
     &:disabled {
       opacity: 0.5;
+      cursor: default;
     }
   }
 

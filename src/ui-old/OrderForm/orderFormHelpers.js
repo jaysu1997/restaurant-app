@@ -28,7 +28,7 @@ function calcIngredientsUsage(ingredients, curDishCustomizeOption) {
     setingredientsUsage(name, quantity);
   });
 
-  // 額外細項增加的消耗
+  // 額外項目增加的消耗
   curDishCustomizeOption.forEach((obj) => {
     if (obj.length === 0 || obj.detail.length === 0) return;
 
@@ -36,7 +36,7 @@ function calcIngredientsUsage(ingredients, curDishCustomizeOption) {
       const name = option.ingredientName;
       const quantity = option.quantity;
 
-      // 空字串代表此細項無額外食材消耗
+      // 空字串代表此項目無額外食材消耗
       if (name === "") return;
       setingredientsUsage(name, quantity);
     });

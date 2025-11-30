@@ -9,17 +9,12 @@ function SelectFilter({ filterValue, handleValueChange, ...filters }) {
       value={filterValue}
       onChange={(e) => handleValueChange(queryKey, e)}
       placeholder={placeholder}
+      menuPosition="fixed"
+      menuPlacement="bottom"
+      maxMenuHeight={200}
       isSearchable={false}
       components={{
         IndicatorSeparator: () => null,
-      }}
-      styles={{
-        control: (baseStyles) => ({
-          ...baseStyles,
-          "&:hover": {
-            borderColor: baseStyles.borderColor,
-          },
-        }),
       }}
     />
   );

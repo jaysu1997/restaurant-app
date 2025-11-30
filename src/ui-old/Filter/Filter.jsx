@@ -1,22 +1,16 @@
 import { useRef, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { TbFilter, TbFilterCheck } from "react-icons/tb";
 import SelectFilter from "./SelectFilter";
 import SearchFilter from "./SearchFilter";
 import DateRangeFilter from "./DateRangeFilter";
 import useClickOutside from "../../hooks/ui/useClickOutside";
 import { getInitialFilterState, handleSearchParams } from "./filterHelpers";
 import Button from "../../ui/Button";
+import FilterIcon from "../../ui/FilterIcon";
 
 const StyledFilter = styled.div`
   position: relative;
-`;
-
-const StyledFilterCheckIcon = styled(TbFilterCheck)`
-  path:last-of-type {
-    stroke: red;
-  }
 `;
 
 const FilterContainer = styled.div`
@@ -119,6 +113,7 @@ function Filter({ filtersConfig }) {
 
   // 處理篩選器輸入值更新的功能
   function handleValueChange(queryKey, value) {
+    console.log(queryKey, value);
     setTempFilters((tempFilters) => ({
       ...tempFilters,
       [queryKey]: { ...tempFilters[queryKey], value },
@@ -128,9 +123,7 @@ function Filter({ filtersConfig }) {
   return (
     <StyledFilter>
       <Button
-        $type="secondary"
-        $size="sm"
-        $rounded="full"
+        $variant="outline"
         onClick={() =>
           setIsContainerOpen((isContainerOpen) => {
             if (!isContainerOpen) {
@@ -140,11 +133,7 @@ function Filter({ filtersConfig }) {
           })
         }
       >
-        {hasActiveFilters ? (
-          <StyledFilterCheckIcon size={18} />
-        ) : (
-          <TbFilter size={18} />
-        )}
+        <FilterIcon checked={hasActiveFilters} />
         <span>篩選數據</span>
       </Button>
 

@@ -1,31 +1,18 @@
 import { useForm } from "react-hook-form";
-import FormTable from "../../ui-old/FormTable";
-import FormTypography from "../../ui-old/FormTypography";
 import FormRow from "../../ui-old/FormRow";
-import Button from "../../ui-old/Button";
-import ButtonSpinner from "../../ui/ButtonSpinner";
 import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui-old/StyledHotToast";
-import FormFieldset from "../../ui-old/FormFieldset";
-import ControlledInput from "../../ui-old/ControlledInput";
 import Modal from "../../ui-old/Modal";
 import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
-
-const formFieldData = [
-  {
-    title: "食材名稱",
-    inputName: "label",
-    inputType: "text",
-  },
-  {
-    title: "庫存數量",
-    inputName: "remainingQuantity",
-    inputType: "number",
-  },
-];
+import { FormDescription, FormLayout, FormSection } from "../../ui/FormLayout";
+import FormInput from "../../ui/FormInput";
+import ButtonSubmit from "../../ui/ButtonSubmit";
+import ButtonCancel from "../../ui/ButtonCancel";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
   const {
+    register,
     handleSubmit,
     control,
     formState: { errors },
@@ -65,52 +52,56 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
 
   return (
     <Modal modalHeader="食材設定表單" maxWidth={56} onCloseModal={onCloseModal}>
-      <FormTable onSubmit={handleSubmit(onSubmit, onError)}>
+      <FormLayout onSubmit={handleSubmit(onSubmit, onError)}>
         {inventory && (
-          <FormTypography $titleStyle="description">
+          <FormDescription>
             表單說明：食材名稱更改後，所有使用此食材的餐點備料和選項也會同步更新名稱。
-          </FormTypography>
+          </FormDescription>
         )}
 
-        {formFieldData.map((data) => (
-          <FormRow $formRowStyle="oneColumn" key={data.inputName}>
-            <FormTypography $titleStyle="title">
-              {data.title}
-              <FormTypography $titleStyle="highlight">*</FormTypography>
-            </FormTypography>
+        <FormSection>
+          <h3>
+            食材名稱
+            <span className="emphasize">*</span>
+          </h3>
 
-            <FormFieldset legendValue="" fieldName={errors?.[data.inputName]}>
-              <ControlledInput
-                placeholder={`請輸入餐點${data.title}`}
-                type={data.inputType}
-                control={control}
-                name={data.inputName}
-                rules={{
-                  required: `${data.title}欄位必須填寫`,
-                  min: {
-                    value: 0,
-                    message: `${data.title}數量必須不得為負數`,
-                  },
-                }}
-              />
-            </FormFieldset>
-          </FormRow>
-        ))}
+          <FormFieldLayout errors={errors?.label}>
+            <FormInput
+              errors={errors?.label}
+              placeholder="請輸入食材名稱"
+              {...register("label", {
+                required: "食材名稱必須填寫",
+              })}
+            />
+          </FormFieldLayout>
+        </FormSection>
+
+        <FormSection>
+          <h3>
+            庫存數量
+            <span className="emphasize">*</span>
+          </h3>
+
+          <FormFieldLayout errors={errors?.remainingQuantity}>
+            <FormInput
+              errors={errors?.remainingQuantity}
+              placeholder="請輸入庫存數量"
+              {...register("remainingQuantity", {
+                required: "庫存數量必須填寫",
+                min: {
+                  value: 0,
+                  message: "庫存數量數量不得為負數",
+                },
+              })}
+            />
+          </FormFieldLayout>
+        </FormSection>
 
         <FormRow $formRowStyle="footer">
-          <Button
-            $buttonStyle="cancel"
-            type="button"
-            disabled={isUpserting}
-            onClick={onCloseModal}
-          >
-            取消
-          </Button>
-          <Button $buttonStyle="submit" type="submit" disabled={isUpserting}>
-            {isUpserting ? <ButtonSpinner /> : "儲存"}
-          </Button>
+          <ButtonSubmit disabled={isUpserting} isLoading={isUpserting} />
+          <ButtonCancel disabled={isUpserting} onClick={onCloseModal} />
         </FormRow>
-      </FormTable>
+      </FormLayout>
     </Modal>
   );
 }

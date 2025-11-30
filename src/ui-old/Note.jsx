@@ -37,13 +37,7 @@ const ReadOnlyText = styled.span`
   word-break: break-word;
 `;
 
-function Note({
-  register,
-  children,
-  readOnly = false,
-  value,
-  maxLength = 100,
-}) {
+function Note({ register, children, readOnly = false, value, maxLength = 50 }) {
   return (
     <StyledNote>
       {children}

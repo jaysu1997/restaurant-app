@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
 import { useSearchParams } from "react-router-dom";
 import { useRef } from "react";
 import { isValidPositiveInteger } from "../utils/orderHelpers";
-import Dot from "../ui/Dot";
+import { ChevronRight, ChevronLeft, Dot } from "lucide-react";
 
 const StyledPagination = styled.footer`
   display: flex;
@@ -105,19 +104,20 @@ function Pagination({ curPage, maxPage }) {
           onClick={() => handlePagination(curPage - 1)}
           disabled={curPage === 1}
         >
-          <BiSolidLeftArrow size={16} />
+          <ChevronLeft size={20} strokeWidth={3} />
         </button>
         <strong>{curPage}</strong>
-        <Dot $size={1} />
+        <Dot size={20} />
         <span>共 {maxPage} 頁</span>
         <button
           type="button"
           onClick={() => handlePagination(curPage + 1)}
           disabled={curPage === maxPage}
         >
-          <BiSolidRightArrow size={16} />
+          <ChevronRight size={20} strokeWidth={3} />
         </button>
       </PaginationControls>
+
       <JumpSection>
         <span>前往</span>
         <input

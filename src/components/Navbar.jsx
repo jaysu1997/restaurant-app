@@ -1,18 +1,18 @@
 import styled from "styled-components";
-import {
-  BiChalkboard,
-  BiEdit,
-  BiFoodMenu,
-  BiFork,
-  BiFridge,
-  BiCog,
-  BiUserPlus,
-} from "react-icons/bi";
 import useUser from "../hooks/data/auth/useUser";
 import useClickOutside from "../hooks/ui/useClickOutside";
 import { useRef } from "react";
 import StyleNavLink from "../ui/StyledNavLink";
 import useScrollLock from "../hooks/ui/useScrollLock";
+import {
+  LayoutDashboard,
+  ClipboardList,
+  BookOpenText,
+  Refrigerator,
+  Settings,
+  UserPlus,
+  Soup,
+} from "lucide-react";
 
 const Wrapper = styled.div`
   position: sticky;
@@ -71,12 +71,12 @@ const NavList = styled.ul`
 `;
 
 const navigationsLink = [
-  { to: "/", icon: BiChalkboard, title: "營運總覽" },
-  { to: "menu", icon: BiFork, title: "點餐系統" },
-  { to: "/orders", icon: BiEdit, title: "訂單管理" },
-  { to: "/menu-manage", icon: BiFoodMenu, title: "菜單設定" },
-  { to: "/inventory", icon: BiFridge, title: "庫存管理" },
-  { to: "/settings", icon: BiCog, title: "店鋪設定" },
+  { to: "/", icon: LayoutDashboard, title: "營運總覽" },
+  { to: "menu", icon: Soup, title: "點餐系統" },
+  { to: "/orders", icon: ClipboardList, title: "訂單管理" },
+  { to: "/menu-manage", icon: BookOpenText, title: "菜單設定" },
+  { to: "/inventory", icon: Refrigerator, title: "庫存管理" },
+  { to: "/settings", icon: Settings, title: "店鋪設定" },
 ];
 
 function Navbar({ isOpen, setIsOpen }) {
@@ -109,7 +109,7 @@ function Navbar({ isOpen, setIsOpen }) {
           {isManager && (
             <li>
               <StyleNavLink to="/signup" onClick={() => setIsOpen(false)}>
-                <BiUserPlus />
+                <UserPlus />
                 <span>新增員工</span>
               </StyleNavLink>
             </li>

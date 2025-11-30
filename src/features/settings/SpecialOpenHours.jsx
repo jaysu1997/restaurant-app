@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { GoPlus } from "react-icons/go";
 import DateRangePicker from "../../ui-old/DateRangePicker";
 import ControlledSwitch from "../../ui-old/ControlledSwitch";
 import ControlledTimeRange from "./ControlledTimeRange";
@@ -16,10 +15,9 @@ import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
 import { fadeInAnimation } from "../../utils/dom";
 import StyledHotToast from "../../ui-old/StyledHotToast";
-import { MdOutlineDeleteForever } from "react-icons/md";
 import SectionContainer from "../../ui/SectionContainer";
-import { LuCalendarClock } from "react-icons/lu";
-import ButtonAdd from "../../ui/ButtonAdd";
+import Button from "../../ui/Button";
+import { Plus, Trash2, CalendarClock } from "lucide-react";
 
 const BusinessPeriodList = styled.ul`
   display: flex;
@@ -32,6 +30,9 @@ const BusinessPeriodItem = styled.li`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 0.6rem;
+
+  /* 由useFieldArray新增的欄位圖層會被下面的Button蓋過去，導致DatePicker展開之後出現Button壓在Picker之上的情況，原因不太清楚，但後來發現可以透過提高此元素的圖層順位解決問題 */
+  z-index: 2;
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
@@ -150,8 +151,8 @@ function SpecialOpenHours({ data = {} }) {
     <FormProvider {...methods}>
       <SectionContainer
         title="特殊營業時間"
-        icon={<LuCalendarClock />}
-        caption="需要臨時調整特定日期的營業時段，可在此處添加設定，設定值會覆蓋一般營業時間。"
+        icon={<CalendarClock size={20} />}
+        description="需要臨時調整特定日期的營業時段，可在此處添加設定，設定值會覆蓋一般營業時間。"
         form={{
           formId: "specialOpenHours",
           handleReset: () => reset({ specialOpenHours: data }),
@@ -159,7 +160,8 @@ function SpecialOpenHours({ data = {} }) {
           isUpdating: isPending,
         }}
         additionalAction={
-          <ButtonAdd
+          <Button
+            $variant="text"
             onClick={() => {
               append({
                 dateRange: "",
@@ -170,9 +172,9 @@ function SpecialOpenHours({ data = {} }) {
               fadeInAnimation(`specialOpenHours.${dayFields.length}`);
             }}
           >
-            <GoPlus size={18} strokeWidth={0.6} />
+            <Plus size={18} />
             新增日期
-          </ButtonAdd>
+          </Button>
         }
       >
         <form id="specialOpenHours" onSubmit={handleSubmit(onSubmit, onError)}>
@@ -213,7 +215,7 @@ function SpecialOpenHours({ data = {} }) {
                   />
 
                   <RemoveButton onClick={() => remove(dayIndex)}>
-                    <MdOutlineDeleteForever size={20} />
+                    <Trash2 size={20} />
                   </RemoveButton>
 
                   <FormErrorsMessage

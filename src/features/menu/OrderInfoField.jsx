@@ -2,7 +2,6 @@
 import styled from "styled-components";
 import ControlledSelect from "../../ui-old/ControlledSelect";
 import Note from "../../ui-old/Note";
-import FormTypography from "../../ui-old/FormTypography";
 import DiningMethodSwitch from "../../ui-old/DiningMethodSwitch";
 import { generatePickupTimeOptions } from "../../context/settingsHelpers";
 
@@ -56,8 +55,9 @@ function OrderInfoField({
       <Row>
         <label>
           {takeOut ? "取餐時間" : "內用桌號"}
-          <FormTypography $titleStyle="highlight">*</FormTypography>
+          <span className="emphasize">*</span>
         </label>
+
         <ControlledSelect
           options={
             takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
@@ -82,8 +82,9 @@ function OrderInfoField({
       <Row>
         <label>
           付款狀態
-          <FormTypography $titleStyle="highlight">*</FormTypography>
+          <span className="emphasize">*</span>
         </label>
+
         <ControlledSelect
           options={[
             { label: "已付款", value: "已付款" },

@@ -1,7 +1,6 @@
 // 食材備料頁面
 import styled from "styled-components";
 import { useState } from "react";
-import { BsFileEarmarkPlus } from "react-icons/bs";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
@@ -10,6 +9,7 @@ import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import Filter from "../ui-old/Filter/Filter";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 import Button from "../ui/Button";
+import { FilePlus } from "lucide-react";
 
 const Container = styled.ul`
   display: grid;
@@ -32,7 +32,7 @@ const filtersConfig = [
     queryKey: "quantity",
     placeholder: "選擇庫存剩餘量",
     options: [
-      { label: "不篩選", value: "all" },
+      { label: "不篩選", value: "" },
       { label: "庫存低於100", value: "100" },
       { label: "庫存低於50", value: "50" },
       { label: "庫存低於10", value: "10" },
@@ -90,13 +90,8 @@ function Inventory() {
     <>
       <PageHeader title="庫存管理">
         <div>
-          <Button
-            $type="primary"
-            $size="sm"
-            $rounded="full"
-            onClick={() => setIsOpenModal(true)}
-          >
-            <BsFileEarmarkPlus size={18} />
+          <Button onClick={() => setIsOpenModal(true)}>
+            <FilePlus size={18} />
             <span>新增食材</span>
           </Button>
         </div>

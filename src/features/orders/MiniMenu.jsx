@@ -6,8 +6,8 @@ import QueryStatusFallback from "../../ui-old/QueryStatusFallback";
 import CategoryGroup from "./CategoryGroup";
 import { useState } from "react";
 import OrderForm from "../../ui-old/OrderForm/OrderForm";
-import ButtonAdd from "../../ui/ButtonAdd";
-import { GoPlus } from "react-icons/go";
+import Button from "../../ui/Button";
+import { Plus } from "lucide-react";
 
 const StyledMiniMenu = styled.div`
   display: flex;
@@ -45,12 +45,13 @@ function MiniMenu() {
 
   return (
     <>
-      <ButtonAdd
+      <Button
+        $variant="text"
         onClick={() => setIsOpenModal({ type: "MiniMenu", data: null })}
       >
-        <GoPlus size={18} strokeWidth={0.6} />
+        <Plus size={18} />
         新增餐點
-      </ButtonAdd>
+      </Button>
 
       {isOpenModal.type === "MiniMenu" && (
         <Modal

@@ -44,7 +44,7 @@ const type = {
   `,
   footer: css`
     grid-column: 1 / -1;
-    justify-content: end;
+    justify-content: start;
     gap: 1.6rem;
     padding: 0.6rem 1.2rem;
   `,

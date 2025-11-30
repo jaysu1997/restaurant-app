@@ -3,13 +3,13 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
 import Button from "../ui/Button";
-import { BsFileEarmarkPlus } from "react-icons/bs";
 import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 import Filter from "../ui-old/Filter/Filter.jsx";
 import QueryStatusFallback from "../ui-old/QueryStatusFallback.jsx";
 import styled from "styled-components";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
+import { FilePlus } from "lucide-react";
 
 const Container = styled.ul`
   display: grid;
@@ -73,7 +73,7 @@ function MenuManage() {
       queryKey: "category",
       placeholder: "選擇餐點分類",
       options: [
-        { label: "不篩選", value: "all" },
+        { label: "不篩選", value: "" },
         ...Array.from(new Set(menusData?.map((data) => data.category))).map(
           (category) => ({ label: category, value: category })
         ),
@@ -84,15 +84,12 @@ function MenuManage() {
   return (
     <>
       <PageHeader title="菜單設定">
-        <Button
-          $type="primary"
-          $size="sm"
-          $rounded="full"
-          onClick={() => setIsOpenModal(true)}
-        >
-          <BsFileEarmarkPlus size={18} />
-          <span>新增餐點</span>
-        </Button>
+        <div>
+          <Button onClick={() => setIsOpenModal(true)}>
+            <FilePlus size={18} />
+            <span>新增餐點</span>
+          </Button>
+        </div>
         <Filter filtersConfig={filtersConfig} />
       </PageHeader>
 

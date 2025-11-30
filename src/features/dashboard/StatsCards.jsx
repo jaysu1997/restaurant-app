@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import {
-  LuClipboardList,
-  LuCircleDollarSign,
-  LuTrendingUpDown,
-  LuMinus,
-  LuTrophy,
-  LuArrowBigDown,
-  LuArrowBigUp,
-} from "react-icons/lu";
+  ClipboardList,
+  CircleDollarSign,
+  TrendingUpDown,
+  Trophy,
+  Minus,
+  ArrowBigDown,
+  ArrowBigUp,
+} from "lucide-react";
 
 const StyledStatsCardRow = styled.section`
   display: grid;
@@ -72,28 +72,28 @@ function StatsCards({ analyzedData }) {
       value: todayOrderCounts,
       cardColor: "#dbeafe",
       iconColor: "#2563eb",
-      icon: LuClipboardList,
+      icon: ClipboardList,
     },
     {
       heading: "今日營收金額",
       value: `$ ${todayRevenue}`,
       cardColor: "#dcfce7",
       iconColor: "#16a34a",
-      icon: LuCircleDollarSign,
+      icon: CircleDollarSign,
     },
     {
       heading: "今日營收趨勢",
       value: `$ ${todayRevenueTrend}`,
       cardColor: "#f3e8ff",
       iconColor: "#9333ea",
-      icon: LuTrendingUpDown,
+      icon: TrendingUpDown,
     },
     {
       heading: "今日熱銷商品",
       value: todayTopDishes[0]?.name,
       cardColor: "#ffedd5",
       iconColor: "#ea580c",
-      icon: LuTrophy,
+      icon: Trophy,
     },
   ];
 
@@ -111,8 +111,8 @@ function StatsCards({ analyzedData }) {
               <span>
                 {!item.value && item.value !== 0 ? (
                   <>
-                    <LuMinus size={24} />
-                    <LuMinus size={24} />
+                    <Minus size={24} />
+                    <Minus size={24} />
                   </>
                 ) : (
                   item.value
@@ -121,9 +121,9 @@ function StatsCards({ analyzedData }) {
 
               {item.heading === "今日營收趨勢" ? (
                 todayRevenueTrend >= 0 ? (
-                  <LuArrowBigUp color="#22c55e" fill="#22c55e" size={24} />
+                  <ArrowBigUp color="#22c55e" fill="#22c55e" size={20} />
                 ) : (
-                  <LuArrowBigDown color="#f43f5e" fill="#f43f5e" size={24} />
+                  <ArrowBigDown color="#f43f5e" fill="#f43f5e" size={20} />
                 )
               ) : undefined}
             </StatData>

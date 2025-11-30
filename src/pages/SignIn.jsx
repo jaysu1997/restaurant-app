@@ -6,8 +6,9 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ButtonSpinner from "../ui/ButtonSpinner";
 import PasswordInput from "../components/PasswordInput";
-import FormInput from "../ui/FormInput";
 import Button from "../ui/Button";
+import FormInput from "../ui/FormInput";
+import FormFieldLayout from "../ui/FormFieldLayout";
 
 const StyledSignIn = styled.div`
   width: 100%;
@@ -48,15 +49,9 @@ const SignInForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-`;
-
-const Field = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  font-size: 1.4rem;
 
   label {
+    font-size: 1.4rem;
     font-weight: 500;
   }
 `;
@@ -116,9 +111,8 @@ function SignIn() {
       )}
 
       <SignInForm onSubmit={handleSubmit(onSubmit, onError)}>
-        <Field>
+        <FormFieldLayout id="email" label="信箱" errors={errors?.email}>
           <FormInput
-            label="信箱"
             id="email"
             disabled={isPending}
             autoComplete="username"
@@ -129,28 +123,26 @@ function SignIn() {
                 message: "信箱格式錯誤",
               },
             })}
-            errors={errors?.email}
           />
-        </Field>
+        </FormFieldLayout>
 
-        <Field>
+        <FormFieldLayout label="密碼" id="password" errors={errors?.password}>
           <PasswordInput
-            label="密碼"
             id="password"
             autoComplete="current-password"
+            errors={errors?.password}
             disabled={isPending}
             {...register("password", {
               required: "密碼必須填寫",
               minLength: { value: 8, message: "密碼至少8碼" },
             })}
-            errors={errors?.password}
           />
-        </Field>
+        </FormFieldLayout>
+
         <MarginTop>
           <Button
-            $type="primary"
-            $size="xl"
-            $rounded="sm"
+            type="submit"
+            $isFullWidth={true}
             $isLoading={isPending}
             disabled={isPending}
           >

@@ -1,18 +1,20 @@
 import styled from "styled-components";
-import { FiCheck, FiX } from "react-icons/fi";
 import { Controller } from "react-hook-form";
+import { Check, X } from "lucide-react";
 
 const StyledControlledSwitch = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr));
-  gap: 1rem;
-  align-items: start;
+  grid-template-rows: minmax(0, max-content);
+  gap: 0.4rem;
+  /* align-items: start; */
 `;
 
 const StyledSwitch = styled.div`
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  height: 3.8rem;
 
   @media (max-width: 288px) {
     justify-content: start;
@@ -54,7 +56,7 @@ const SwitchHandle = styled.div`
   transition: left 0.3s ease-in-out;
 `;
 
-function ControlledSwitch({ control, items, handleChange }) {
+function ControlledSwitch({ control, items, handleChange, disabled }) {
   return (
     <StyledControlledSwitch>
       {items.map((item, index) => (
@@ -71,6 +73,7 @@ function ControlledSwitch({ control, items, handleChange }) {
                 <SwitchContainer $checked={checked}>
                   <input
                     type="checkbox"
+                    disabled={disabled}
                     hidden
                     checked={checked}
                     onChange={(e) => {
@@ -91,9 +94,9 @@ function ControlledSwitch({ control, items, handleChange }) {
                   />
                   <SwitchHandle $checked={checked}>
                     {checked ? (
-                      <FiCheck size={16} color="#007bff" />
+                      <Check size={16} color="#007bff" />
                     ) : (
-                      <FiX size={16} color="#ccc" />
+                      <X size={16} color="#ccc" />
                     )}
                   </SwitchHandle>
                 </SwitchContainer>

@@ -1,23 +1,34 @@
 import styled from "styled-components";
 import toast from "react-hot-toast";
-import { FaXmark, FaTriangleExclamation, FaCircleCheck } from "react-icons/fa6";
+import { X, TriangleAlert, Check } from "lucide-react";
 
 const Wrapper = styled.div`
-  padding: 0.8rem 0rem;
+  padding: 0.8rem 0;
   width: 100%;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 2rem 1fr 1.6rem;
   grid-template-rows: 2rem;
-  line-height: 1.6;
-  gap: 1.2rem;
   align-items: center;
+  gap: 1.2rem;
+  line-height: 1.6;
 `;
 
-const Icon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${(props) => (props.type === "error" ? "#e11d48" : "#22c55e")};
+const AlertIocn = styled(TriangleAlert)`
+  stroke-width: 3;
+  stroke: #fff;
+  fill: #e11d48;
+
+  & path:nth-child(1) {
+    stroke: #e11d48;
+  }
+`;
+
+const CheckIcon = styled(Check)`
+  background-color: #22c55e;
+  border-radius: 50%;
+  padding: 0.4rem;
+  stroke-width: 3.6;
+  stroke: #fff;
 `;
 
 const Title = styled.h4`
@@ -31,8 +42,6 @@ const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  height: 2rem;
-  width: 2rem;
 `;
 
 const Content = styled.div`
@@ -53,17 +62,12 @@ function StyledHotToast({
 
   return toastAlert((t) => (
     <Wrapper>
-      <Icon type={type}>
-        {type === "error" ? (
-          <FaTriangleExclamation size={20} />
-        ) : (
-          <FaCircleCheck size={20} />
-        )}
-      </Icon>
+      {type === "error" ? <AlertIocn size={20} /> : <CheckIcon size={20} />}
+
       <Title type={type}>{title}</Title>
       {closeButton && (
         <CloseButton onClick={() => toast.dismiss(t.id)}>
-          <FaXmark size={16} />
+          <X size={16} strokeWidth={2.8} />
         </CloseButton>
       )}
       {content && <Content>{content}</Content>}

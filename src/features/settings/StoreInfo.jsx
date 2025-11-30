@@ -4,19 +4,13 @@ import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
-import { LuStore } from "react-icons/lu";
+import { Store } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
-const Content = styled.ul`
+const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-
-  li {
-    display: grid;
-    grid-template-rows: auto auto;
-    row-gap: 0.4rem;
-    align-items: center;
-  }
 `;
 
 function StoreInfo({ data = {} }) {
@@ -47,8 +41,8 @@ function StoreInfo({ data = {} }) {
   return (
     <SectionContainer
       title="店鋪資訊設定"
-      icon={<LuStore />}
-      caption="設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。"
+      icon={<Store size={20} />}
+      description="設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。"
       form={{
         formId: "storeInfo",
         handleReset: () => reset({ storeInfo: data }),
@@ -58,9 +52,12 @@ function StoreInfo({ data = {} }) {
     >
       <form id="storeInfo" onSubmit={handleSubmit(onSubmit, onError)}>
         <Content>
-          <li>
+          <FormFieldLayout
+            id="phone"
+            label="連絡電話"
+            errors={errors?.storeInfo?.phone}
+          >
             <FormInput
-              label="連絡電話"
               id="phone"
               type="tel"
               placeholder="請輸入連絡電話"
@@ -79,28 +76,30 @@ function StoreInfo({ data = {} }) {
                   return true;
                 },
               })}
-              errors={errors?.storeInfo?.phone}
             />
-          </li>
+          </FormFieldLayout>
 
-          <li>
+          <FormFieldLayout
+            id="address"
+            label="店鋪地址"
+            errors={errors?.storeInfo?.address}
+          >
             <FormInput
-              label="店鋪地址"
               id="address"
-              type="text"
               placeholder="請輸入店鋪地址"
               {...register("storeInfo.address", {
                 required: "店鋪地址不能空白",
               })}
-              errors={errors?.storeInfo?.address}
             />
-          </li>
+          </FormFieldLayout>
 
-          <li>
+          <FormFieldLayout
+            id="taxId"
+            label="統一編號"
+            errors={errors?.storeInfo?.taxId}
+          >
             <FormInput
-              label="統一編號"
               id="taxId"
-              type="number"
               placeholder="請輸入統一編號"
               {...register("storeInfo.taxId", {
                 required: "統一編號不能空白",
@@ -108,9 +107,8 @@ function StoreInfo({ data = {} }) {
                   return /^\d{8}$/.test(value) || "統一編號格式錯誤";
                 },
               })}
-              errors={errors?.storeInfo?.taxId}
             />
-          </li>
+          </FormFieldLayout>
         </Content>
       </form>
     </SectionContainer>

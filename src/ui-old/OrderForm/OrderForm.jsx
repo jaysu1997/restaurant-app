@@ -10,7 +10,8 @@ import Modal from "../Modal";
 import Note from "../Note";
 import CustomizeArea from "./CustomizeArea";
 import ServingsControl from "../ServingsControl";
-import { TiShoppingCart } from "react-icons/ti";
+import { ShoppingBag } from "lucide-react";
+import Button from "../../ui/Button";
 
 const Form = styled.form`
   display: flex;
@@ -26,7 +27,6 @@ const Container = styled.div`
   padding: 2rem;
   gap: 2.4rem;
   overflow-y: auto;
-  scrollbar-gutter: stable;
 `;
 
 const Price = styled.span`
@@ -43,8 +43,7 @@ const Title = styled.h5`
 
 const Footer = styled.footer`
   display: flex;
-  flex-shrink: 0;
-  height: 6.5rem;
+  min-height: 7.2rem;
   width: 100%;
   justify-content: space-between;
   align-items: center;
@@ -53,24 +52,6 @@ const Footer = styled.footer`
   padding: 1.6rem;
   z-index: 1;
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
-`;
-
-const AddToCartButton = styled.button`
-  height: 3.2rem;
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 6px;
-  background-color: #292524;
-  color: #fff;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-
-  &:not(:disabled):hover {
-    background-color: #3f3f46;
-  }
 `;
 
 function OrderForm({ dishData, onCloseModal, isEdit = false }) {
@@ -91,7 +72,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     uniqueId = generateDishItemId(dishes),
   } = dishData;
 
-  // 將自訂細項數據整理成訂購表單展示的欄位數據以及在useReducer進行初始化的數據
+  // 將自訂項目數據整理成訂購表單展示的欄位數據以及在useReducer進行初始化的數據
   const { displayFields, reducerFields } = customize.reduce(
     (acc, curCustomization) => {
       acc.reducerFields.push({
@@ -99,7 +80,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
         customizeTitle: curCustomization.title,
         detail: [],
       });
-      // 必填細項與選填細項
+      // 必填項目與選填項目
       if (curCustomization.isRequired === "required") {
         acc.displayFields.unshift(curCustomization);
       } else {
@@ -113,12 +94,12 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     }
   );
 
-  // 用來存放初始化細項數據
+  // 用來存放初始化項目數據
   const customizeOptionRef = useRef(
     isEdit ? dishData.customizeDetail : reducerFields
   );
 
-  // 初始化useReducer的curDishCustomizeOption(自訂細項的詳細數據)
+  // 初始化useReducer的curDishCustomizeOption(自訂項目的詳細數據)
   useEffect(() => {
     dispatch({
       type: "orderForm/init",
@@ -240,10 +221,10 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
             size="md"
           />
 
-          <AddToCartButton disabled={!isValid}>
-            <TiShoppingCart size={20} />
+          <Button type="submit" $isFullWidth disabled={!isValid}>
+            <ShoppingBag size={18} />
             加入購物車
-          </AddToCartButton>
+          </Button>
         </Footer>
       </Form>
     </Modal>

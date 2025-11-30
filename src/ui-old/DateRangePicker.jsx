@@ -4,10 +4,8 @@ import { zhTW } from "react-day-picker/locale";
 import { format } from "date-fns";
 import { useRef, useState } from "react";
 import useClickOutside from "../hooks/ui/useClickOutside";
-import { PiCalendar } from "react-icons/pi";
 import StyledDayPicker from "./StyledDayPicker";
-// 這個icon或許更適合
-import { LuCalendarRange } from "react-icons/lu";
+import { CalendarRange } from "lucide-react";
 
 const StyledDatePicker = styled.div`
   position: relative;
@@ -114,7 +112,7 @@ function DateRangePicker({
           readOnly
         />
 
-        <PiCalendar size={20} />
+        <CalendarRange size={20} />
       </DateField>
 
       {isOpenDayPicker && (

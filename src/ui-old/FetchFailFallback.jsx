@@ -1,10 +1,9 @@
 import ErrorSvg from "../assets/error.svg?react";
 import { useNavigate } from "react-router-dom";
-import ButtonHome from "../ui/ButtonHome";
-import ButtonReload from "../ui/ButtonReload";
 import StatusView from "../ui/StatusView";
 
 // 數據獲取失敗fallback ui
+// 可能要改成放react query的retry功能進來使用
 function FetchFailFallback({ error }) {
   const navigate = useNavigate();
 
@@ -12,15 +11,9 @@ function FetchFailFallback({ error }) {
     <StatusView
       img={<ErrorSvg role="img" aria-label="數據獲取失敗警告圖示" />}
       heading="數據獲取失敗"
-      caption={error?.message}
-      action={
-        <>
-          <ButtonReload onClick={error?.action}>
-            {error?.actionLabel}
-          </ButtonReload>
-          <ButtonHome onClick={() => navigate("/")} />
-        </>
-      }
+      description={error?.message}
+      actionFn={error?.action}
+      actionLabel={error?.actionLabel}
     />
   );
 }

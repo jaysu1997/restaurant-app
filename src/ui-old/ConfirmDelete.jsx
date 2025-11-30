@@ -1,12 +1,13 @@
 import styled from "styled-components";
-import Button from "./Button";
 import { Fragment, useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
-import { RiArrowRightSLine } from "react-icons/ri";
 import ButtonSpinner from "../ui/ButtonSpinner";
 import useGetFilterMenuData from "../hooks/data/menus/useGetFilterData";
 import QueryStatusFallback from "./QueryStatusFallback";
+import Button from "../ui/Button";
+import ButtonCancel from "../ui/ButtonCancel";
+import { ChevronRight } from "lucide-react";
 
 const StyledConfirmDelete = styled.div`
   max-width: 36rem;
@@ -14,7 +15,7 @@ const StyledConfirmDelete = styled.div`
   flex-direction: column;
 
   padding: 2rem;
-  gap: 1.2rem;
+  gap: 2.4rem;
   font-size: 1.6rem;
 `;
 
@@ -46,7 +47,6 @@ const AccordionTitle = styled.button`
   background-color: #f9fafb;
   transition: background-color 0.3s;
   font-size: 1.4rem;
-  line-height: 1.4;
 
   svg {
     transition: transform 0.3s;
@@ -111,8 +111,8 @@ const ConfirmCheckBox = styled.div`
 
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
+  justify-content: center;
+  gap: 2rem;
 `;
 
 // 執行食材獲取的功能或許需要優化，目前這看起來有點醜，未來應該要分割
@@ -162,11 +162,9 @@ function ConfirmDelete({
           </ConfirmCheckBox>
 
           <ButtonRow>
-            <Button $buttonStyle="cancel" onClick={onCloseModal}>
-              取消
-            </Button>
             <Button
-              $buttonStyle="confirmDelete"
+              $variant="danger"
+              $isLoading={isDeleting}
               disabled={confirm === false || isDeleting}
               onClick={() => {
                 handleDelete(data.id, {
@@ -174,8 +172,11 @@ function ConfirmDelete({
                 });
               }}
             >
-              {isDeleting ? <ButtonSpinner /> : "刪除"}
+              <span>刪除</span>
+              {isDeleting && <ButtonSpinner />}
             </Button>
+
+            <ButtonCancel onClick={onCloseModal} />
           </ButtonRow>
         </QueryStatusFallback>
       </StyledConfirmDelete>
@@ -215,7 +216,7 @@ function FilterMenuList({ name, filterMenuData }) {
     <>
       <Accordion>
         <AccordionTitle $collapse={isExpanded} onClick={handleToggle}>
-          <RiArrowRightSLine size={14} />
+          <ChevronRight size={14} />
           <span>查看使用{name}的餐點</span>
         </AccordionTitle>
 

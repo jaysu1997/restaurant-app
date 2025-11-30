@@ -1,10 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
 import AvatarCropper from "./AvatarCropper";
-import { MdUpload } from "react-icons/md";
 import UserAvatar from "../../ui/UserAvatar";
 import SectionContainer from "../../ui/SectionContainer";
-import ButtonAdd from "../../ui/ButtonAdd";
+import Button from "../../ui/Button";
+import { Upload } from "lucide-react";
 
 const StyledUpdateUserAvatar = styled.div`
   display: grid;
@@ -51,10 +51,15 @@ function UpdateUserAvatar({ userData }) {
       <StyledUpdateUserAvatar>
         <UserAvatar avatarUrl={avatarUrl} />
 
-        <ButtonAdd as="label" htmlFor="avatar" role="avatarUploadButton">
-          <MdUpload size={19} />
+        <Button
+          $variant="tertiary"
+          as="label"
+          htmlFor="avatar"
+          role="avatarUploadButton"
+        >
+          <Upload size={18} />
           選擇新頭像
-        </ButtonAdd>
+        </Button>
 
         <span>必須是 JPEG、PNG、GIF 檔。</span>
       </StyledUpdateUserAvatar>

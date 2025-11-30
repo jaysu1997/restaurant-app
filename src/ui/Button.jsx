@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const type = {
+const variant = {
   primary: css`
     color: #fff;
     background-color: #2563eb;
@@ -10,12 +10,13 @@ const type = {
     }
   `,
   secondary: css`
+    color: #3b82f6;
     background-color: #fff;
-    border: 1px solid #d1d5db;
-    color: #374151;
+    border-color: #3b82f6;
 
     &:not(:disabled):hover {
-      background-color: #f9fafb;
+      background-color: #3b82f6;
+      color: #fff;
     }
   `,
   tertiary: css`
@@ -26,6 +27,15 @@ const type = {
       background-color: #dbeafe;
     }
   `,
+  outline: css`
+    color: #374151;
+    background-color: #fff;
+    border-color: #d1d5db;
+
+    &:not(:disabled):hover {
+      background-color: #f9fafb;
+    }
+  `,
   danger: css`
     color: #fff;
     background-color: #dc2626;
@@ -34,39 +44,35 @@ const type = {
       background-color: #b91c1c;
     }
   `,
-  text: css``,
-  ghost: css``,
-};
-
-const size = {
-  sm: css`
-    width: fit-content;
-  `,
-  xl: css`
-    width: 100%;
-  `,
-};
-
-const rounded = {
-  sm: css`
+  text: css`
+    color: #2563eb;
+    padding: 0.6rem 0.8rem;
     border-radius: 4px;
+
+    &:not(:disabled):hover {
+      background-color: #eff6ff;
+    }
   `,
-  md: css`
-    border-radius: 6px;
+  ghost: css`
+    color: #4b5563;
+    padding: 0.6rem;
+
+    &:not(:disabled):hover {
+      background-color: #f3f4f6;
+    }
   `,
-  full: css`
-    border-radius: 999px;
-  `,
+  plain: css``,
 };
 
-const Button = styled.button`
+const Button = styled.button.attrs((props) => ({
+  type: props.type || "button",
+}))`
   cursor: pointer;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  flex-shrink: 0;
 
   font-size: 1.4rem;
   font-weight: 500;
@@ -75,19 +81,26 @@ const Button = styled.button`
 
   transition: background-color 0.2s;
 
-  height: fit-content;
+  width: max-content;
+  min-width: max-content;
+  border-radius: 999px;
 
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  /* 載入中顯示動畫 */
   & > span {
     visibility: ${({ $isLoading }) => ($isLoading ? "hidden" : "visible")};
   }
 
-  ${({ $type }) => type[$type]}
-  ${({ $size }) => size[$size]}
-  ${({ $rounded }) => rounded[$rounded]} /* @container (width < 12rem) {
-    span {
-      display: none;
-    }
-  } */
+  ${({ $variant = "primary" }) => variant[$variant]}
+
+  ${({ $isFullWidth }) =>
+    $isFullWidth &&
+    css`
+      width: 100%;
+    `}
 `;
 
 export default Button;

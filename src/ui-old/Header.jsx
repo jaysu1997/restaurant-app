@@ -1,8 +1,8 @@
 // 網站頂部
 import styled from "styled-components";
-import { BiMenu } from "react-icons/bi";
 import Logo from "./Logo";
 import User from "../features/account/User";
+import { Menu } from "lucide-react";
 
 const StyleHeader = styled.header`
   width: 100%;
@@ -43,7 +43,7 @@ function Header({ setIsOpen }) {
   return (
     <StyleHeader>
       <ToggleButton onClick={() => setIsOpen((prev) => !prev)}>
-        <BiMenu size={36} />
+        <Menu size={36} />
       </ToggleButton>
       <Logo />
       <User />

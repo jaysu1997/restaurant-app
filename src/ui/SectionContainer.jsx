@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import ContentContainer from "./ContentContainer";
-import Caption from "./Caption";
+import Description from "./Description";
 import ButtonSubmit from "./ButtonSubmit";
 import ButtonCancel from "./ButtonCancel";
 
@@ -29,7 +29,6 @@ const Header = styled.header`
 
   svg {
     color: #6b7280;
-    font-size: 2rem;
   }
 `;
 
@@ -38,21 +37,23 @@ const Title = styled.h3`
   font-weight: 600;
 `;
 
-const ButtonGroup = styled.footer`
+const Content = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 2.4rem;
 `;
 
-const AdditionalAction = styled.div`
-  margin-right: auto;
+const ButtonGroup = styled.footer`
+  display: flex;
+  justify-content: flex-start;
+  gap: 2.4rem;
 `;
 
 // 設定section ui
 function SectionContainer({
   title,
   icon,
-  caption,
+  description,
   form = {},
   additionalAction,
   children,
@@ -68,18 +69,17 @@ function SectionContainer({
               <Title>{title}</Title>
               {icon}
             </Header>
-            {caption && <Caption>{caption}</Caption>}
+            {Description && <Description>{description}</Description>}
           </SectionHeader>
         )}
 
-        {children}
+        <Content>
+          {children}
+          {additionalAction}
+        </Content>
 
         {formId && (
           <ButtonGroup>
-            {additionalAction && (
-              <AdditionalAction>{additionalAction}</AdditionalAction>
-            )}
-
             <ButtonSubmit
               form={formId}
               isLoading={isUpdating}
@@ -87,7 +87,6 @@ function SectionContainer({
             />
 
             <ButtonCancel
-              type="button"
               onClick={handleReset}
               disabled={!isDirty || isUpdating}
             />

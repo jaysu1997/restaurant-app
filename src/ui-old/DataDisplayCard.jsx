@@ -1,6 +1,6 @@
 // 用來展示數據的卡片ui
 import styled from "styled-components";
-import { GoTrash, GoPencil } from "react-icons/go";
+import { Trash2, SquarePen, Minus } from "lucide-react";
 
 const Card = styled.li`
   display: grid;
@@ -12,6 +12,9 @@ const Card = styled.li`
   background-color: #fff;
   transition: transform 0.2s ease, border 0.2s ease;
 
+  font-size: 1.4rem;
+  font-weight: 600;
+
   &:hover {
     transform: translateY(-2px);
     border: 2px solid #93c5fd;
@@ -20,7 +23,6 @@ const Card = styled.li`
 
 const TableRow = styled.div`
   grid-column: 1 / -1;
-
   display: grid;
   grid-template-columns: min-content 1fr;
   white-space: nowrap;
@@ -32,14 +34,12 @@ const TableHead = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-weight: 600;
-  font-size: 1.4rem;
   padding: 0.8rem;
 `;
 
 const TableBody = styled.div`
   padding: 0.8rem;
-  font-size: 1.4rem;
+
   font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -48,12 +48,9 @@ const TableBody = styled.div`
 
 const Button = styled.button`
   width: 100%;
-  /* background-color: #f9fafb; */
   background-color: #fff;
   color: ${(props) => props.$fontColor};
   padding: 0.6rem 1.2rem;
-  font-size: 1.4rem;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,16 +68,16 @@ function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
       {dataFormat.map((data) => (
         <TableRow key={data.head}>
           <TableHead>{data.head}</TableHead>
-          <TableBody>{data.body}</TableBody>
+          <TableBody>{data.body ?? <Minus size={16} />}</TableBody>
         </TableRow>
       ))}
 
       <Button $fontColor="#0f766e" onClick={handleEditButton}>
-        <GoPencil size={15} strokeWidth={0.6} />
+        <SquarePen size={15} />
         <span>編輯</span>
       </Button>
       <Button $fontColor="#b91c1c" onClick={handleDeleteButton}>
-        <GoTrash size={15} strokeWidth={0.6} />
+        <Trash2 size={15} />
         <span>刪除</span>
       </Button>
     </Card>

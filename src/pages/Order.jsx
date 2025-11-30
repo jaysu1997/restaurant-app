@@ -11,7 +11,8 @@ import { useSettings } from "../context/SettingsContext";
 const StyledOrderSummary = styled.div`
   display: grid;
   grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
-  gap: 2.4rem;
+  column-gap: 2.4rem;
+  row-gap: 3.6rem;
   padding: 0 0 3.6rem;
   font-weight: 500;
   width: 100%;
@@ -24,7 +25,7 @@ const StyledOrderSummary = styled.div`
 const OrderHeader = styled.header`
   background-color: #6366f1;
   color: #fff;
-  padding: 1.6rem 3.6rem;
+  padding: 2rem 2.4rem;
   font-size: 2.4rem;
   grid-column: 1 / -1;
   border-radius: 6px;

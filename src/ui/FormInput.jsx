@@ -1,11 +1,5 @@
 import styled from "styled-components";
 
-const StyledFormInput = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-`;
-
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -37,52 +31,39 @@ const IconButton = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-color: ${({ $disabled }) =>
-    $disabled ? "rgba(239, 239, 239, 0.3)" : "#fff"};
-
-  cursor: ${({ $disabled }) => ($disabled ? "not-allowed" : "default")};
+  background-color: ${({ $isDisabled }) =>
+    $isDisabled ? "rgba(239, 239, 239, 0.3)" : "#fff"};
 
   button {
-    width: 2rem;
-    height: 2rem;
+    width: 1.8rem;
+    height: 1.8rem;
   }
 
   svg {
     height: 100%;
     width: 100%;
+    color: #374151;
   }
 `;
 
-const ErrorMessage = styled.p`
-  color: #ff3333;
-  padding: 0 0.6rem;
-  font-size: 1.3rem;
-  font-weight: 500;
-  min-height: 2rem;
-`;
-
-// 通用input + error message ui
-function FormInput({ label, id, button, type, disabled, errors, ...rest }) {
+function FormInput({ id, type = "text", disabled, button, ...rest }) {
   return (
-    <StyledFormInput>
-      <label htmlFor={id}>{label}</label>
-      <InputWrapper>
-        <Input
-          id={id}
-          type={type === "number" ? "text" : type}
-          disabled={disabled}
-          {...rest}
-        />
-        {button?.icon && (
-          <IconButton $disabled={disabled}>
-            <button type="button" onClick={button?.action}>
-              {button?.icon}
-            </button>
-          </IconButton>
-        )}
-      </InputWrapper>
-      <ErrorMessage>{errors?.message}</ErrorMessage>
-    </StyledFormInput>
+    <InputWrapper>
+      <Input
+        id={id}
+        type={type}
+        disabled={disabled}
+        // 這裡通常是用來放入RHF的props
+        {...rest}
+      />
+      {button?.icon && (
+        <IconButton $isDisabled={disabled}>
+          <button type="button" onClick={button?.action} disabled={disabled}>
+            {button?.icon}
+          </button>
+        </IconButton>
+      )}
+    </InputWrapper>
   );
 }
 

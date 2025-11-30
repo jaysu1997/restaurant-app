@@ -6,7 +6,8 @@ export async function getMenusApi() {
   const { data, error } = await supabase
     .from("menus")
     .select()
-    .order("category", { ascending: true });
+    .order("category", { ascending: true })
+    .order("price", { ascending: true });
 
   handleSupabaseError(error);
 

@@ -16,7 +16,7 @@ function useCreateOrder() {
     onSuccess: (data) => {
       StyledHotToast({
         type: "success",
-        title: `取餐單號 ${formatPickupNumber(
+        title: `取餐號碼 ${formatPickupNumber(
           data.order.pickupNumber
         )} 建立成功`,
       });

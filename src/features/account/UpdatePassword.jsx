@@ -4,7 +4,8 @@ import StyledHotToast from "../../ui-old/StyledHotToast";
 import PasswordInput from "../../components/PasswordInput";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
 import SectionContainer from "../../ui/SectionContainer";
-import { LuKeyRound } from "react-icons/lu";
+import { KeyRound } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
@@ -63,7 +64,7 @@ function UpdatePassword({ userData }) {
   return (
     <SectionContainer
       title="變更密碼"
-      icon={<LuKeyRound />}
+      icon={<KeyRound size={20} />}
       form={{
         formId: "updatePassword",
         handleReset: () => reset(),
@@ -72,49 +73,61 @@ function UpdatePassword({ userData }) {
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="updatePassword">
-        <label htmlFor="password">現有密碼</label>
-        <PasswordInput
+        <FormFieldLayout
+          label="現有密碼"
           id="password"
-          autoComplete="current-password"
-          disabled={isPending}
-          {...register("currentPassword", {
-            required: "密碼必須填寫",
-            minLength: { value: 8, message: "密碼至少8碼" },
-          })}
           errors={errors?.currentPassword}
-        />
+        >
+          <PasswordInput
+            id="password"
+            autoComplete="current-password"
+            disabled={isPending}
+            {...register("currentPassword", {
+              required: "密碼必須填寫",
+              minLength: { value: 8, message: "密碼至少8碼" },
+            })}
+          />
+        </FormFieldLayout>
 
-        <label htmlFor="newPassword">新的密碼</label>
-        <PasswordInput
+        <FormFieldLayout
+          label="新的密碼"
           id="newPassword"
-          autoComplete="new-password"
-          disabled={isPending}
-          {...register("newPassword", {
-            required: "請輸入新的密碼",
-            minLength: { value: 8, message: "密碼至少要有8碼" },
-            validate: (value) => {
-              const currentPassword = watch("currentPassword");
-              return value !== currentPassword || "新密碼不能與舊密碼相同";
-            },
-          })}
           errors={errors?.newPassword}
-        />
+        >
+          <PasswordInput
+            id="newPassword"
+            autoComplete="new-password"
+            disabled={isPending}
+            {...register("newPassword", {
+              required: "請輸入新的密碼",
+              minLength: { value: 8, message: "密碼至少要有8碼" },
+              validate: (value) => {
+                const currentPassword = watch("currentPassword");
+                return value !== currentPassword || "新密碼不能與舊密碼相同";
+              },
+            })}
+          />
+        </FormFieldLayout>
 
-        <label htmlFor="confirmPassword">確認新密碼</label>
-        <PasswordInput
+        <FormFieldLayout
+          label="確認新密碼"
           id="confirmPassword"
-          autoComplete="new-password"
-          disabled={isPending}
-          {...register("confirmPassword", {
-            required: "請再次輸入新密碼",
-            minLength: { value: 8, message: "密碼至少要有8碼" },
-            validate: (value) => {
-              const newPassword = watch("newPassword");
-              return value === newPassword || "兩次輸入的新密碼不一致";
-            },
-          })}
           errors={errors?.confirmPassword}
-        />
+        >
+          <PasswordInput
+            id="confirmPassword"
+            autoComplete="new-password"
+            disabled={isPending}
+            {...register("confirmPassword", {
+              required: "請再次輸入新密碼",
+              minLength: { value: 8, message: "密碼至少要有8碼" },
+              validate: (value) => {
+                const newPassword = watch("newPassword");
+                return value === newPassword || "兩次輸入的新密碼不一致";
+              },
+            })}
+          />
+        </FormFieldLayout>
       </Form>
     </SectionContainer>
   );
