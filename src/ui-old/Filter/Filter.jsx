@@ -8,16 +8,40 @@ import useClickOutside from "../../hooks/ui/useClickOutside";
 import { getInitialFilterState, handleSearchParams } from "./filterHelpers";
 import Button from "../../ui/Button";
 import FilterIcon from "../../ui/FilterIcon";
+import useScrollLock from "../../hooks/ui/useScrollLock";
 
 const StyledFilter = styled.div`
   position: relative;
 `;
 
-const FilterContainer = styled.div`
+const Wrapper = styled.div`
   position: absolute;
   top: 5rem;
   right: 0;
-  z-index: 1;
+  z-index: 2;
+  width: min(95dvw, 28rem);
+
+  opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
+  pointer-events: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
+  transition: opacity 0.2s;
+
+  @media (max-width: 40em) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+`;
+
+const FilterContainer = styled.div`
   padding: 1.5rem;
   font-size: 1.4rem;
   display: flex;
@@ -26,8 +50,16 @@ const FilterContainer = styled.div`
   background-color: #fff;
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  width: min(95dvw, 28rem);
   border: 1px solid #e3e5e7;
+
+  @media (max-width: 40em) {
+    position: absolute;
+    width: 100%;
+    max-height: 85%;
+    border-radius: 4px 4px 0 0;
+    bottom: ${({ $isOpen }) => ($isOpen ? "0" : "-100%")};
+    transition: bottom 0.3s;
+  }
 `;
 
 const FilterTitle = styled.h3`
@@ -40,7 +72,6 @@ const FilterGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  max-width: 25rem;
   width: 100%;
 
   label {
@@ -55,6 +86,7 @@ const ActionButtonGroup = styled.footer`
   gap: 2rem;
   height: 3.2rem;
   margin-top: 1rem;
+  flex-shrink: 0;
 `;
 
 const ApplyFiltersButton = styled.button`
@@ -77,6 +109,7 @@ const ResetFiltersButton = styled(ApplyFiltersButton)`
   }
 `;
 
+// 或許可以考慮使用RHF，這樣可以比較好處理errors問題，但或許也可以不處理
 function Filter({ filtersConfig }) {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -95,6 +128,14 @@ function Filter({ filtersConfig }) {
     true
   );
 
+  // 自動關閉以及html滾動功能
+  useScrollLock(
+    40,
+    isContainerOpen,
+    () => setIsContainerOpen(false),
+    "conditional"
+  );
+
   // 清除條件按鈕disabled(filter輸入框有無輸入值)
   const isButtonDisabled = !Object.values(tempFilters).some(
     (filter) => !!filter.value
@@ -108,12 +149,12 @@ function Filter({ filtersConfig }) {
   const filterComponents = {
     select: SelectFilter,
     datePicker: DateRangeFilter,
-    input: SearchFilter,
+    text: SearchFilter,
+    number: SearchFilter,
   };
 
   // 處理篩選器輸入值更新的功能
   function handleValueChange(queryKey, value) {
-    console.log(queryKey, value);
     setTempFilters((tempFilters) => ({
       ...tempFilters,
       [queryKey]: { ...tempFilters[queryKey], value },
@@ -137,8 +178,8 @@ function Filter({ filtersConfig }) {
         <span>篩選數據</span>
       </Button>
 
-      {isContainerOpen && (
-        <FilterContainer ref={filterContainerRef}>
+      <Wrapper $isOpen={isContainerOpen}>
+        <FilterContainer ref={filterContainerRef} $isOpen={isContainerOpen}>
           <FilterTitle>篩選數據</FilterTitle>
           {filtersConfig.map((filter) => {
             // 根據filterConfig動態決定要使用哪種篩選框
@@ -172,7 +213,6 @@ function Filter({ filtersConfig }) {
               onClick={() =>
                 handleSearchParams(
                   pathname,
-                  filtersConfig,
                   tempFilters,
                   searchParams,
                   setSearchParams,
@@ -184,7 +224,7 @@ function Filter({ filtersConfig }) {
             </ApplyFiltersButton>
           </ActionButtonGroup>
         </FilterContainer>
-      )}
+      </Wrapper>
     </StyledFilter>
   );
 }

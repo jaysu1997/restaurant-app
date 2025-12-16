@@ -10,7 +10,7 @@ import {
   BookOpenText,
   Refrigerator,
   Settings,
-  UserPlus,
+  UserRoundCog,
   Soup,
 } from "lucide-react";
 
@@ -81,14 +81,14 @@ const navigationsLink = [
 
 function Navbar({ isOpen, setIsOpen }) {
   const { user } = useUser();
-  const userRole = user?.user_metadata?.user_role;
+  const userRole = user?.user_metadata?.role;
   const isManager = userRole === "店長";
 
   const navRef = useRef(null);
   useClickOutside(navRef, isOpen, setIsOpen);
 
   // 自動關閉以及html滾動功能
-  useScrollLock(64, isOpen, () => setIsOpen(false));
+  useScrollLock(64, isOpen, () => setIsOpen(false), "conditional");
 
   return (
     <Wrapper $isOpen={isOpen}>
@@ -108,9 +108,9 @@ function Navbar({ isOpen, setIsOpen }) {
 
           {isManager && (
             <li>
-              <StyleNavLink to="/signup" onClick={() => setIsOpen(false)}>
-                <UserPlus />
-                <span>新增員工</span>
+              <StyleNavLink to="/staff" onClick={() => setIsOpen(false)}>
+                <UserRoundCog />
+                <span>員工管理</span>
               </StyleNavLink>
             </li>
           )}

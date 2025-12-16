@@ -5,11 +5,9 @@ import {
   endOfDay,
   format,
   getDay,
-  isAfter,
   isBefore,
   isTomorrow,
   isWithinInterval,
-  max,
   set,
   startOfDay,
 } from "date-fns";

@@ -5,8 +5,9 @@ const StyledFormField = styled.div`
   flex-direction: column;
   gap: 0.4rem;
 
+  min-width: 0px;
+
   & > label {
-    /* padding-left: 0.8rem; */
     width: fit-content;
   }
 `;
@@ -20,18 +21,14 @@ const ErrorMessage = styled.p`
 `;
 
 // 通用 label input + error message ui
-function FormFieldLayout({ label, id, errors, children }) {
+function FormFieldLayout({ label, id, error, children }) {
   return (
     <StyledFormField>
       {label && <label htmlFor={id}>{label}</label>}
       {children}
-      {errors !== false && <ErrorMessage>{errors?.message}</ErrorMessage>}
+      {error !== false && <ErrorMessage>{error?.message}</ErrorMessage>}
     </StyledFormField>
   );
 }
 
 export default FormFieldLayout;
-
-{
-  /* <FormFieldLayout label={label} id={id} errors={errors}></FormFieldLayout> */
-}

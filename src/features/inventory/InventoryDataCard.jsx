@@ -42,8 +42,8 @@ function InventoryDataCard({ inventory }) {
           modalType="inventory"
           render={() => (
             <p>
-              請確認是否要刪除食材：<strong>{isOpenModal.data.label}</strong>
-              ，以及各個餐點中所有使用此食材的備料和選項。
+              請確認是否要刪除食材「<strong>{isOpenModal.data.label}</strong>
+              」， 各餐點中使用此食材的備料與選項也會同步刪除，此操作無法復原。
             </p>
           )}
         />

@@ -9,7 +9,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { addYears, compareAsc, endOfYear, isAfter, isToday } from "date-fns";
-import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
@@ -18,6 +17,7 @@ import StyledHotToast from "../../ui-old/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
 import Button from "../../ui/Button";
 import { Plus, Trash2, CalendarClock } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 const BusinessPeriodList = styled.ul`
   display: flex;
@@ -30,9 +30,7 @@ const BusinessPeriodItem = styled.li`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 0.6rem;
-
-  /* 由useFieldArray新增的欄位圖層會被下面的Button蓋過去，導致DatePicker展開之後出現Button壓在Picker之上的情況，原因不太清楚，但後來發現可以透過提高此元素的圖層順位解決問題 */
-  z-index: 2;
+  align-items: start;
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
@@ -44,23 +42,9 @@ const EmptyMessage = styled.p`
   font-weight: 500;
 `;
 
-const RemoveButton = styled.button`
-  color: #383838;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-
-  &:not(:disabled):hover {
-    color: #dc2626;
-  }
-`;
-
 const DateField = styled.div`
   display: grid;
   grid-template-columns: minmax(20rem, 1fr) 2rem;
-  grid-template-rows: 3.8rem;
-  grid-auto-rows: min-content;
   column-gap: 0.6rem;
   row-gap: 0.3rem;
   padding-bottom: 0.6rem;
@@ -159,7 +143,7 @@ function SpecialOpenHours({ data = {} }) {
           isDirty,
           isUpdating: isPending,
         }}
-        additionalAction={
+        appendButton={
           <Button
             $variant="text"
             onClick={() => {
@@ -189,42 +173,45 @@ function SpecialOpenHours({ data = {} }) {
                 id={`specialOpenHours.${dayIndex}`}
               >
                 <DateField>
-                  <Controller
-                    name={`specialOpenHours.${dayIndex}.dateRange`}
-                    control={control}
-                    render={({ field }) => (
-                      <DateRangePicker
-                        defaultMonth={field.value?.from}
-                        startMonth={new Date()}
-                        endMonth={endOfYear(addYears(new Date(), 5))}
-                        selected={field.value}
-                        onSelect={(range) => field.onChange(range ? range : "")}
-                        handleValueReset={() => field.onChange("")}
-                        disabledDate={{ before: new Date() }}
-                      />
-                    )}
-                    rules={{
-                      validate: () =>
-                        validateDateRangeField({
-                          dayIndex,
-                          setError,
-                          clearErrors,
-                          getValues,
-                        }),
-                    }}
-                  />
+                  <FormFieldLayout
+                    error={
+                      errors?.specialOpenHours?.[dayIndex]?.errorFallback ||
+                      false
+                    }
+                  >
+                    <Controller
+                      name={`specialOpenHours.${dayIndex}.dateRange`}
+                      control={control}
+                      render={({ field }) => (
+                        <DateRangePicker
+                          defaultMonth={field.value?.from}
+                          startMonth={new Date()}
+                          endMonth={endOfYear(addYears(new Date(), 5))}
+                          selected={field.value}
+                          onSelect={(range) =>
+                            field.onChange(range ? range : "")
+                          }
+                          handleValueReset={() => field.onChange("")}
+                          disabledDate={{ before: new Date() }}
+                        />
+                      )}
+                      rules={{
+                        validate: () =>
+                          validateDateRangeField({
+                            dayIndex,
+                            setError,
+                            clearErrors,
+                            getValues,
+                          }),
+                      }}
+                    />
+                  </FormFieldLayout>
 
-                  <RemoveButton onClick={() => remove(dayIndex)}>
+                  <Button $variant="plain" onClick={() => remove(dayIndex)}>
                     <Trash2 size={20} />
-                  </RemoveButton>
-
-                  <FormErrorsMessage
-                    errors={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
-                    gridColumn="1 / -1"
-                  />
+                  </Button>
 
                   <ControlledSwitch
-                    control={control}
                     items={[
                       {
                         name: `specialOpenHours.${dayIndex}.isBusinessDay`,

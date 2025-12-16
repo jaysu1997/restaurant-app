@@ -4,6 +4,7 @@ import ControlledSelect from "../../ui-old/ControlledSelect";
 import Note from "../../ui-old/Note";
 import DiningMethodSwitch from "../../ui-old/DiningMethodSwitch";
 import { generatePickupTimeOptions } from "../../context/settingsHelpers";
+import { useFormContext } from "react-hook-form";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -25,14 +26,9 @@ const Row = styled.div`
   }
 `;
 
-function OrderInfoField({
-  register,
-  takeOut,
-  control,
-  setValue,
-  dishes,
-  settingsData,
-}) {
+function OrderInfoField({ takeOut, dishes, settingsData }) {
+  const { register } = useFormContext();
+
   const pickupTimeOptions = generatePickupTimeOptions(
     settingsData.todayOpenInfo
   );
@@ -46,8 +42,6 @@ function OrderInfoField({
         <label>用餐方式</label>
         <DiningMethodSwitch
           takeOut={takeOut}
-          control={control}
-          setValue={setValue}
           isDisabled={dishes.length === 0}
         />
       </Row>
@@ -62,7 +56,6 @@ function OrderInfoField({
           options={
             takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
           }
-          control={control}
           name={takeOut ? "pickupTime" : "tableNumber"}
           creatable={false}
           placeholder={
@@ -90,7 +83,6 @@ function OrderInfoField({
             { label: "已付款", value: "已付款" },
             { label: "未付款", value: "未付款" },
           ]}
-          control={control}
           name="paid"
           creatable={false}
           placeholder="請選擇付款狀態"

@@ -126,6 +126,7 @@ function ConfirmDelete({
 }) {
   const [confirm, setConfirm] = useState(false);
   // 只有在庫存數據刪除的時候，才需要執行以下custom hook以及展示FilterMenuList
+  // 這裡的設計應該需要修正，有些沒有用到食材的篩除也出現error
   const shouldFetchFilterData = modalType === "inventory";
   const { filterMenuData, isPending, isError, error } = useGetFilterMenuData(
     data.label,

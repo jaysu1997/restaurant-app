@@ -2,22 +2,37 @@ import { useEffect } from "react";
 import useUser from "../hooks/data/auth/useUser";
 import { useNavigate } from "react-router-dom";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, roles }) {
   const navigate = useNavigate();
   const { userIsPending, user } = useUser();
+  const userRole = user?.user_metadata?.role;
+
+  const isAuthorized = user && (!roles || roles.includes(userRole));
 
   useEffect(() => {
-    // 沒有登入用戶就自動轉跳到登入路由
-    if (!userIsPending && !user) {
+    if (userIsPending) return;
+
+    // 未登入 → Login
+    if (!user) {
       navigate("/signin", { replace: true });
+      return;
     }
-  }, [user, userIsPending, navigate]);
 
-  // 已登入則可以顯示內容
-  if (user) return children;
+    // 已登入但沒權限 → Home
+    if (!isAuthorized) {
+      navigate("/", { replace: true });
+      return;
+    }
+  }, [userIsPending, user, isAuthorized, navigate]);
 
-  // 正在獲取數據中則先不回傳內容
-  return null;
+  // 🛑 user 還沒載入完成 → 不要渲染任何東西
+  if (userIsPending) return null;
+
+  // 🛑 user 已載入，但沒有權限 → 也不要渲染 children
+  if (!isAuthorized) return null;
+
+  // ✅ user 有權限 → render children
+  return children;
 }
 
 export default ProtectedRoute;

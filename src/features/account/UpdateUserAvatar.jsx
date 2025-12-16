@@ -22,7 +22,7 @@ const StyledUpdateUserAvatar = styled.div`
 function UpdateUserAvatar({ userData }) {
   const [imgUrl, setImgUrl] = useState(undefined);
 
-  const avatarFile = userData?.user_metadata?.avatar_file;
+  const avatarFile = userData?.user_metadata?.avatarFile;
   const avatarUrl = `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/${avatarFile}`;
 
   function handleSelectFile(e) {

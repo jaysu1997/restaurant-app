@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
 import CartItem from "./CartItem";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import {
   buildOrderData,
@@ -41,7 +41,7 @@ const StyledShoppingCart = styled.aside`
     display: ${({ $isOpen }) => !$isOpen && "none"};
     top: 0;
     right: 0;
-    height: 100dvh;
+    height: 100%;
     width: 100%;
     z-index: 11;
     border: none;
@@ -178,7 +178,7 @@ const CloseButton = styled.button`
 function ShoppingCart({ settingsData }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  useScrollLock(50, isOpen, () => setIsOpen(false));
+  useScrollLock(50, isOpen, () => setIsOpen(false), "conditional");
 
   const {
     state: { dishes },
@@ -218,7 +218,7 @@ function ShoppingCart({ settingsData }) {
   }
 
   return (
-    <>
+    <FormProvider control={control} register={register} setValue={setValue}>
       <StyledShoppingCart $isOpen={isOpen}>
         <Header>
           <h3>購物車</h3>
@@ -235,10 +235,7 @@ function ShoppingCart({ settingsData }) {
             ))}
 
             <OrderInfoField
-              register={register}
-              control={control}
               takeOut={takeOut}
-              setValue={setValue}
               dishes={dishes}
               settingsData={settingsData}
             />
@@ -282,7 +279,7 @@ function ShoppingCart({ settingsData }) {
           <span>{`$ ${totalPrice}`}</span>
         </CartOpenButton>
       )}
-    </>
+    </FormProvider>
   );
 }
 

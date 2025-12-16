@@ -11,7 +11,7 @@ const StyleHeader = styled.header`
   background-color: #fff;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 3;
   grid-column: 1 / -1;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.078);
 

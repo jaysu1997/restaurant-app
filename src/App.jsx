@@ -18,14 +18,13 @@ import SignIn from "./pages/SignIn";
 import ProtectedRoute from "./ui-old/ProtectedRoute";
 import Account from "./pages/Account";
 import ScrollToTop from "./components/ScrollToTop";
-import SignUp from "./pages/SignUp";
+import Staff from "./pages/Staff";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      // retry: 3,
-      retry: false,
+      retry: 2,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },
@@ -36,7 +35,13 @@ const queryClient = new QueryClient({
   },
 });
 
-// 還有需要註冊使用者的功能
+// select元件或許可以設計成一個共用的樣式，然後其他在使用rest props覆蓋過去就好
+
+// 可能有好幾個使用SectionContainer的元件都需要檢查一下欄位之間的距離，或許可以統一設定form的gap為0.4rem，目前好像是個別設定的
+
+// react.lazy 是否需要?
+
+// 相同的驗證正則，或許可以寫成utils(email、phone、positive int)
 
 // 還有一些css中有使用中文作為data-set，好像改成英文會好一點，id可能也是?但如果需要引用到偽元素中，則繼續使用中文
 
@@ -84,7 +89,14 @@ export default function App() {
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/staff"
+              element={
+                <ProtectedRoute roles={["店長"]}>
+                  <Staff />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route path="/signin" element={<SignIn />} />
           <Route path="*" element={<PageNotFound />} />

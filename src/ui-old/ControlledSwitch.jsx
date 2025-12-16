@@ -1,13 +1,12 @@
 import styled from "styled-components";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Check, X } from "lucide-react";
 
 const StyledControlledSwitch = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8.2rem, 1fr));
   grid-template-rows: minmax(0, max-content);
   gap: 0.4rem;
-  /* align-items: start; */
 `;
 
 const StyledSwitch = styled.div`
@@ -56,7 +55,9 @@ const SwitchHandle = styled.div`
   transition: left 0.3s ease-in-out;
 `;
 
-function ControlledSwitch({ control, items, handleChange, disabled }) {
+function ControlledSwitch({ items, handleChange, disabled }) {
+  const { control } = useFormContext();
+
   return (
     <StyledControlledSwitch>
       {items.map((item, index) => (

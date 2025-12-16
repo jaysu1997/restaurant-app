@@ -71,10 +71,10 @@ function User() {
   const { signOut, isPending } = useSignOut();
 
   const { userIsPending, user } = useUser();
-  const avatarFile = user?.user_metadata?.avatar_file;
+  const userName = user?.user_metadata?.name;
+  const userRole = user?.user_metadata?.role;
+  const avatarFile = user?.user_metadata?.avatarFile;
   const avatarUrl = `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/${avatarFile}`;
-  const userName = user?.user_metadata?.user_name;
-  const userRole = user?.user_metadata?.user_role;
 
   const itemsConfig = [
     {

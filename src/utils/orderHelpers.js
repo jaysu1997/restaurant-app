@@ -112,12 +112,6 @@ function buildOrderData(dishes, data) {
   return orderData;
 }
 
-// 驗證是否為正整數(否則回傳預設值)
-// 這部分或許可以把所有number input都改成不需要在輸入時驗證，只需要在提交時驗證就好
-function isValidPositiveInteger(value, defaultValue = 1) {
-  return /^[1-9]\d*$/.test(value) ? Number(value) : defaultValue;
-}
-
 // 檢查日期searchParams是否格式正確(預防url手動更改後造成的格式錯誤問題)
 function safeParseDate(dateStr) {
   if (typeof dateStr !== "string") return undefined;
@@ -132,6 +126,5 @@ export {
   summarizeMealChoices,
   compareInventory,
   buildOrderData,
-  isValidPositiveInteger,
   safeParseDate,
 };

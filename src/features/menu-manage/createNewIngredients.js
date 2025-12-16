@@ -5,7 +5,7 @@ function createNewIngredients({ newIngredientsMap, getValues }) {
 
   // 之所以使用Map存放數據，是為了檢察這個新食材是否真的有使用，而不是在新增食材食輸入錯誤但被記錄儲存的
   newIngredientsMap.forEach((newIngredientsName, fieldName) => {
-    const fieldValue = getValues(fieldName).label;
+    const fieldValue = getValues(fieldName).value;
 
     if (
       fieldValue === newIngredientsName &&

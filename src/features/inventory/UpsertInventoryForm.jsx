@@ -1,24 +1,39 @@
-import { useForm } from "react-hook-form";
-import FormRow from "../../ui-old/FormRow";
+import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import Modal from "../../ui-old/Modal";
 import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
-import { FormDescription, FormLayout, FormSection } from "../../ui/FormLayout";
-import FormInput from "../../ui/FormInput";
 import ButtonSubmit from "../../ui/ButtonSubmit";
 import ButtonCancel from "../../ui/ButtonCancel";
-import FormFieldLayout from "../../ui/FormFieldLayout";
+import styled from "styled-components";
+import FormSection from "../../components/FormSection";
+import { ensurePositiveInt } from "../../utils/helpers";
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  width: 36rem;
+  gap: 2.4rem;
+  padding: 2rem;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  gap: 2.4rem;
+`;
 
 function UpsertInventoryForm({ inventory, onCloseModal }) {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
+  const isEdit = inventory ? true : false;
+  const methods = useForm({
     defaultValues: inventory || {},
   });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = methods;
+
   const { upsert, isUpserting } = useUpsertInventory();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -27,15 +42,15 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
     // 增加value(配合react-select的格式)
     const inventoryData = {
       ...data,
-      label: data.label.trim(),
-      value: data.label.trim(),
+      label: data.label,
+      value: data.label,
     };
 
     upsert(inventoryData, {
       onSuccess: () => {
         StyledHotToast({
           type: "success",
-          title: `庫存食材設定${inventory ? "更新" : "新增"}成功`,
+          title: `庫存食材設定${isEdit ? "更新" : "新增"}成功`,
         });
 
         onCloseModal?.();
@@ -52,56 +67,54 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
 
   return (
     <Modal modalHeader="食材設定表單" maxWidth={56} onCloseModal={onCloseModal}>
-      <FormLayout onSubmit={handleSubmit(onSubmit, onError)}>
-        {inventory && (
-          <FormDescription>
-            表單說明：食材名稱更改後，所有使用此食材的餐點備料和選項也會同步更新名稱。
-          </FormDescription>
-        )}
-
-        <FormSection>
-          <h3>
-            食材名稱
-            <span className="emphasize">*</span>
-          </h3>
-
-          <FormFieldLayout errors={errors?.label}>
-            <FormInput
-              errors={errors?.label}
-              placeholder="請輸入食材名稱"
-              {...register("label", {
-                required: "食材名稱必須填寫",
-              })}
-            />
-          </FormFieldLayout>
-        </FormSection>
-
-        <FormSection>
-          <h3>
-            庫存數量
-            <span className="emphasize">*</span>
-          </h3>
-
-          <FormFieldLayout errors={errors?.remainingQuantity}>
-            <FormInput
-              errors={errors?.remainingQuantity}
-              placeholder="請輸入庫存數量"
-              {...register("remainingQuantity", {
-                required: "庫存數量必須填寫",
-                min: {
-                  value: 0,
-                  message: "庫存數量數量不得為負數",
+      <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
+        <FormProvider {...methods} isDisabled={isUpserting}>
+          <FormSection
+            descriptions={
+              isEdit
+                ? [
+                    "食材名稱變更後，所有使用此食材的餐點備料與選項將自動更新為新名稱，無需個別調整餐點設定。",
+                  ]
+                : null
+            }
+          >
+            <FormSection
+              heading={{ text: "食材名稱", required: true }}
+              fields={[
+                {
+                  type: "input",
+                  name: "label",
+                  errors: errors?.label,
+                  rules: {
+                    setValueAs: (value) => value.trim(),
+                  },
                 },
-              })}
+              ]}
             />
-          </FormFieldLayout>
-        </FormSection>
 
-        <FormRow $formRowStyle="footer">
-          <ButtonSubmit disabled={isUpserting} isLoading={isUpserting} />
-          <ButtonCancel disabled={isUpserting} onClick={onCloseModal} />
-        </FormRow>
-      </FormLayout>
+            <FormSection
+              heading={{ text: "庫存數量", required: true }}
+              fields={[
+                {
+                  type: "input",
+                  name: "remainingQuantity",
+                  errors: errors?.remainingQuantity,
+                  rules: {
+                    setValueAs: (value) => ensurePositiveInt(value, value, 0),
+                    validate: (value) =>
+                      typeof value === "number" || "請輸入 0 以上的整數",
+                  },
+                },
+              ]}
+            />
+          </FormSection>
+
+          <Footer>
+            <ButtonSubmit disabled={isUpserting} isLoading={isUpserting} />
+            <ButtonCancel disabled={isUpserting} onClick={onCloseModal} />
+          </Footer>
+        </FormProvider>
+      </StyledForm>
     </Modal>
   );
 }

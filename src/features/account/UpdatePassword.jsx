@@ -76,7 +76,7 @@ function UpdatePassword({ userData }) {
         <FormFieldLayout
           label="現有密碼"
           id="password"
-          errors={errors?.currentPassword}
+          error={errors?.currentPassword}
         >
           <PasswordInput
             id="password"
@@ -84,7 +84,7 @@ function UpdatePassword({ userData }) {
             disabled={isPending}
             {...register("currentPassword", {
               required: "密碼必須填寫",
-              minLength: { value: 8, message: "密碼至少8碼" },
+              minLength: { value: 8, message: "密碼至少要有8碼" },
             })}
           />
         </FormFieldLayout>
@@ -92,7 +92,7 @@ function UpdatePassword({ userData }) {
         <FormFieldLayout
           label="新的密碼"
           id="newPassword"
-          errors={errors?.newPassword}
+          error={errors?.newPassword}
         >
           <PasswordInput
             id="newPassword"
@@ -112,7 +112,7 @@ function UpdatePassword({ userData }) {
         <FormFieldLayout
           label="確認新密碼"
           id="confirmPassword"
-          errors={errors?.confirmPassword}
+          error={errors?.confirmPassword}
         >
           <PasswordInput
             id="confirmPassword"

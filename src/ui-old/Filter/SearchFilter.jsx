@@ -2,19 +2,14 @@ import { X } from "lucide-react";
 import FormInput from "../../ui/FormInput";
 
 function SearchFilter({ filterValue, handleValueChange, ...filters }) {
-  const { queryKey, placeholder, inputType } = filters;
+  const { queryKey, placeholder } = filters;
 
   return (
     <FormInput
       placeholder={placeholder}
       value={filterValue}
       onChange={(e) => {
-        const finalValue =
-          inputType === "number"
-            ? e.target.value.replace(/\D/g, "")
-            : e.target.value;
-
-        handleValueChange(queryKey, finalValue);
+        handleValueChange(queryKey, e.target.value);
       }}
       button={{
         icon: <X />,

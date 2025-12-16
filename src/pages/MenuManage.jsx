@@ -62,8 +62,7 @@ function MenuManage() {
   const filtersConfig = [
     {
       title: "餐點名稱",
-      type: "input",
-      inputType: "text",
+      type: "text",
       queryKey: "name",
       placeholder: "搜尋餐點名稱",
     },

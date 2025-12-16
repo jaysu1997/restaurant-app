@@ -1,5 +1,5 @@
 // 內用外帶的switch ui元件
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 const StyledToggleSwitch = styled.label`
@@ -46,12 +46,10 @@ const Slider = styled.span`
   transition: all 0.3s;
 `;
 
-function DiningMethodSwitch({
-  control,
-  setValue,
-  takeOut = false,
-  isDisabled = false,
-}) {
+function DiningMethodSwitch({ takeOut = false, isDisabled = false }) {
+  // 使用此元件時，記得在父元件使用FormProvider提供以下兩個props
+  const { control, setValue } = useFormContext();
+
   return (
     <Controller
       name="diningMethod"

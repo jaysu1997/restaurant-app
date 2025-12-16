@@ -1,17 +1,5 @@
-import { handleSupabaseError } from "../utils/handleSupabaseError";
 import supabase from "./supabase";
-
-// 註冊
-export async function signUpApi({ email, password }) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
-
-  handleSupabaseError(error);
-
-  return data;
-}
+import { handleSupabaseError } from "../utils/handleSupabaseError";
 
 // 登入
 export async function signInApi({ email, password }) {
@@ -63,7 +51,7 @@ export async function upsertAvatarFileApi(updateAvatarPayload) {
   handleSupabaseError(error);
 
   const { error: userMetaDataError } = await supabase.auth.updateUser({
-    data: { avatar_file: newFileName },
+    data: { avatarFile: newFileName },
   });
 
   handleSupabaseError(userMetaDataError);

@@ -99,7 +99,7 @@ function Modal({
   maxWidth = 56,
   scrollBar = true,
 }) {
-  useScrollLock(0, true, onCloseModal);
+  useScrollLock(0, true, onCloseModal, "always");
 
   return createPortal(
     <Overlay>

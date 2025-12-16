@@ -1,4 +1,4 @@
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
@@ -17,14 +17,13 @@ const customComponents = {
 
 function ControlledSelect({
   name,
-  control,
   rules,
   options,
-  handleCreateNewItems,
   disabled,
   creatable = false,
   placeholder = null,
 }) {
+  const { control, handleCreateNewItems = () => {} } = useFormContext();
   const { field } = useController({ name, control, rules });
 
   const Component = creatable ? CreatableSelect : Select;
@@ -35,7 +34,7 @@ function ControlledSelect({
         isSearchable: true,
         formatCreateLabel: (inputValue) => `新增食材: ${inputValue}`,
         onCreateOption: (optionValue) =>
-          handleCreateNewItems(optionValue, field.name),
+          handleCreateNewItems(optionValue.trim(), field.name),
       }
     : {
         isClearable: false,

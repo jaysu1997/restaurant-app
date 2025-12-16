@@ -10,19 +10,12 @@ const OrderCard = styled.section`
   & > div {
     display: grid;
     grid-template-columns: 8rem 1fr;
-    grid-template-rows: minmax(3.8rem, auto) minmax(2rem, auto);
-    align-items: center;
+    grid-template-rows: minmax(6.2rem, auto);
     column-gap: 1.6rem;
-    row-gap: 0.2rem;
+    row-gap: 0.4rem;
 
     /* 寬度不足時可能需要縮小字體，因為grid的對其有點麻煩 */
     /* font-size: 1.4rem; */
-
-    /* 這個應該用不到了 */
-    /* span {
-      overflow: hidden;
-      overflow-wrap: break-word;
-    } */
   }
 `;
 

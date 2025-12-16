@@ -3,6 +3,7 @@ import Select from "react-select";
 function SelectFilter({ filterValue, handleValueChange, ...filters }) {
   const { queryKey, placeholder, options } = filters;
 
+  // 或許這個select也可以設計成一個共用的ui元件
   return (
     <Select
       options={options}
@@ -11,11 +12,11 @@ function SelectFilter({ filterValue, handleValueChange, ...filters }) {
       placeholder={placeholder}
       menuPosition="fixed"
       menuPlacement="bottom"
-      maxMenuHeight={200}
       isSearchable={false}
       components={{
         IndicatorSeparator: () => null,
       }}
+      styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
     />
   );
 }

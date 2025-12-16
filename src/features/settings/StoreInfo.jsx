@@ -6,6 +6,7 @@ import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
 import { Store } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
+import { validatePhoneNumber } from "../../utils/helpers";
 
 const Content = styled.div`
   display: flex;
@@ -55,7 +56,7 @@ function StoreInfo({ data = {} }) {
           <FormFieldLayout
             id="phone"
             label="連絡電話"
-            errors={errors?.storeInfo?.phone}
+            error={errors?.storeInfo?.phone}
           >
             <FormInput
               id="phone"
@@ -63,18 +64,7 @@ function StoreInfo({ data = {} }) {
               placeholder="請輸入連絡電話"
               {...register("storeInfo.phone", {
                 required: "連絡電話不能空白",
-                validate: (value) => {
-                  const trimmed = value.trim();
-
-                  const isMobile = /^09\d{8}$/.test(trimmed);
-                  const isLandline = /^0[2-8]\d{7,8}$/.test(trimmed);
-
-                  if (!isMobile && !isLandline) {
-                    return "請輸入正確的市話或手機號碼(純數字)";
-                  }
-
-                  return true;
-                },
+                validate: (value) => validatePhoneNumber(value),
               })}
             />
           </FormFieldLayout>
@@ -82,7 +72,7 @@ function StoreInfo({ data = {} }) {
           <FormFieldLayout
             id="address"
             label="店鋪地址"
-            errors={errors?.storeInfo?.address}
+            error={errors?.storeInfo?.address}
           >
             <FormInput
               id="address"
@@ -96,7 +86,7 @@ function StoreInfo({ data = {} }) {
           <FormFieldLayout
             id="taxId"
             label="統一編號"
-            errors={errors?.storeInfo?.taxId}
+            error={errors?.storeInfo?.taxId}
           >
             <FormInput
               id="taxId"

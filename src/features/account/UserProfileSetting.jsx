@@ -6,6 +6,7 @@ import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
 import { UserRoundPen } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
+import { validatePhoneNumber } from "../../utils/helpers";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
@@ -25,8 +26,8 @@ function UserProfileSetting({ userData }) {
     reset,
   } = useForm({
     defaultValues: {
-      user_name: userData?.user_metadata?.user_name,
-      personal_phone: userData?.user_metadata?.personal_phone,
+      name: userData?.user_metadata?.name,
+      personalPhone: userData?.user_metadata?.personalPhone,
     },
   });
 
@@ -34,8 +35,8 @@ function UserProfileSetting({ userData }) {
     mutate(data, {
       onSuccess: (newData) =>
         reset({
-          user_name: newData.user.user_metadata.user_name,
-          personal_phone: newData.user.user_metadata.personal_phone,
+          name: newData.user.user_metadata.name,
+          personalPhone: newData.user.user_metadata.personalPhone,
         }),
     });
   }
@@ -57,15 +58,11 @@ function UserProfileSetting({ userData }) {
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="userProfile">
-        <FormFieldLayout
-          id="userName"
-          label="用戶名稱"
-          errors={errors?.user_name}
-        >
+        <FormFieldLayout id="name" label="用戶名稱" error={errors?.name}>
           <FormInput
-            id="userName"
+            id="name"
             disabled={isPending}
-            {...register("user_name", {
+            {...register("name", {
               required: "用戶名稱不可空白",
               maxLength: {
                 value: 20,
@@ -77,28 +74,16 @@ function UserProfileSetting({ userData }) {
         </FormFieldLayout>
 
         <FormFieldLayout
-          id="userPhone"
+          id="personalPhone"
           label="連絡電話"
-          errors={errors?.personal_phone}
+          error={errors?.personalPhone}
         >
           <FormInput
-            id="userPhone"
+            id="personalPhone"
             disabled={isPending}
-            {...register("personal_phone", {
+            {...register("personalPhone", {
               required: "連絡電話不能空白",
-              validate: (value) => {
-                // 電話號碼的驗證或許可以設計成helpers
-                const trimmed = value.trim();
-
-                const isMobile = /^09\d{8}$/.test(trimmed);
-                const isLandline = /^0[2-8]\d{7,8}$/.test(trimmed);
-
-                if (!isMobile && !isLandline) {
-                  return "請輸入正確的市話或手機號碼(純數字)";
-                }
-
-                return true;
-              },
+              validate: (value) => validatePhoneNumber(value),
             })}
           />
         </FormFieldLayout>

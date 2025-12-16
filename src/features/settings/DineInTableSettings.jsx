@@ -4,23 +4,24 @@ import { fadeInAnimation } from "../../utils/dom";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import StyledHotToast from "../../ui-old/StyledHotToast";
 import { generateTableNumbers } from "../../context/settingsHelpers";
-import { isValidPositiveInteger } from "../../utils/orderHelpers";
 import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
 import Button from "../../ui/Button";
 import { Plus, Trash2, Utensils } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
+import { ensurePositiveInt } from "../../utils/helpers";
 
 const Content = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
+  gap: 3.2rem;
 
   li {
     display: grid;
     grid-template-columns: 1fr 1fr 2rem;
     grid-template-rows: auto auto auto auto;
     column-gap: 0.6rem;
+    row-gap: 0.4rem;
 
     align-items: center;
   }
@@ -29,12 +30,10 @@ const Content = styled.ul`
 // 或許這個title也可以重複使用
 const SubTitle = styled.h4`
   grid-column: 1 / -1;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 600;
-  color: #6366f1;
+  color: #333;
   margin-bottom: 2rem;
-  border-bottom: 2px solid #6366f1;
-  width: fit-content;
 `;
 
 const EmptyMessage = styled.p`
@@ -126,7 +125,7 @@ function DineInTableSettings({ data = {} }) {
         isDirty,
         isUpdating: isPending,
       }}
-      additionalAction={
+      appendButton={
         <Button
           $variant="text"
           onClick={() => {
@@ -153,7 +152,7 @@ function DineInTableSettings({ data = {} }) {
               <FormFieldLayout
                 id={`${index}.zoneName`}
                 label="分區名稱"
-                errors={errors?.dineInTableConfig?.[index]?.zoneName}
+                error={errors?.dineInTableConfig?.[index]?.zoneName}
               >
                 <FormInput
                   id={`${index}.zoneName`}
@@ -177,23 +176,26 @@ function DineInTableSettings({ data = {} }) {
               <FormFieldLayout
                 id={`${index}.tableCount`}
                 label="分區桌數"
-                errors={errors?.dineInTableConfig?.[index]?.tableCount}
+                error={errors?.dineInTableConfig?.[index]?.tableCount}
               >
                 <FormInput
                   id={`${index}.tableCount`}
                   placeholder="分區總桌數"
                   {...register(`dineInTableConfig.${index}.tableCount`, {
                     required: "總桌數不能空白",
-                    validate: (value) => {
-                      return isValidPositiveInteger(value, "請輸入正整數");
-                    },
+                    validate: (value) =>
+                      ensurePositiveInt(value, "請輸入 1 以上的整數", 1),
                   })}
                 />
               </FormFieldLayout>
 
-              <RemoveButton type="button" onClick={() => remove(index)}>
+              <Button
+                $variant="plain"
+                type="button"
+                onClick={() => remove(index)}
+              >
                 <Trash2 size={20} />
-              </RemoveButton>
+              </Button>
 
               <Preview>
                 <label>桌號預覽</label>

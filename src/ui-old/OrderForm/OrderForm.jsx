@@ -148,6 +148,8 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
         return acc + extraPriceTotal;
       }, price - discount);
 
+      console.log(itemTotalPrice);
+
       const dishData = {
         ...data,
         itemTotalPrice,

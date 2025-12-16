@@ -20,6 +20,8 @@ const BusinessPeriodItem = styled.li`
   grid-template-columns: 1fr 1fr;
   column-gap: 3.2rem;
 
+  align-items: start;
+
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
@@ -28,7 +30,7 @@ const BusinessPeriodItem = styled.li`
 const DateField = styled.div`
   display: grid;
   grid-template-columns: auto auto;
-  grid-template-rows: 3.8rem;
+  /* grid-template-rows: 3.8rem; */
   row-gap: 0.6rem;
   padding-bottom: 0.6rem;
   align-items: center;
@@ -108,7 +110,6 @@ function RegularOpenHours({ data = {} }) {
                   />
 
                   <ControlledSwitch
-                    control={control}
                     items={[
                       {
                         name: `regularOpenHours.${dayIndex}.isBusinessDay`,

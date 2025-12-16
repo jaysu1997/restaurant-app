@@ -15,6 +15,10 @@ function useUpsertMenu() {
     onSuccess: () => {
       // 這種用法好像並沒有在文檔中看到，但可以同時將多個queryKey無效
       queryClient.invalidateQueries(["filterMenuData", "menus"]);
+      StyledHotToast({
+        type: "success",
+        title: "餐點設定成功",
+      });
     },
     onError: (error) => {
       StyledHotToast({

@@ -47,9 +47,14 @@ const StyledPopup = styled.div`
   display: flex;
   position: absolute;
   top: 5rem;
-  z-index: 2;
+  z-index: 999;
   width: 100%;
   justify-content: center;
+
+  @media (max-width: 40em) {
+    top: auto;
+    bottom: 5rem;
+  }
 `;
 
 const Wrapper = styled.div`

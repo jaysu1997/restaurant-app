@@ -10,7 +10,7 @@ function QueryStatusFallback({
   error,
   isEmpty,
   emptyState,
-  render,
+  render = () => null,
   children,
 }) {
   // 這裡後續或許需要整理的更統一，且動態

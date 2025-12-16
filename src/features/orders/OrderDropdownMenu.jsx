@@ -82,7 +82,7 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
               請確認是否要刪除
               <strong>{`取餐號碼${formatPickupNumber(pickupNumber)}`}</strong>
               &#8203;&nbsp;(
-              {formatCreatedTime(createdTime)}) 。
+              {formatCreatedTime(createdTime)})，此操作無法復原。
             </p>
           )}
         />

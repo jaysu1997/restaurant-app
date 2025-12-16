@@ -73,8 +73,8 @@ function SignIn() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: "abglyo8ey3@mkzaso.com",
-      password: "abglyo8ey3@mkzaso.com",
+      email: "admin@test.com",
+      password: "admin@test.com",
     },
   });
 
@@ -111,7 +111,7 @@ function SignIn() {
       )}
 
       <SignInForm onSubmit={handleSubmit(onSubmit, onError)}>
-        <FormFieldLayout id="email" label="信箱" errors={errors?.email}>
+        <FormFieldLayout id="email" label="信箱" error={errors?.email}>
           <FormInput
             id="email"
             disabled={isPending}
@@ -126,15 +126,14 @@ function SignIn() {
           />
         </FormFieldLayout>
 
-        <FormFieldLayout label="密碼" id="password" errors={errors?.password}>
+        <FormFieldLayout label="密碼" id="password" error={errors?.password}>
           <PasswordInput
             id="password"
             autoComplete="current-password"
-            errors={errors?.password}
             disabled={isPending}
             {...register("password", {
               required: "密碼必須填寫",
-              minLength: { value: 8, message: "密碼至少8碼" },
+              minLength: { value: 8, message: "密碼至少要有8碼" },
             })}
           />
         </FormFieldLayout>

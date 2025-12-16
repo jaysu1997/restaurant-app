@@ -33,8 +33,9 @@ const Header = styled.header`
 `;
 
 const Title = styled.h3`
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #111;
 `;
 
 const Content = styled.div`
@@ -55,7 +56,7 @@ function SectionContainer({
   icon,
   description,
   form = {},
-  additionalAction,
+  appendButton,
   children,
 }) {
   const { formId, handleReset, isDirty, isUpdating } = form;
@@ -69,13 +70,13 @@ function SectionContainer({
               <Title>{title}</Title>
               {icon}
             </Header>
-            {Description && <Description>{description}</Description>}
+            {description && <Description>{description}</Description>}
           </SectionHeader>
         )}
 
         <Content>
           {children}
-          {additionalAction}
+          {appendButton}
         </Content>
 
         {formId && (

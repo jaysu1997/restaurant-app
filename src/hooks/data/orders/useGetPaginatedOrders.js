@@ -6,11 +6,9 @@ import {
 } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { getPaginatedOrdersApi } from "../../../services/apiOrder";
-import {
-  isValidPositiveInteger,
-  safeParseDate,
-} from "../../../utils/orderHelpers";
+import { safeParseDate } from "../../../utils/orderHelpers";
 import { addDays, format } from "date-fns";
+import { ensurePositiveInt } from "../../../utils/helpers";
 
 // 將日期篩選條件轉換成supabase時間欄位的要求格式
 function getCreatedTimeSearchParams(createdTime) {
@@ -34,10 +32,11 @@ function useGetPaginatedOrders() {
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   // 篩選條件(參數)
-  const page = isValidPositiveInteger(searchParams.get("page"), 1);
-  const pickupNumber = isValidPositiveInteger(
-    Number(searchParams.get("pickupNumber")),
-    null
+  const page = ensurePositiveInt(searchParams.get("page"), 1, 1);
+  const pickupNumber = ensurePositiveInt(
+    searchParams.get("pickupNumber"),
+    null,
+    1
   );
   const createdTime = getCreatedTimeSearchParams(
     searchParams.get("createdTime")
