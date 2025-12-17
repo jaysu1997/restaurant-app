@@ -76,7 +76,7 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
           handleDelete={mutate}
           isDeleting={isPending}
           data={orderData}
-          modalType="order"
+          showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除

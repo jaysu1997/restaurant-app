@@ -39,7 +39,7 @@ function InventoryDataCard({ inventory }) {
           handleDelete={deleteInventory}
           isDeleting={inventoryDeleting}
           data={isOpenModal.data}
-          modalType="inventory"
+          showRelatedData={true}
           render={() => (
             <p>
               請確認是否要刪除食材「<strong>{isOpenModal.data.label}</strong>

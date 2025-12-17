@@ -7,7 +7,7 @@ import Button from "../ui/Button";
 import { useFormContext } from "react-hook-form";
 import FormInput from "../ui/FormInput";
 
-// 測試看看
+// 測試看看(應該要改個名稱，例如UpsertFormSection之類的)
 const Section = styled.div`
   grid-column: ${({ $isFullWidth }) => ($isFullWidth ? "1 / -1" : "auto")};
   display: grid;
@@ -25,7 +25,7 @@ const Section = styled.div`
   h3 {
     font-size: 2.2rem;
     font-weight: 700;
-    color: #000;
+    color: #292929;
   }
 
   h4 {

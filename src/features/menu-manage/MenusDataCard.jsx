@@ -55,7 +55,7 @@ function MenusDataCard({ menu }) {
           handleDelete={deleteMenu}
           isDeleting={menuDeleting}
           data={isOpenModal.data}
-          modalType="menus"
+          showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除餐點「<strong>{isOpenModal.data.name}</strong>」

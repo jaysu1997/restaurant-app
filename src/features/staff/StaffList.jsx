@@ -167,7 +167,25 @@ function StaffList({ staffList }) {
         </List>
       </SectionContainer>
 
-      {/* <ConfirmDelete onCloseModal={() => setIsOpenModal(false)} /> */}
+      {/* {isOpenModal && (
+        <ConfirmDelete
+          onCloseModal={() => setIsOpenModal(false)}
+          handleDelete={mutate}
+          isDeleting={isPending}
+          data={orderData}
+          showRelatedData={false}
+          render={() => (
+            <p>
+              請確認是否要刪除
+              <strong>{`取餐號碼${formatPickupNumber(
+                orderData.pickupNumber
+              )}`}</strong>
+              &#8203;&nbsp;(
+              {formatCreatedTime(orderData.createdTime)})，此操作無法復原。
+            </p>
+          )}
+        />
+      )} */}
     </>
   );
 }

@@ -32,7 +32,7 @@ const SubTitle = styled.h4`
   grid-column: 1 / -1;
   font-size: 1.8rem;
   font-weight: 600;
-  color: #333;
+  color: #292929;
   margin-bottom: 2rem;
 `;
 
@@ -65,18 +65,6 @@ const Preview = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-`;
-
-const RemoveButton = styled.button`
-  color: #383838;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 3.8rem;
-
-  &:hover {
-    color: #dc2626;
   }
 `;
 
@@ -147,7 +135,7 @@ function DineInTableSettings({ data = {} }) {
 
           {fields.map((field, index) => (
             <li key={field.id} id={`dineInTableConfig.${index}`}>
-              <SubTitle>內用桌號分區 {index + 1}</SubTitle>
+              <SubTitle>內用分區 {index + 1}</SubTitle>
 
               <FormFieldLayout
                 id={`${index}.zoneName`}
