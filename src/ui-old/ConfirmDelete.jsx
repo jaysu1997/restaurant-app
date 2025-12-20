@@ -9,7 +9,8 @@ import ButtonCancel from "../ui/ButtonCancel";
 import FilterMenuList from "../features/inventory/FilterMenuList";
 
 const StyledConfirmDelete = styled.div`
-  max-width: 36rem;
+  width: 36rem;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
 
@@ -19,6 +20,9 @@ const StyledConfirmDelete = styled.div`
 `;
 
 const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   font-size: 1.6rem;
 
   strong {

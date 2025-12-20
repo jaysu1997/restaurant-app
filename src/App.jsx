@@ -35,6 +35,8 @@ const queryClient = new QueryClient({
   },
 });
 
+// 有一些error handle，可能需要修正，尤其是edge function中沒有明確回覆錯誤原因的部分
+
 // select元件或許可以設計成一個共用的樣式，然後其他在使用rest props覆蓋過去就好
 
 // 可能有好幾個使用SectionContainer的元件都需要檢查一下欄位之間的距離，或許可以統一設定form的gap為0.4rem，目前好像是個別設定的

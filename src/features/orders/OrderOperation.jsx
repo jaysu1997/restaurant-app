@@ -80,7 +80,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
                 orderData.pickupNumber
               )}`}</strong>
               &#8203;&nbsp;(
-              {formatCreatedTime(orderData.createdTime)})，此操作無法復原。
+              {formatCreatedTime(orderData.createdTime)})？
             </p>
           )}
         />

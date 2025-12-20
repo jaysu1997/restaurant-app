@@ -35,6 +35,14 @@ const BusinessPeriodItem = styled.li`
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
+
+  h4 {
+    grid-column: 1 / -1;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #292929;
+    margin-bottom: 1rem;
+  }
 `;
 
 const EmptyMessage = styled.p`
@@ -172,6 +180,7 @@ function SpecialOpenHours({ data = {} }) {
                 key={day.id}
                 id={`specialOpenHours.${dayIndex}`}
               >
+                <h4>例外日期 {dayIndex + 1}</h4>
                 <DateField>
                   <FormFieldLayout
                     error={

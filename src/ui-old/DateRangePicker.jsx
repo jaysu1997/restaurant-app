@@ -45,27 +45,25 @@ const DateField = styled.div`
 
 const StyledPopup = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
   position: absolute;
   top: 5rem;
+  left: 50%;
   z-index: 999;
-  width: 100%;
-  justify-content: center;
+  transform: translateX(-50%);
+
+  background-color: #fff;
+  border: 1px solid #e3e5e7;
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 1.2rem;
 
   @media (max-width: 40em) {
     top: auto;
     bottom: 5rem;
   }
-`;
-
-const Wrapper = styled.div`
-  background-color: #fff;
-  border: 1px solid #e3e5e7;
-  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-  gap: 1rem;
-  border-radius: 4px;
-  padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Footer = styled.footer`
@@ -108,7 +106,7 @@ function DateRangePicker({
     <StyledDatePicker>
       <DateField
         $isActive={isOpenDayPicker}
-        onClick={() => setIsOpenDayPicker(true)}
+        onClick={() => setIsOpenDayPicker((isOpen) => !isOpen)}
       >
         <input
           name="startDate"
@@ -121,31 +119,29 @@ function DateRangePicker({
       </DateField>
 
       {isOpenDayPicker && (
-        <StyledPopup>
-          <Wrapper ref={daypickerRef}>
-            <StyledDayPicker
-              animate
-              captionLayout="dropdown"
-              mode="range"
-              weekStartsOn={0}
-              locale={zhTW}
-              defaultMonth={defaultMonth || new Date()}
-              startMonth={startMonth}
-              endMonth={endMonth}
-              selected={selected}
-              onSelect={onSelect}
-              disabled={disabledDate}
-            />
-            <Footer>
-              <UtilityButton onClick={handleValueReset} disabled={!selected}>
-                清除
-              </UtilityButton>
+        <StyledPopup ref={daypickerRef}>
+          <StyledDayPicker
+            animate
+            captionLayout="dropdown"
+            mode="range"
+            weekStartsOn={0}
+            locale={zhTW}
+            defaultMonth={defaultMonth || new Date()}
+            startMonth={startMonth}
+            endMonth={endMonth}
+            selected={selected}
+            onSelect={onSelect}
+            disabled={disabledDate}
+          />
+          <Footer>
+            <UtilityButton onClick={handleValueReset} disabled={!selected}>
+              清除
+            </UtilityButton>
 
-              <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
-                確認
-              </UtilityButton>
-            </Footer>
-          </Wrapper>
+            <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
+              確認
+            </UtilityButton>
+          </Footer>
         </StyledPopup>
       )}
     </StyledDatePicker>

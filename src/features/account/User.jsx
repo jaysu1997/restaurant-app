@@ -6,6 +6,7 @@ import useUser from "../../hooks/data/auth/useUser";
 import DropdownMenu from "../../ui-old/DropdownMenu";
 import UserAvatar from "../../ui/UserAvatar";
 import { UserRound, LogOut, ChevronRight } from "lucide-react";
+import { AVATAR_URL } from "../../utils/constants";
 
 const StyledUser = styled.div`
   margin-right: 1rem;
@@ -74,7 +75,7 @@ function User() {
   const userName = user?.user_metadata?.name;
   const userRole = user?.user_metadata?.role;
   const avatarFile = user?.user_metadata?.avatarFile;
-  const avatarUrl = `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/${avatarFile}`;
+  const avatarUrl = `${AVATAR_URL}${avatarFile}`;
 
   const itemsConfig = [
     {

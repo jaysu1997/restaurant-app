@@ -79,7 +79,7 @@ const Button = styled.button.attrs((props) => ({
   type: props.type || "button",
 }))`
   cursor: pointer;
-  position: relative;
+  position: ${({ $isLoading }) => ($isLoading ? "relative" : "static")};
   display: inline-flex;
   align-items: center;
   justify-content: center;

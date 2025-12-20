@@ -20,7 +20,7 @@ function useDeleteStaff() {
     },
   });
 
-  return { mutate };
+  return { mutate, isPending };
 }
 
 export default useDeleteStaff;

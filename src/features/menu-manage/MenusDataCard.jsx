@@ -58,8 +58,7 @@ function MenusDataCard({ menu }) {
           showRelatedData={false}
           render={() => (
             <p>
-              請確認是否要刪除餐點「<strong>{isOpenModal.data.name}</strong>」
-              ，此操作無法復原。
+              請確認是否要刪除「<strong>{isOpenModal.data.name}</strong>」？
             </p>
           )}
         />

@@ -38,8 +38,12 @@ export async function updateStaffApi(userData) {
 }
 
 // 刪除指定user
-export async function deleteStaffApi() {
-  const { data, error } = await supabase.functions.invoke("delete-staff");
+export async function deleteStaffApi(userId) {
+  const { data, error } = await supabase.functions.invoke("delete-staff", {
+    body: {
+      userId,
+    },
+  });
 
   handleSupabaseError(error);
 

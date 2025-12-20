@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import UpsertMenuForm from "../menu-manage/UpsertMenuForm";
 
@@ -25,8 +25,8 @@ const AccordionTitle = styled.button`
 
   svg {
     transition: transform 0.3s;
-    transform: ${({ $collapse }) =>
-      $collapse ? "rotate(-90deg)" : "rotate(90deg)"};
+    transform: ${({ $isExpanded }) =>
+      $isExpanded ? "rotate(-90deg)" : "rotate(90deg)"};
   }
 
   &:hover {
@@ -35,18 +35,15 @@ const AccordionTitle = styled.button`
 `;
 
 const AccordionContent = styled.div`
-  overflow: hidden;
-  height: ${({ $height }) => $height};
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-  visibility: ${({ $visible }) => ($visible ? "visible" : "hidden")};
-  transition: height 0.3s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s ease,
-    visibility 0.6s ease;
+  font-size: 1.4rem;
+  opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
+  visibility: ${({ $isExpanded }) => ($isExpanded ? "visible" : "hidden")};
+  padding: ${({ $isExpanded }) => ($isExpanded ? "0.6rem 1.2rem" : "0 1.2rem")};
+  max-height: ${({ $isExpanded }) => ($isExpanded ? "7.5rem" : "0")};
+  overflow: ${({ $isExpanded }) => ($isExpanded ? "auto" : "hidden")};
 
-  .content-inner {
-    padding: 0.6rem 1.2rem;
-    font-size: 1.4rem;
-    line-height: 1.6;
-  }
+  transition: max-height 0.3s, padding 0.3s, opacity 0.6s ease,
+    visibility 0.6s ease;
 
   span[tabindex="0"] {
     color: #3b82f6;
@@ -67,59 +64,36 @@ const AccordionContent = styled.div`
 function FilterMenuList({ name, filterMenuData }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
-  const [height, setHeight] = useState("0px");
-  const [isVisible, setIsVisible] = useState(false);
-  const contentRef = useRef(null);
 
-  useEffect(() => {
-    const el = contentRef.current;
-    if (isExpanded) {
-      const scrollHeight = el.scrollHeight;
-      setHeight(`${scrollHeight}px`);
-      setIsVisible(true);
-    } else {
-      setHeight("0px");
-      setIsVisible(false);
-    }
-  }, [isExpanded]);
-
-  const handleToggle = () => {
-    // 先讓內容可見，再設定展開，避免 scrollHeight 為 0
-    if (!isExpanded) setIsVisible(true);
-    setIsExpanded((prev) => !prev);
-  };
+  function handleToggle() {
+    setIsExpanded((isExpanded) => !isExpanded);
+  }
 
   return (
     <>
       <Accordion>
-        <AccordionTitle $collapse={isExpanded} onClick={handleToggle}>
+        <AccordionTitle $isExpanded={isExpanded} onClick={handleToggle}>
           <ChevronRight size={14} />
           <span>查看使用{name}的餐點</span>
         </AccordionTitle>
 
-        <AccordionContent
-          ref={contentRef}
-          $height={height}
-          $visible={isVisible}
-        >
-          <div className="content-inner">
-            {filterMenuData.length !== 0 ? (
-              filterMenuData.map((menu, index) => (
-                <Fragment key={menu.id}>
-                  <span
-                    role="button"
-                    tabIndex="0"
-                    onClick={() => setActiveMenu(menu)}
-                  >
-                    {menu.name}
-                  </span>
-                  {index < filterMenuData.length - 1 ? "、" : "。"}
-                </Fragment>
-              ))
-            ) : (
-              <span>無</span>
-            )}
-          </div>
+        <AccordionContent $isExpanded={isExpanded}>
+          {filterMenuData.length !== 0 ? (
+            filterMenuData.map((menu, index) => (
+              <Fragment key={menu.id}>
+                <span
+                  role="button"
+                  tabIndex="0"
+                  onClick={() => setActiveMenu(menu)}
+                >
+                  {menu.name}
+                </span>
+                {index < filterMenuData.length - 1 ? "、" : "。"}
+              </Fragment>
+            ))
+          ) : (
+            <span>無</span>
+          )}
         </AccordionContent>
       </Accordion>
 

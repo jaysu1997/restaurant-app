@@ -3,12 +3,14 @@ import SectionContainer from "../../ui/SectionContainer";
 import { UsersRound } from "lucide-react";
 import UserAvatar from "../../ui/UserAvatar";
 import { UserRoundX } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Select from "react-select";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
 import Button from "../../ui/Button";
 import ConfirmDelete from "../../ui-old/ConfirmDelete";
+import useDeleteStaff from "../../hooks/data/staff/useDeleteStaff";
+import { AVATAR_URL } from "../../utils/constants";
 
 const List = styled.ul`
   display: flex;
@@ -17,32 +19,30 @@ const List = styled.ul`
 
 const Item = styled.li`
   display: grid;
-  grid-template-columns: 4rem 3fr minmax(8.6rem, 1fr) 2rem;
-  grid-template-rows: 4rem;
+  grid-template-columns: auto 3fr minmax(8.6rem, 1fr) 2rem;
+  grid-template-rows: 4.5rem;
   align-items: center;
   gap: 2rem;
   padding: 1rem;
   border-top: 1px solid #f3f4f6;
 
-  &:last-child {
-    border-bottom: 1px solid #f3f4f6;
-  }
-
   &:first-child {
+    border: none;
     pointer-events: none;
   }
 
   &:hover {
-    background-color: #f0f9ff;
+    background-color: ${({ $isUpdating }) =>
+      $isUpdating ? "transparent" : "#f0f9ff"};
   }
 
   ${({ $isUpdating }) =>
     $isUpdating &&
     css`
-      background-color: #f9fafb;
+      background-color: #e5e7eb;
       opacity: 0.6;
-      pointer-events: none;
       user-select: none;
+      cursor: progress;
     `}
 
   @media (max-width : 25em) {
@@ -54,6 +54,7 @@ const Item = styled.li`
 const Profile = styled.div`
   display: flex;
   flex-direction: column;
+
   min-width: 0;
 
   span {
@@ -64,26 +65,24 @@ const Profile = styled.div`
   }
 
   & > span:last-child {
-    font-size: 1.2rem;
+    /* font-size: 1.2rem; */
     font-weight: 400;
     color: #6b7280;
   }
 `;
 
-function StaffList({ staffList }) {
-  const [roles, setRoles] = useState(
-    Object.fromEntries(
+function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
+  const rolesById = useMemo(() => {
+    return Object.fromEntries(
       staffList.map((item) => [item.id, item.user_metadata.role])
-    )
-  );
-  const [updating, setUpdating] = useState(
-    Object.fromEntries(staffList.map((item) => [item.id, false]))
-  );
+    );
+  }, [staffList]);
+
+  const [updating, setUpdating] = useState({});
 
   const { mutate } = useUpdateStaff();
   const { user } = useUser();
-
-  const [isOpenModal, setIsOpenModal] = useState();
+  const { mutate: deleteStaff, isPending } = useDeleteStaff();
 
   const sortedList = staffList.toSorted((a, b) => {
     const priority = (item) => {
@@ -95,23 +94,15 @@ function StaffList({ staffList }) {
     return priority(a) - priority(b);
   });
 
-  const avatarUrl =
-    "https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/";
-
   function handleChange(id, currentRole, optionValue) {
     if (currentRole === optionValue) return;
-    setRoles((roles) => ({ ...roles, [id]: optionValue }));
     setUpdating((updating) => ({ ...updating, [id]: true }));
 
     mutate(
       { userId: id, role: optionValue },
       {
-        onSuccess: () => {
+        onSettled: () => {
           setUpdating((updating) => ({ ...updating, [id]: false }));
-        },
-        onError: () => {
-          setUpdating((updating) => ({ ...updating, [id]: false }));
-          setRoles((roles) => ({ ...roles, [id]: currentRole }));
         },
       }
     );
@@ -124,9 +115,9 @@ function StaffList({ staffList }) {
           {sortedList.map((item) => {
             const { avatarFile, name, role } = item.user_metadata;
             return (
-              <Item key={item.id} $isUpdating={updating[item.id]}>
+              <Item key={item.id} $isUpdating={!!updating[item.id]}>
                 <UserAvatar
-                  avatarUrl={`${avatarUrl}${avatarFile}`}
+                  avatarUrl={`${AVATAR_URL}${avatarFile}`}
                   lazyLoading={true}
                 />
 
@@ -141,7 +132,10 @@ function StaffList({ staffList }) {
                     { label: "店長", value: "店長" },
                     { label: "員工", value: "員工" },
                   ]}
-                  value={{ label: roles[item.id], value: roles[item.id] }}
+                  value={{
+                    label: rolesById[item.id],
+                    value: rolesById[item.id],
+                  }}
                   onChange={(option) =>
                     handleChange(item.id, role, option.value)
                   }
@@ -158,6 +152,7 @@ function StaffList({ staffList }) {
                 <Button
                   $variant="plain"
                   disabled={item.id === user.id || updating[item.id]}
+                  onClick={() => setIsOpenModal({ type: "delete", data: item })}
                 >
                   <UserRoundX size={20} strokeWidth={2.2} />
                 </Button>
@@ -167,25 +162,24 @@ function StaffList({ staffList }) {
         </List>
       </SectionContainer>
 
-      {/* {isOpenModal && (
+      {isOpenModal.type === "delete" && (
         <ConfirmDelete
           onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={mutate}
+          handleDelete={deleteStaff}
           isDeleting={isPending}
-          data={orderData}
+          data={isOpenModal.data}
           showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除
-              <strong>{`取餐號碼${formatPickupNumber(
-                orderData.pickupNumber
-              )}`}</strong>
-              &#8203;&nbsp;(
-              {formatCreatedTime(orderData.createdTime)})，此操作無法復原。
+              <strong>
+                {isOpenModal.data.user_metadata.name} ({isOpenModal.data.email})
+              </strong>
+              ？
             </p>
           )}
         />
-      )} */}
+      )}
     </>
   );
 }

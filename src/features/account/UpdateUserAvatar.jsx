@@ -5,6 +5,7 @@ import UserAvatar from "../../ui/UserAvatar";
 import SectionContainer from "../../ui/SectionContainer";
 import Button from "../../ui/Button";
 import { Upload } from "lucide-react";
+import { AVATAR_URL } from "../../utils/constants";
 
 const StyledUpdateUserAvatar = styled.div`
   display: grid;
@@ -23,7 +24,7 @@ function UpdateUserAvatar({ userData }) {
   const [imgUrl, setImgUrl] = useState(undefined);
 
   const avatarFile = userData?.user_metadata?.avatarFile;
-  const avatarUrl = `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/${avatarFile}`;
+  const avatarUrl = `${AVATAR_URL}${avatarFile}`;
 
   function handleSelectFile(e) {
     const fileLength = e.target.files.length;

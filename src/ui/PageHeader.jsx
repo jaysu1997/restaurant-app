@@ -18,7 +18,7 @@ const PageActions = styled.div`
   gap: 1rem;
 
   @media (max-width: 30em) {
-    & > div > button > span {
+    button > span {
       display: none;
     }
   }
