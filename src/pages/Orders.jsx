@@ -33,8 +33,8 @@ function Orders() {
 
   const emptyStateMessage =
     createdTime || pickupNumber
-      ? "查無符合當前篩選條件的訂單數據"
-      : "目前沒有任何已經建立的訂單數據";
+      ? "查無符合當前篩選條件的訂單數據。"
+      : "目前沒有任何已經建立的訂單數據。";
 
   return (
     <>

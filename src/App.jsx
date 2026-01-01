@@ -24,7 +24,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      retry: 2,
+      // retry: 2,
+      retry: false,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },
@@ -34,6 +35,12 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// 目前的食材刪除api有問題，會把customize通通刪成null
+
+// 各種無數據和error應該需要再做一些調整
+
+// icon 尺寸需要動態化
 
 // 有一些error handle，可能需要修正，尤其是edge function中沒有明確回覆錯誤原因的部分
 

@@ -18,9 +18,9 @@ function formatPickupNumber(pickupNumber) {
 function summarizeMealChoices(dish) {
   return dish.customizeDetail
     .reduce((acc, cur) => {
-      if (cur.detail.length === 0) return acc;
+      if (cur.selectedOptions.length === 0) return acc;
 
-      cur.detail.forEach((curOption) => {
+      cur.selectedOptions.forEach((curOption) => {
         acc.push(curOption.optionLabel);
       });
 

@@ -30,7 +30,7 @@ const Row = styled.div`
 function DishCard({ dish, setIsOpenModal }) {
   // 使用食材清單
   const ingredientsList = dish.ingredients
-    .map((ing) => ing.ingredientName.label)
+    .map((ing) => ing.ingredient.label)
     .join(", ");
 
   return (

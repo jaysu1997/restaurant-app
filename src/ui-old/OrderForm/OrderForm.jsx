@@ -57,7 +57,7 @@ const Footer = styled.footer`
 function OrderForm({ dishData, onCloseModal, isEdit = false }) {
   // 餐點編輯的相關功能
   const {
-    state: { dishes, curDishCustomizeOption, inventoryMap },
+    state: { dishes, currentCustomization, inventoryMap },
     dispatch,
   } = useOrder();
 
@@ -78,7 +78,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
       acc.reducerFields.push({
         customizeId: curCustomization.customizeId,
         customizeTitle: curCustomization.title,
-        detail: [],
+        selectedOptions: [],
       });
       // 必填項目與選填項目
       if (curCustomization.isRequired === "required") {
@@ -120,7 +120,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     // 計算食材總消耗
     const ingredientsUsage = calcIngredientsUsage(
       ingredients,
-      curDishCustomizeOption
+      currentCustomization
     );
 
     // 餐點原本的食材消耗(在更新餐點設定會需要用到)
@@ -140,15 +140,13 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     // 庫存充足
     if (result.length === 0) {
       // 每份餐點的售價(本身 + 額外選項)
-      const itemTotalPrice = curDishCustomizeOption.reduce((acc, cur) => {
-        const extraPriceTotal = cur.detail.reduce(
+      const itemTotalPrice = currentCustomization.reduce((acc, cur) => {
+        const extraPriceTotal = cur.selectedOptions.reduce(
           (sum, customizeData) => sum + customizeData.extraPrice,
           0
         );
         return acc + extraPriceTotal;
       }, price - discount);
-
-      console.log(itemTotalPrice);
 
       const dishData = {
         ...data,

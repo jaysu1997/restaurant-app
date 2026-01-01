@@ -9,6 +9,9 @@ const Accordion = styled.div`
   border-radius: 6px;
   overflow: hidden;
   font-size: 1.2rem;
+
+  max-height: ${({ $isExpanded }) => ($isExpanded ? "13.8rem" : "3.8rem")};
+  transition: max-height 0.3s;
 `;
 
 const AccordionTitle = styled.button`
@@ -36,14 +39,13 @@ const AccordionTitle = styled.button`
 
 const AccordionContent = styled.div`
   font-size: 1.4rem;
+  padding: 0.6rem 1.2rem;
+  max-height: 10rem;
+  overflow: auto;
+
   opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
   visibility: ${({ $isExpanded }) => ($isExpanded ? "visible" : "hidden")};
-  padding: ${({ $isExpanded }) => ($isExpanded ? "0.6rem 1.2rem" : "0 1.2rem")};
-  max-height: ${({ $isExpanded }) => ($isExpanded ? "7.5rem" : "0")};
-  overflow: ${({ $isExpanded }) => ($isExpanded ? "auto" : "hidden")};
-
-  transition: max-height 0.3s, padding 0.3s, opacity 0.6s ease,
-    visibility 0.6s ease;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
 
   span[tabindex="0"] {
     color: #3b82f6;
@@ -71,7 +73,7 @@ function FilterMenuList({ name, filterMenuData }) {
 
   return (
     <>
-      <Accordion>
+      <Accordion $isExpanded={isExpanded}>
         <AccordionTitle $isExpanded={isExpanded} onClick={handleToggle}>
           <ChevronRight size={14} />
           <span>查看使用{name}的餐點</span>

@@ -12,7 +12,7 @@ function generateDishItemId(dishes) {
 }
 
 // 統計餐點需要消耗的食材數量(1份)
-function calcIngredientsUsage(ingredients, curDishCustomizeOption) {
+function calcIngredientsUsage(ingredients, currentCustomization) {
   // 總食材消耗數據
   const ingredientsUsage = new Map();
 
@@ -22,18 +22,18 @@ function calcIngredientsUsage(ingredients, curDishCustomizeOption) {
 
   // 餐點本身的消耗
   ingredients.forEach((ing) => {
-    const name = ing.ingredientName.value;
+    const name = ing.ingredient.value;
     const quantity = ing.quantity;
 
     setingredientsUsage(name, quantity);
   });
 
   // 額外項目增加的消耗
-  curDishCustomizeOption.forEach((obj) => {
-    if (obj.length === 0 || obj.detail.length === 0) return;
+  currentCustomization.forEach((obj) => {
+    if (obj.length === 0 || obj.selectedOptions.length === 0) return;
 
-    obj.detail.forEach((option) => {
-      const name = option.ingredientName;
+    obj.selectedOptions.forEach((option) => {
+      const name = option.ingredient;
       const quantity = option.quantity;
 
       // 空字串代表此項目無額外食材消耗

@@ -53,10 +53,9 @@ function OptionSection({ nestedIndex, inventoryData }) {
             },
             {
               type: "select",
-              name: `customize.${nestedIndex}.options.${index}.ingredientName`,
+              name: `customize.${nestedIndex}.options.${index}.ingredient`,
               errors:
-                errors?.customize?.[nestedIndex]?.options?.[index]
-                  ?.ingredientName,
+                errors?.customize?.[nestedIndex]?.options?.[index]?.ingredient,
               label: "額外消耗食材",
             },
             {
@@ -72,23 +71,16 @@ function OptionSection({ nestedIndex, inventoryData }) {
               },
             },
           ]}
-        >
-          {/* 選項的id */}
-          <input
-            hidden
-            {...register(`customize.${nestedIndex}.options.${index}.optionId`, {
-              value: index,
-            })}
-          />
-        </FormSection>
+        ></FormSection>
       ))}
       <Button
         $variant="text"
         onClick={() => {
           append({
+            optionId: `o_${crypto.randomUUID().slice(0, 8)}`,
             optionLabel: "",
             extraPrice: "",
-            ingredientName: "",
+            ingredient: "",
             quantity: "",
           });
 

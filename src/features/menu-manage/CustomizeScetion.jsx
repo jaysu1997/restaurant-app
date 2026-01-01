@@ -7,7 +7,6 @@ import OptionSection from "./OptionSection";
 
 function CustomizeScetion({ inventoryData }) {
   const {
-    register,
     control,
     formState: { errors },
   } = useFormContext();
@@ -53,13 +52,6 @@ function CustomizeScetion({ inventoryData }) {
             },
           ]}
         >
-          {/* 設定項目的id */}
-          <input
-            hidden
-            {...register(`customize.${index}.customizeId`, {
-              value: index,
-            })}
-          />
           <OptionSection nestedIndex={index} inventoryData={inventoryData} />
         </FormSection>
       ))}
@@ -68,17 +60,19 @@ function CustomizeScetion({ inventoryData }) {
         $variant="text"
         onClick={() => {
           append({
+            customizeId: `c_${crypto.randomUUID().slice(0, 8)}`,
             title: "",
             isRequired: "optional",
             choiceType: "multiple",
             options: [
               {
-                ingredientName: "",
+                ingredient: "",
                 extraPrice: "",
                 optionLabel: "",
                 quantity: "",
               },
             ],
+            selectOptions: [],
           });
 
           // 淡入欄位動畫

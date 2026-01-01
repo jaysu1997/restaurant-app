@@ -80,6 +80,7 @@ export async function updateUserProfileApi(userProFileData) {
 export async function updateUserPasswordApi(userCredentials) {
   const { email, currentPassword, newPassword } = userCredentials;
 
+  // 先驗證輸入的當前密碼是否正確，避免被他人惡意串改密碼
   const { error: signInError } = await supabase.auth.signInWithPassword({
     email,
     password: currentPassword,
@@ -87,6 +88,7 @@ export async function updateUserPasswordApi(userCredentials) {
 
   handleSupabaseError(signInError);
 
+  // 確認帳號密碼都正確之後才能正式更改為新密碼
   const { data, error } = await supabase.auth.updateUser({
     password: newPassword,
   });

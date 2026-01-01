@@ -9,7 +9,6 @@ import Note from "../../ui-old/Note";
 import OrderOperation from "./OrderOperation";
 import { buildOrderData, formatCreatedTime } from "../../utils/orderHelpers";
 import useUpdateOrder from "../../hooks/data/orders/useUpdateOrder";
-import FormErrorsMessage from "../../ui-old/FormErrorsMessage";
 import {
   generatePickupTimeOptions,
   formatToHourMinute,
@@ -31,8 +30,12 @@ function OrderSummaryEdit({ orderData, settingsData }) {
     dispatch,
   } = useOrder();
 
-  const { inventoryIsPending, inventoryError, inventoryIsError } =
-    useGetInventory(dispatch);
+  const {
+    inventoryData,
+    inventoryIsPending,
+    inventoryError,
+    inventoryIsError,
+  } = useGetInventory(dispatch);
 
   useEffect(() => {
     dispatch({
@@ -72,8 +75,8 @@ function OrderSummaryEdit({ orderData, settingsData }) {
     !settingsData.todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
 
   function onSubmit(data) {
-    const orderData = buildOrderData(dishes, data);
-    console.log();
+    const orderData = buildOrderData(dishes, data, inventoryData);
+
     updateOrder(orderData);
   }
 
@@ -139,8 +142,6 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                   }}
                 />
               </FormFieldLayout>
-
-              {/* <FormErrorsMessage gridColumn="2" /> */}
             </div>
 
             <div>
@@ -197,7 +198,8 @@ function OrderSummaryEdit({ orderData, settingsData }) {
 
         <OrderOperation
           isEdit={true}
-          disabeldSubmit={dishes.length === 0 || updating}
+          isUpdating={updating}
+          disabeldSubmit={dishes.length === 0}
           orderData={orderData}
           handleSubmit={handleSubmit(onSubmit, onError)}
         />

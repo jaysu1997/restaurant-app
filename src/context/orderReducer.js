@@ -3,7 +3,7 @@ export const initialState = {
   // 存放訂單所有餐點數據
   dishes: [],
   // 臨時存放當前餐點自訂項目選擇數據
-  curDishCustomizeOption: [],
+  currentCustomization: [],
   // 存放食材庫存數據
   inventoryMap: new Map(),
 };
@@ -15,9 +15,8 @@ export function reducer(state, action) {
       const newInventoryMap = new Map();
 
       action.payload.forEach((ingredient) => {
-        const name = ingredient.value;
-        const { remainingQuantity } = ingredient;
-        newInventoryMap.set(name, remainingQuantity);
+        const { uuid, remainingQuantity } = ingredient;
+        newInventoryMap.set(uuid, remainingQuantity);
       });
 
       return { ...state, inventoryMap: newInventoryMap };
@@ -26,70 +25,53 @@ export function reducer(state, action) {
     case "orderForm/init": {
       return {
         ...state,
-        curDishCustomizeOption: [...action.payload],
+        currentCustomization: [...action.payload],
       };
     }
     // 單選選項新增
-    case "curDishCustomizeOption/setSingleChoice": {
-      const newCurDishCustomizeOption = state.curDishCustomizeOption.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? { ...item, detail: [action.payload] }
-            : item
+    case "currentCustomization/setSingleChoice": {
+      const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
+        item.customizeId === action.payload.customizeId
+          ? { ...item, selectedOptions: [action.payload] }
+          : item
       );
 
       return {
         ...state,
-        curDishCustomizeOption: [...newCurDishCustomizeOption],
-      };
-    }
-    // 單選選項刪除
-    case "curDishCustomizeOption/clearSingleChoice": {
-      const newCurDishCustomizeOption = state.curDishCustomizeOption.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? { ...item, detail: [] }
-            : item
-      );
-
-      return {
-        ...state,
-        curDishCustomizeOption: [...newCurDishCustomizeOption],
+        currentCustomization: [...newCurDishCustomizeOption],
       };
     }
     // 多選選項新增
-    case "curDishCustomizeOption/addMultipleChoice": {
-      const newCurDishCustomizeOption = state.curDishCustomizeOption.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? {
-                ...item,
-                detail: [...item.detail, action.payload],
-              }
-            : item
+    case "currentCustomization/addMultipleChoice": {
+      const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
+        item.customizeId === action.payload.customizeId
+          ? {
+              ...item,
+              selectedOptions: [...item.selectedOptions, action.payload],
+            }
+          : item
       );
 
       return {
         ...state,
-        curDishCustomizeOption: [...newCurDishCustomizeOption],
+        currentCustomization: [...newCurDishCustomizeOption],
       };
     }
     // 多選選項刪除
-    case "curDishCustomizeOption/removeMultipleChoice": {
-      const newCurDishCustomizeOption = state.curDishCustomizeOption.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? {
-                ...item,
-                detail: item.detail.filter(
-                  (detail) => detail.optionLabel !== action.payload.optionLabel
-                ),
-              }
-            : item
+    case "currentCustomization/removeMultipleChoice": {
+      const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
+        item.customizeId === action.payload.customizeId
+          ? {
+              ...item,
+              selectedOptions: item.selectedOptions.filter(
+                (option) => option.optionLabel !== action.payload.optionLabel
+              ),
+            }
+          : item
       );
       return {
         ...state,
-        curDishCustomizeOption: [...newCurDishCustomizeOption],
+        currentCustomization: [...newCurDishCustomizeOption],
       };
     }
     // 新增餐點
@@ -99,7 +81,7 @@ export function reducer(state, action) {
 
       newState.dishes.push({
         ...dishData,
-        customizeDetail: state.curDishCustomizeOption,
+        customizeDetail: state.currentCustomization,
       });
 
       // 將庫存食材 - 本次餐點所需食材
@@ -124,7 +106,7 @@ export function reducer(state, action) {
 
       // 更新數據
       newState.dishes[dishIndex] = dishData;
-      newState.dishes[dishIndex].customizeDetail = state.curDishCustomizeOption;
+      newState.dishes[dishIndex].customizeDetail = state.currentCustomization;
 
       // 先把原本消耗的所有食材加回庫存
       previousIngredientsUsage.usageMap.forEach((quantity, name) => {

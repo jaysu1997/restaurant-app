@@ -57,6 +57,8 @@ const variant = {
   ghost: css`
     color: #4b5563;
     padding: 0.6rem;
+    border: none;
+    height: 2.6rem;
 
     &:not(:disabled):hover {
       background-color: #f3f4f6;
@@ -66,7 +68,7 @@ const variant = {
     width: 2rem;
     height: 3.8rem;
     padding: 0;
-    border-width: 0px;
+    border: none;
     color: #6b7280;
 
     &:not(:disabled):hover {

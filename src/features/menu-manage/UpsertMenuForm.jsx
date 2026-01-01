@@ -47,7 +47,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
 
   const methods = useForm({
     defaultValues: menu || {
-      ingredients: [{ ingredientName: "", quantity: "" }],
+      ingredients: [{ ingredient: "", quantity: "" }],
     },
   });
 
@@ -58,23 +58,34 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     formState: { errors },
   } = methods;
 
-  // 當<CreatableSelect />建立新選項時執行
+  // 當 <CreatableSelect /> 建立新選項時
   function handleCreateNewItems(optionValue, fieldName) {
-    // 把新的選項值設置到react hook form的指定欄位中
-    setValue(fieldName, { label: optionValue, value: optionValue });
-    newIngredientRef.current.set(fieldName, optionValue);
+    let uuid = newIngredientRef.current.get(optionValue);
+
+    if (!uuid) {
+      uuid = crypto.randomUUID();
+      newIngredientRef.current.set(optionValue, uuid);
+    }
+
+    setValue(fieldName, {
+      label: optionValue,
+      value: optionValue,
+      uuid,
+    });
   }
 
   function onSubmit(data) {
     // 要新增到庫存數據表單的新食材
-    const newIngredients = createNewIngredients({
-      getValues,
-      newIngredientsMap: newIngredientRef.current,
+    const newIngredients = createNewIngredients(data, newIngredientRef.current);
+    // 排序餐點自訂項目(以便點餐時，必填項目的ui在前面)
+    const sortedCustomize = [...data.customize].sort((a, b) => {
+      if (a.isRequired === b.isRequired) return 0;
+      return a.isRequired === "required" ? -1 : 1;
     });
 
     // 執行表單數據上傳
     upsert(
-      { menuData: data, newIngredients },
+      { menuData: { ...data, customize: sortedCustomize }, newIngredients },
       { onSuccess: () => onCloseModal?.() }
     );
   }

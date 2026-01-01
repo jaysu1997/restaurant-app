@@ -40,8 +40,8 @@ function IngredientScetion({ inventoryData }) {
           fields={[
             {
               type: "select",
-              name: `ingredients.${index}.ingredientName`,
-              errors: errors?.ingredients?.[index]?.ingredientName,
+              name: `ingredients.${index}.ingredient`,
+              errors: errors?.ingredients?.[index]?.ingredient,
               label: "食材名稱",
             },
             {
@@ -63,7 +63,7 @@ function IngredientScetion({ inventoryData }) {
         $variant="text"
         onClick={() => {
           append({
-            ingredientName: "",
+            ingredient: "",
             quantity: "",
           });
           // 淡入欄位動畫

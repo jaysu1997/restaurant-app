@@ -15,10 +15,10 @@ export async function getInventoryApi() {
 }
 
 // 根據輸入的食材名稱，取得所有備料和選項有使用指定食材的餐點
-export async function getFilterDataApi(ingredientName) {
+export async function getFilterDataApi(id) {
   // 在supabase中設定的sql(如果餐點中的備料或選項有使用指定食材，就數據獲取範圍內)
   const { data, error } = await supabase.rpc("get_menus_using_ingredient", {
-    ingredient_name: `${ingredientName}`,
+    inventory_id: `${id}`,
   });
 
   handleSupabaseError(error);
@@ -31,7 +31,7 @@ export async function updateInventoryApi(inventoryData) {
   const { id, label, value, remainingQuantity } = inventoryData;
 
   const { data, error } = await supabase.rpc(
-    "upsert_inventory_and_update_menus",
+    "update_inventory_and_update_menus",
     {
       inventory_id: id,
       new_label: label,
@@ -67,9 +67,7 @@ export async function createInventoryApi(newIngredients) {
 export async function deleteInventoryApi(id) {
   const { data, error } = await supabase.rpc(
     "delete_inventory_and_update_menus",
-    {
-      inventory_id: id,
-    }
+    { inventory_id: id }
   );
 
   handleSupabaseError(error);

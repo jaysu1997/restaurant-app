@@ -40,10 +40,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
     page * itemsPerPage - 1
   );
 
-  handleSupabaseError(error, {
-    for: "PGRST103",
-    message: "找不到指定的分頁，建議從第一頁開始查看。",
-  });
+  handleSupabaseError(error);
 
   // 回傳訂單數據、當前分頁、最大分頁數
   return {

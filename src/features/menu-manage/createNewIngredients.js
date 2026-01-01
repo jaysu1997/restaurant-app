@@ -1,25 +1,24 @@
 // 整合所有使用到的新食材(要順便新增到inventory中)
-function createNewIngredients({ newIngredientsMap, getValues }) {
-  const newIngredientSet = new Set();
-  const newIngredientsArr = [];
+function createNewIngredients(data, newIngredientRef) {
+  const newIngrendientsMap = new Map();
 
-  // 之所以使用Map存放數據，是為了檢察這個新食材是否真的有使用，而不是在新增食材食輸入錯誤但被記錄儲存的
-  newIngredientsMap.forEach((newIngredientsName, fieldName) => {
-    const fieldValue = getValues(fieldName).value;
-
-    if (
-      fieldValue === newIngredientsName &&
-      !newIngredientSet.has(newIngredientsName)
-    ) {
-      newIngredientSet.add(newIngredientsName);
-      newIngredientsArr.push({
-        label: newIngredientsName,
-        value: newIngredientsName,
-      });
+  data.ingredients?.forEach((i) => {
+    const ing = i.ingredient;
+    if (newIngredientRef.has(ing.label)) {
+      newIngrendientsMap.set(ing.label, ing);
     }
   });
 
-  return newIngredientsArr;
+  data.customize?.forEach((c) => {
+    c.options?.forEach((o) => {
+      const ing = o.ingredient;
+      if (newIngredientRef.has(ing.label)) {
+        newIngrendientsMap.set(ing.label, ing);
+      }
+    });
+  });
+
+  return [...newIngrendientsMap.values()];
 }
 
 export { createNewIngredients };

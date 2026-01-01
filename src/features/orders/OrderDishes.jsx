@@ -3,7 +3,7 @@ import {
   summarizeMealChoices,
   calculateOrderSummary,
 } from "../../utils/orderHelpers";
-import { Pencil, Trash2, Minus } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import styled from "styled-components";
 import { useState } from "react";
 import { useOrder } from "../../context/OrderContext";
@@ -18,91 +18,53 @@ const OrderDishesList = styled.ul`
 
 const OrderDishRow = styled.li`
   display: grid;
-  grid-template-rows: 2.6rem;
-  grid-template-columns:
-    minmax(0px, 1fr) minmax(0px, 1fr) minmax(5rem, 0.5fr)
-    minmax(6rem, 0.5fr)
-    5.4rem;
-
-  gap: 1rem;
+  grid-template-columns: 1.2fr repeat(2, minmax(5.6rem, 0.4fr)) 5.6rem;
+  gap: 1.2rem;
   padding: 1rem;
 
-  font-weight: 600;
   overflow-wrap: break-word;
   border-bottom: 1px solid #dcdcdc;
+  min-height: 8rem;
 
   &:first-child {
-    grid-template-rows: auto;
     background-color: #e7e5e4;
     border-radius: 6px;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 1.4rem;
     border: none;
+    min-height: 0;
   }
 
-  [data-value="餐點"] {
+  [data-value="name"] {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-weight: 600;
   }
 
-  [data-value="項目"] {
-    grid-row: 2;
-  }
-
-  [data-value="備註"] {
-    grid-row: 1 / 3;
-    grid-column: 2;
-  }
-
-  [data-value="金額"] {
-    color: #dc2626;
-  }
-
-  @media (max-width: 30em) {
+  @media (max-width: 35em) {
     grid-template-columns: minmax(0px, 1fr) auto;
 
     &:first-child > span:not(:first-child) {
       display: none;
     }
 
-    [data-value="項目"] {
-      grid-row: 2;
-      grid-column: 1 / -1;
-    }
-
-    [data-value="備註"] {
-      grid-row: 3;
-      grid-column: 1 / -1;
-
-      svg {
-        display: none;
-      }
-    }
-
-    [data-value="數量"] {
-      grid-row: 4;
-      grid-column: 1;
-    }
-
-    [data-value="金額"] {
-      grid-row: 4;
-      grid-column: 2;
+    [data-value="price"] {
       justify-self: end;
       white-space: nowrap;
     }
   }
 `;
 
-const Customize = styled.p`
-  font-weight: 400;
-  font-size: 1.4rem;
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: end;
   gap: 0.2rem;
+
+  @media (max-width: 35em) {
+    grid-row: 1;
+    grid-column: 2;
+  }
 `;
 
 const OrderSummary = styled.div`
@@ -123,6 +85,23 @@ const OrderSummary = styled.div`
   }
 `;
 
+const ItemMeta = styled.div`
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-weight: 400;
+  font-size: 1.4rem;
+
+  [data-value="note"] {
+    color: #6b7280;
+  }
+
+  @media (max-width: 35em) {
+    grid-column: 1 / -1;
+  }
+`;
+
 function OrderDishes({ dishData, isEdit }) {
   const { totalServings, totalPrice } = calculateOrderSummary(dishData);
 
@@ -130,20 +109,24 @@ function OrderDishes({ dishData, isEdit }) {
     <OrderDishesList>
       <OrderDishRow>
         <span>訂購餐點</span>
-        <span>備註</span>
         <span>數量</span>
         <span>金額</span>
       </OrderDishRow>
 
       {dishData.map((dish) => (
         <OrderDishRow key={dish.uniqueId}>
-          <span data-value="餐點">{dish.name}</span>
-          <Customize data-value="項目">{summarizeMealChoices(dish)}</Customize>
-          <Customize data-value="備註">
-            {dish.note ? `" ${dish.note} "` : <Minus size={14} />}
-          </Customize>
-          <span data-value="數量">{dish.servings} 份</span>
-          <span data-value="金額">$ {dish.itemTotalPrice * dish.servings}</span>
+          <span data-value="name">{dish.name}</span>
+          <ItemMeta>
+            {dish.customizeDetail.length !== 0 && (
+              <p data-value="option">{summarizeMealChoices(dish)}</p>
+            )}
+            {dish.note && <p data-value="note">{`" ${dish.note} "`}</p>}
+          </ItemMeta>
+
+          <span data-value="amount">{dish.servings} 份</span>
+          <span data-value="price" className="emphasize">
+            $ {dish.itemTotalPrice * dish.servings}
+          </span>
           {isEdit && <OrderEditButton dishData={dish} />}
         </OrderDishRow>
       ))}
@@ -167,7 +150,7 @@ function OrderEditButton({ dishData }) {
 
   return (
     <>
-      <ButtonGroup data-value="操作">
+      <ButtonGroup>
         <Button $variant="ghost" onClick={() => setIsOpenModal(dishData)}>
           <Pencil size={14} />
         </Button>

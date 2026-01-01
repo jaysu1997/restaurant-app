@@ -70,7 +70,7 @@ function ConfirmDelete({
   const [confirm, setConfirm] = useState(false);
 
   const { filterMenuData, isPending, isError, error } = useMenuUsage(
-    data.label,
+    data.id,
     showRelatedData
   );
 

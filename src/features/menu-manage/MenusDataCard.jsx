@@ -13,7 +13,7 @@ function MenusDataCard({ menu }) {
 
   // 所有成份
   const ingredientList = ingredients?.map(
-    (ingredient) => ingredient.ingredientName.label
+    (ingredient) => ingredient.ingredient.label
   );
 
   // 所有自訂附加項目

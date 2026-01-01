@@ -22,7 +22,13 @@ const Footer = styled.footer`
   }
 `;
 
-function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
+function OrderOperation({
+  orderData,
+  isEdit,
+  handleSubmit,
+  disabeldSubmit,
+  isUpdating,
+}) {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -33,8 +39,8 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
       <Footer>
         {isEdit ? (
           <ButtonSubmit
-            isLoading={disabeldSubmit}
-            disabled={disabeldSubmit}
+            isLoading={isUpdating}
+            disabled={disabeldSubmit || isUpdating}
             onClick={() => handleSubmit()}
           />
         ) : (
@@ -52,6 +58,7 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
           onClick={() => {
             navigate(-1);
           }}
+          disabled={isUpdating}
         >
           {isEdit ? "取消" : "返回"}
         </Button>

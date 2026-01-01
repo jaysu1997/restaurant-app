@@ -202,15 +202,16 @@ function ShoppingCart({ settingsData }) {
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   function onSubmit(data) {
+    console.log(dishes);
     const orderData = buildOrderData(dishes, data);
 
-    createOrder(orderData, {
-      onSuccess: () => {
-        dispatch({ type: "order/reset" });
-        reset();
-        setIsOpen(false);
-      },
-    });
+    // createOrder(orderData, {
+    //   onSuccess: () => {
+    //     dispatch({ type: "order/reset" });
+    //     reset();
+    //     setIsOpen(false);
+    //   },
+    // });
   }
 
   function onError(error) {

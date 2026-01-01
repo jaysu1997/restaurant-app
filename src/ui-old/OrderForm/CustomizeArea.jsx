@@ -74,35 +74,25 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
 
   // 當前訂購餐點的項目選擇
   const {
-    state: { curDishCustomizeOption },
+    state: { currentCustomization },
     dispatch,
   } = useOrder();
 
   function handleClick(e, payload) {
     // 單選新增
-    if (choiceType === "single" && e.target.checked) {
+    if (choiceType === "single") {
       dispatch({
-        type: "curDishCustomizeOption/setSingleChoice",
+        type: "currentCustomization/setSingleChoice",
         payload,
       });
       // 必填
       isRequired === "required" && setIsAnswered("isAnswered");
     }
 
-    // 單選刪除
-    if (choiceType === "single" && !e.target.checked) {
-      dispatch({
-        type: "curDishCustomizeOption/clearSingleChoice",
-        payload,
-      });
-      // 必填
-      isRequired === "required" && setIsAnswered("required");
-    }
-
     // 多選新增
     if (choiceType === "multiple" && e.target.checked) {
       dispatch({
-        type: "curDishCustomizeOption/addMultipleChoice",
+        type: "currentCustomization/addMultipleChoice",
         payload,
       });
       // 必填
@@ -113,18 +103,17 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
     if (choiceType === "multiple" && !e.target.checked) {
       // 如果此多選項目是必填，則在沒有選取任何值的情況下，整體樣式需恢復成未填寫狀態
       if (isRequired === "required") {
-        const curDishCustomizeOptionIndex = curDishCustomizeOption.findIndex(
-          (customize) => customize.customizeId === customizeId
-        );
-
         // 當前選項長度為1，代表目前只有存在一個選項，被移除後就沒有選取任何值
-        curDishCustomizeOption[curDishCustomizeOptionIndex].detail.length ===
-          1 && setIsAnswered("required");
+        const optionLength = currentCustomization.find(
+          (customize) => customize.customizeId === customizeId
+        )?.selectedOptions.length;
+
+        optionLength === 1 && setIsAnswered("required");
       }
 
       // 移除選項
       dispatch({
-        type: "curDishCustomizeOption/removeMultipleChoice",
+        type: "currentCustomization/removeMultipleChoice",
         payload,
       });
     }
@@ -160,7 +149,7 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
             register={register}
             optionData={optionData}
             handleClick={handleClick}
-            curDishCustomizeOption={curDishCustomizeOption}
+            currentCustomization={currentCustomization}
             key={optionData.optionId}
           />
         ))}

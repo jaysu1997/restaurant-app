@@ -24,11 +24,6 @@ const StyledOption = styled.label`
     background-color: ${({ $hoverBgColor }) => $hoverBgColor};
   }
 
-  &:has(input:disabled) {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
   svg {
     transition: all 0.2s;
   }
@@ -60,11 +55,11 @@ function Option({
   register,
   optionData,
   handleClick,
-  curDishCustomizeOption,
+  currentCustomization,
 }) {
   const { customizeId, choiceType, isRequired, title } = customizeData;
 
-  const { optionId, optionLabel, extraPrice, ingredientName, quantity } =
+  const { optionId, optionLabel, extraPrice, ingredient, quantity } =
     optionData;
 
   // 數據內容與格式
@@ -73,36 +68,27 @@ function Option({
     optionId,
     optionLabel,
     extraPrice,
-    ingredientName: ingredientName.value,
+    ingredientName: ingredient.value,
     quantity,
   };
 
-  // 獨一無二的值(避免如果不小心設定相同選項名稱所導致的功能異常)
-  const uniqueValue = `${customizeId}-${optionId}-${optionLabel}`;
-
   // 當前選項是否是被選中的選項(單選項目需要)
-  const checked = curDishCustomizeOption[customizeId]?.detail.some(
-    (option) => option.optionId === optionId
-  );
+  const checked = currentCustomization
+    .find((c) => c.customizeId === customizeId)
+    ?.selectedOptions.some((option) => option.optionId === optionId);
 
   return (
     <StyledOption
       $hoverBgColor={hoverBgColor[isAnswered]}
-      htmlFor={uniqueValue}
+      htmlFor={optionId}
       $checked={checked}
     >
       <input
-        type="checkbox"
+        type={choiceType === "single" ? "radio" : "checkbox"}
         hidden
-        id={uniqueValue}
-        value={uniqueValue}
+        id={optionId}
+        value={optionId}
         onClick={(e) => handleClick(e, payload)}
-        // 如果是單選項目且已經有選定選項，就禁止選擇其他選項
-        disabled={
-          choiceType === "single" &&
-          curDishCustomizeOption[customizeId]?.detail.length > 0 &&
-          !checked
-        }
         {...register(`customizeField.${isRequired}.${customizeId}`, {
           required: isRequired === "optional" ? false : `${title}必須填選`,
         })}

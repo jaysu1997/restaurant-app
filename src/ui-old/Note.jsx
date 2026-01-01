@@ -32,12 +32,12 @@ const TextArea = styled.textarea`
 
 const ReadOnlyText = styled.span`
   width: 100%;
-
   white-space: pre-wrap; /* 保留換行 */
   word-break: break-word;
 `;
 
 function Note({ register, children, readOnly = false, value, maxLength = 50 }) {
+  // 這裡的register中應該要加上trim
   return (
     <StyledNote>
       {children}
