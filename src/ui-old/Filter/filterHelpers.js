@@ -1,4 +1,3 @@
-import { ensurePositiveInt } from "../../utils/helpers";
 import { safeParseDate } from "../../utils/orderHelpers";
 import { format } from "date-fns";
 
@@ -9,7 +8,7 @@ function getInitialFilterState(searchParams, filtersConfig) {
     let value = "";
 
     if (searchParams.get(queryKey)) {
-      if (type === "text" || type === "number") {
+      if (type === "input") {
         value = searchParams.get(queryKey);
       }
       if (type === "select") {
@@ -42,13 +41,8 @@ function handleSearchParams(
     let searchParamsValue = "";
 
     // 篩選輸入類型為input(text)所要進行的處理方式
-    if (obj.type === "text" && obj.value) {
+    if (obj.type === "input" && obj.value) {
       searchParamsValue = obj.value.trim();
-    }
-
-    // 篩選輸入類型為input(number)所要進行的處理方式
-    if (obj.type === "number" && obj.value) {
-      searchParamsValue = ensurePositiveInt(obj.value, "", 1);
     }
 
     // 篩選輸入類型為select所要進行的處理方式

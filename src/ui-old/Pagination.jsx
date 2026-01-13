@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 import { useRef } from "react";
 import { ChevronRight, ChevronLeft, Dot } from "lucide-react";
-import { ensurePositiveInt } from "../utils/helpers";
+import { parsePositiveInt } from "../utils/helpers";
 
 const StyledPagination = styled.footer`
   display: flex;
@@ -77,14 +77,16 @@ function Pagination({ curPage, maxPage }) {
   const inputRef = useRef(null);
 
   function handlePagination(value) {
-    const inputValue = ensurePositiveInt(value, 1, 1);
-    const page = Math.max(1, Math.min(inputValue, maxPage));
-    searchParams.set("page", page);
+    searchParams.set("page", value);
     setSearchParams(searchParams);
   }
 
   function handleSubmit() {
-    handlePagination(inputRef?.current?.value || curPage);
+    const inputValue = parsePositiveInt(inputRef?.current?.value, {
+      min: 1,
+      fallback: 1,
+    });
+    handlePagination(Math.min(inputValue, maxPage));
     inputRef.current.value = "";
     inputRef.current?.blur();
   }
@@ -120,14 +122,7 @@ function Pagination({ curPage, maxPage }) {
 
       <JumpSection>
         <span>前往</span>
-        <input
-          type="text"
-          ref={inputRef}
-          // onChange={(e) => {
-          //   e.target.value = e.target.value.replace(/\D/g, "");
-          // }}
-          onKeyDown={handleKeyDown}
-        />
+        <input type="text" ref={inputRef} onKeyDown={handleKeyDown} />
         <span>頁</span>
         <button onClick={handleSubmit} role="submit">
           GO

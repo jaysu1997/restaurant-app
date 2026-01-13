@@ -20,12 +20,12 @@ const Wrapper = styled.div`
   right: 0;
   z-index: 2;
   width: min(95dvw, 28rem);
-
-  opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
-  pointer-events: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
-  transition: opacity 0.2s;
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
 
   @media (max-width: 40em) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     position: fixed;
     top: 0;
     left: 0;
@@ -34,10 +34,9 @@ const Wrapper = styled.div`
     height: 100%;
     background-color: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(2px);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
+    pointer-events: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
+    transition: opacity 0.2s;
   }
 `;
 
@@ -149,8 +148,7 @@ function Filter({ filtersConfig }) {
   const filterComponents = {
     select: SelectFilter,
     datePicker: DateRangeFilter,
-    text: SearchFilter,
-    number: SearchFilter,
+    input: SearchFilter,
   };
 
   // 處理篩選器輸入值更新的功能

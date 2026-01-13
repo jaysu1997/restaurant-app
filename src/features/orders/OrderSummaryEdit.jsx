@@ -20,6 +20,7 @@ import StyledHotToast from "../../ui-old/StyledHotToast";
 import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
 import FormFieldLayout from "../../ui/FormFieldLayout";
+import { Navigate } from "react-router-dom";
 
 // 這裡的樣式需要修正(整體布局都需要)
 function OrderSummaryEdit({ orderData, settingsData }) {
@@ -82,7 +83,13 @@ function OrderSummaryEdit({ orderData, settingsData }) {
 
   function onError(error) {
     console.log(error);
-    StyledHotToast({ type: "error", title: "訂單更新失敗" });
+    const message = error?.status ? "訂單尚未付款，無法註記為已完成狀態" : "";
+    StyledHotToast({ type: "error", title: "訂單更新失敗", content: message });
+  }
+
+  // 已完成訂單不可做編輯(自動轉到檢視頁面)
+  if (orderData.status === "已完成") {
+    return <Navigate to={`/order/${orderData.id}`} replace />;
   }
 
   return (
@@ -103,7 +110,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
               <span>{orderUUID}</span>
             </div>
 
-            <OrderDishes dishData={dishes} isEdit={true} />
+            <OrderDishes dishes={dishes} isEdit={true} />
           </OrderCard>
         </ContentContainer>
 

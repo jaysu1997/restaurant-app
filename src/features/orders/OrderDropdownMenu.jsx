@@ -29,7 +29,7 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const navigate = useNavigate();
 
-  const { id, pickupNumber, createdTime } = orderData;
+  const { id, pickupNumber, createdTime, status } = orderData;
 
   function handleToggle(e) {
     e.stopPropagation();
@@ -41,16 +41,19 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
       name: "檢視訂單",
       icon: Eye,
       handleClick: () => navigate(`/order/${id}`),
+      hidden: false,
     },
     {
       name: "編輯訂單",
       icon: SquarePen,
       handleClick: () => navigate(`/order/${id}/edit`),
+      hidden: status === "已完成" ? true : false,
     },
     {
       name: "刪除訂單",
       icon: Trash2,
       handleClick: () => setIsOpenModal(true),
+      hidden: status === "已完成" ? true : false,
     },
   ];
 

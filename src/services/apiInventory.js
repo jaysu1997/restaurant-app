@@ -1,5 +1,5 @@
 import supabase from "./supabase";
-import { handleSupabaseError } from "../utils/handleSupabaseError";
+import handleSupabaseApiError from "./handleSupabaseApiError";
 
 // 取得inventory中的所有食材數據
 export async function getInventoryApi() {
@@ -8,7 +8,7 @@ export async function getInventoryApi() {
     .select()
     .order("remainingQuantity", { ascending: true });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
   // return [];
@@ -21,7 +21,7 @@ export async function getFilterDataApi(id) {
     inventory_id: `${id}`,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -40,7 +40,7 @@ export async function updateInventoryApi(inventoryData) {
     }
   );
 
-  handleSupabaseError(error, {
+  handleSupabaseApiError(error, {
     for: "23505",
     message: `${inventoryData.label}已存在`,
   });
@@ -55,7 +55,7 @@ export async function createInventoryApi(newIngredients) {
     .insert(newIngredients)
     .select();
 
-  handleSupabaseError(error, {
+  handleSupabaseApiError(error, {
     for: "23505",
     message: `${newIngredients.label}已存在`,
   });
@@ -70,7 +70,7 @@ export async function deleteInventoryApi(id) {
     { inventory_id: id }
   );
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }

@@ -96,6 +96,7 @@ function SignUp({ setIsOpenModal }) {
             id="email"
             disabled={isPending}
             {...register("email", {
+              setValueAs: (value) => value.trim(),
               required: "此欄位必須填寫",
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,

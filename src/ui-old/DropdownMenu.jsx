@@ -57,23 +57,25 @@ function DropdownMenu({
       {children}
       {open && (
         <MenuContainer ref={activeMenuRef}>
-          {itemsConfig.map((item) => {
-            const Icon = item.icon;
+          {itemsConfig
+            .filter((item) => !item.hidden)
+            .map((item) => {
+              const Icon = item.icon;
 
-            return (
-              <MenuItem key={item.name}>
-                <button
-                  onClick={() => {
-                    item.handleClick();
-                    setIsOpenMenu(false);
-                  }}
-                >
-                  <Icon size={18} strokeWidth={2} />
-                  <span>{item.name}</span>
-                </button>
-              </MenuItem>
-            );
-          })}
+              return (
+                <MenuItem key={item.name}>
+                  <button
+                    onClick={() => {
+                      item.handleClick();
+                      setIsOpenMenu(false);
+                    }}
+                  >
+                    <Icon size={18} strokeWidth={2} />
+                    <span>{item.name}</span>
+                  </button>
+                </MenuItem>
+              );
+            })}
         </MenuContainer>
       )}
     </Wrapper>

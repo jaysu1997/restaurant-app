@@ -1,3 +1,5 @@
+import { applyInventoryUsage, findDishIndexById } from "../utils/orderHelpers";
+
 // 單筆訂單數據建立與編輯useReducer
 export const initialState = {
   // 存放訂單所有餐點數據
@@ -15,8 +17,8 @@ export function reducer(state, action) {
       const newInventoryMap = new Map();
 
       action.payload.forEach((ingredient) => {
-        const { uuid, remainingQuantity } = ingredient;
-        newInventoryMap.set(uuid, remainingQuantity);
+        const { uuid, value, remainingQuantity } = ingredient;
+        newInventoryMap.set(uuid, { name: value, remainingQuantity });
       });
 
       return { ...state, inventoryMap: newInventoryMap };
@@ -32,7 +34,7 @@ export function reducer(state, action) {
     case "currentCustomization/setSingleChoice": {
       const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
         item.customizeId === action.payload.customizeId
-          ? { ...item, selectedOptions: [action.payload] }
+          ? { ...item, selectOptions: [action.payload] }
           : item
       );
 
@@ -47,7 +49,7 @@ export function reducer(state, action) {
         item.customizeId === action.payload.customizeId
           ? {
               ...item,
-              selectedOptions: [...item.selectedOptions, action.payload],
+              selectOptions: [...item.selectOptions, action.payload],
             }
           : item
       );
@@ -57,13 +59,13 @@ export function reducer(state, action) {
         currentCustomization: [...newCurDishCustomizeOption],
       };
     }
-    // 多選選項刪除
-    case "currentCustomization/removeMultipleChoice": {
+    // 選項刪除
+    case "currentCustomization/removeChoice": {
       const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
         item.customizeId === action.payload.customizeId
           ? {
               ...item,
-              selectedOptions: item.selectedOptions.filter(
+              selectOptions: item.selectOptions.filter(
                 (option) => option.optionLabel !== action.payload.optionLabel
               ),
             }
@@ -77,19 +79,20 @@ export function reducer(state, action) {
     // 新增餐點
     case "dishes/addDish": {
       const dishData = action.payload;
+      const { ingredientsUsagePerServing, servings } = dishData;
       const newState = structuredClone(state);
 
+      // 新增餐點
       newState.dishes.push({
         ...dishData,
-        customizeDetail: state.currentCustomization,
+        customize: state.currentCustomization,
       });
 
       // 將庫存食材 - 本次餐點所需食材
-      dishData.ingredientsUsage.forEach((quantity, name) => {
-        newState.inventoryMap.set(
-          name,
-          newState.inventoryMap.get(name) - quantity * dishData.servings
-        );
+      applyInventoryUsage({
+        inventoryMap: newState.inventoryMap,
+        ingredientsUsagePerServing,
+        servings,
       });
 
       console.log(newState);
@@ -99,30 +102,27 @@ export function reducer(state, action) {
     // 編輯餐點數據
     case "dishes/updateDish": {
       const { dishData, previousIngredientsUsage } = action.payload;
+      const { ingredientsUsagePerServing, servings, uniqueId } = dishData;
       const newState = structuredClone(state);
-      const dishIndex = newState.dishes.findIndex(
-        (dish) => dish.uniqueId === dishData.uniqueId
-      );
+
+      const dishIndex = findDishIndexById(newState.dishes, uniqueId);
 
       // 更新數據
       newState.dishes[dishIndex] = dishData;
-      newState.dishes[dishIndex].customizeDetail = state.currentCustomization;
+      newState.dishes[dishIndex].customize = state.currentCustomization;
 
       // 先把原本消耗的所有食材加回庫存
-      previousIngredientsUsage.usageMap.forEach((quantity, name) => {
-        newState.inventoryMap.set(
-          name,
-          newState.inventoryMap.get(name) +
-            quantity * previousIngredientsUsage.servings
-        );
+      applyInventoryUsage({
+        inventoryMap: newState.inventoryMap,
+        ingredientsUsagePerServing: previousIngredientsUsage,
+        servings: -1,
       });
 
       // 將庫存食材 - 本次餐點所需食材
-      dishData.ingredientsUsage.forEach((quantity, name) => {
-        newState.inventoryMap.set(
-          name,
-          newState.inventoryMap.get(name) - quantity * dishData.servings
-        );
+      applyInventoryUsage({
+        inventoryMap: newState.inventoryMap,
+        ingredientsUsagePerServing,
+        servings,
       });
 
       console.log(newState);
@@ -131,18 +131,16 @@ export function reducer(state, action) {
     // 刪除指定餐點
     case "dishes/removeDish": {
       const newState = structuredClone(state);
-      const dishIndex = newState.dishes.findIndex(
-        (dish) => dish.uniqueId === action.payload
-      );
-      const dishingredientsUsage = newState.dishes[dishIndex].ingredientsUsage;
-      const dishServings = newState.dishes[dishIndex].servings;
+      const dishIndex = findDishIndexById(newState.dishes, action.payload);
 
-      // 把原本消耗的食材補回庫存
-      dishingredientsUsage.forEach((quantity, name) => {
-        newState.inventoryMap.set(
-          name,
-          newState.inventoryMap.get(name) + quantity * dishServings
-        );
+      const { ingredientsUsagePerServing, servings } =
+        newState.dishes[dishIndex];
+
+      // 把原本消耗的所有食材加回庫存
+      applyInventoryUsage({
+        inventoryMap: newState.inventoryMap,
+        ingredientsUsagePerServing,
+        servings: -servings,
       });
 
       // 將指定餐點從點餐列表中移除
@@ -154,22 +152,20 @@ export function reducer(state, action) {
     case "dishes/updateDishServings": {
       const { uniqueId, servings } = action.payload;
       const newState = structuredClone(state);
-      const dishIndex = newState.dishes.findIndex(
-        (dish) => dish.uniqueId === uniqueId
-      );
-      const dishData = newState.dishes[dishIndex];
-      const servingsDiff = servings - dishData.servings;
+      const dishIndex = findDishIndexById(newState.dishes, uniqueId);
+
+      const orderDish = newState.dishes[dishIndex];
+      const servingsDiff = servings - orderDish.servings;
 
       // 更新庫存剩餘存量(可增可減)
-      dishData.ingredientsUsage.forEach((quantity, name) => {
-        newState.inventoryMap.set(
-          name,
-          newState.inventoryMap.get(name) - quantity * servingsDiff
-        );
+      applyInventoryUsage({
+        inventoryMap: newState.inventoryMap,
+        ingredientsUsagePerServing: orderDish.ingredientsUsagePerServing,
+        servings: servingsDiff,
       });
 
       // 更新餐點份數
-      dishData.servings = servings;
+      orderDish.servings = servings;
 
       return newState;
     }
@@ -183,7 +179,9 @@ export function reducer(state, action) {
 
       const dishesData = dishes.map((curDish) => ({
         ...curDish,
-        ingredientsUsage: new Map(Object.entries(curDish.ingredientsUsage)),
+        ingredientsUsagePerServing: new Map(
+          Object.entries(curDish.ingredientsUsagePerServing)
+        ),
       }));
 
       return {

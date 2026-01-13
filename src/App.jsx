@@ -36,13 +36,13 @@ const queryClient = new QueryClient({
   },
 });
 
-// 目前的食材刪除api有問題，會把customize通通刪成null
+// 可能有很多欄位都需要補上trim()，避免各種無意義的空白。
 
 // 各種無數據和error應該需要再做一些調整
 
 // icon 尺寸需要動態化
 
-// 有一些error handle，可能需要修正，尤其是edge function中沒有明確回覆錯誤原因的部分
+// 有一些error handle，可能需要修正，
 
 // select元件或許可以設計成一個共用的樣式，然後其他在使用rest props覆蓋過去就好
 

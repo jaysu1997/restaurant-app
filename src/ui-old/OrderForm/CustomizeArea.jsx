@@ -64,7 +64,7 @@ const OptionsArea = styled.div`
 `;
 
 // 自訂選項區塊
-function CustomizeArea({ customizeData, register, isEdit = false }) {
+function CustomizeArea({ customizeData, isEdit = false }) {
   const { choiceType, customizeId, isRequired, title, options } = customizeData;
 
   // 用來控制項目CSS樣式(填寫狀態)
@@ -78,42 +78,45 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
     dispatch,
   } = useOrder();
 
+  // 這裡邏輯需要修改，單選選填有問題，會無法取消
   function handleClick(e, payload) {
-    // 單選新增
-    if (choiceType === "single") {
-      dispatch({
-        type: "currentCustomization/setSingleChoice",
-        payload,
-      });
-      // 必填
-      isRequired === "required" && setIsAnswered("isAnswered");
+    // 新增選項
+    if (e.target.checked) {
+      // 必填項目切換成已填寫狀態
+      if (isRequired === "required" && isAnswered === "required") {
+        setIsAnswered("isAnswered");
+      }
+
+      // 單選
+      if (choiceType === "single") {
+        dispatch({
+          type: "currentCustomization/setSingleChoice",
+          payload,
+        });
+      }
+      // 多選
+      if (choiceType === "multiple") {
+        dispatch({
+          type: "currentCustomization/addMultipleChoice",
+          payload,
+        });
+      }
     }
 
-    // 多選新增
-    if (choiceType === "multiple" && e.target.checked) {
-      dispatch({
-        type: "currentCustomization/addMultipleChoice",
-        payload,
-      });
-      // 必填
-      isRequired === "required" && setIsAnswered("isAnswered");
-    }
-
-    // 多選移除
-    if (choiceType === "multiple" && !e.target.checked) {
-      // 如果此多選項目是必填，則在沒有選取任何值的情況下，整體樣式需恢復成未填寫狀態
+    // 移除選項
+    if (!e.target.checked) {
+      // 必填項目
       if (isRequired === "required") {
         // 當前選項長度為1，代表目前只有存在一個選項，被移除後就沒有選取任何值
         const optionLength = currentCustomization.find(
           (customize) => customize.customizeId === customizeId
-        )?.selectedOptions.length;
+        )?.selectOptions.length;
 
         optionLength === 1 && setIsAnswered("required");
       }
 
-      // 移除選項
       dispatch({
-        type: "currentCustomization/removeMultipleChoice",
+        type: "currentCustomization/removeChoice",
         payload,
       });
     }
@@ -146,7 +149,6 @@ function CustomizeArea({ customizeData, register, isEdit = false }) {
           <Option
             isAnswered={isAnswered}
             customizeData={customizeData}
-            register={register}
             optionData={optionData}
             handleClick={handleClick}
             currentCustomization={currentCustomization}

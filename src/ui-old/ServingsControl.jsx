@@ -1,9 +1,9 @@
 // 控制和設定餐點份數的元件
 import styled from "styled-components";
 import { useOrder } from "../context/OrderContext";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import StyledHotToast from "./StyledHotToast";
-import { compareInventory } from "../utils/orderHelpers";
+import { checkInventoryAvailability } from "../utils/orderHelpers";
 import { Minus, Plus } from "lucide-react";
 
 const Serving = styled.div`
@@ -25,6 +25,11 @@ const CountInputField = styled.input`
   border-right: 1px solid #d1d5db;
   text-align: center;
   padding: 0.2rem 0.4rem;
+
+  &:read-only {
+    cursor: default;
+    background-color: #f9fafb;
+  }
 `;
 
 const CountButton = styled.button`
@@ -55,7 +60,7 @@ function ServingsControl({
   size = "sm",
   servings,
   setServings,
-  dishData = {},
+  orderDish = {},
   liveUpdate = false,
 }) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -64,53 +69,47 @@ function ServingsControl({
     dispatch,
   } = useOrder();
 
-  const prevServingsRef = useRef(servings);
-
   // 處理份數調整的函式
-  function handleServingsChange(servings, dishData) {
+  function handleServingsChange(servings, orderDish) {
     // 如果是在OrderForm上使用，不需要再次檢查庫存剩餘食材(沒有使用即時更新)
     if (!liveUpdate) {
-      prevServingsRef.current = servings;
       setServings(servings);
       return;
     }
 
     // 即時更新功能需要先檢查庫存並修改剩餘數量
-    let result = [];
+    let shortages = [];
 
-    if (servings - prevServingsRef.current > 0) {
-      result = compareInventory({
-        ingredientsUsage: dishData.ingredientsUsage,
-        servings: servings - prevServingsRef.current,
-        inventoryMap: new Map(inventoryMap),
+    // 分量調整增加需要檢查庫存是否足夠
+    if (servings > orderDish.servings) {
+      shortages = checkInventoryAvailability({
+        ingredientsUsagePerServing: orderDish.ingredientsUsagePerServing,
+        servings: servings - orderDish.servings,
+        inventoryMap,
       });
     }
 
     // 庫存充足
-    if (result.length === 0) {
-      prevServingsRef.current = servings;
+    if (shortages.length === 0) {
       setServings(servings);
       dispatch({
         type: "dishes/updateDishServings",
         payload: {
           servings,
-          uniqueId: dishData.uniqueId,
+          uniqueId: orderDish.uniqueId,
         },
       });
       setButtonDisabled(false);
     } else {
       // 庫存不足
-      setServings(prevServingsRef.current);
-      // 當前庫存無法再多製作1份餐點則禁用按鈕
-      result.find((ingredients) => ingredients.maxCapacity === 0) &&
-        setButtonDisabled(true);
+      setButtonDisabled(true);
 
       StyledHotToast({
         type: "error",
         title: "庫存食材不足",
         content: (
           <ul>
-            {result.map((ingredient, index) => (
+            {shortages.map((ingredient, index) => (
               <li key={index}>
                 {ingredient.maxCapacity === 0
                   ? `${ingredient.name}已用完`
@@ -129,7 +128,7 @@ function ServingsControl({
         type="button"
         $size={size}
         disabled={servings <= 1}
-        onClick={() => handleServingsChange(servings - 1, dishData)}
+        onClick={() => handleServingsChange(servings - 1, orderDish)}
       >
         <Minus />
       </CountButton>
@@ -137,12 +136,8 @@ function ServingsControl({
       <CountInputField
         type="text"
         value={servings}
-        onChange={(e) => {
-          setServings(e.target.value.replace(/\D/g, ""));
-        }}
-        onBlur={() =>
-          handleServingsChange(Math.max(1, Number(servings)), dishData)
-        }
+        readOnly={liveUpdate}
+        onChange={(e) => setServings(e.target.value)}
         required
         inputMode="numeric"
       />
@@ -150,7 +145,7 @@ function ServingsControl({
       <CountButton
         type="button"
         disabled={buttonDisabled}
-        onClick={() => handleServingsChange(servings + 1, dishData)}
+        onClick={() => handleServingsChange(servings + 1, orderDish)}
       >
         <Plus />
       </CountButton>

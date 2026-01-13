@@ -125,7 +125,7 @@ function CartItem({ dish }) {
               type="sm"
               servings={servings}
               setServings={setServings}
-              dishData={dish}
+              orderDish={dish}
               liveUpdate={true}
             />
             <OrderPrice>$ {dishTotalPrice}</OrderPrice>
@@ -135,7 +135,7 @@ function CartItem({ dish }) {
 
       {isOpenModal && (
         <OrderForm
-          dishData={dish}
+          orderDish={dish}
           onCloseModal={() => setIsOpenModal(false)}
           isEdit={true}
         />

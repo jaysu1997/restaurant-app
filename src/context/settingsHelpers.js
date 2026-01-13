@@ -20,8 +20,14 @@ export function formatToHourMinute(date) {
 // 生成單一分區的內用桌號字串陣列
 export function generateTableNumbers(zoneName, tableCount) {
   if (!tableCount) return [];
+
+  // 限制預覽畫面生成的總桌數，避免快速更新數據時導致反覆生成新陣列渲染，最終網頁掛掉(反正預覽空間有限，多的桌數根本看不到)
+  const MAX_PREVIEW_TABLES = 25;
+
+  const count = Math.min(tableCount, MAX_PREVIEW_TABLES);
+
   return Array.from(
-    { length: tableCount },
+    { length: count },
     (_, i) => `${zoneName}${zoneName.trim() ? " - " : ""}${i + 1}`
   );
 }

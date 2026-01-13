@@ -3,11 +3,10 @@ import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
 import { fadeInAnimation } from "../../utils/dom";
-import { ensurePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt } from "../../utils/helpers";
 
 function OptionSection({ nestedIndex, inventoryData }) {
   const {
-    register,
     control,
     formState: { errors },
   } = useFormContext();
@@ -46,7 +45,8 @@ function OptionSection({ nestedIndex, inventoryData }) {
                 errors?.customize?.[nestedIndex]?.options?.[index]?.extraPrice,
               label: "選項額外加價",
               rules: {
-                setValueAs: (value) => ensurePositiveInt(value, value, 0),
+                setValueAs: (value) =>
+                  parsePositiveInt(value, { min: 0, fallback: value }),
                 validate: (value) =>
                   typeof value === "number" || "請輸入 0 以上的整數",
               },
@@ -65,7 +65,8 @@ function OptionSection({ nestedIndex, inventoryData }) {
                 errors?.customize?.[nestedIndex]?.options?.[index]?.quantity,
               label: "食材消耗數量",
               rules: {
-                setValueAs: (value) => ensurePositiveInt(value, value, 0),
+                setValueAs: (value) =>
+                  parsePositiveInt(value, { min: 0, fallback: value }),
                 validate: (value) =>
                   typeof value === "number" || "請輸入 0 以上的整數",
               },

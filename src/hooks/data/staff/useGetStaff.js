@@ -8,7 +8,7 @@ function useGetStaff() {
     queryKey: ["staff"],
   });
 
-  return { data: data?.users?.users, isPending, error, isError };
+  return { data: data?.users, isPending, error, isError };
 }
 
 export default useGetStaff;

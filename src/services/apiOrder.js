@@ -1,6 +1,6 @@
 // 訂單相關api
 import supabase from "./supabase.js";
-import { handleSupabaseError } from "../utils/handleSupabaseError";
+import handleSupabaseApiError from "./handleSupabaseApiError";
 import { format, startOfDay, subDays } from "date-fns";
 
 // 建立新的餐點訂單api
@@ -9,7 +9,7 @@ export async function createOrderApi(orderData) {
     order_data: orderData,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -31,7 +31,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
     query = query.gte("createdTime", from).lt("createdTime", to);
   }
 
-  if (pickupNumber) {
+  if (pickupNumber !== null) {
     query = query.eq("pickupNumber", pickupNumber);
   }
 
@@ -40,7 +40,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
     page * itemsPerPage - 1
   );
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   // 回傳訂單數據、當前分頁、最大分頁數
   return {
@@ -61,7 +61,7 @@ export async function getLast7DaysOrdersApi() {
     .select("*")
     .gte("createdTime", startDate);
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -74,7 +74,7 @@ export async function getOrderApi(orderId) {
     .eq("id", orderId)
     .single();
 
-  handleSupabaseError(error, {
+  handleSupabaseApiError(error, {
     for: "PGRST116",
     message: "查無此訂單，請確認訂單 ID 是否正確。",
   });
@@ -89,7 +89,7 @@ export async function deleteOrderApi(orderId) {
     order_id: orderId,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -99,7 +99,7 @@ export async function updateOrderApi(oderData) {
     order_data: oderData,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }

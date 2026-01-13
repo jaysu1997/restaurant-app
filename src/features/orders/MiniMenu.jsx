@@ -89,7 +89,7 @@ function MiniMenu() {
 
       {isOpenModal.type === "OrderForm" && (
         <OrderForm
-          dishData={isOpenModal.data}
+          orderDish={isOpenModal.data}
           isEdit={false}
           onCloseModal={() => setIsOpenModal(false)}
         />

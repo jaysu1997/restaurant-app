@@ -52,12 +52,11 @@ const OptionName = styled.span`
 function Option({
   isAnswered,
   customizeData,
-  register,
   optionData,
   handleClick,
   currentCustomization,
 }) {
-  const { customizeId, choiceType, isRequired, title } = customizeData;
+  const { customizeId, choiceType, isRequired } = customizeData;
 
   const { optionId, optionLabel, extraPrice, ingredient, quantity } =
     optionData;
@@ -68,30 +67,36 @@ function Option({
     optionId,
     optionLabel,
     extraPrice,
+    ingredientUuid: ingredient.uuid || null,
     ingredientName: ingredient.value,
     quantity,
   };
 
-  // 當前選項是否是被選中的選項(單選項目需要)
-  const checked = currentCustomization
-    .find((c) => c.customizeId === customizeId)
-    ?.selectedOptions.some((option) => option.optionId === optionId);
+  // 當前選項是否是被選中的選項
+  const isChecked = currentCustomization
+    .find((customize) => customize.customizeId === customizeId)
+    ?.selectOptions.some((option) => option.optionId === optionId);
 
   return (
     <StyledOption
       $hoverBgColor={hoverBgColor[isAnswered]}
       htmlFor={optionId}
-      $checked={checked}
+      $checked={isChecked}
     >
       <input
-        type={choiceType === "single" ? "radio" : "checkbox"}
+        // type={
+        //   choiceType === "single" && isRequired === "required"
+        //     ? "radio"
+        //     : "checkbox"
+        // }
+        type="checkbox"
         hidden
         id={optionId}
-        value={optionId}
-        onClick={(e) => handleClick(e, payload)}
-        {...register(`customizeField.${isRequired}.${customizeId}`, {
-          required: isRequired === "optional" ? false : `${title}必須填選`,
-        })}
+        // 避免數據尚未處理完成時isChecked = undefined報出受控元件error，所以設false為默認值
+        checked={isChecked ?? false}
+        onChange={(e) => {
+          handleClick(e, payload);
+        }}
       />
 
       <Square size={20} />

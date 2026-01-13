@@ -1,5 +1,5 @@
 // 處理supabase api錯誤
-function handleSupabaseError(error, fallback = "") {
+export default function handleSupabaseApiError(error, fallback = "") {
   // 可能在沒有網路連線的部分要再做處理，因為好像如果沒有接收到supabase回傳response，那麼api內的error也會是undefined
   if (!error) return;
 
@@ -8,6 +8,7 @@ function handleSupabaseError(error, fallback = "") {
     console.log("error.code:", error.code);
     console.log("error.name:", error.name);
     console.log("error.status:", error.status);
+    console.log("error.message", error.message);
 
     // error發生之後要回傳的訊息和按鈕設定
     let errorFallback = {
@@ -64,5 +65,3 @@ function handleSupabaseError(error, fallback = "") {
     throw errorFallback;
   }
 }
-
-export { handleSupabaseError };

@@ -102,8 +102,8 @@ const ItemMeta = styled.div`
   }
 `;
 
-function OrderDishes({ dishData, isEdit }) {
-  const { totalServings, totalPrice } = calculateOrderSummary(dishData);
+function OrderDishes({ dishes, isEdit }) {
+  const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   return (
     <OrderDishesList>
@@ -113,11 +113,11 @@ function OrderDishes({ dishData, isEdit }) {
         <span>金額</span>
       </OrderDishRow>
 
-      {dishData.map((dish) => (
+      {dishes.map((dish) => (
         <OrderDishRow key={dish.uniqueId}>
           <span data-value="name">{dish.name}</span>
           <ItemMeta>
-            {dish.customizeDetail.length !== 0 && (
+            {dish.customize.length !== 0 && (
               <p data-value="option">{summarizeMealChoices(dish)}</p>
             )}
             {dish.note && <p data-value="note">{`" ${dish.note} "`}</p>}
@@ -127,7 +127,7 @@ function OrderDishes({ dishData, isEdit }) {
           <span data-value="price" className="emphasize">
             $ {dish.itemTotalPrice * dish.servings}
           </span>
-          {isEdit && <OrderEditButton dishData={dish} />}
+          {isEdit && <OrderEditButton dish={dish} />}
         </OrderDishRow>
       ))}
 
@@ -144,14 +144,14 @@ function OrderDishes({ dishData, isEdit }) {
   );
 }
 
-function OrderEditButton({ dishData }) {
+function OrderEditButton({ dish }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { dispatch } = useOrder();
 
   return (
     <>
       <ButtonGroup>
-        <Button $variant="ghost" onClick={() => setIsOpenModal(dishData)}>
+        <Button $variant="ghost" onClick={() => setIsOpenModal(dish)}>
           <Pencil size={14} />
         </Button>
         <Button
@@ -159,7 +159,7 @@ function OrderEditButton({ dishData }) {
           onClick={() =>
             dispatch({
               type: "dishes/removeDish",
-              payload: dishData.uniqueId,
+              payload: dish.uniqueId,
             })
           }
         >
@@ -169,7 +169,7 @@ function OrderEditButton({ dishData }) {
 
       {isOpenModal && (
         <OrderForm
-          dishData={isOpenModal}
+          orderDish={isOpenModal}
           onCloseModal={() => setIsOpenModal(false)}
           isEdit={true}
         />

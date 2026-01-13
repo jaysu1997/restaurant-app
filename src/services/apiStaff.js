@@ -1,5 +1,5 @@
+import handleEdgeFunctionError from "./handleEdgeFunctionError";
 import supabase from "./supabase";
-import { handleSupabaseError } from "../utils/handleSupabaseError";
 
 // 註冊新帳號
 export async function createStaffApi(userData) {
@@ -7,7 +7,7 @@ export async function createStaffApi(userData) {
     body: userData,
   });
 
-  handleSupabaseError(error);
+  await handleEdgeFunctionError(error);
 
   return data;
 }
@@ -16,7 +16,7 @@ export async function createStaffApi(userData) {
 export async function getStaffApi() {
   const { data, error } = await supabase.functions.invoke("get-staff");
 
-  handleSupabaseError(error);
+  await handleEdgeFunctionError(error);
 
   return data;
 }
@@ -32,7 +32,7 @@ export async function updateStaffApi(userData) {
     },
   });
 
-  handleSupabaseError(error);
+  await handleEdgeFunctionError(error);
 
   return data;
 }
@@ -45,7 +45,7 @@ export async function deleteStaffApi(userId) {
     },
   });
 
-  handleSupabaseError(error);
+  await handleEdgeFunctionError(error);
 
   return data;
 }

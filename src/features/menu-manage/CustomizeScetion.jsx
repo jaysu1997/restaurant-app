@@ -66,6 +66,7 @@ function CustomizeScetion({ inventoryData }) {
             choiceType: "multiple",
             options: [
               {
+                optionId: `o_${crypto.randomUUID().slice(0, 8)}`,
                 ingredient: "",
                 extraPrice: "",
                 optionLabel: "",

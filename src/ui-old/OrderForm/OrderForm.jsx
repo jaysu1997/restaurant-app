@@ -1,10 +1,14 @@
 // 點餐功能表單
 import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
-import { useEffect, useRef, useState } from "react";
-import { calcIngredientsUsage, generateDishItemId } from "./orderFormHelpers";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { compareInventory } from "../../utils/orderHelpers";
+import {
+  checkInventoryAvailability,
+  calcIngredientsUsagePerServing,
+  generateDishItemId,
+  getTotalIngredientsUsage,
+} from "../../utils/orderHelpers";
 import StyledHotToast from "../StyledHotToast";
 import Modal from "../Modal";
 import Note from "../Note";
@@ -12,6 +16,7 @@ import CustomizeArea from "./CustomizeArea";
 import ServingsControl from "../ServingsControl";
 import { ShoppingBag } from "lucide-react";
 import Button from "../../ui/Button";
+import { parsePositiveInt } from "../../utils/helpers";
 
 const Form = styled.form`
   display: flex;
@@ -54,14 +59,14 @@ const Footer = styled.footer`
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
 `;
 
-function OrderForm({ dishData, onCloseModal, isEdit = false }) {
+function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
   // 餐點編輯的相關功能
   const {
     state: { dishes, currentCustomization, inventoryMap },
     dispatch,
   } = useOrder();
 
-  const [servings, setServings] = useState(dishData.servings || 1);
+  const [servings, setServings] = useState(orderDish.servings || 1);
 
   // 當前餐點數據
   const {
@@ -70,78 +75,57 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
     ingredients,
     customize,
     uniqueId = generateDishItemId(dishes),
-  } = dishData;
+  } = orderDish;
 
-  // 將自訂項目數據整理成訂購表單展示的欄位數據以及在useReducer進行初始化的數據
-  const { displayFields, reducerFields } = customize.reduce(
-    (acc, curCustomization) => {
-      acc.reducerFields.push({
-        customizeId: curCustomization.customizeId,
-        customizeTitle: curCustomization.title,
-        selectedOptions: [],
-      });
-      // 必填項目與選填項目
-      if (curCustomization.isRequired === "required") {
-        acc.displayFields.unshift(curCustomization);
-      } else {
-        acc.displayFields.push(curCustomization);
-      }
-      return acc;
-    },
-    {
-      displayFields: [],
-      reducerFields: [],
-    }
-  );
-
-  // 用來存放初始化項目數據
-  const customizeOptionRef = useRef(
-    isEdit ? dishData.customizeDetail : reducerFields
-  );
-
-  // 初始化useReducer的curDishCustomizeOption(自訂項目的詳細數據)
+  // 初始化useReducer的currentCustomization(自訂項目的詳細數據)
   useEffect(() => {
     dispatch({
       type: "orderForm/init",
-      payload: customizeOptionRef.current,
+      payload: customize,
     });
-  }, [dispatch]);
+  }, [dispatch, customize]);
 
-  // isValid + 設定required:true，可以設計出必填欄位都有填寫才點擊提交按鈕的功能
-  const {
-    handleSubmit,
-    register,
-    formState: { isValid },
-  } = useForm({
-    defaultValues: dishData || {},
+  // 必填項目尚未完成填寫
+  const hasUnfilledRequiredCustomization = currentCustomization.some(
+    ({ isRequired, selectOptions }) =>
+      isRequired === "required" && selectOptions.length === 0
+  );
+
+  const { handleSubmit, register } = useForm({
+    defaultValues: orderDish || {},
   });
 
   function onSubmit(data) {
-    // 計算食材總消耗
-    const ingredientsUsage = calcIngredientsUsage(
+    // 計算當前訂購餐點所需的食材(每1份)
+    const ingredientsUsagePerServing = calcIngredientsUsagePerServing(
       ingredients,
       currentCustomization
     );
 
-    // 餐點原本的食材消耗(在更新餐點設定會需要用到)
-    const previousIngredientsUsage = isEdit && {
-      usageMap: dishData.ingredientsUsage,
-      servings: dishData.servings,
-    };
+    // 編輯時需用到(原先餐點所消耗的食材總數)
+    const previousIngredientsUsage =
+      isEdit &&
+      getTotalIngredientsUsage(
+        orderDish.ingredientsUsagePerServing,
+        orderDish.servings
+      );
 
-    // 庫存剩餘比對
-    const result = compareInventory({
-      ingredientsUsage,
-      servings,
-      inventoryMap: new Map(inventoryMap),
+    // 避免非正整數分量值
+    const currentServings = parsePositiveInt(servings, { min: 1, fallback: 1 });
+
+    // 確認庫存剩餘食材是否可以供應餐點消耗
+    const shortages = checkInventoryAvailability({
+      ingredientsUsagePerServing,
+      servings: currentServings,
+      inventoryMap,
       previousIngredientsUsage,
     });
 
     // 庫存充足
-    if (result.length === 0) {
+    if (shortages.length === 0) {
       // 每份餐點的售價(本身 + 額外選項)
       const itemTotalPrice = currentCustomization.reduce((acc, cur) => {
-        const extraPriceTotal = cur.selectedOptions.reduce(
+        const extraPriceTotal = cur.selectOptions.reduce(
           (sum, customizeData) => sum + customizeData.extraPrice,
           0
         );
@@ -151,8 +135,8 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
       const dishData = {
         ...data,
         itemTotalPrice,
-        ingredientsUsage,
-        servings,
+        ingredientsUsagePerServing,
+        servings: currentServings,
         uniqueId,
       };
 
@@ -169,7 +153,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
         title: "點餐失敗（庫存食材不足）",
         content: (
           <ul>
-            {result.map((ingredient, index) => (
+            {shortages.map((ingredient, index) => (
               <li key={index}>
                 {ingredient.maxCapacity === 0
                   ? `${ingredient.name}已用完`
@@ -188,7 +172,7 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
 
   return (
     <Modal
-      modalHeader={dishData.name}
+      modalHeader={orderDish.name}
       maxWidth={36}
       onCloseModal={onCloseModal}
       scrollBar={false}
@@ -197,12 +181,11 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
         <Container>
           <Price>$ {price - discount}</Price>
 
-          {displayFields &&
-            displayFields.map((customizeData) => (
+          {customize &&
+            customize.map((customizeData) => (
               <CustomizeArea
                 isEdit={isEdit}
                 customizeData={customizeData}
-                register={register}
                 key={customizeData.customizeId}
               />
             ))}
@@ -216,12 +199,16 @@ function OrderForm({ dishData, onCloseModal, isEdit = false }) {
           <ServingsControl
             servings={servings}
             setServings={setServings}
-            dishData={isEdit ? dishData : {}}
+            orderDish={isEdit ? orderDish : {}}
             liveUpdate={false}
             size="md"
           />
 
-          <Button type="submit" $isFullWidth disabled={!isValid}>
+          <Button
+            type="submit"
+            $isFullWidth
+            disabled={hasUnfilledRequiredCustomization}
+          >
             <ShoppingBag size={18} />
             加入購物車
           </Button>

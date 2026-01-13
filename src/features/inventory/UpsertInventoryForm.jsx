@@ -7,7 +7,7 @@ import ButtonSubmit from "../../ui/ButtonSubmit";
 import ButtonCancel from "../../ui/ButtonCancel";
 import styled from "styled-components";
 import FormSection from "../../components/FormSection";
-import { ensurePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt } from "../../utils/helpers";
 
 const StyledForm = styled.form`
   display: flex;
@@ -100,7 +100,8 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
                   name: "remainingQuantity",
                   errors: errors?.remainingQuantity,
                   rules: {
-                    setValueAs: (value) => ensurePositiveInt(value, value, 0),
+                    setValueAs: (value) =>
+                      parsePositiveInt(value, { min: 0, fallback: value }),
                     validate: (value) =>
                       typeof value === "number" || "請輸入 0 以上的整數",
                   },

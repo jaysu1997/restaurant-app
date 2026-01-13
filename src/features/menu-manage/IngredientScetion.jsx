@@ -3,7 +3,7 @@ import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
 import { fadeInAnimation } from "../../utils/dom";
-import { ensurePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt } from "../../utils/helpers";
 
 function IngredientScetion({ inventoryData }) {
   const {
@@ -50,7 +50,8 @@ function IngredientScetion({ inventoryData }) {
               errors: errors?.ingredients?.[index]?.quantity,
               label: "使用數量",
               rules: {
-                setValueAs: (value) => ensurePositiveInt(value, value, 0),
+                setValueAs: (value) =>
+                  parsePositiveInt(value, { min: 0, fallback: value }),
                 validate: (value) =>
                   typeof value === "number" || "請輸入 0 以上的整數",
               },

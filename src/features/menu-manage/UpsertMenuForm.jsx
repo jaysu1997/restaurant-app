@@ -12,7 +12,7 @@ import styled from "styled-components";
 import FormSection from "../../components/FormSection";
 import IngredientScetion from "./IngredientScetion";
 import CustomizeScetion from "./CustomizeScetion";
-import { ensurePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt } from "../../utils/helpers";
 
 const StyledForm = styled.form`
   display: grid;
@@ -113,7 +113,8 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       heading: "定價",
       name: "price",
       rules: {
-        setValueAs: (value) => ensurePositiveInt(value, value, 0),
+        setValueAs: (value) =>
+          parsePositiveInt(value, { min: 0, fallback: value }),
         validate: (value) => typeof value === "number" || "請輸入 0 以上的整數",
       },
     },
@@ -121,7 +122,8 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       heading: "折扣",
       name: "discount",
       rules: {
-        setValueAs: (value) => ensurePositiveInt(value, value, 0),
+        setValueAs: (value) =>
+          parsePositiveInt(value, { min: 0, fallback: value }),
         validate: (value) => {
           if (typeof value !== "number") return "請輸入 0 以上的整數";
           if (Number(value) > Number(getValues("price")))

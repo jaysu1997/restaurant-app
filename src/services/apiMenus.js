@@ -1,5 +1,5 @@
 import supabase from "./supabase.js";
-import { handleSupabaseError } from "../utils/handleSupabaseError";
+import handleSupabaseApiError from "./handleSupabaseApiError";
 
 // 取得所有menu數據
 export async function getMenusApi() {
@@ -9,7 +9,7 @@ export async function getMenusApi() {
     .order("category", { ascending: true })
     .order("price", { ascending: true });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
   // return [];
@@ -26,7 +26,7 @@ export async function upsertMenuApi(upsertData) {
       .insert(newIngredients)
       .select();
 
-    handleSupabaseError(inventoryError, {
+    handleSupabaseApiError(inventoryError, {
       for: "default",
       message:
         "新食材數據自動建立失敗，可以嘗試嘗試再次交表單，或前往庫存管理頁面手動建立。",
@@ -39,7 +39,7 @@ export async function upsertMenuApi(upsertData) {
     .upsert(menuData)
     .select();
 
-  handleSupabaseError(error, {
+  handleSupabaseApiError(error, {
     for: "23505",
     message: `${menuData.name}已存在。`,
   });
@@ -51,7 +51,7 @@ export async function upsertMenuApi(upsertData) {
 export async function deleteMenuApi(id) {
   const { error } = await supabase.from("menus").delete().eq("id", id);
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return null;
 }

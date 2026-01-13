@@ -9,7 +9,7 @@ import FormInput from "../../ui/FormInput";
 import Button from "../../ui/Button";
 import { Plus, Trash2, Utensils } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
-import { ensurePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt } from "../../utils/helpers";
 
 const Content = styled.ul`
   display: flex;
@@ -171,8 +171,13 @@ function DineInTableSettings({ data = {} }) {
                   placeholder="分區總桌數"
                   {...register(`dineInTableConfig.${index}.tableCount`, {
                     required: "總桌數不能空白",
+                    setValueAs: (value) =>
+                      parsePositiveInt(value, {
+                        min: 1,
+                        fallback: value,
+                      }),
                     validate: (value) =>
-                      ensurePositiveInt(value, "請輸入 1 以上的整數", 1),
+                      typeof value === "number" || "請輸入 1 以上的整數",
                   })}
                 />
               </FormFieldLayout>

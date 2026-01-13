@@ -29,6 +29,7 @@ function OrderOperation({
   disabeldSubmit,
   isUpdating,
 }) {
+  const { status } = orderData;
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -37,13 +38,15 @@ function OrderOperation({
   return (
     <>
       <Footer>
-        {isEdit ? (
+        {isEdit && (
           <ButtonSubmit
             isLoading={isUpdating}
             disabled={disabeldSubmit || isUpdating}
             onClick={() => handleSubmit()}
           />
-        ) : (
+        )}
+
+        {!isEdit && status !== "已完成" && (
           <Button
             $variant="secondary"
             onClick={() => navigate(`/order/${orderId}/edit`)}
@@ -63,7 +66,7 @@ function OrderOperation({
           {isEdit ? "取消" : "返回"}
         </Button>
 
-        {!isEdit && (
+        {!isEdit && status !== "已完成" && (
           <div>
             <Button $variant="danger" onClick={() => setIsOpenModal(true)}>
               <Trash2 size={16} />
