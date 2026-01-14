@@ -1,15 +1,14 @@
 import OrdersTable from "../features/orders/OrdersTable";
 import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
-import Filter from "../ui/Filter/Filter";
+import Filter from "../ui-old/Filter/Filter";
 import PageHeader from "../ui/PageHeader";
-import Pagination from "../ui/Pagination";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import Pagination from "../ui-old/Pagination";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback";
 
 const filtersConfig = [
   {
     title: "取餐號碼",
     type: "input",
-    inputType: "number",
     queryKey: "pickupNumber",
     placeholder: "搜尋取餐號碼(不含#)",
   },
@@ -34,14 +33,15 @@ function Orders() {
 
   const emptyStateMessage =
     createdTime || pickupNumber
-      ? "查無符合當前篩選條件的訂單數據"
-      : "目前沒有任何已經建立的訂單數據";
+      ? "查無符合當前篩選條件的訂單數據。"
+      : "目前沒有任何已經建立的訂單數據。";
 
   return (
     <>
       <PageHeader title="訂單管理">
         <Filter filtersConfig={filtersConfig} />
       </PageHeader>
+
       <QueryStatusFallback
         isPending={isPending}
         isError={isError}

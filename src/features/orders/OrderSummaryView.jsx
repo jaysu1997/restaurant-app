@@ -1,42 +1,15 @@
 // 訂單詳情(檢視)
-import styled from "styled-components";
 import Tag from "../../ui/Tag";
 import OrderDishes from "./OrderDishes";
 import OrderOperation from "./OrderOperation";
 // 這裡的format可能需要整理(變成通用助手或是統一成一個函式)
 import { formatCreatedTime } from "../../utils/orderHelpers";
 import { formatToHourMinute } from "../../context/settingsHelpers";
+import OrderCard from "./OrderCard";
+import ContentContainer from "../../ui/ContentContainer";
+import Note from "../../ui-old/Note";
 
-const OrderInfo = styled.section`
-  background-color: #fff;
-  border: 1px solid #f3f4f6;
-  border-radius: 6px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 1.4rem 2.8rem;
-  height: fit-content;
-`;
-
-const Row = styled.div`
-  display: grid;
-  grid-template-columns: 8rem 1fr;
-  gap: 1.6rem;
-  min-height: 3.8rem;
-  align-items: center;
-
-  &:last-child {
-    align-items: start;
-  }
-
-  div {
-    overflow: hidden;
-    overflow-wrap: break-word;
-  }
-`;
-
-function OrderSummaryView({ orderData, isEdit }) {
+function OrderSummaryView({ orderData }) {
   const {
     diningMethod,
     tableNumber,
@@ -51,48 +24,53 @@ function OrderSummaryView({ orderData, isEdit }) {
 
   return (
     <>
-      <OrderInfo>
-        <Row>
-          <div>建立時間：</div>
-          <div>{formatCreatedTime(createdTime)}</div>
-        </Row>
-        <Row>
-          <div>訂單編號：</div>
-          <div>{orderUUID}</div>
-        </Row>
-        <Row>
-          <div>訂購餐點：</div>
-        </Row>
-        <OrderDishes dishData={dishes} isEdit={isEdit} />
-      </OrderInfo>
-
-      <OrderInfo>
-        <Row>
-          <div>用餐方式：</div>
-          <div>{diningMethod}</div>
-        </Row>
-        <Row>
-          <div>{diningMethod === "內用" ? "內用桌號：" : "取餐時間："}</div>
-          <div>{tableNumber || formatToHourMinute(pickupTime)}</div>
-        </Row>
-        <Row>
-          <div>付款狀態：</div>
+      <ContentContainer>
+        <OrderCard>
           <div>
+            <label>建立時間：</label>
+            <span>{formatCreatedTime(createdTime)}</span>
+          </div>
+
+          <div>
+            <label>訂單編號：</label>
+            <span>{orderUUID}</span>
+          </div>
+
+          <OrderDishes dishes={dishes} isEdit={false} />
+        </OrderCard>
+      </ContentContainer>
+
+      <ContentContainer>
+        <OrderCard>
+          <div>
+            <label>用餐方式：</label>
+            <span>{diningMethod}</span>
+          </div>
+
+          <div>
+            <label>
+              {diningMethod === "內用" ? "內用桌號：" : "取餐時間："}
+            </label>
+            <span>{tableNumber || formatToHourMinute(pickupTime)}</span>
+          </div>
+
+          <div>
+            <label>付款狀態：</label>
             <Tag $tagStatus={paid}>{paid}</Tag>
           </div>
-        </Row>
-        <Row>
-          <div>訂單狀態：</div>
+
           <div>
+            <label>訂單狀態：</label>
             <Tag $tagStatus={status}>{status}</Tag>
           </div>
-        </Row>
+        </OrderCard>
+      </ContentContainer>
 
-        <Row>
-          <div>訂單備註：</div>
-          <div>{note || "無"}</div>
-        </Row>
-      </OrderInfo>
+      <ContentContainer>
+        <Note value={note} readOnly>
+          <label>訂單備註：</label>
+        </Note>
+      </ContentContainer>
 
       <OrderOperation isEdit={false} orderData={orderData} />
     </>

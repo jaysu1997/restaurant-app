@@ -1,4 +1,4 @@
-// ButtonSpinner.js
+// 按鈕中的 Loading 動畫
 import styled, { keyframes } from "styled-components";
 
 const spin = keyframes`
@@ -8,14 +8,21 @@ const spin = keyframes`
 `;
 
 const ButtonSpinner = styled.div`
-  display: inline-block;
-  height: 1.8rem;
-  width: 1.8rem;
-  border: 3px solid rgba(255, 255, 255, 0.6);
-  border-top-color: white; /* 高亮部分 */
-  border-radius: 50%;
-  animation: ${spin} 0.8s linear infinite;
-  vertical-align: middle;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    height: 1.8rem;
+    width: 1.8rem;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: ${spin} 0.8s linear infinite;
+  }
 `;
 
 export default ButtonSpinner;

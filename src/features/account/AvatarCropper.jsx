@@ -1,11 +1,12 @@
 import { useState } from "react";
-import Modal from "../../ui/Modal";
+import Modal from "../../ui-old/Modal";
 import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
 import useUpsertUserAvatar from "../../hooks/data/auth/useUpsertUserAvatar";
-import ButtonSpinner from "../../ui/ButtonSpinner";
-import StyledHotToast from "../../ui/StyledHotToast";
+import StyledHotToast from "../../ui-old/StyledHotToast";
+import ButtonSubmit from "../../ui/ButtonSubmit";
+import ButtonCancel from "../../ui/ButtonCancel";
 
 const Wrapper = styled.section`
   width: min(56rem, 95dvw);
@@ -30,35 +31,25 @@ const ButtonGroup = styled.div`
   gap: 1.2rem;
 `;
 
-const SubmitButton = styled.button`
-  background-color: #2563eb;
-  color: #fff;
-  padding: 0.6rem 1.8rem;
-  font-weight: 500;
-  width: 6.4rem;
-  height: 3.6rem;
-  border-radius: 999px;
-`;
-
-const CancelButton = styled(SubmitButton)`
-  color: #333;
-  background-color: #eee;
-`;
-
 // 使用Canvas將裁切區域轉成Blob Url
 const getCroppedImg = (imageSrc, pixelCrop) => {
   // 因為監聽圖片onload是非同步功能，所以使用Promise方便處理
   return new Promise((resolve, reject) => {
-    // 裁切後固定輸出成512x512尺寸的圖檔
-    const outputSize = 512;
+    // 裁切後固定輸出成300x300尺寸的圖檔
+    const outputSize = 300;
 
     const image = new Image();
     image.src = imageSrc;
+
     image.onload = () => {
       const canvas = document.createElement("canvas");
       canvas.width = outputSize;
       canvas.height = outputSize;
       const ctx = canvas.getContext("2d");
+
+      // 重要：高品質縮放
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
 
       ctx.drawImage(
         image,
@@ -101,7 +92,7 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
 
       // 更新需要用到的數據(新檔名、舊檔名、新圖檔)
       const updateAvatarPayload = {
-        oldFileName: userData.user_metadata.avatar_file,
+        oldFileName: userData.user_metadata.avatarFile,
         newFileName: `${userData.id}_${Date.now()}.webp`,
         newFile: blob,
       };
@@ -139,12 +130,12 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
       <Footer>
         <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
         <ButtonGroup>
-          <SubmitButton onClick={handleSave} disabled={isPending}>
-            {isPending ? <ButtonSpinner /> : "儲存"}
-          </SubmitButton>
-          <CancelButton onClick={onCloseModal} disabled={isPending}>
-            取消
-          </CancelButton>
+          <ButtonSubmit
+            isLoading={isPending}
+            disabled={isPending}
+            onClick={handleSave}
+          />
+          <ButtonCancel onClick={onCloseModal} disabled={isPending} />
         </ButtonGroup>
       </Footer>
     </Modal>

@@ -1,17 +1,16 @@
 import styled from "styled-components";
-import defaultAvatar from "../../assets/default-user.png";
 import { useNavigate } from "react-router-dom";
-import { RiArrowRightSLine } from "react-icons/ri";
-import { GoPerson, GoSignOut } from "react-icons/go";
 import { useState } from "react";
 import useSignOut from "../../hooks/data/auth/useSignOut";
 import useUser from "../../hooks/data/auth/useUser";
-import DropdownMenu from "../../ui/DropdownMenu";
+import DropdownMenu from "../../ui-old/DropdownMenu";
+import UserAvatar from "../../ui/UserAvatar";
+import { UserRound, LogOut, ChevronRight } from "lucide-react";
+import { AVATAR_URL } from "../../utils/constants";
 
 const StyledUser = styled.div`
-  padding: 0 2.4rem;
+  margin-right: 1rem;
   margin-left: auto;
-  /* width: 100%; */
 `;
 
 const UserButton = styled.button`
@@ -22,7 +21,7 @@ const UserButton = styled.button`
   align-content: center;
   align-items: center;
   column-gap: 1rem;
-  padding: 0.8rem 0.2rem;
+  padding: 1rem;
   border-radius: 6px;
   margin-left: auto;
 
@@ -37,21 +36,22 @@ const UserButton = styled.button`
     color: #374151;
     transition: transform 0.3s;
   }
-`;
 
-const UserAvatar = styled.img`
-  grid-row: 1 / -1;
-  display: block;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  object-position: center;
+  @media (max-width: 50em) {
+    height: fit-content;
+    grid-template-columns: 3.6rem;
+    grid-template-rows: 3.6rem;
+    padding: 0.8rem;
+
+    span,
+    svg {
+      display: none;
+    }
+  }
 `;
 
 const UserName = styled.span`
-  max-width: 20ch;
+  max-width: 10ch;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -72,20 +72,20 @@ function User() {
   const { signOut, isPending } = useSignOut();
 
   const { userIsPending, user } = useUser();
-  const avatarFile = user?.user_metadata?.avatar_file;
-  const avatarUrl = `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/avatar/${avatarFile}`;
-  const userName = user?.user_metadata?.user_name;
-  const userRole = user?.user_metadata?.user_role;
+  const userName = user?.user_metadata?.name;
+  const userRole = user?.user_metadata?.role;
+  const avatarFile = user?.user_metadata?.avatarFile;
+  const avatarUrl = `${AVATAR_URL}${avatarFile}`;
 
   const itemsConfig = [
     {
       name: "用戶設定",
-      icon: GoPerson,
+      icon: UserRound,
       handleClick: () => navigate("/account"),
     },
     {
       name: "登出",
-      icon: GoSignOut,
+      icon: LogOut,
       handleClick: () => signOut(),
     },
   ];
@@ -105,13 +105,10 @@ function User() {
             setIsOpenMenu((isOpenMenu) => !isOpenMenu);
           }}
         >
-          <UserAvatar
-            src={avatarFile ? avatarUrl : defaultAvatar}
-            alt="userAvatar"
-          />
+          <UserAvatar avatarUrl={avatarUrl} />
           <UserName>{userName}</UserName>
           <UserRole>{userRole}</UserRole>
-          <RiArrowRightSLine size={22} />
+          <ChevronRight size={20} strokeWidth={2.4} />
         </UserButton>
       </DropdownMenu>
     </StyledUser>

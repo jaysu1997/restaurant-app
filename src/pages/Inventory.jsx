@@ -1,30 +1,27 @@
 // 食材備料頁面
 import styled from "styled-components";
 import { useState } from "react";
-import { BsFileEarmarkPlus } from "react-icons/bs";
-import Button from "../ui/Button";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
 import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
 import { useSearchParams } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
-import Filter from "../ui/Filter/Filter";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import Filter from "../ui-old/Filter/Filter";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback";
+import Button from "../ui/Button";
+import { FilePlus } from "lucide-react";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(15.4rem, 1fr));
-  justify-content: space-between;
-  gap: 2.4rem;
-  padding-bottom: 3.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 3.6rem;
 `;
 
 const filtersConfig = [
   {
     title: "食材名稱",
     type: "input",
-    inputType: "text",
     queryKey: "name",
     placeholder: "搜尋食材名稱",
   },
@@ -34,7 +31,7 @@ const filtersConfig = [
     queryKey: "quantity",
     placeholder: "選擇庫存剩餘量",
     options: [
-      { label: "不篩選", value: "all" },
+      { label: "不篩選", value: "" },
       { label: "庫存低於100", value: "100" },
       { label: "庫存低於50", value: "50" },
       { label: "庫存低於10", value: "10" },
@@ -71,7 +68,7 @@ function Inventory() {
     inventoryIsPending,
     inventoryError,
     inventoryIsError,
-  } = useGetInventory(false);
+  } = useGetInventory();
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");
@@ -91,21 +88,23 @@ function Inventory() {
   return (
     <>
       <PageHeader title="庫存管理">
+        <div>
+          <Button onClick={() => setIsOpenModal(true)}>
+            <FilePlus size={18} />
+            <span>新增食材</span>
+          </Button>
+        </div>
         <Filter filtersConfig={filtersConfig} />
-        <Button
-          $buttonStyle="createNewItem"
-          onClick={() => setIsOpenModal(true)}
-        >
-          <BsFileEarmarkPlus size={18} />
-          <span>新增食材</span>
-        </Button>
       </PageHeader>
 
       <QueryStatusFallback
         isPending={inventoryIsPending}
         isError={inventoryIsError}
         error={inventoryError}
-        isEmpty={Array.isArray(inventoryData) && inventoryData?.length === 0}
+        isEmpty={
+          (Array.isArray(inventoryData) && inventoryData?.length === 0) ||
+          displayInventoryData?.length === 0
+        }
         emptyState={{
           message: emptyStateMessage,
         }}

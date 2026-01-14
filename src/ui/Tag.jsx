@@ -27,6 +27,7 @@ const Tag = styled.span`
   font-weight: 700;
   border-radius: 6px;
   width: fit-content;
+  height: fit-content;
 
   ${(props) => tagStyles[props.$tagStatus] || tagStyles["準備中"]}
 `;

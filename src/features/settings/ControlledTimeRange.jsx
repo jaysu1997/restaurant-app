@@ -1,13 +1,13 @@
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import styled from "styled-components";
-import { MdAdd, MdHorizontalRule, MdOutlineDelete } from "react-icons/md";
-import { Fragment } from "react";
-import ControlledSelect from "../../ui/ControlledSelect";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
+import ControlledSelect from "../../ui-old/ControlledSelect";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 import { generateTimeOptions } from "../../context/settingsHelpers";
 import { endOfDay, startOfDay } from "date-fns";
+import { Trash2, Plus, Minus } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
+import Button from "../../ui/Button";
 
 const StyledTimeRange = styled.ul`
   display: flex;
@@ -17,27 +17,9 @@ const StyledTimeRange = styled.ul`
   li {
     display: grid;
     grid-template-columns: minmax(7.8rem, 1fr) 1.4rem minmax(7.8rem, 1fr) 2rem;
-    grid-template-rows: 3.8rem auto;
+    /* grid-template-rows: 3.8rem auto; */
     align-items: center;
     column-gap: 0.6rem;
-  }
-`;
-
-const RemoveButton = styled.button`
-  color: #383838;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-
-  &:not(:disabled):hover {
-    color: #dc2626;
-  }
-`;
-
-const AppendButton = styled(RemoveButton)`
-  &:not(:disabled):hover {
-    color: #3b82f6;
   }
 `;
 
@@ -82,12 +64,13 @@ function validateTimeSlotField({
   checkOverlapConflicts({ validSlots, path, setError });
 }
 
-function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
+function ControlledTimeRange({ dayIndex, fieldArrayName }) {
   const {
     getValues,
     formState: { errors },
     setError,
     clearErrors,
+    control,
   } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -115,11 +98,16 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
   return (
     <StyledTimeRange>
       {fields.map((field, slotIndex) => (
-        <Fragment key={field.id}>
+        <FormFieldLayout
+          key={field.id}
+          error={
+            errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[slotIndex]
+              ?.errorFallback
+          }
+        >
           <li id={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}`}>
             <ControlledSelect
               options={times}
-              control={control}
               name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.openTime`}
               creatable={false}
               placeholder="開始時間"
@@ -128,10 +116,11 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
                 validate: validateFn,
               }}
             />
-            <MdHorizontalRule size={14} />
+
+            <Minus size={14} />
+
             <ControlledSelect
               options={times}
-              control={control}
               name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.closeTime`}
               creatable={false}
               placeholder="休息時間"
@@ -142,8 +131,9 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
             />
 
             {slotIndex === 0 && (
-              <AppendButton
-                type="button"
+              <Button
+                $variant="plain"
+                $hoverColor="#2563eb"
                 onClick={() => {
                   append({ openTime: "", closeTime: "" });
                   // 淡入欄位動畫
@@ -152,35 +142,27 @@ function ControlledTimeRange({ control, dayIndex, fieldArrayName }) {
                   );
                 }}
               >
-                <MdAdd size={20} />
-              </AppendButton>
+                <Plus size={20} strokeWidth={2.4} />
+              </Button>
             )}
 
             {slotIndex !== 0 && (
-              <RemoveButton
+              <Button
+                $variant="plain"
                 title="清除這個時段的時間"
-                type="button"
                 disabled={fields.length === 1}
                 onClick={() => {
                   remove(slotIndex);
 
-                  // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在
+                  // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在(但是這樣好像也會變成提早驗證其他欄位，所以或許需要再考慮看看?)
                   fields.length > 1 && validateFn();
                 }}
               >
-                <MdOutlineDelete size={20} />
-              </RemoveButton>
+                <Trash2 size={20} />
+              </Button>
             )}
           </li>
-
-          <FormErrorsMessage
-            errors={
-              errors?.[fieldArrayName]?.[dayIndex]?.timeSlots?.[slotIndex]
-                ?.errorFallback
-            }
-            gridColumn="1 / -1"
-          />
-        </Fragment>
+        </FormFieldLayout>
       ))}
     </StyledTimeRange>
   );

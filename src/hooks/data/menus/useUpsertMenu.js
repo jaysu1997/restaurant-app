@@ -1,7 +1,7 @@
 // 新增or更新單筆menu數據
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertMenuApi } from "../../../services/apiMenus";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 
 function useUpsertMenu() {
   const queryClient = useQueryClient();
@@ -15,6 +15,10 @@ function useUpsertMenu() {
     onSuccess: () => {
       // 這種用法好像並沒有在文檔中看到，但可以同時將多個queryKey無效
       queryClient.invalidateQueries(["filterMenuData", "menus"]);
+      StyledHotToast({
+        type: "success",
+        title: "餐點設定成功",
+      });
     },
     onError: (error) => {
       StyledHotToast({

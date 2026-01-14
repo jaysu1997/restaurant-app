@@ -1,57 +1,19 @@
 import styled from "styled-components";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import { useForm } from "react-hook-form";
-import ButtonSpinner from "../../ui/ButtonSpinner";
-import StyledHotToast from "../../ui/StyledHotToast";
-import PasswordInput from "../../ui/PasswordInput";
+import StyledHotToast from "../../ui-old/StyledHotToast";
+import PasswordInput from "../../components/PasswordInput";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
+import SectionContainer from "../../ui/SectionContainer";
+import { KeyRound } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
   display: grid;
-  grid-template-columns: 8rem 1fr;
+  grid-template-rows: auto auto;
   column-gap: 1rem;
-  grid-template-rows: repeat(3, 3.8rem 2.8rem);
+  row-gap: 0.4rem;
   font-size: 1.4rem;
-  font-weight: 500;
-  align-items: center;
-
-  div {
-    position: relative;
-  }
-`;
-
-const Input = styled.input`
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  font-size: 1.4rem;
-  font-weight: 400;
-  padding: 0 0.8rem;
-  height: 3.8rem;
-  border-radius: 6px;
-`;
-
-const Footer = styled.footer`
-  padding-top: 2.4rem;
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 2rem;
-`;
-
-const SubmitButton = styled.button`
-  background-color: #2563eb;
-  color: #fff;
-  padding: 0.6rem 1.8rem;
-  border-radius: 4px;
-  font-weight: 500;
-  width: 6.4rem;
-`;
-
-const CancelButton = styled(SubmitButton)`
-  color: #333;
-  background-color: #eee;
 `;
 
 function UpdatePassword({ userData }) {
@@ -100,27 +62,42 @@ function UpdatePassword({ userData }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <label>現有密碼</label>
-      <PasswordInput
-        render={(type) => (
-          <Input
-            type={type}
+    <SectionContainer
+      title="變更密碼"
+      icon={<KeyRound size={20} />}
+      form={{
+        formId: "updatePassword",
+        handleReset: () => reset(),
+        isDirty: isDirty,
+        isUpdating: isPending,
+      }}
+    >
+      <Form onSubmit={handleSubmit(onSubmit, onError)} id="updatePassword">
+        <FormFieldLayout
+          label="現有密碼"
+          id="password"
+          error={errors?.currentPassword}
+        >
+          <PasswordInput
+            id="password"
             autoComplete="current-password"
+            disabled={isPending}
             {...register("currentPassword", {
-              required: "請輸入現有密碼",
+              required: "密碼必須填寫",
               minLength: { value: 8, message: "密碼至少要有8碼" },
             })}
           />
-        )}
-      />
-      <FormErrorsMessage errors={errors?.currentPassword} gridColumn={2} />
-      <label>新的密碼</label>
-      <PasswordInput
-        render={(type) => (
-          <Input
-            type={type}
+        </FormFieldLayout>
+
+        <FormFieldLayout
+          label="新的密碼"
+          id="newPassword"
+          error={errors?.newPassword}
+        >
+          <PasswordInput
+            id="newPassword"
             autoComplete="new-password"
+            disabled={isPending}
             {...register("newPassword", {
               required: "請輸入新的密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
@@ -130,15 +107,17 @@ function UpdatePassword({ userData }) {
               },
             })}
           />
-        )}
-      />
-      <FormErrorsMessage errors={errors?.newPassword} gridColumn={2} />
-      <label>確認新密碼</label>
-      <PasswordInput
-        render={(type) => (
-          <Input
-            type={type}
+        </FormFieldLayout>
+
+        <FormFieldLayout
+          label="確認新密碼"
+          id="confirmPassword"
+          error={errors?.confirmPassword}
+        >
+          <PasswordInput
+            id="confirmPassword"
             autoComplete="new-password"
+            disabled={isPending}
             {...register("confirmPassword", {
               required: "請再次輸入新密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
@@ -148,19 +127,9 @@ function UpdatePassword({ userData }) {
               },
             })}
           />
-        )}
-      />
-      <FormErrorsMessage errors={errors?.confirmPassword} gridColumn={2} />
-
-      <Footer>
-        <SubmitButton disabled={!isDirty || isPending}>
-          {isPending ? <ButtonSpinner /> : "儲存"}
-        </SubmitButton>
-        <CancelButton onClick={() => reset()} disabled={!isDirty || isPending}>
-          取消
-        </CancelButton>
-      </Footer>
-    </Form>
+        </FormFieldLayout>
+      </Form>
+    </SectionContainer>
   );
 }
 

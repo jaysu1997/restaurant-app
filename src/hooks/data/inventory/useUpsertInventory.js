@@ -5,7 +5,7 @@ import {
   createInventoryApi,
   updateInventoryApi,
 } from "../../../services/apiInventory";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 
 function useUpsertInventory() {
   const queryClient = useQueryClient();

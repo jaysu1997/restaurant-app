@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import DishCard from "../../ui/DishCard";
+import DishCard from "../../ui-old/DishCard";
 
 const CategoryName = styled.li`
   background-color: #262626;

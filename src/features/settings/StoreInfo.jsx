@@ -1,41 +1,27 @@
 import styled from "styled-components";
-import ControlledInput from "../../ui/ControlledInput";
 import { useForm } from "react-hook-form";
-import SettingFormSection from "../../ui/SettingFormSection";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
-import StyledHotToast from "../../ui/StyledHotToast";
+import StyledHotToast from "../../ui-old/StyledHotToast";
+import SectionContainer from "../../ui/SectionContainer";
+import FormInput from "../../ui/FormInput";
+import { Store } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
+import { validatePhoneNumber } from "../../utils/helpers";
 
-const Content = styled.ul`
+const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-
-  li {
-    display: grid;
-    grid-template-rows: auto 3.8rem 2rem;
-    row-gap: 0.3rem;
-    align-items: center;
-  }
-
-  label {
-    padding-bottom: 0.3rem;
-  }
-
-  input {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+  gap: 0.4rem;
 `;
 
 function StoreInfo({ data = {} }) {
-  const { mutate } = useUpsertSettings();
+  const { mutate, isPending } = useUpsertSettings();
 
   const {
-    control,
     formState: { isDirty, errors },
     handleSubmit,
     reset,
+    register,
   } = useForm({
     defaultValues: { storeInfo: data },
   });
@@ -54,77 +40,68 @@ function StoreInfo({ data = {} }) {
   }
 
   return (
-    <SettingFormSection
+    <SectionContainer
       title="店鋪資訊設定"
+      icon={<Store size={20} />}
       description="設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。"
-      handleSubmit={handleSubmit(onSubmit, onError)}
-      handleReset={() => reset({ storeInfo: data })}
-      isDirty={isDirty}
+      form={{
+        formId: "storeInfo",
+        handleReset: () => reset({ storeInfo: data }),
+        isDirty,
+        isUpdating: isPending,
+      }}
     >
-      <Content>
-        <li>
-          <label htmlFor="phone">連絡電話</label>
-          <ControlledInput
-            control={control}
+      <form id="storeInfo" onSubmit={handleSubmit(onSubmit, onError)}>
+        <Content>
+          <FormFieldLayout
             id="phone"
-            name="storeInfo.phone"
-            type="tel"
-            placeholder="請輸入連絡電話"
-            rules={{
-              required: "連絡電話不能空白",
-              validate: (value) => {
-                const trimmed = value.trim();
+            label="連絡電話"
+            error={errors?.storeInfo?.phone}
+          >
+            <FormInput
+              id="phone"
+              type="tel"
+              placeholder="請輸入連絡電話"
+              {...register("storeInfo.phone", {
+                required: "連絡電話不能空白",
+                validate: (value) => validatePhoneNumber(value),
+              })}
+            />
+          </FormFieldLayout>
 
-                const isMobile = /^09\d{8}$/.test(trimmed);
-                const isLandline = /^0[2-8]\d{7,8}$/.test(trimmed);
-
-                if (!isMobile && !isLandline) {
-                  return "請輸入正確的市話或手機號碼(純數字)";
-                }
-
-                return true;
-              },
-            }}
-          />
-
-          <FormErrorsMessage errors={errors?.storeInfo?.phone} />
-        </li>
-
-        <li>
-          <label htmlFor="address">店鋪地址</label>
-          <ControlledInput
-            control={control}
+          <FormFieldLayout
             id="address"
-            name="storeInfo.address"
-            type="text"
-            placeholder="請輸入店鋪地址"
-            rules={{
-              required: "店鋪地址不能空白",
-            }}
-          />
+            label="店鋪地址"
+            error={errors?.storeInfo?.address}
+          >
+            <FormInput
+              id="address"
+              placeholder="請輸入店鋪地址"
+              {...register("storeInfo.address", {
+                required: "店鋪地址不能空白",
+              })}
+            />
+          </FormFieldLayout>
 
-          <FormErrorsMessage errors={errors?.storeInfo?.address} />
-        </li>
-
-        <li>
-          <label htmlFor="taxId">統一編號</label>
-          <ControlledInput
-            control={control}
+          <FormFieldLayout
             id="taxId"
-            name="storeInfo.taxId"
-            type="number"
-            placeholder="請輸入統一編號"
-            rules={{
-              required: "統一編號不能空白",
-              validate: (value) => {
-                return /^\d{8}$/.test(value) || "統一編號格式錯誤";
-              },
-            }}
-          />
-          <FormErrorsMessage errors={errors?.storeInfo?.taxId} />
-        </li>
-      </Content>
-    </SettingFormSection>
+            label="統一編號"
+            error={errors?.storeInfo?.taxId}
+          >
+            <FormInput
+              id="taxId"
+              placeholder="請輸入統一編號"
+              {...register("storeInfo.taxId", {
+                required: "統一編號不能空白",
+                validate: (value) => {
+                  return /^\d{8}$/.test(value) || "統一編號格式錯誤";
+                },
+              })}
+            />
+          </FormFieldLayout>
+        </Content>
+      </form>
+    </SectionContainer>
   );
 }
 

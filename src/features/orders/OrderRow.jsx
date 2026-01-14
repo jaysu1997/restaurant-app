@@ -8,8 +8,8 @@ import {
 const StyledOrderRow = styled.div`
   display: grid;
   grid-template-columns:
-    5.6rem minmax(0, 1fr) minmax(0, 1.5fr) repeat(3, minmax(0, 1fr))
-    2.8rem;
+    6.4rem minmax(0, 0.5fr) minmax(0, 1fr) repeat(3, minmax(0, 0.5fr))
+    3.2rem;
   align-items: center;
   justify-items: start;
   gap: 1rem;
@@ -25,15 +25,9 @@ const StyledOrderRow = styled.div`
     border-radius: 0 0 8px 8px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 48em) {
     grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "createdTime action"
-      "diningMethod diningMethod"
-      "pickupNumber pickupNumber"
-      "totalPrice totalPrice"
-      "status status"
-      "paid paid";
+    grid-template-rows: repeat(6, 2.8rem);
     border: none;
     border-radius: 6px;
 
@@ -52,60 +46,32 @@ const StyledOrderRow = styled.div`
       width: 100%;
       height: 2.8rem;
       font-weight: 600;
+      grid-column: 1 / -1;
     }
 
     div::before {
+      content: attr(data-label);
       font-weight: 500;
       font-size: 1.4rem;
       color: #666;
     }
 
-    div[data-order-type] {
-      grid-area: diningMethod;
-
-      &::before {
-        content: "用餐方式";
-      }
-    }
-
-    div[data-order-number] {
-      grid-area: pickupNumber;
-
-      &::before {
-        content: "取餐號碼";
-      }
-    }
-
-    div[data-action] {
-      grid-area: action;
+    div[data-label="操作"] {
+      grid-row: 1;
+      grid-column: 2;
       justify-content: flex-end;
-    }
-
-    div[data-created-time] {
-      grid-area: createdTime;
-    }
-
-    div[data-status] {
-      grid-area: status;
 
       &::before {
-        content: "訂單狀態";
+        display: none;
       }
     }
 
-    div[data-total-price] {
-      grid-area: totalPrice;
+    div[data-label="建立時間"] {
+      grid-row: 1;
+      grid-column: 1;
 
       &::before {
-        content: "消費金額";
-      }
-    }
-
-    div[data-paid] {
-      grid-area: paid;
-
-      &::before {
-        content: "付款狀態";
+        display: none;
       }
     }
   }
@@ -120,29 +86,31 @@ const DiningMethod = styled.span`
 function OrderRow({ orderData, children }) {
   return (
     <StyledOrderRow>
-      <div data-order-type>
+      <div data-label="用餐方式">
         <DiningMethod $diningMethod={orderData.diningMethod}>
           {`[${orderData.diningMethod}]`}
         </DiningMethod>
       </div>
 
-      <div data-order-number>
+      <div data-label="取餐號碼">
         <span>{formatPickupNumber(orderData.pickupNumber)}</span>
       </div>
 
-      <div data-created-time>{formatCreatedTime(orderData.createdTime)}</div>
+      <div data-label="建立時間">
+        {formatCreatedTime(orderData.createdTime)}
+      </div>
 
-      <div data-status>
+      <div data-label="消費金額">{`$ ${orderData.totalPrice}`}</div>
+
+      <div data-label="訂單狀態">
         <Tag $tagStatus={orderData.status}>{orderData.status}</Tag>
       </div>
 
-      <div data-total-price>{`$ ${orderData.totalPrice}`}</div>
-
-      <div data-paid>
+      <div data-label="付款狀態">
         <Tag $tagStatus={orderData.paid}>{orderData.paid}</Tag>
       </div>
 
-      <div data-action>{children}</div>
+      <div data-label="操作">{children}</div>
     </StyledOrderRow>
   );
 }

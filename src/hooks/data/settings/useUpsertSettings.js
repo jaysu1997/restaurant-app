@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertSettingsApi } from "../../../services/apiSettings";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import StyledHotToast from "../../../ui-old/StyledHotToast";
 
 // 更新or新增店鋪設定
 function useUpsertSettings() {
   const queryClient = useQueryClient();
 
-  const { mutate, isPaused, error } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: upsertSettingsApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
@@ -17,7 +17,7 @@ function useUpsertSettings() {
     },
   });
 
-  return { mutate, isPaused, error };
+  return { mutate, isPending, error };
 }
 
 export default useUpsertSettings;

@@ -2,22 +2,20 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
-import Button from "../ui/Button.jsx";
-import { BsFileEarmarkPlus } from "react-icons/bs";
+import Button from "../ui/Button";
 import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
-import Filter from "../ui/Filter/Filter.jsx";
-import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
+import Filter from "../ui-old/Filter/Filter.jsx";
+import QueryStatusFallback from "../ui-old/QueryStatusFallback.jsx";
 import styled from "styled-components";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
+import { FilePlus } from "lucide-react";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  justify-content: space-between;
-  gap: 4rem;
-  padding-bottom: 3.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  gap: 3.6rem;
 `;
 
 function filterData(menusData, nameSearchParams, categorySearchParams) {
@@ -65,7 +63,6 @@ function MenuManage() {
     {
       title: "餐點名稱",
       type: "input",
-      inputType: "text",
       queryKey: "name",
       placeholder: "搜尋餐點名稱",
     },
@@ -75,7 +72,7 @@ function MenuManage() {
       queryKey: "category",
       placeholder: "選擇餐點分類",
       options: [
-        { label: "不篩選", value: "all" },
+        { label: "不篩選", value: "" },
         ...Array.from(new Set(menusData?.map((data) => data.category))).map(
           (category) => ({ label: category, value: category })
         ),
@@ -86,14 +83,13 @@ function MenuManage() {
   return (
     <>
       <PageHeader title="菜單設定">
+        <div>
+          <Button onClick={() => setIsOpenModal(true)}>
+            <FilePlus size={18} />
+            <span>新增餐點</span>
+          </Button>
+        </div>
         <Filter filtersConfig={filtersConfig} />
-        <Button
-          $buttonStyle="createNewItem"
-          onClick={() => setIsOpenModal(true)}
-        >
-          <BsFileEarmarkPlus size={18} />
-          <span>新增餐點</span>
-        </Button>
       </PageHeader>
 
       <QueryStatusFallback
