@@ -51,7 +51,7 @@ function OrderOperation({
             $variant="secondary"
             onClick={() => navigate(`/order/${orderId}/edit`)}
           >
-            <SquarePen size={16} />
+            <SquarePen />
             編輯
           </Button>
         )}
@@ -69,7 +69,7 @@ function OrderOperation({
         {!isEdit && status !== "已完成" && (
           <div>
             <Button $variant="danger" onClick={() => setIsOpenModal(true)}>
-              <Trash2 size={16} />
+              <Trash2 />
               刪除
             </Button>
           </div>
@@ -87,7 +87,7 @@ function OrderOperation({
             <p>
               請確認是否要刪除
               <strong>{`取餐號碼${formatPickupNumber(
-                orderData.pickupNumber
+                orderData.pickupNumber,
               )}`}</strong>
               &#8203;&nbsp;(
               {formatCreatedTime(orderData.createdTime)})？

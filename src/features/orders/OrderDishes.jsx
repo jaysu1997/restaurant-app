@@ -35,7 +35,7 @@ const OrderDishRow = styled.li`
     min-height: 0;
   }
 
-  [data-value="name"] {
+  .dishName {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -49,7 +49,7 @@ const OrderDishRow = styled.li`
       display: none;
     }
 
-    [data-value="price"] {
+    .dishPrice {
       justify-self: end;
       white-space: nowrap;
     }
@@ -93,7 +93,7 @@ const ItemMeta = styled.div`
   font-weight: 400;
   font-size: 1.4rem;
 
-  [data-value="note"] {
+  .dishNote {
     color: #6b7280;
   }
 
@@ -115,16 +115,14 @@ function OrderDishes({ dishes, isEdit }) {
 
       {dishes.map((dish) => (
         <OrderDishRow key={dish.uniqueId}>
-          <span data-value="name">{dish.name}</span>
+          <span className="dishName">{dish.name}</span>
           <ItemMeta>
-            {dish.customize.length !== 0 && (
-              <p data-value="option">{summarizeMealChoices(dish)}</p>
-            )}
-            {dish.note && <p data-value="note">{`" ${dish.note} "`}</p>}
+            {dish.customize.length !== 0 && <p>{summarizeMealChoices(dish)}</p>}
+            {dish.note && <p className="dishNote">{`" ${dish.note} "`}</p>}
           </ItemMeta>
 
-          <span data-value="amount">{dish.servings} 份</span>
-          <span data-value="price" className="emphasize">
+          <span>{dish.servings} 份</span>
+          <span className="emphasize dishPrice">
             $ {dish.itemTotalPrice * dish.servings}
           </span>
           {isEdit && <OrderEditButton dish={dish} />}
@@ -152,7 +150,7 @@ function OrderEditButton({ dish }) {
     <>
       <ButtonGroup>
         <Button $variant="ghost" onClick={() => setIsOpenModal(dish)}>
-          <Pencil size={14} />
+          <Pencil />
         </Button>
         <Button
           $variant="ghost"
@@ -163,7 +161,7 @@ function OrderEditButton({ dish }) {
             })
           }
         >
-          <Trash2 size={14} />
+          <Trash2 />
         </Button>
       </ButtonGroup>
 

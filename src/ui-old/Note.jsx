@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { trimString } from "../utils/helpers";
 
 const StyledNote = styled.div`
   display: grid;
@@ -46,7 +47,9 @@ function Note({ register, children, readOnly = false, value, maxLength = 50 }) {
         <TextArea
           maxLength={maxLength}
           placeholder={`備註內容最多${maxLength}個字`}
-          {...register("note")}
+          {...register("note", {
+            setValueAs: trimString,
+          })}
         />
       )}
     </StyledNote>

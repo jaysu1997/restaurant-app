@@ -1,19 +1,5 @@
 import { useController, useFormContext } from "react-hook-form";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
-
-const selectStyle = {
-  input: (base) => ({ ...base, maxWidth: "100%", overflow: "hidden" }),
-  container: (base) => ({ ...base, width: "100%" }),
-  control: (base) => ({ ...base, fontSize: "1.4rem" }),
-  menuList: (base) => ({ ...base, fontSize: "1.4rem", color: "#000" }),
-  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-};
-
-const customComponents = {
-  DropdownIndicator: () => null,
-  IndicatorSeparator: () => null,
-};
+import StyledSelect from "../ui/StyledSelect";
 
 function ControlledSelect({
   name,
@@ -26,32 +12,27 @@ function ControlledSelect({
   const { control, handleCreateNewItems = () => {} } = useFormContext();
   const { field } = useController({ name, control, rules });
 
-  const Component = creatable ? CreatableSelect : Select;
-
-  const creatableProps = creatable
-    ? {
-        isClearable: true,
-        isSearchable: true,
-        formatCreateLabel: (inputValue) => `新增食材: ${inputValue}`,
-        onCreateOption: (optionValue) =>
-          handleCreateNewItems(optionValue.trim(), field.name),
-      }
-    : {
-        isClearable: false,
-        isSearchable: false,
-      };
+  // CreatableSelect需要的props設定
+  const creatableProps = {
+    isClearable: true,
+    isSearchable: true,
+    formatCreateLabel: (inputValue) => `新增食材: ${inputValue}`,
+    onCreateOption: (optionValue) =>
+      handleCreateNewItems(optionValue.trim(), field.name),
+  };
 
   return (
-    <Component
+    <StyledSelect
       {...field}
-      styles={selectStyle}
-      menuPortalTarget={document.body}
-      menuPosition="fixed"
-      components={customComponents}
+      creatable={creatable}
       options={options}
       isDisabled={disabled}
       placeholder={placeholder}
-      {...creatableProps} // 👈 根據 creatable 動態加入特定 props
+      components={{
+        IndicatorSeparator: () => null,
+        DropdownIndicator: () => null,
+      }}
+      {...(creatable ? creatableProps : {})}
     />
   );
 }

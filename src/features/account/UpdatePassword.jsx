@@ -64,7 +64,7 @@ function UpdatePassword({ userData }) {
   return (
     <SectionContainer
       title="變更密碼"
-      icon={<KeyRound size={20} />}
+      icon={<KeyRound />}
       form={{
         formId: "updatePassword",
         handleReset: () => reset(),

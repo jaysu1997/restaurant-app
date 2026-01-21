@@ -84,11 +84,6 @@ function Option({
       $checked={isChecked}
     >
       <input
-        // type={
-        //   choiceType === "single" && isRequired === "required"
-        //     ? "radio"
-        //     : "checkbox"
-        // }
         type="checkbox"
         hidden
         id={optionId}
@@ -99,8 +94,8 @@ function Option({
         }}
       />
 
-      <Square size={20} />
-      <Check size={16} strokeWidth={3} />
+      <Square className="icon-lg" />
+      <Check className="icon-md" strokeWidth={3} />
 
       <OptionName>{optionData.optionLabel}</OptionName>
       <span>

@@ -105,14 +105,14 @@ function StatsCards({ analyzedData }) {
         return (
           <StatCard $bgColor={item.cardColor} key={index}>
             <StatHeading>{item.heading}</StatHeading>
-            <Icon size={20} color={item.iconColor} />
+            <Icon className="icon-lg" color={item.iconColor} />
 
             <StatData>
               <span>
                 {!item.value && item.value !== 0 ? (
                   <>
-                    <Minus size={24} />
-                    <Minus size={24} />
+                    <Minus className="icon-xl" />
+                    <Minus className="icon-xl" />
                   </>
                 ) : (
                   item.value
@@ -121,9 +121,17 @@ function StatsCards({ analyzedData }) {
 
               {item.heading === "今日營收趨勢" ? (
                 todayRevenueTrend >= 0 ? (
-                  <ArrowBigUp color="#22c55e" fill="#22c55e" size={20} />
+                  <ArrowBigUp
+                    color="#22c55e"
+                    fill="#22c55e"
+                    className="icon-lg"
+                  />
                 ) : (
-                  <ArrowBigDown color="#f43f5e" fill="#f43f5e" size={20} />
+                  <ArrowBigDown
+                    color="#f43f5e"
+                    fill="#f43f5e"
+                    className="icon-lg"
+                  />
                 )
               ) : undefined}
             </StatData>

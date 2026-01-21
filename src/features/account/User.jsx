@@ -108,7 +108,7 @@ function User() {
           <UserAvatar avatarUrl={avatarUrl} />
           <UserName>{userName}</UserName>
           <UserRole>{userRole}</UserRole>
-          <ChevronRight size={20} strokeWidth={2.4} />
+          <ChevronRight className="icon-lg" strokeWidth={2.4} />
         </UserButton>
       </DropdownMenu>
     </StyledUser>

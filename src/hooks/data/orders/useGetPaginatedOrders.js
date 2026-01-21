@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { getPaginatedOrdersApi } from "../../../services/apiOrder";
 import { safeParseDate } from "../../../utils/orderHelpers";
 import { addDays, format } from "date-fns";
-import { parsePositiveInt } from "../../../utils/helpers";
+import { parsePositiveInt, withFallbackRetry } from "../../../utils/helpers";
 
 // 將日期篩選條件轉換成supabase時間欄位的要求格式
 function getCreatedTimeSearchParams(createdTime) {
@@ -44,7 +44,7 @@ function useGetPaginatedOrders() {
   });
 
   const createdTime = getCreatedTimeSearchParams(
-    searchParams.get("createdTime")
+    searchParams.get("createdTime"),
   );
 
   const {
@@ -52,6 +52,7 @@ function useGetPaginatedOrders() {
     isPending,
     error,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ["orders", page, createdTime, pickupNumber],
     queryFn: () => getPaginatedOrdersApi(page, createdTime, pickupNumber),
@@ -78,7 +79,7 @@ function useGetPaginatedOrders() {
     maxPage,
     isPending,
     isError,
-    error,
+    error: withFallbackRetry(error, refetch),
     createdTime,
     pickupNumber,
   };

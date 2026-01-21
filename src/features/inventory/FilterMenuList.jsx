@@ -27,6 +27,9 @@ const AccordionTitle = styled.button`
   font-size: 1.4rem;
 
   svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    flex-shrink: 0;
     transition: transform 0.3s;
     transform: ${({ $isExpanded }) =>
       $isExpanded ? "rotate(-90deg)" : "rotate(90deg)"};
@@ -45,7 +48,9 @@ const AccordionContent = styled.div`
 
   opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
   visibility: ${({ $isExpanded }) => ($isExpanded ? "visible" : "hidden")};
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
 
   span[tabindex="0"] {
     color: #3b82f6;
@@ -75,7 +80,7 @@ function FilterMenuList({ name, filterMenuData }) {
     <>
       <Accordion $isExpanded={isExpanded}>
         <AccordionTitle $isExpanded={isExpanded} onClick={handleToggle}>
-          <ChevronRight size={14} />
+          <ChevronRight />
           <span>查看使用{name}的餐點</span>
         </AccordionTitle>
 

@@ -111,6 +111,30 @@ export const GlobalStyles = styled.createGlobalStyle`
     accent-color: #2563eb;
   }
 
+  .icon-sm {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .icon-md {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .icon-lg {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
+  .icon-xl {
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+  }
+
   .emphasize {
     color: #dc2626;
   }

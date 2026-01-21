@@ -7,7 +7,7 @@ import ButtonSubmit from "../../ui/ButtonSubmit";
 import ButtonCancel from "../../ui/ButtonCancel";
 import styled from "styled-components";
 import FormSection from "../../components/FormSection";
-import { parsePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt, trimString } from "../../utils/helpers";
 
 const StyledForm = styled.form`
   display: flex;
@@ -86,7 +86,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
                   name: "label",
                   errors: errors?.label,
                   rules: {
-                    setValueAs: (value) => value.trim(),
+                    setValueAs: trimString,
                   },
                 },
               ]}

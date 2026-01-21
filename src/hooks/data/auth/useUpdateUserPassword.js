@@ -14,8 +14,11 @@ function useUpdateUserPassword() {
       setTimeout(() => signOut(), 2000);
     },
     onError: (error) => {
-      console.log(error);
-      StyledHotToast({ type: "error", title: "密碼變更失敗" });
+      StyledHotToast({
+        type: "error",
+        title: "密碼變更失敗",
+        content: error.message,
+      });
     },
   });
 

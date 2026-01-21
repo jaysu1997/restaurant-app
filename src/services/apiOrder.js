@@ -37,7 +37,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
 
   const { data, count, error } = await query.range(
     (page - 1) * itemsPerPage,
-    page * itemsPerPage - 1
+    page * itemsPerPage - 1,
   );
 
   handleSupabaseApiError(error);
@@ -54,7 +54,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
 export async function getLast7DaysOrdersApi() {
   const startDate = format(
     startOfDay(subDays(new Date(), 6)),
-    "yyyy-MM-dd HH:mm:ss"
+    "yyyy-MM-dd HH:mm:ss",
   );
   const { data, error } = await supabase
     .from("orders")
@@ -63,6 +63,7 @@ export async function getLast7DaysOrdersApi() {
 
   handleSupabaseApiError(error);
 
+  // return [];
   return data;
 }
 
@@ -75,8 +76,7 @@ export async function getOrderApi(orderId) {
     .single();
 
   handleSupabaseApiError(error, {
-    for: "PGRST116",
-    message: "查無此訂單，請確認訂單 ID 是否正確。",
+    PGRST116: "查無此訂單，請確認訂單 ID 是否正確。",
   });
 
   // 使用single，所以是直接回傳一個物件(不是物件陣列)
@@ -94,6 +94,7 @@ export async function deleteOrderApi(orderId) {
   return data;
 }
 
+// 更新指定訂單
 export async function updateOrderApi(oderData) {
   const { data, error } = await supabase.rpc("update_order", {
     order_data: oderData,

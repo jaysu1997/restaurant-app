@@ -9,7 +9,7 @@ import FormInput from "../../ui/FormInput";
 import Button from "../../ui/Button";
 import { Plus, Trash2, Utensils } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
-import { parsePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt, trimString } from "../../utils/helpers";
 
 const Content = styled.ul`
   display: flex;
@@ -105,7 +105,7 @@ function DineInTableSettings({ data = {} }) {
   return (
     <SectionContainer
       title="內用桌號設定"
-      icon={<Utensils size={20} />}
+      icon={<Utensils />}
       description="設定內用餐桌的區域分類與桌號配置，用於點餐時標記內用桌位。"
       form={{
         formId: "dineInTableConfig",
@@ -122,7 +122,7 @@ function DineInTableSettings({ data = {} }) {
             fadeInAnimation(`dineInTableConfig.${fields.length}`);
           }}
         >
-          <Plus size={20} />
+          <Plus />
           新增分區
         </Button>
       }
@@ -138,21 +138,21 @@ function DineInTableSettings({ data = {} }) {
               <SubTitle>內用分區 {index + 1}</SubTitle>
 
               <FormFieldLayout
-                id={`${index}.zoneName`}
+                id={`dineInTableConfig.${index}.zoneName`}
                 label="分區名稱"
                 error={errors?.dineInTableConfig?.[index]?.zoneName}
               >
                 <FormInput
-                  id={`${index}.zoneName`}
+                  id={`dineInTableConfig.${index}.zoneName`}
                   placeholder="分區名稱"
                   {...register(`dineInTableConfig.${index}.zoneName`, {
+                    setValueAs: trimString,
                     validate: (value) => {
-                      const trimmedValue = value.trim();
                       const zones = getValues("dineInTableConfig");
 
                       const duplicate = zones.some((zone, zoneIndex) => {
                         if (zoneIndex === index) return false; // ← 重點：略過自己
-                        return zone.zoneName.trim() === trimmedValue;
+                        return zone.zoneName.trim() === value;
                       });
 
                       return !duplicate || "此名稱已被使用";
@@ -162,12 +162,12 @@ function DineInTableSettings({ data = {} }) {
               </FormFieldLayout>
 
               <FormFieldLayout
-                id={`${index}.tableCount`}
+                id={`dineInTableConfig.${index}.tableCount`}
                 label="分區桌數"
                 error={errors?.dineInTableConfig?.[index]?.tableCount}
               >
                 <FormInput
-                  id={`${index}.tableCount`}
+                  id={`dineInTableConfig.${index}.tableCount`}
                   placeholder="分區總桌數"
                   {...register(`dineInTableConfig.${index}.tableCount`, {
                     required: "總桌數不能空白",
@@ -187,7 +187,7 @@ function DineInTableSettings({ data = {} }) {
                 type="button"
                 onClick={() => remove(index)}
               >
-                <Trash2 size={20} />
+                <Trash2 />
               </Button>
 
               <Preview>
@@ -196,7 +196,7 @@ function DineInTableSettings({ data = {} }) {
                   <p>
                     {generateTableNumbers(
                       watch(`dineInTableConfig.${index}.zoneName`),
-                      watch(`dineInTableConfig.${index}.tableCount`)
+                      watch(`dineInTableConfig.${index}.tableCount`),
                     ).join(" , ")}
                   </p>
                 </div>

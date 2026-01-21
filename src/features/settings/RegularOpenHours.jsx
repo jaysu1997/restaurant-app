@@ -73,7 +73,7 @@ function RegularOpenHours({ data = {} }) {
       {
         onSuccess: (newData) =>
           reset({ regularOpenHours: newData.regularOpenHours }),
-      }
+      },
     );
   }
 
@@ -86,7 +86,7 @@ function RegularOpenHours({ data = {} }) {
     <FormProvider {...methods}>
       <SectionContainer
         title="一般營業時間"
-        icon={<Clock size={20} />}
+        icon={<Clock />}
         description="設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。"
         form={{
           formId: "regularOpenHours",

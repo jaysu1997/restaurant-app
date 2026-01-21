@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSettingsApi } from "../../../services/apiSettings";
+import { withFallbackRetry } from "../../../utils/helpers";
 
 // 取得所有設定的數據
 function useGetSettings() {
   const {
     data = {},
-    error: settingsError,
-    isPending: settingsIsPending,
-    isSuccess: settingsIsSuccess,
-    isError: settingsIsError,
+    error,
+    isPending,
+    isSuccess,
+    isError,
+    refetch,
   } = useQuery({
     queryKey: ["settings"],
     queryFn: getSettingsApi,
@@ -16,10 +18,10 @@ function useGetSettings() {
 
   return {
     data,
-    settingsError,
-    settingsIsPending,
-    settingsIsSuccess,
-    settingsIsError,
+    error: withFallbackRetry(error, refetch),
+    isPending,
+    isSuccess,
+    isError,
   };
 }
 

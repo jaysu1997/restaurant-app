@@ -89,7 +89,7 @@ function OptionSection({ nestedIndex, inventoryData }) {
           fadeInAnimation(`customize.${nestedIndex}.options.${fields.length}`);
         }}
       >
-        <Plus size={18} />
+        <Plus />
         新增選項
       </Button>
     </>

@@ -75,7 +75,7 @@ function CartItem({ dish }) {
 
       prevIsOpenModalRef.current = isOpenModal;
     },
-    [isOpenModal, dish.servings]
+    [isOpenModal, dish.servings],
   );
 
   return (
@@ -91,7 +91,7 @@ function CartItem({ dish }) {
                   setIsOpenModal(true);
                 }}
               >
-                <SquarePen size={14} />
+                <SquarePen />
               </Button>
 
               <Button
@@ -103,7 +103,7 @@ function CartItem({ dish }) {
                   });
                 }}
               >
-                <Trash2 size={14} />
+                <Trash2 />
               </Button>
             </OrderAction>
           </Row>

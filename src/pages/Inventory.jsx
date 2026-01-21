@@ -47,13 +47,13 @@ function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
 
   if (nameSearchParams && nameSearchParams !== "") {
     displayData = inventoryData.filter((inventory) =>
-      inventory.label.includes(nameSearchParams)
+      inventory.label.includes(nameSearchParams),
     );
   }
 
   if (quantityKeyWord && quantityKeyWord !== "all") {
     displayData = displayData.filter(
-      (inventory) => inventory.remainingQuantity <= Number(quantityKeyWord)
+      (inventory) => inventory.remainingQuantity <= Number(quantityKeyWord),
     );
   }
 
@@ -63,21 +63,16 @@ function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
 function Inventory() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const {
-    inventoryData,
-    inventoryIsPending,
-    inventoryError,
-    inventoryIsError,
-  } = useGetInventory();
+  const { data, isPending, error, isError } = useGetInventory();
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");
 
   // 要展示的數據
   const displayInventoryData = filterData(
-    inventoryData,
+    data,
     nameSearchParams,
-    quantitySearchParams
+    quantitySearchParams,
   );
 
   const emptyStateMessage =
@@ -89,8 +84,8 @@ function Inventory() {
     <>
       <PageHeader title="庫存管理">
         <div>
-          <Button onClick={() => setIsOpenModal(true)}>
-            <FilePlus size={18} />
+          <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
+            <FilePlus />
             <span>新增食材</span>
           </Button>
         </div>
@@ -98,24 +93,22 @@ function Inventory() {
       </PageHeader>
 
       <QueryStatusFallback
-        isPending={inventoryIsPending}
-        isError={inventoryIsError}
-        error={inventoryError}
-        isEmpty={
-          (Array.isArray(inventoryData) && inventoryData?.length === 0) ||
-          displayInventoryData?.length === 0
-        }
-        emptyState={{
+        status={{
+          isPending,
+          isError,
+          hasNoData: displayInventoryData?.length === 0,
+        }}
+        errorFallback={error}
+        noDataFallback={{
           message: emptyStateMessage,
         }}
-        render={() => (
-          <Container>
-            {displayInventoryData.map((inventory) => (
-              <InventoryDataCard inventory={inventory} key={inventory.id} />
-            ))}
-          </Container>
-        )}
-      />
+      >
+        <Container>
+          {displayInventoryData?.map((inventory) => (
+            <InventoryDataCard inventory={inventory} key={inventory.id} />
+          ))}
+        </Container>
+      </QueryStatusFallback>
 
       {isOpenModal && (
         <UpsertInventoryForm onCloseModal={() => setIsOpenModal(false)} />

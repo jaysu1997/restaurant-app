@@ -107,13 +107,13 @@ function Modal({
         <Header>
           <Title $textColor={headerColor}>{modalHeader}</Title>
           <CloseButton onClick={onCloseModal}>
-            <X size={16} />
+            <X className="icon-md" />
           </CloseButton>
         </Header>
         <Content $scrollbar={scrollBar}>{children}</Content>
       </StyleModal>
     </Overlay>,
-    document.body
+    document.body,
   );
 }
 

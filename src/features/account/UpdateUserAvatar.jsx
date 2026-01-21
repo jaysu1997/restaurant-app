@@ -58,7 +58,7 @@ function UpdateUserAvatar({ userData }) {
           htmlFor="avatar"
           role="avatarUploadButton"
         >
-          <Upload size={18} />
+          <Upload />
           選擇新頭像
         </Button>
 

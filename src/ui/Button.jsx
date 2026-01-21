@@ -50,6 +50,12 @@ const variant = {
     border-radius: 4px;
     background-color: #fff;
 
+    & svg {
+      width: 1.8rem;
+      height: 1.8rem;
+      flex-shrink: 0;
+    }
+
     &:not(:disabled):hover {
       background-color: #eff6ff;
     }
@@ -59,6 +65,12 @@ const variant = {
     padding: 0.6rem;
     border: none;
     height: 2.6rem;
+
+    & svg {
+      width: 1.4rem;
+      height: 1.4rem;
+      flex-shrink: 0;
+    }
 
     &:not(:disabled):hover {
       background-color: #f3f4f6;
@@ -70,6 +82,12 @@ const variant = {
     padding: 0;
     border: none;
     color: #6b7280;
+
+    & svg {
+      width: 2rem;
+      height: 2rem;
+      flex-shrink: 0;
+    }
 
     &:not(:disabled):hover {
       color: ${({ $hoverColor }) => ($hoverColor ? $hoverColor : "#dc2626")};
@@ -100,6 +118,12 @@ const Button = styled.button.attrs((props) => ({
 
   &:disabled {
     cursor: not-allowed;
+  }
+
+  & svg {
+    width: ${({ $iconSize }) => ($iconSize ? $iconSize : "1.6rem")};
+    height: ${({ $iconSize }) => ($iconSize ? $iconSize : "1.6rem")};
+    flex-shrink: 0;
   }
 
   /* 載入中顯示動畫 */

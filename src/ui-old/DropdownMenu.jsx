@@ -39,6 +39,12 @@ const MenuItem = styled.li`
     font-size: 1.4rem;
     line-height: 2rem;
   }
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    flex-shrink: 0;
+  }
 `;
 
 // 下拉按鈕菜單元件
@@ -70,7 +76,7 @@ function DropdownMenu({
                       setIsOpenMenu(false);
                     }}
                   >
-                    <Icon size={18} strokeWidth={2} />
+                    <Icon />
                     <span>{item.name}</span>
                   </button>
                 </MenuItem>

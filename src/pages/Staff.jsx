@@ -24,16 +24,21 @@ function Staff() {
   return (
     <StaffLayout>
       <PageHeader title="員工管理">
-        <Button onClick={() => setIsOpenModal({ type: "create" })}>
-          <UserRoundPlus size={18} />
+        <Button
+          $iconSize="1.8rem"
+          onClick={() => setIsOpenModal({ type: "create" })}
+        >
+          <UserRoundPlus />
           <span>註冊</span>
         </Button>
       </PageHeader>
 
       <QueryStatusFallback
-        isPending={isPending}
-        isError={isError}
-        error={error}
+        status={{
+          isPending,
+          isError,
+        }}
+        errorFallback={error}
       >
         {isOpenModal.type === "create" && (
           <Modal

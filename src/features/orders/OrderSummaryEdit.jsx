@@ -32,10 +32,10 @@ function OrderSummaryEdit({ orderData, settingsData }) {
   } = useOrder();
 
   const {
-    inventoryData,
-    inventoryIsPending,
-    inventoryError,
-    inventoryIsError,
+    data: inventoryData,
+    isPending,
+    error,
+    isError,
   } = useGetInventory(dispatch);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
   const takeOut = watch("diningMethod") === "外帶";
 
   const pickupTimeOptions = generatePickupTimeOptions(
-    settingsData.todayOpenInfo
+    settingsData.todayOpenInfo,
   );
 
   const isDisabled =
@@ -94,9 +94,11 @@ function OrderSummaryEdit({ orderData, settingsData }) {
 
   return (
     <QueryStatusFallback
-      isPending={inventoryIsPending}
-      isError={inventoryIsError}
-      error={inventoryError}
+      status={{
+        isPending,
+        isError,
+      }}
+      errorFallback={error}
     >
       <FormProvider control={control} setValue={setValue}>
         <ContentContainer>

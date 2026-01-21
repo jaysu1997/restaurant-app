@@ -69,10 +69,12 @@ function ConfirmDelete({
 }) {
   const [confirm, setConfirm] = useState(false);
 
-  const { filterMenuData, isPending, isError, error } = useMenuUsage(
-    data.id,
-    showRelatedData
-  );
+  const {
+    data: filterMenuData,
+    isPending,
+    isError,
+    error,
+  } = useMenuUsage(data.id, showRelatedData);
 
   return (
     <Modal
@@ -83,9 +85,11 @@ function ConfirmDelete({
     >
       <StyledConfirmDelete>
         <QueryStatusFallback
-          isPending={showRelatedData && isPending}
-          isError={showRelatedData && isError}
-          error={error}
+          status={{
+            isPending: showRelatedData && isPending,
+            isError: showRelatedData && isError,
+          }}
+          errorFallback={error}
         >
           <Content>{render()}</Content>
 

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Description from "./Description";
-import Button from "./Button";
 
 const StyledStatusView = styled.div`
   width: 100%;
@@ -23,21 +22,13 @@ const Img = styled.div`
   }
 `;
 
-// 狀態ui(404、error)
-function StatusView({
-  minHeight,
-  img,
-  heading,
-  description,
-  actionFn,
-  actionLabel,
-}) {
+function StatusView({ minHeight, img, heading, description, children }) {
   return (
     <StyledStatusView className="fadeIn" $minHeight={minHeight}>
       <Img>{img}</Img>
       <h2>{heading}</h2>
       <Description>{description}</Description>
-      {actionFn && <Button onClick={actionFn}>{actionLabel}</Button>}
+      {children}
     </StyledStatusView>
   );
 }

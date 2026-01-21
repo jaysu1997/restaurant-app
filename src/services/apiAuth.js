@@ -8,7 +8,9 @@ export async function signInApi({ email, password }) {
     password,
   });
 
-  handleSupabaseApiError(error);
+  handleSupabaseApiError(error, {
+    default: "登入失敗，請檢查信箱和密碼是否正確。",
+  });
 
   return data;
 }
@@ -20,7 +22,7 @@ export async function signOutApi() {
   handleSupabaseApiError(error);
 }
 
-// 查看當前是否有以驗證帳戶登入
+// 查看當前是否有已驗證帳戶登入
 export async function getCurrentUserApi() {
   // 先檢查本地是否有帳號登入
   const { data: session, error: sessionError } =
@@ -60,7 +62,11 @@ export async function upsertAvatarFileApi(updateAvatarPayload) {
     .from("avatar")
     .remove([oldFileName]);
 
-  handleSupabaseApiError(removeOlderAvatar);
+  // 舊頭像刪除失敗不影響更新功能，所以不做throw error，只需要簡單通知
+  if (removeOlderAvatar) {
+    console.log("舊頭像刪除失敗");
+    console.warn(removeOlderAvatar);
+  }
 
   return data;
 }
@@ -86,14 +92,16 @@ export async function updateUserPasswordApi(userCredentials) {
     password: currentPassword,
   });
 
-  handleSupabaseApiError(signInError);
+  handleSupabaseApiError(signInError, {
+    invalid_credentials: "舊密碼錯誤，請重新嘗試。",
+  });
 
   // 確認帳號密碼都正確之後才能正式更改為新密碼
   const { data, error } = await supabase.auth.updateUser({
     password: newPassword,
   });
 
-  handleSupabaseApiError(error);
+  handleSupabaseApiError(error, { weak_password: "密碼長度至少要8碼" });
 
   return data;
 }

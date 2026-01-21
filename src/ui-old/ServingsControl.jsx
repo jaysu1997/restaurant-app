@@ -126,7 +126,6 @@ function ServingsControl({
     <Serving $size={size}>
       <CountButton
         type="button"
-        $size={size}
         disabled={servings <= 1}
         onClick={() => handleServingsChange(servings - 1, orderDish)}
       >

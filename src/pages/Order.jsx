@@ -36,21 +36,35 @@ function Order() {
   // 根據pathname判別當前是否為編輯狀態
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
-  const { orderData, orderIsPending, orderError, orderIsError } = useGetOrder();
-  const { settings, settingsError, settingsIsPending, settingsIsError } =
-    useSettings();
+  const {
+    data: orderData,
+    isPending: orderIsPending,
+    error: orderError,
+    isError: orderIsError,
+  } = useGetOrder();
+
+  const {
+    settings,
+    error: settingsError,
+    isPending: settingsIsPending,
+    isError: settingsIsError,
+  } = useSettings();
+
+  const pageQueryStatus = {
+    isPending: orderIsPending || settingsIsPending,
+    isError: orderIsError || settingsIsError,
+  };
 
   return (
     <>
       <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
       <QueryStatusFallback
-        isPending={orderIsPending || settingsIsPending}
-        isError={orderIsError || settingsIsError}
-        error={orderError || settingsError}
+        status={pageQueryStatus}
+        errorFallback={orderError || settingsError}
       >
         <StyledOrderSummary>
           <OrderHeader>{`取餐號碼 ${formatPickupNumber(
-            orderData?.pickupNumber
+            orderData?.pickupNumber,
           )}`}</OrderHeader>
 
           {isEditPage ? (

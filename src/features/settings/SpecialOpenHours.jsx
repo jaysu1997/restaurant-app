@@ -122,7 +122,7 @@ function SpecialOpenHours({ data = {} }) {
     // 我發現，如果我先新增大量時段，然後切換成公休，再提交，之後會留下大量沒有value的欄位，應該要想辦法刪除
 
     const sortedData = data.specialOpenHours.toSorted((a, b) =>
-      compareAsc(a.dateRange.from, b.dateRange.from)
+      compareAsc(a.dateRange.from, b.dateRange.from),
     );
 
     mutate(
@@ -130,7 +130,7 @@ function SpecialOpenHours({ data = {} }) {
       {
         onSuccess: (newData) =>
           reset({ specialOpenHours: newData.specialOpenHours }),
-      }
+      },
     );
   }
 
@@ -164,7 +164,7 @@ function SpecialOpenHours({ data = {} }) {
               fadeInAnimation(`specialOpenHours.${dayFields.length}`);
             }}
           >
-            <Plus size={18} />
+            <Plus />
             新增日期
           </Button>
         }
@@ -217,7 +217,7 @@ function SpecialOpenHours({ data = {} }) {
                   </FormFieldLayout>
 
                   <Button $variant="plain" onClick={() => remove(dayIndex)}>
-                    <Trash2 size={20} />
+                    <Trash2 />
                   </Button>
 
                   <ControlledSwitch

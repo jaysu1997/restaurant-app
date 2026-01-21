@@ -71,7 +71,7 @@ function IngredientScetion({ inventoryData }) {
           fadeInAnimation(`ingredients.${fields.length}`);
         }}
       >
-        <Plus size={18} />
+        <Plus />
         新增備料
       </Button>
     </FormSection>

@@ -88,7 +88,7 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
   // 必填項目尚未完成填寫
   const hasUnfilledRequiredCustomization = currentCustomization.some(
     ({ isRequired, selectOptions }) =>
-      isRequired === "required" && selectOptions.length === 0
+      isRequired === "required" && selectOptions.length === 0,
   );
 
   const { handleSubmit, register } = useForm({
@@ -99,7 +99,7 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
     // 計算當前訂購餐點所需的食材(每1份)
     const ingredientsUsagePerServing = calcIngredientsUsagePerServing(
       ingredients,
-      currentCustomization
+      currentCustomization,
     );
 
     // 編輯時需用到(原先餐點所消耗的食材總數)
@@ -107,7 +107,7 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
       isEdit &&
       getTotalIngredientsUsage(
         orderDish.ingredientsUsagePerServing,
-        orderDish.servings
+        orderDish.servings,
       );
 
     // 避免非正整數分量值
@@ -127,7 +127,7 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
       const itemTotalPrice = currentCustomization.reduce((acc, cur) => {
         const extraPriceTotal = cur.selectOptions.reduce(
           (sum, customizeData) => sum + customizeData.extraPrice,
-          0
+          0,
         );
         return acc + extraPriceTotal;
       }, price - discount);
@@ -209,7 +209,7 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
             $isFullWidth
             disabled={hasUnfilledRequiredCustomization}
           >
-            <ShoppingBag size={18} />
+            <ShoppingBag />
             加入購物車
           </Button>
         </Footer>

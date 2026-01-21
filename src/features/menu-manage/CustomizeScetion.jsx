@@ -80,7 +80,7 @@ function CustomizeScetion({ inventoryData }) {
           fadeInAnimation(`customize.${fields.length}`);
         }}
       >
-        <Plus size={18} />
+        <Plus />
         新增自訂項目
       </Button>
     </FormSection>

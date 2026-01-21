@@ -4,13 +4,13 @@ import { UsersRound } from "lucide-react";
 import UserAvatar from "../../ui/UserAvatar";
 import { UserRoundX } from "lucide-react";
 import { useMemo, useState } from "react";
-import Select from "react-select";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
 import Button from "../../ui/Button";
 import ConfirmDelete from "../../ui-old/ConfirmDelete";
 import useDeleteStaff from "../../hooks/data/staff/useDeleteStaff";
 import { AVATAR_URL } from "../../utils/constants";
+import StyledSelect from "../../ui/StyledSelect";
 
 const List = styled.ul`
   display: flex;
@@ -74,7 +74,7 @@ const Profile = styled.div`
 function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
   const rolesById = useMemo(() => {
     return Object.fromEntries(
-      staffList.map((item) => [item.id, item.user_metadata.role])
+      staffList.map((item) => [item.id, item.user_metadata.role]),
     );
   }, [staffList]);
 
@@ -104,13 +104,13 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
         onSettled: () => {
           setUpdating((updating) => ({ ...updating, [id]: false }));
         },
-      }
+      },
     );
   }
 
   return (
     <>
-      <SectionContainer title="人員列表" icon={<UsersRound size={20} />}>
+      <SectionContainer title="人員列表" icon={<UsersRound />}>
         <List>
           {sortedList.map((item) => {
             const { avatarFile, name, role } = item.user_metadata;
@@ -126,7 +126,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
                   <span>{item.email}</span>
                 </Profile>
 
-                <Select
+                <StyledSelect
                   isDisabled={item.id === user.id || updating[item.id]}
                   options={[
                     { label: "店長", value: "店長" },
@@ -139,14 +139,6 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
                   onChange={(option) =>
                     handleChange(item.id, role, option.value)
                   }
-                  isSearchable={false}
-                  components={{
-                    IndicatorSeparator: () => null,
-                  }}
-                  menuPosition="fixed"
-                  styles={{
-                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                  }}
                 />
 
                 <Button
@@ -154,7 +146,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
                   disabled={item.id === user.id || updating[item.id]}
                   onClick={() => setIsOpenModal({ type: "delete", data: item })}
                 >
-                  <UserRoundX size={20} strokeWidth={2.2} />
+                  <UserRoundX strokeWidth={2.2} />
                 </Button>
               </Item>
             );

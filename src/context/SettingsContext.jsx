@@ -36,14 +36,10 @@ const SettingsContext = createContext();
 
 // 這裡有一個小問題需要修正，我設計取餐時間必須要至少在當前時間+20分鐘之後，但是同時這樣的設計也用在購物車的欄位設定中，但是這會有一個問題，那就是在休息之前不到20分鐘(但可能還剩下15分鐘)，就會變成無法點餐的狀態。內用和外帶都不行，或許比較可行的做法是縮短成10分鐘，或是其他邏輯?
 function SettingsProvider({ children }) {
-  const {
-    data,
-    settingsError,
-    settingsIsPending,
-    settingsIsSuccess,
-    settingsIsError,
-  } = useGetSettings();
+  const { data, error, isPending, isSuccess, isError } = useGetSettings();
+
   const slotsTimerRef = useRef(null);
+
   const [today, setToday] = useState(new Date());
   const [status, setStatus] = useState({
     isOpenNow: false,
@@ -52,7 +48,7 @@ function SettingsProvider({ children }) {
 
   // 先使用useMemo處理好來自遠端的數據
   const settings = useMemo(() => {
-    if (!settingsIsSuccess) return;
+    if (!isSuccess) return;
 
     // 生成內用桌號選項
     const dineInTableOptions = generateDineInTableOptions(data);
@@ -64,7 +60,7 @@ function SettingsProvider({ children }) {
       dineInTableOptions,
       todayOpenInfo,
     };
-  }, [data, settingsIsSuccess, today]);
+  }, [data, isSuccess, today]);
 
   // 設定一個會自動更新當前營業狀態的函式
   useEffect(() => {
@@ -104,9 +100,9 @@ function SettingsProvider({ children }) {
         data,
         settings,
         status,
-        settingsError,
-        settingsIsPending,
-        settingsIsError,
+        error,
+        isPending,
+        isError,
       }}
     >
       {children}

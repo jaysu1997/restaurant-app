@@ -6,7 +6,7 @@ import PasswordInput from "../../components/PasswordInput";
 import Button from "../../ui/Button";
 import ButtonSpinner from "../../ui/ButtonSpinner";
 import styled from "styled-components";
-import { validatePhoneNumber } from "../../utils/helpers";
+import { trimString, validatePhoneNumber } from "../../utils/helpers";
 import ControlledSelect from "../../ui-old/ControlledSelect";
 
 const Form = styled.form`
@@ -51,7 +51,7 @@ function SignUp({ setIsOpenModal }) {
           reset();
           setIsOpenModal(false);
         },
-      }
+      },
     );
   }
 
@@ -72,7 +72,7 @@ function SignUp({ setIsOpenModal }) {
                 value: 20,
                 message: "用戶名稱長度必須在20個字元以內",
               },
-              setValueAs: (value) => value.trim(),
+              setValueAs: trimString,
             })}
           />
         </FormFieldLayout>
@@ -96,7 +96,7 @@ function SignUp({ setIsOpenModal }) {
             id="email"
             disabled={isPending}
             {...register("email", {
-              setValueAs: (value) => value.trim(),
+              setValueAs: trimString,
               required: "此欄位必須填寫",
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -115,6 +115,7 @@ function SignUp({ setIsOpenModal }) {
             id="personalPhone"
             disabled={isPending}
             {...register("personalPhone", {
+              setValueAs: trimString,
               required: "此欄位必須填寫",
               validate: (value) => validatePhoneNumber(value),
             })}

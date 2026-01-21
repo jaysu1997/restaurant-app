@@ -33,6 +33,12 @@ const ToggleButton = styled.button`
   justify-self: flex-start;
   display: none;
 
+  svg {
+    width: 3.6rem;
+    height: 3.6rem;
+    flex-shrink: 0;
+  }
+
   @media (max-width: 64em) {
     display: flex;
     margin-left: 1rem;
@@ -43,7 +49,7 @@ function Header({ setIsOpen }) {
   return (
     <StyleHeader>
       <ToggleButton onClick={() => setIsOpen((prev) => !prev)}>
-        <Menu size={36} />
+        <Menu />
       </ToggleButton>
       <Logo />
       <User />

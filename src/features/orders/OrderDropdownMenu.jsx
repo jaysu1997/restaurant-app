@@ -19,6 +19,12 @@ const ToggleButton = styled.button`
   width: 2.8rem;
   background-color: ${(props) => (props.$isActive ? "#e5e7eb" : "transparent")};
 
+  & svg {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
   &:hover {
     background-color: #e5e7eb;
   }
@@ -69,7 +75,7 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
           $isActive={isOpenMenu === id}
           onClick={(e) => handleToggle(e)}
         >
-          <Ellipsis size={20} strokeWidth={2.4} />
+          <Ellipsis strokeWidth={2.4} />
         </ToggleButton>
       </DropdownMenu>
 

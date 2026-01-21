@@ -1,4 +1,5 @@
 import WarningIcon from "../assets/warning.svg?react";
+import Button from "./Button";
 import StatusView from "./StatusView";
 
 function ErrorBoundaryFallback({ error, resetErrorBoundary }) {
@@ -10,9 +11,9 @@ function ErrorBoundaryFallback({ error, resetErrorBoundary }) {
       img={<WarningIcon role="img" aria-label="程式錯誤警告圖示" />}
       heading="發生錯誤"
       description={error.message}
-      actionFn={resetErrorBoundary}
-      actionLabel="返回首頁"
-    />
+    >
+      <Button onClick={() => resetErrorBoundary()}>返回首頁</Button>
+    </StatusView>
   );
 }
 

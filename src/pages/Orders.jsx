@@ -43,13 +43,11 @@ function Orders() {
       </PageHeader>
 
       <QueryStatusFallback
-        isPending={isPending}
-        isError={isError}
-        error={error}
-        isEmpty={Array.isArray(ordersData) && ordersData?.length === 0}
-        emptyState={{
+        status={{ isPending, isError, hasNoData: ordersData?.length === 0 }}
+        errorFallback={error}
+        noDataFallback={{
           message: emptyStateMessage,
-          buttonText: createdTime || pickupNumber ? "" : "建立訂單",
+          actionLabel: createdTime || pickupNumber ? "" : "建立訂單",
           redirectTo: "/menu",
         }}
       >

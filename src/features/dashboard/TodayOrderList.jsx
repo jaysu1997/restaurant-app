@@ -98,7 +98,7 @@ function TodayOrderList({ analyzedData }) {
             }
           >
             <span>檢視</span>
-            <ArrowRight size={13} strokeWidth={3.2} />
+            <ArrowRight className="icon-sm" strokeWidth={3.2} />
           </button>
         </Order>
       ))}

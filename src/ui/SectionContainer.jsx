@@ -29,6 +29,9 @@ const Header = styled.header`
 
   svg {
     color: #6b7280;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
   }
 `;
 
@@ -36,6 +39,12 @@ const Title = styled.h3`
   font-size: 2.2rem;
   font-weight: 700;
   color: #292929;
+`;
+
+const Icon = styled.div`
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
 `;
 
 const Content = styled.div`
@@ -68,7 +77,7 @@ function SectionContainer({
           <SectionHeader>
             <Header>
               <Title>{title}</Title>
-              {icon}
+              <Icon>{icon}</Icon>
             </Header>
             {description && <Description>{description}</Description>}
           </SectionHeader>

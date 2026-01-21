@@ -2,15 +2,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getInventoryApi } from "../../../services/apiInventory";
 import { useEffect } from "react";
+import { withFallbackRetry } from "../../../utils/helpers";
 
 function useGetInventory(dispatch) {
-  const {
-    data: inventoryData,
-    isPending: inventoryIsPending,
-    error: inventoryError,
-    isError: inventoryIsError,
-    isSuccess: inventoryisSuccess,
-  } = useQuery({
+  const { data, isPending, error, isError, isSuccess, refetch } = useQuery({
     queryKey: ["inventory"],
     queryFn: getInventoryApi,
   });
@@ -21,22 +16,22 @@ function useGetInventory(dispatch) {
       // 如果不是在訂單編輯狀態，不需要使用useReducer
       if (!dispatch) return;
 
-      if (inventoryisSuccess) {
+      if (isSuccess) {
         dispatch({
           type: "inventory/setAll",
-          payload: inventoryData,
+          payload: data,
         });
       }
     },
-    [dispatch, inventoryData, inventoryisSuccess]
+    [dispatch, data, isSuccess],
   );
 
   return {
-    inventoryData,
-    inventoryIsPending,
-    inventoryError,
-    inventoryIsError,
-    inventoryisSuccess,
+    data,
+    isPending,
+    error: withFallbackRetry(error, refetch),
+    isError,
+    isSuccess,
   };
 }
 

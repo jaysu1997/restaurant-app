@@ -62,12 +62,16 @@ function StyledHotToast({
 
   return toastAlert((t) => (
     <Wrapper>
-      {type === "error" ? <AlertIocn size={20} /> : <CheckIcon size={20} />}
+      {type === "error" ? (
+        <AlertIocn className="icon-lg" />
+      ) : (
+        <CheckIcon className="icon-lg" />
+      )}
 
       <Title type={type}>{title}</Title>
       {closeButton && (
         <CloseButton onClick={() => toast.dismiss(t.id)}>
-          <X size={16} strokeWidth={2.8} />
+          <X className="icon-md" strokeWidth={2.8} />
         </CloseButton>
       )}
       {content && <Content>{content}</Content>}

@@ -26,13 +26,13 @@ function filterData(menusData, nameSearchParams, categorySearchParams) {
   // 關鍵字篩選
   if (nameSearchParams && nameSearchParams !== "") {
     displayData = menusData.filter((menu) =>
-      menu.name.includes(nameSearchParams)
+      menu.name.includes(nameSearchParams),
     );
   }
   // 餐點分類篩選
   if (categorySearchParams && categorySearchParams !== "all") {
     displayData = displayData.filter(
-      (menu) => menu.category === categorySearchParams
+      (menu) => menu.category === categorySearchParams,
     );
   }
 
@@ -42,16 +42,16 @@ function filterData(menusData, nameSearchParams, categorySearchParams) {
 function MenuManage() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
+  const { data, isPending, error, isError } = useGetMenus();
 
   const nameSearchParams = searchParams.get("name");
   const categorySearchParams = searchParams.get("category");
 
   // 要展示的數據
   const displayMenusData = filterData(
-    menusData,
+    data,
     nameSearchParams,
-    categorySearchParams
+    categorySearchParams,
   );
 
   const emptyStateMessage =
@@ -73,8 +73,8 @@ function MenuManage() {
       placeholder: "選擇餐點分類",
       options: [
         { label: "不篩選", value: "" },
-        ...Array.from(new Set(menusData?.map((data) => data.category))).map(
-          (category) => ({ label: category, value: category })
+        ...Array.from(new Set(data?.map((data) => data.category))).map(
+          (category) => ({ label: category, value: category }),
         ),
       ],
     },
@@ -84,8 +84,8 @@ function MenuManage() {
     <>
       <PageHeader title="菜單設定">
         <div>
-          <Button onClick={() => setIsOpenModal(true)}>
-            <FilePlus size={18} />
+          <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
+            <FilePlus />
             <span>新增餐點</span>
           </Button>
         </div>
@@ -93,23 +93,20 @@ function MenuManage() {
       </PageHeader>
 
       <QueryStatusFallback
-        isPending={menusIsPending}
-        isError={menusIsError}
-        error={menusError}
-        isEmpty={
-          Array.isArray(displayMenusData) && displayMenusData?.length === 0
-        }
-        emptyState={{
-          message: emptyStateMessage,
+        status={{
+          isPending,
+          isError,
+          hasNoData: displayMenusData?.length === 0,
         }}
-        render={() => (
-          <Container>
-            {displayMenusData.map((menu) => (
-              <MenusDataCard menu={menu} key={menu.id} />
-            ))}
-          </Container>
-        )}
-      />
+        errorFallback={error}
+        noDataFallback={{ message: emptyStateMessage }}
+      >
+        <Container>
+          {displayMenusData?.map((menu) => (
+            <MenusDataCard menu={menu} key={menu.id} />
+          ))}
+        </Container>
+      </QueryStatusFallback>
 
       {isOpenModal && (
         <UpsertMenuForm onCloseModal={() => setIsOpenModal(false)} />

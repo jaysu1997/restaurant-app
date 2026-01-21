@@ -12,7 +12,7 @@ import styled from "styled-components";
 import FormSection from "../../components/FormSection";
 import IngredientScetion from "./IngredientScetion";
 import CustomizeScetion from "./CustomizeScetion";
-import { parsePositiveInt } from "../../utils/helpers";
+import { parsePositiveInt, trimString } from "../../utils/helpers";
 
 const StyledForm = styled.form`
   display: grid;
@@ -36,10 +36,10 @@ const Footer = styled.footer`
 
 function UpsertMenuForm({ onCloseModal, menu }) {
   const {
-    inventoryData,
-    inventoryIsPending,
-    inventoryError,
-    inventoryIsError,
+    data: inventoryData,
+    isPending: inventoryIsPending,
+    error: inventoryError,
+    isError: inventoryIsError,
   } = useGetInventory();
 
   const { upsert, isUpserting } = useUpsertMenu();
@@ -86,7 +86,7 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     // 執行表單數據上傳
     upsert(
       { menuData: { ...data, customize: sortedCustomize }, newIngredients },
-      { onSuccess: () => onCloseModal?.() }
+      { onSuccess: () => onCloseModal?.() },
     );
   }
 
@@ -99,14 +99,14 @@ function UpsertMenuForm({ onCloseModal, menu }) {
       heading: "名稱",
       name: "name",
       rules: {
-        setValueAs: (value) => value.trim(),
+        setValueAs: trimString,
       },
     },
     {
       heading: "分類",
       name: "category",
       rules: {
-        setValueAs: (value) => value.trim(),
+        setValueAs: trimString,
       },
     },
     {
@@ -138,9 +138,11 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   return (
     <Modal modalHeader="餐點設定表單" maxWidth={56} onCloseModal={onCloseModal}>
       <QueryStatusFallback
-        isPending={inventoryIsPending}
-        isError={inventoryIsError}
-        error={inventoryError}
+        status={{
+          isPending: inventoryIsPending,
+          isError: inventoryIsError,
+        }}
+        errorFallback={inventoryError}
       >
         <FormProvider
           {...methods}

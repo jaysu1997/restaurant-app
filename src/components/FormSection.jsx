@@ -82,7 +82,7 @@ function FormSection({
           {heading.required && <span className="emphasize">*</span>}
           {heading.action && (
             <Button $variant="ghost" onClick={heading.action}>
-              <Trash2 size={16} />
+              <Trash2 />
             </Button>
           )}
         </Heading>

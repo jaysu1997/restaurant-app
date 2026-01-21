@@ -124,7 +124,7 @@ function Filter({ filtersConfig }) {
     filterContainerRef,
     isContainerOpen,
     setIsContainerOpen,
-    true
+    true,
   );
 
   // 自動關閉以及html滾動功能
@@ -132,16 +132,16 @@ function Filter({ filtersConfig }) {
     40,
     isContainerOpen,
     () => setIsContainerOpen(false),
-    "conditional"
+    "conditional",
   );
 
   // 清除條件按鈕disabled(filter輸入框有無輸入值)
   const isButtonDisabled = !Object.values(tempFilters).some(
-    (filter) => !!filter.value
+    (filter) => !!filter.value,
   );
   // 篩選數據按鈕切換(當前是否有套用中的filter)
   const hasActiveFilters = Object.values(initialFilterState).some(
-    (filter) => !!filter.value
+    (filter) => !!filter.value,
   );
 
   // 篩選種類和對應元件
@@ -163,6 +163,7 @@ function Filter({ filtersConfig }) {
     <StyledFilter>
       <Button
         $variant="outline"
+        $iconSize="1.8rem"
         onClick={() =>
           setIsContainerOpen((isContainerOpen) => {
             if (!isContainerOpen) {
@@ -201,7 +202,7 @@ function Filter({ filtersConfig }) {
                   Object.keys(prev).reduce((acc, key) => {
                     acc[key] = { ...prev[key], value: "" };
                     return acc;
-                  }, {})
+                  }, {}),
                 )
               }
             >
@@ -214,7 +215,7 @@ function Filter({ filtersConfig }) {
                   tempFilters,
                   searchParams,
                   setSearchParams,
-                  setIsContainerOpen
+                  setIsContainerOpen,
                 )
               }
             >

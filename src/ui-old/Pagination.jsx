@@ -20,6 +20,12 @@ const PaginationControls = styled.div`
   gap: 0.3rem;
   justify-content: center;
 
+  svg {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
   strong {
     color: #2563eb;
   }
@@ -106,17 +112,17 @@ function Pagination({ curPage, maxPage }) {
           onClick={() => handlePagination(curPage - 1)}
           disabled={curPage === 1}
         >
-          <ChevronLeft size={20} strokeWidth={3} />
+          <ChevronLeft strokeWidth={3} />
         </button>
         <strong>{curPage}</strong>
-        <Dot size={20} />
+        <Dot />
         <span>共 {maxPage} 頁</span>
         <button
           type="button"
           onClick={() => handlePagination(curPage + 1)}
           disabled={curPage === maxPage}
         >
-          <ChevronRight size={20} strokeWidth={3} />
+          <ChevronRight strokeWidth={3} />
         </button>
       </PaginationControls>
 

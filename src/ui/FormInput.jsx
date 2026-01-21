@@ -9,6 +9,10 @@ const InputWrapper = styled.div`
   border-radius: 4px;
   overflow: hidden;
 
+  &:hover {
+    border-color: #b3b3b3;
+  }
+
   &:focus-within {
     border-color: #2684ff;
     box-shadow: 0 0 0 1px #2684ff;

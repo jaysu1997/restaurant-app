@@ -26,7 +26,7 @@ const StyledTimeRange = styled.ul`
 // 一天的時段(每5分鐘一個選項)
 const times = generateTimeOptions(
   startOfDay(new Date(2025, 0, 1)),
-  endOfDay(new Date(2025, 0, 1))
+  endOfDay(new Date(2025, 0, 1)),
 );
 
 function validateTimeSlotField({
@@ -117,7 +117,7 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
               }}
             />
 
-            <Minus size={14} />
+            <Minus className="icon-sm" />
 
             <ControlledSelect
               options={times}
@@ -138,11 +138,11 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
                   append({ openTime: "", closeTime: "" });
                   // 淡入欄位動畫
                   fadeInAnimation(
-                    `${fieldArrayName}.${dayIndex}.timeSlots.${fields.length}`
+                    `${fieldArrayName}.${dayIndex}.timeSlots.${fields.length}`,
                   );
                 }}
               >
-                <Plus size={20} strokeWidth={2.4} />
+                <Plus strokeWidth={2.4} />
               </Button>
             )}
 
@@ -158,7 +158,7 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
                   fields.length > 1 && validateFn();
                 }}
               >
-                <Trash2 size={20} />
+                <Trash2 />
               </Button>
             )}
           </li>

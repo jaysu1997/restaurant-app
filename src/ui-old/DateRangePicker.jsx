@@ -40,6 +40,9 @@ const DateField = styled.div`
 
   svg {
     color: #3b82f6;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
   }
 `;
 
@@ -98,7 +101,7 @@ function DateRangePicker({
   function formatRangeDate(selectedDate) {
     return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
       selectedDate.to,
-      "yyyy/MM/dd"
+      "yyyy/MM/dd",
     )}`;
   }
 
@@ -115,7 +118,7 @@ function DateRangePicker({
           readOnly
         />
 
-        <CalendarRange size={20} />
+        <CalendarRange />
       </DateField>
 
       {isOpenDayPicker && (

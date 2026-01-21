@@ -132,13 +132,25 @@ const CartOpenButton = styled.button`
   font-weight: 500;
 
   /* 陰影與過渡 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 0 6px rgba(37, 99, 235, 0.2);
-  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.2),
+    0 0 6px rgba(37, 99, 235, 0.2);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+
+  & svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    flex-shrink: 0;
+  }
 
   /* 點擊回饋 */
   &:active {
     transform: translateX(-50%) scale(0.97);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 0 4px rgba(37, 99, 235, 0.15);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.2),
+      0 0 4px rgba(37, 99, 235, 0.15);
   }
 
   /* 小螢幕（800px以下）時顯示 */
@@ -155,6 +167,12 @@ const CloseButton = styled.button`
   justify-content: center;
   align-items: center;
   position: relative;
+
+  & svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+  }
 
   &::before {
     content: "";
@@ -225,7 +243,7 @@ function ShoppingCart({ settingsData }) {
           <h3>購物車</h3>
 
           <CloseButton onClick={() => setIsOpen(false)}>
-            <X size={16} />
+            <X />
           </CloseButton>
         </Header>
 
@@ -273,7 +291,7 @@ function ShoppingCart({ settingsData }) {
 
       {dishes.length !== 0 && (
         <CartOpenButton onClick={() => setIsOpen(true)}>
-          <ShoppingCartIcon size={18} />
+          <ShoppingCartIcon />
           <Dot $size={0.8} />
           <span>{`共 ${totalServings} 份`}</span>
           <Dot $size={0.8} />

@@ -27,8 +27,7 @@ export async function upsertMenuApi(upsertData) {
       .select();
 
     handleSupabaseApiError(inventoryError, {
-      for: "default",
-      message:
+      default:
         "新食材數據自動建立失敗，可以嘗試嘗試再次交表單，或前往庫存管理頁面手動建立。",
     });
   }
@@ -40,8 +39,7 @@ export async function upsertMenuApi(upsertData) {
     .select();
 
   handleSupabaseApiError(error, {
-    for: "23505",
-    message: `${menuData.name}已存在。`,
+    23505: `${menuData.name}已存在。`,
   });
 
   return data;

@@ -10,7 +10,9 @@ const Card = styled.li`
   overflow: hidden;
   border: 2px solid #dcdcdc;
   background-color: #fff;
-  transition: transform 0.2s ease, border 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border 0.2s ease;
 
   font-size: 1.4rem;
   font-weight: 600;
@@ -57,6 +59,12 @@ const Button = styled.button`
   gap: 0.8rem;
   outline: 1px solid #dcdcdc;
 
+  & svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+  }
+
   &:hover {
     background-color: #f0f9ff;
   }
@@ -68,16 +76,16 @@ function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
       {dataFormat.map((data) => (
         <TableRow key={data.head}>
           <TableHead>{data.head}</TableHead>
-          <TableBody>{data.body ?? <Minus size={16} />}</TableBody>
+          <TableBody>{data.body ?? <Minus className="icon-md" />}</TableBody>
         </TableRow>
       ))}
 
       <Button $fontColor="#0f766e" onClick={handleEditButton}>
-        <SquarePen size={15} />
+        <SquarePen />
         <span>編輯</span>
       </Button>
       <Button $fontColor="#b91c1c" onClick={handleDeleteButton}>
-        <Trash2 size={15} />
+        <Trash2 />
         <span>刪除</span>
       </Button>
     </Card>

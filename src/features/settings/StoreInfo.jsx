@@ -6,7 +6,7 @@ import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
 import { Store } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
-import { validatePhoneNumber } from "../../utils/helpers";
+import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
 const Content = styled.div`
   display: flex;
@@ -42,7 +42,7 @@ function StoreInfo({ data = {} }) {
   return (
     <SectionContainer
       title="店鋪資訊設定"
-      icon={<Store size={20} />}
+      icon={<Store />}
       description="設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。"
       form={{
         formId: "storeInfo",
@@ -63,6 +63,7 @@ function StoreInfo({ data = {} }) {
               type="tel"
               placeholder="請輸入連絡電話"
               {...register("storeInfo.phone", {
+                setValueAs: trimString,
                 required: "連絡電話不能空白",
                 validate: (value) => validatePhoneNumber(value),
               })}
@@ -78,6 +79,7 @@ function StoreInfo({ data = {} }) {
               id="address"
               placeholder="請輸入店鋪地址"
               {...register("storeInfo.address", {
+                setValueAs: trimString,
                 required: "店鋪地址不能空白",
               })}
             />
@@ -92,6 +94,7 @@ function StoreInfo({ data = {} }) {
               id="taxId"
               placeholder="請輸入統一編號"
               {...register("storeInfo.taxId", {
+                setValueAs: trimString,
                 required: "統一編號不能空白",
                 validate: (value) => {
                   return /^\d{8}$/.test(value) || "統一編號格式錯誤";

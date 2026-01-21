@@ -6,7 +6,7 @@ import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
 import { UserRoundPen } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
-import { validatePhoneNumber } from "../../utils/helpers";
+import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
 // 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
@@ -49,7 +49,7 @@ function UserProfileSetting({ userData }) {
   return (
     <SectionContainer
       title="個人資料"
-      icon={<UserRoundPen size={20} />}
+      icon={<UserRoundPen />}
       form={{
         formId: "userProfile",
         handleReset: () => reset(),
@@ -63,12 +63,12 @@ function UserProfileSetting({ userData }) {
             id="name"
             disabled={isPending}
             {...register("name", {
+              setValueAs: trimString,
               required: "用戶名稱不可空白",
               maxLength: {
                 value: 20,
                 message: "名稱長度必須在20個字元以內",
               },
-              setValueAs: (value) => value.trim(),
             })}
           />
         </FormFieldLayout>
@@ -82,6 +82,7 @@ function UserProfileSetting({ userData }) {
             id="personalPhone"
             disabled={isPending}
             {...register("personalPhone", {
+              setValueAs: trimString,
               required: "連絡電話不能空白",
               validate: (value) => validatePhoneNumber(value),
             })}

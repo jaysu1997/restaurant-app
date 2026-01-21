@@ -8,8 +8,6 @@ import { useSearchParams } from "react-router-dom";
 const StyleSwiper = styled(Swiper)`
   grid-column: 1 / 2;
   width: 100%;
-  /* max-width: 96rem; */
-  /* z-index: 0; */
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`

@@ -35,13 +35,13 @@ function groupDishesByCategory(dishes) {
       }
       acc[dish.category].dishes.push(dish);
       return acc;
-    }, {})
+    }, {}),
   );
 }
 
 function MiniMenu() {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
+  const { data, isPending, error, isError } = useGetMenus();
 
   return (
     <>
@@ -49,7 +49,7 @@ function MiniMenu() {
         $variant="text"
         onClick={() => setIsOpenModal({ type: "MiniMenu", data: null })}
       >
-        <Plus size={18} />
+        <Plus />
         新增餐點
       </Button>
 
@@ -61,28 +61,29 @@ function MiniMenu() {
         >
           <StyledMiniMenu>
             <QueryStatusFallback
-              isPending={menusIsPending}
-              isError={menusIsError}
-              error={menusError}
-              isEmpty={Array.isArray(menusData) && menusData.length === 0}
-              emptyState={{
+              status={{
+                isPending,
+                isError,
+                hasNoData: data?.length === 0,
+              }}
+              errorFallback={error}
+              noDataFallback={{
                 message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
-                buttonText: "新增餐點",
+                actionLabel: "新增餐點",
                 redirectTo: "/menu-manage",
               }}
-              render={() => (
-                <MenuList>
-                  {groupDishesByCategory(menusData).map((menu) => (
-                    <CategoryGroup
-                      key={menu.category}
-                      category={menu.category}
-                      dishes={menu.dishes}
-                      onSelect={setIsOpenModal}
-                    />
-                  ))}
-                </MenuList>
-              )}
-            />
+            >
+              <MenuList>
+                {groupDishesByCategory(data).map((menu) => (
+                  <CategoryGroup
+                    key={menu.category}
+                    category={menu.category}
+                    dishes={menu.dishes}
+                    onSelect={setIsOpenModal}
+                  />
+                ))}
+              </MenuList>
+            </QueryStatusFallback>
           </StyledMiniMenu>
         </Modal>
       )}

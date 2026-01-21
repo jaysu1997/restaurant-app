@@ -53,6 +53,12 @@ const SwitchHandle = styled.div`
   justify-content: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: left 0.3s ease-in-out;
+
+  & svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+  }
 `;
 
 function ControlledSwitch({ items, handleChange, disabled }) {
@@ -81,7 +87,7 @@ function ControlledSwitch({ items, handleChange, disabled }) {
                       onChange(
                         e.target.checked
                           ? item.option2.value
-                          : item.option1.value
+                          : item.option1.value,
                       );
 
                       // 如果需要在切換value同時執行函式，就使用handleChange prop
@@ -94,11 +100,7 @@ function ControlledSwitch({ items, handleChange, disabled }) {
                     }}
                   />
                   <SwitchHandle $checked={checked}>
-                    {checked ? (
-                      <Check size={16} color="#007bff" />
-                    ) : (
-                      <X size={16} color="#ccc" />
-                    )}
+                    {checked ? <Check color="#007bff" /> : <X color="#ccc" />}
                   </SwitchHandle>
                 </SwitchContainer>
                 <span>{checked ? item.option2.label : item.option1.label}</span>
