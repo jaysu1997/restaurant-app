@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signInApi } from "../../../services/apiAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 function useSignIn() {
   const navigate = useNavigate();

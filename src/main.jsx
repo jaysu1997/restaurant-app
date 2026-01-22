@@ -2,13 +2,15 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "./ui/ErrorFallBack.jsx";
+import ErrorBoundaryFallback from "./ui/ErrorBoundaryFallback.jsx";
+import { GlobalStyles } from "./style/GlobalStyles.js";
 
-// fallback元件需要再做修正(樣式和內容可能都要)
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <GlobalStyles />
+
     <ErrorBoundary
-      FallbackComponent={ErrorFallback}
+      FallbackComponent={ErrorBoundaryFallback}
       onReset={() => window.location.replace("/")}
     >
       <App />

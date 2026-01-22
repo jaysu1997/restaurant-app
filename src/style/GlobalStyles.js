@@ -1,21 +1,49 @@
 import * as styled from "styled-components";
 
+// focus-visiable需要設定
+
+// color
+// #fff
+// #dfdfdf
+// #ddd
+// #ccc
+// #6b7280
+
+// #fecaca
+// #f87171
+// #f43f5e
+// #ff3333
+// #dc2626
+
+// focus color
+// #2684ff
+
+// shadow
+// rgba(0, 0, 0, 0.04)
+
+// border-radius
+// 4px
+// 6px
+// 999px
+// 50%
+
 export const GlobalStyles = styled.createGlobalStyle`
-  * {
+  /* :root {
+    --color-white: #fff;
+  } */
+
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    scrollbar-width: thin;
-  }
-
-  *:disabled {
-    cursor: not-allowed;
   }
 
   html {
     font-size: 62.5%;
     scrollbar-gutter: stable;
-    scrollbar-width: auto;
+    overflow-y: scroll;
   }
 
   body {
@@ -23,40 +51,49 @@ export const GlobalStyles = styled.createGlobalStyle`
     font-optical-sizing: auto;
     font-weight: 400;
     font-size: 1.6rem;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #1f2937;
     background-color: #f9fafb;
     min-height: 100dvh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
   }
 
   img {
     max-width: 100%;
   }
 
-  button {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    transition: all 0.3s;
-
-    &:disabled {
-      opacity: 0.5;
-    }
-  }
-
   li {
     list-style: none;
   }
 
-  textarea {
-    width: 100%;
-    resize: none;
-    min-height: 6.4rem;
-    border: 1px solid #cacaca;
-    border-radius: 6px;
-    padding: 0.3rem 0.6rem;
-    font-size: 1.4rem;
-    line-height: 1.4;
+  a {
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   }
 
   input {
@@ -70,26 +107,29 @@ export const GlobalStyles = styled.createGlobalStyle`
     accent-color: #2563eb;
   }
 
-  /* 如果想要通通把number input改成text，可以把這個刪除，然後限制只能輸入數字，其實會更方便 */
-  /* 移除number input的預設上下按鈕 */
-  /* 適用於 Chrome、Edge、Opera */
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  .icon-sm {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex-shrink: 0;
   }
 
-  /* 適用於 Firefox */
-  input[type="number"] {
-    -moz-appearance: textfield;
+  .icon-md {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
   }
 
-  /* 將input auto-fill時預設的淡藍色背景改成全白 */
-  /* input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px white inset !important;
-    box-shadow: 0 0 0 1000px white inset !important;
-    -webkit-text-fill-color: inherit !important;
-  } */
+  .icon-lg {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
+  .icon-xl {
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+  }
 
   .emphasize {
     color: #dc2626;
@@ -97,18 +137,18 @@ export const GlobalStyles = styled.createGlobalStyle`
 
   /* 淡入動畫 */
   .fadeIn {
-    opacity: 0;
     animation: fadeIn 0.3s ease forwards;
   }
 
+  /* 原本是用translateY，但是在append新欄位時會造成圖層問題，然導致剛新增欄位後展開daypicker，會看到按鈕浮在daypicker之上，所以改用margin-top */
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(-30px);
+      margin-top: -30px;
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      margin-top: 0;
     }
   }
 `;

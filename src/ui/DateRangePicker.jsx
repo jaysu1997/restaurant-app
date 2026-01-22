@@ -4,8 +4,8 @@ import { zhTW } from "react-day-picker/locale";
 import { format } from "date-fns";
 import { useRef, useState } from "react";
 import useClickOutside from "../hooks/ui/useClickOutside";
-import { PiCalendar } from "react-icons/pi";
 import StyledDayPicker from "./StyledDayPicker";
+import { CalendarRange } from "lucide-react";
 
 const StyledDatePicker = styled.div`
   position: relative;
@@ -40,27 +40,33 @@ const DateField = styled.div`
 
   svg {
     color: #3b82f6;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
   }
 `;
 
 const StyledPopup = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
   position: absolute;
   top: 5rem;
-  z-index: 2;
-  width: 100%;
-  justify-content: center;
-`;
+  left: 50%;
+  z-index: 999;
+  transform: translateX(-50%);
 
-const Wrapper = styled.div`
   background-color: #fff;
   border: 1px solid #e3e5e7;
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-  gap: 1rem;
   border-radius: 4px;
   padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
+
+  @media (max-width: 40em) {
+    top: auto;
+    bottom: 5rem;
+  }
 `;
 
 const Footer = styled.footer`
@@ -95,7 +101,7 @@ function DateRangePicker({
   function formatRangeDate(selectedDate) {
     return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
       selectedDate.to,
-      "yyyy/MM/dd"
+      "yyyy/MM/dd",
     )}`;
   }
 
@@ -103,7 +109,7 @@ function DateRangePicker({
     <StyledDatePicker>
       <DateField
         $isActive={isOpenDayPicker}
-        onClick={() => setIsOpenDayPicker(true)}
+        onClick={() => setIsOpenDayPicker((isOpen) => !isOpen)}
       >
         <input
           name="startDate"
@@ -112,35 +118,33 @@ function DateRangePicker({
           readOnly
         />
 
-        <PiCalendar size={20} />
+        <CalendarRange />
       </DateField>
 
       {isOpenDayPicker && (
-        <StyledPopup>
-          <Wrapper ref={daypickerRef}>
-            <StyledDayPicker
-              animate
-              captionLayout="dropdown"
-              mode="range"
-              weekStartsOn={0}
-              locale={zhTW}
-              defaultMonth={defaultMonth || new Date()}
-              startMonth={startMonth}
-              endMonth={endMonth}
-              selected={selected}
-              onSelect={onSelect}
-              disabled={disabledDate}
-            />
-            <Footer>
-              <UtilityButton onClick={handleValueReset} disabled={!selected}>
-                清除
-              </UtilityButton>
+        <StyledPopup ref={daypickerRef}>
+          <StyledDayPicker
+            animate
+            captionLayout="dropdown"
+            mode="range"
+            weekStartsOn={0}
+            locale={zhTW}
+            defaultMonth={defaultMonth || new Date()}
+            startMonth={startMonth}
+            endMonth={endMonth}
+            selected={selected}
+            onSelect={onSelect}
+            disabled={disabledDate}
+          />
+          <Footer>
+            <UtilityButton onClick={handleValueReset} disabled={!selected}>
+              清除
+            </UtilityButton>
 
-              <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
-                確認
-              </UtilityButton>
-            </Footer>
-          </Wrapper>
+            <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
+              確認
+            </UtilityButton>
+          </Footer>
         </StyledPopup>
       )}
     </StyledDatePicker>

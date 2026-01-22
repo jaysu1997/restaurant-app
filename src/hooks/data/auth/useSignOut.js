@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signOutApi } from "../../../services/apiAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
+import StyledHotToast from "../../../ui/StyledHotToast";
 
 function useSignOut() {
   const navigate = useNavigate();
@@ -16,6 +17,13 @@ function useSignOut() {
       // 登出後刪除用戶數據，避免被利用
       queryClient.removeQueries({ queryKey: ["user"], exact: true });
       navigate("/signin", { replace: true });
+    },
+    onError: (error) => {
+      StyledHotToast({
+        type: "error",
+        title: "登出失敗",
+        content: error.message,
+      });
     },
   });
 

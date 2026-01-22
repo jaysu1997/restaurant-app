@@ -1,10 +1,8 @@
 import styled from "styled-components";
-import { BiSolidRightArrow, BiSolidLeftArrow } from "react-icons/bi";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
-import { scrollToTop } from "../utils/scrollToTop";
-import { GoDotFill } from "react-icons/go";
-import { isValidPositiveInteger } from "../utils/orderHelpers";
+import { useSearchParams } from "react-router";
+import { useRef } from "react";
+import { ChevronRight, ChevronLeft, Dot } from "lucide-react";
+import { parsePositiveInt } from "../utils/helpers";
 
 const StyledPagination = styled.footer`
   display: flex;
@@ -21,6 +19,12 @@ const PaginationControls = styled.div`
   align-items: center;
   gap: 0.3rem;
   justify-content: center;
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
 
   strong {
     color: #2563eb;
@@ -78,22 +82,17 @@ function Pagination({ curPage, maxPage }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef(null);
 
-  useEffect(
-    function () {
-      scrollToTop();
-    },
-    [curPage]
-  );
-
   function handlePagination(value) {
-    const inputValue = isValidPositiveInteger(Number(value), 1);
-    const page = Math.max(1, Math.min(inputValue, maxPage));
-    searchParams.set("page", page);
+    searchParams.set("page", value);
     setSearchParams(searchParams);
   }
 
   function handleSubmit() {
-    handlePagination(inputRef?.current?.value || curPage);
+    const inputValue = parsePositiveInt(inputRef?.current?.value, {
+      min: 1,
+      fallback: 1,
+    });
+    handlePagination(Math.min(inputValue, maxPage));
     inputRef.current.value = "";
     inputRef.current?.blur();
   }
@@ -113,29 +112,23 @@ function Pagination({ curPage, maxPage }) {
           onClick={() => handlePagination(curPage - 1)}
           disabled={curPage === 1}
         >
-          <BiSolidLeftArrow size={16} />
+          <ChevronLeft strokeWidth={3} />
         </button>
         <strong>{curPage}</strong>
-        <GoDotFill size={10} />
+        <Dot />
         <span>共 {maxPage} 頁</span>
         <button
           type="button"
           onClick={() => handlePagination(curPage + 1)}
           disabled={curPage === maxPage}
         >
-          <BiSolidRightArrow size={16} />
+          <ChevronRight strokeWidth={3} />
         </button>
       </PaginationControls>
+
       <JumpSection>
         <span>前往</span>
-        <input
-          type="text"
-          ref={inputRef}
-          onChange={(e) => {
-            e.target.value = e.target.value.replace(/\D/g, "");
-          }}
-          onKeyDown={handleKeyDown}
-        />
+        <input type="text" ref={inputRef} onKeyDown={handleKeyDown} />
         <span>頁</span>
         <button onClick={handleSubmit} role="submit">
           GO

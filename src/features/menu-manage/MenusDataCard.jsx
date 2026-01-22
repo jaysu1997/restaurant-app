@@ -1,5 +1,4 @@
 // 菜單設定數據表單
-import { FiMinus } from "react-icons/fi";
 import DataDisplayCard from "../../ui/DataDisplayCard";
 import { useState } from "react";
 import UpsertMenuForm from "./UpsertMenuForm";
@@ -10,28 +9,13 @@ function MenusDataCard({ menu }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { deleteMenu, menuDeleting } = useDeleteMenu();
   // 菜單數據
-  const { name, category, price, discount, ingredients, customize } = menu;
-
-  // 所有成份
-  const ingredientList = ingredients?.map(
-    (ingredient) => ingredient.ingredientName.label
-  );
-
-  // 所有自訂附加項目
-  const customizeList = customize?.map((custom) => custom.title);
+  const { name, category, price } = menu;
 
   // 卡片展示格式
   const menuDataFormat = [
-    { head: "名稱", body: name, twoColumns: false },
-    { head: "分類", body: category, twoColumns: false },
-    { head: "售價", body: price, twoColumns: false },
-    { head: "折扣", body: discount || <FiMinus />, twoColumns: false },
-    { head: "食材", body: ingredientList?.join(", "), twoColumns: true },
-    {
-      head: "細項",
-      body: customizeList?.join(", ") || <FiMinus />,
-      twoColumns: true,
-    },
+    { head: "名稱", body: name },
+    { head: "分類", body: category },
+    { head: "售價", body: price },
   ];
 
   return (
@@ -57,11 +41,10 @@ function MenusDataCard({ menu }) {
           handleDelete={deleteMenu}
           isDeleting={menuDeleting}
           data={isOpenModal.data}
-          modalType="menus"
+          showRelatedData={false}
           render={() => (
             <p>
-              請確認是否要刪除餐點：<strong>{isOpenModal.data.name}</strong>
-              ，以及該餐點的所有設定。
+              請確認是否要刪除「<strong>{isOpenModal.data.name}</strong>」？
             </p>
           )}
         />

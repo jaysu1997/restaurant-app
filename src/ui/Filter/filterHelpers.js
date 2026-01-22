@@ -1,8 +1,4 @@
-import {
-  isValidPositiveInteger,
-  safeParseDate,
-} from "../../utils/orderHelpers";
-import StyledHotToast from "../StyledHotToast";
+import { safeParseDate } from "../../utils/orderHelpers";
 import { format } from "date-fns";
 
 // 從url取得searchParams值
@@ -34,7 +30,6 @@ function getInitialFilterState(searchParams, filtersConfig) {
 // 處理searchParams更新(URL)
 function handleSearchParams(
   pathname,
-  filtersConfig,
   tempFilters,
   searchParams,
   setSearchParams,
@@ -45,7 +40,7 @@ function handleSearchParams(
   for (const [key, obj] of Object.entries(tempFilters)) {
     let searchParamsValue = "";
 
-    // 篩選輸入類型為input所要進行的處理方式
+    // 篩選輸入類型為input(text)所要進行的處理方式
     if (obj.type === "input" && obj.value) {
       searchParamsValue = obj.value.trim();
     }

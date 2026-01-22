@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { GoKebabHorizontal, GoEye, GoPencil, GoTrash } from "react-icons/go";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import {
   formatCreatedTime,
@@ -9,16 +8,22 @@ import {
 } from "../../utils/orderHelpers";
 import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
 import DropdownMenu from "../../ui/DropdownMenu";
+import { Ellipsis, Trash2, SquarePen, Eye } from "lucide-react";
 
 const ToggleButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
-  border-radius: 6px;
+  border-radius: 4px;
   height: 2.8rem;
   width: 2.8rem;
   background-color: ${(props) => (props.$isActive ? "#e5e7eb" : "transparent")};
+
+  & svg {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
 
   &:hover {
     background-color: #e5e7eb;
@@ -30,7 +35,7 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const navigate = useNavigate();
 
-  const { id, pickupNumber, createdTime } = orderData;
+  const { id, pickupNumber, createdTime, status } = orderData;
 
   function handleToggle(e) {
     e.stopPropagation();
@@ -40,18 +45,21 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
   const itemsConfig = [
     {
       name: "檢視訂單",
-      icon: GoEye,
+      icon: Eye,
       handleClick: () => navigate(`/order/${id}`),
+      hidden: false,
     },
     {
       name: "編輯訂單",
-      icon: GoPencil,
-      handleClick: () => navigate(`/order-edit/${id}`),
+      icon: SquarePen,
+      handleClick: () => navigate(`/order/${id}/edit`),
+      hidden: status === "已完成" ? true : false,
     },
     {
       name: "刪除訂單",
-      icon: GoTrash,
+      icon: Trash2,
       handleClick: () => setIsOpenModal(true),
+      hidden: status === "已完成" ? true : false,
     },
   ];
 
@@ -67,7 +75,7 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
           $isActive={isOpenMenu === id}
           onClick={(e) => handleToggle(e)}
         >
-          <GoKebabHorizontal size={20} strokeWidth={0.4} />
+          <Ellipsis strokeWidth={2.4} />
         </ToggleButton>
       </DropdownMenu>
 
@@ -77,13 +85,13 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
           handleDelete={mutate}
           isDeleting={isPending}
           data={orderData}
-          modalType="order"
+          showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除
               <strong>{`取餐號碼${formatPickupNumber(pickupNumber)}`}</strong>
               &#8203;&nbsp;(
-              {formatCreatedTime(createdTime)}) 。
+              {formatCreatedTime(createdTime)})？
             </p>
           )}
         />

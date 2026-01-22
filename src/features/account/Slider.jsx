@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 
 const StyledSlider = styled.div`
-  width: 100%;
+  flex: 1;
   height: 2rem;
   position: relative;
   cursor: pointer;

@@ -1,16 +1,21 @@
 // 用來展示數據的卡片ui
 import styled from "styled-components";
-import { GoTrash, GoPencil } from "react-icons/go";
+import { Trash2, SquarePen, Minus } from "lucide-react";
 
 const Card = styled.li`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  grid-template-columns: repeat(2, 1fr);
   border-radius: 6px;
   overflow: hidden;
   border: 2px solid #dcdcdc;
   background-color: #fff;
-  transition: transform 0.2s ease, border 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border 0.2s ease;
+
+  font-size: 1.4rem;
+  font-weight: 600;
 
   &:hover {
     transform: translateY(-2px);
@@ -19,7 +24,6 @@ const Card = styled.li`
 `;
 
 const TableRow = styled.div`
-  ${(props) => props.$twoColumns && "grid-column: 1 / -1;"}
   display: grid;
   grid-template-columns: min-content 1fr;
   white-space: nowrap;
@@ -28,60 +32,72 @@ const TableRow = styled.div`
 
 const TableHead = styled.div`
   background-color: #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-weight: 600;
-  font-size: 1.4rem;
   padding: 0.8rem;
 `;
 
 const TableBody = styled.div`
   padding: 0.8rem;
-  font-size: 1.4rem;
   font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
-const Button = styled.button`
-  width: 100%;
-  /* background-color: #f9fafb; */
-  background-color: #fff;
-  color: ${(props) => props.$fontColor};
+const Footer = styled.div`
+  display: flex;
+`;
+
+const EditButton = styled.button`
+  flex-grow: 1;
+  color: #0f766e;
   padding: 0.6rem 1.2rem;
-  font-size: 1.4rem;
-  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  outline: 1px solid #dcdcdc;
+
+  & svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+  }
 
   &:hover {
     background-color: #f0f9ff;
   }
 `;
 
+const DeleteButton = styled(EditButton)`
+  color: #b91c1c;
+`;
+
+const Divider = styled.div`
+  background-color: #dcdcdc;
+  width: 1px;
+  flex-shrink: 0;
+`;
+
 function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
   return (
     <Card>
       {dataFormat.map((data) => (
-        <TableRow $twoColumns={data.twoColumns} key={data.head}>
+        <TableRow key={data.head}>
           <TableHead>{data.head}</TableHead>
-          <TableBody>{data.body}</TableBody>
+          <TableBody>{data.body ?? <Minus className="icon-md" />}</TableBody>
         </TableRow>
       ))}
 
-      <Button $fontColor="#0f766e" onClick={handleEditButton}>
-        <GoPencil size={15} strokeWidth={0.6} />
-        <span>編輯</span>
-      </Button>
-      <Button $fontColor="#b91c1c" onClick={handleDeleteButton}>
-        <GoTrash size={15} strokeWidth={0.6} />
-        <span>刪除</span>
-      </Button>
+      <Footer>
+        <EditButton onClick={handleEditButton}>
+          <SquarePen />
+          <span>編輯</span>
+        </EditButton>
+        <Divider />
+        <DeleteButton onClick={handleDeleteButton}>
+          <Trash2 />
+          <span>刪除</span>
+        </DeleteButton>
+      </Footer>
     </Card>
   );
 }

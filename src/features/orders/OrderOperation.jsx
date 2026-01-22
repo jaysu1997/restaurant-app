@@ -1,98 +1,78 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 import { useState } from "react";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import { scrollToTop } from "../../utils/scrollToTop";
 import {
   formatCreatedTime,
   formatPickupNumber,
 } from "../../utils/orderHelpers";
 import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
+import Button from "../../ui/Button";
+import ButtonSubmit from "../../ui/ButtonSubmit";
+import { SquarePen, Trash2 } from "lucide-react";
 
 const Footer = styled.footer`
+  grid-column: 1;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   gap: 2rem;
-`;
 
-const Button = styled.button`
-  padding: 0.8rem 1.8rem;
-  font-size: 1.6rem;
-  font-weight: 600;
-  border-radius: 6px;
-
-  background-color: ${(props) => props.$bgColor};
-  color: ${(props) => props.$fontColor};
-
-  &:hover {
-    background-color: ${(props) => props.$hoverBgColor};
+  & > div {
+    margin-left: auto;
   }
 `;
 
-function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
+function OrderOperation({
+  orderData,
+  isEdit,
+  handleSubmit,
+  disabeldSubmit,
+  isUpdating,
+}) {
+  const { status } = orderData;
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { mutate, isPending } = useDeleteOrder();
-  const location = useLocation();
-  const from = location.state?.from;
 
   return (
     <>
       <Footer>
-        {isEdit ? (
+        {isEdit && (
+          <ButtonSubmit
+            isLoading={isUpdating}
+            disabled={disabeldSubmit || isUpdating}
+            onClick={() => handleSubmit()}
+          />
+        )}
+
+        {!isEdit && status !== "已完成" && (
           <Button
-            $bgColor="#059669"
-            $fontColor="#fff"
-            $hoverBgColor="#047857"
-            disabled={disabeldSubmit}
-            onClick={() => {
-              handleSubmit();
-              scrollToTop();
-            }}
+            $variant="secondary"
+            onClick={() => navigate(`/order/${orderId}/edit`)}
           >
-            儲存
-          </Button>
-        ) : (
-          <Button
-            $bgColor="#059669"
-            $fontColor="#fff"
-            $hoverBgColor="#047857"
-            onClick={() => {
-              navigate(`/order-edit/${orderId}`);
-              scrollToTop();
-            }}
-          >
+            <SquarePen />
             編輯
           </Button>
         )}
+
         <Button
-          $bgColor="#dc2626"
-          $fontColor="#fff"
-          $hoverBgColor="#b91c1c"
-          onClick={() => setIsOpenModal(true)}
+          $variant="outline"
+          onClick={() => {
+            navigate(-1);
+          }}
+          disabled={isUpdating}
         >
-          刪除
+          {isEdit ? "取消" : "返回"}
         </Button>
-        {isEdit ? (
-          <Button
-            $bgColor="#e7e5e4"
-            $fontColor="#333"
-            $hoverBgColor="#d6d3d1"
-            onClick={() => navigate(-1)}
-          >
-            取消更新
-          </Button>
-        ) : (
-          <Button
-            $bgColor="#e7e5e4"
-            $fontColor="#333"
-            $hoverBgColor="#d6d3d1"
-            onClick={() => navigate(-1)}
-          >
-            {from === "dashboard" ? "返回首頁" : "返回列表"}
-          </Button>
+
+        {!isEdit && status !== "已完成" && (
+          <div>
+            <Button $variant="danger" onClick={() => setIsOpenModal(true)}>
+              <Trash2 />
+              刪除
+            </Button>
+          </div>
         )}
       </Footer>
 
@@ -102,15 +82,15 @@ function OrderOperation({ orderData, isEdit, handleSubmit, disabeldSubmit }) {
           handleDelete={mutate}
           isDeleting={isPending}
           data={orderData}
-          modalType="order"
+          showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除
               <strong>{`取餐號碼${formatPickupNumber(
-                orderData.pickupNumber
+                orderData.pickupNumber,
               )}`}</strong>
               &#8203;&nbsp;(
-              {formatCreatedTime(orderData.createdTime)}) 。
+              {formatCreatedTime(orderData.createdTime)})？
             </p>
           )}
         />

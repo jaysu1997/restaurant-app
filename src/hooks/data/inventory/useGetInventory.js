@@ -2,51 +2,36 @@
 import { useQuery } from "@tanstack/react-query";
 import { getInventoryApi } from "../../../services/apiInventory";
 import { useEffect } from "react";
-import { useOrder } from "../../../context/OrderContext";
-import { useLocation } from "react-router-dom";
+import { withFallbackRetry } from "../../../utils/helpers";
 
-function useGetInventory(isInOrderContext = false) {
-  const { dispatch } = useOrder();
-  const { pathname } = useLocation();
-
-  const {
-    data: inventoryData,
-    isPending: inventoryIsPending,
-    error: inventoryError,
-    isError: inventoryIsError,
-    isSuccess,
-  } = useQuery({
+function useGetInventory(dispatch) {
+  const { data, isPending, error, isError, isSuccess, refetch } = useQuery({
     queryKey: ["inventory"],
     queryFn: getInventoryApi,
   });
 
-  // 將下載的庫存數據存入useReducer中
+  // 建立和編輯訂單時需要把下載的庫存數據存入useReducer中
   useEffect(
     function () {
       // 如果不是在訂單編輯狀態，不需要使用useReducer
-      if (!isInOrderContext) return;
-
-      // 如果是在點餐頁面和訂單編輯頁面來回切換的話需要重置useReducer的state，避免數據出問題
-      dispatch({
-        type: "page/setCurrent",
-        payload: pathname,
-      });
+      if (!dispatch) return;
 
       if (isSuccess) {
         dispatch({
           type: "inventory/setAll",
-          payload: inventoryData,
+          payload: data,
         });
       }
     },
-    [dispatch, inventoryData, isInOrderContext, isSuccess, pathname]
+    [dispatch, data, isSuccess],
   );
 
   return {
-    inventoryData,
-    inventoryIsPending,
-    inventoryError,
-    inventoryIsError,
+    data,
+    isPending,
+    error: withFallbackRetry(error, refetch),
+    isError,
+    isSuccess,
   };
 }
 

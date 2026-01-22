@@ -1,5 +1,5 @@
-// 表單欄位淡入動畫(或許)
-function fadeInAnimation(elementId) {
+// 表單欄位插入淡入動畫
+export function fadeInAnimation(elementId) {
   requestAnimationFrame(() => {
     const element = document.getElementById(elementId);
 
@@ -8,5 +8,3 @@ function fadeInAnimation(elementId) {
     }
   });
 }
-
-export default fadeInAnimation;

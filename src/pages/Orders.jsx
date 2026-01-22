@@ -9,7 +9,6 @@ const filtersConfig = [
   {
     title: "取餐號碼",
     type: "input",
-    inputType: "number",
     queryKey: "pickupNumber",
     placeholder: "搜尋取餐號碼(不含#)",
   },
@@ -34,22 +33,21 @@ function Orders() {
 
   const emptyStateMessage =
     createdTime || pickupNumber
-      ? "查無符合當前篩選條件的訂單數據"
-      : "目前沒有任何已經建立的訂單數據";
+      ? "查無符合當前篩選條件的訂單數據。"
+      : "目前沒有任何已經建立的訂單數據。";
 
   return (
     <>
       <PageHeader title="訂單管理">
         <Filter filtersConfig={filtersConfig} />
       </PageHeader>
+
       <QueryStatusFallback
-        isPending={isPending}
-        isError={isError}
-        error={error}
-        isEmpty={Array.isArray(ordersData) && ordersData?.length === 0}
-        emptyState={{
+        status={{ isPending, isError, hasNoData: ordersData?.length === 0 }}
+        errorFallback={error}
+        noDataFallback={{
           message: emptyStateMessage,
-          buttonText: createdTime || pickupNumber ? "" : "建立訂單",
+          actionLabel: createdTime || pickupNumber ? "" : "建立訂單",
           redirectTo: "/menu",
         }}
       >

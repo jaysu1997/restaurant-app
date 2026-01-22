@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { GoPlus } from "react-icons/go";
 import DateRangePicker from "../../ui/DateRangePicker";
 import ControlledSwitch from "../../ui/ControlledSwitch";
 import ControlledTimeRange from "./ControlledTimeRange";
@@ -9,15 +8,16 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import SettingFormSection from "../../ui/SettingFormSection";
 import { addYears, compareAsc, endOfYear, isAfter, isToday } from "date-fns";
-import FormErrorsMessage from "../../ui/FormErrorsMessage";
 import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
-import fadeInAnimation from "../../utils/fadeInAnimation";
+import { fadeInAnimation } from "../../utils/dom";
 import StyledHotToast from "../../ui/StyledHotToast";
-import { MdOutlineDeleteForever } from "react-icons/md";
+import SectionContainer from "../../ui/SectionContainer";
+import Button from "../../ui/Button";
+import { Plus, Trash2, CalendarClock } from "lucide-react";
+import FormFieldLayout from "../../ui/FormFieldLayout";
 
 const BusinessPeriodList = styled.ul`
   display: flex;
@@ -30,9 +30,18 @@ const BusinessPeriodItem = styled.li`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 0.6rem;
+  align-items: start;
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
+  }
+
+  h4 {
+    grid-column: 1 / -1;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #292929;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -41,43 +50,9 @@ const EmptyMessage = styled.p`
   font-weight: 500;
 `;
 
-const RemoveButton = styled.button`
-  color: #383838;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-
-  &:not(:disabled):hover {
-    color: #dc2626;
-  }
-`;
-
-const AppendButton = styled.button`
-  height: fit-content;
-  width: fit-content;
-  grid-column: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: #3b82f6;
-  font-weight: 500;
-  padding: 0.6rem 1.8rem;
-  border-radius: 4px;
-  background-color: #dbeafe;
-
-  margin-top: 1.6rem;
-
-  &:hover {
-    background-color: #bfdbfe;
-  }
-`;
-
 const DateField = styled.div`
   display: grid;
   grid-template-columns: minmax(20rem, 1fr) 2rem;
-  grid-template-rows: 3.8rem;
-  grid-auto-rows: min-content;
   column-gap: 0.6rem;
   row-gap: 0.3rem;
   padding-bottom: 0.6rem;
@@ -111,7 +86,7 @@ function validateDateRangeField({ setError, clearErrors, getValues }) {
 }
 
 function SpecialOpenHours({ data = {} }) {
-  const { mutate } = useUpsertSettings();
+  const { mutate, isPending } = useUpsertSettings();
 
   const methods = useForm({
     defaultValues: {
@@ -144,8 +119,10 @@ function SpecialOpenHours({ data = {} }) {
   function onSubmit(data) {
     console.log("成功", data);
 
+    // 我發現，如果我先新增大量時段，然後切換成公休，再提交，之後會留下大量沒有value的欄位，應該要想辦法刪除
+
     const sortedData = data.specialOpenHours.toSorted((a, b) =>
-      compareAsc(a.dateRange.from, b.dateRange.from)
+      compareAsc(a.dateRange.from, b.dateRange.from),
     );
 
     mutate(
@@ -153,7 +130,7 @@ function SpecialOpenHours({ data = {} }) {
       {
         onSuccess: (newData) =>
           reset({ specialOpenHours: newData.specialOpenHours }),
-      }
+      },
     );
   }
 
@@ -164,83 +141,19 @@ function SpecialOpenHours({ data = {} }) {
 
   return (
     <FormProvider {...methods}>
-      <SettingFormSection
+      <SectionContainer
         title="特殊營業時間"
+        icon={<CalendarClock size={20} />}
         description="需要臨時調整特定日期的營業時段，可在此處添加設定，設定值會覆蓋一般營業時間。"
-        handleSubmit={handleSubmit(onSubmit, onError)}
-        handleReset={() => reset({ specialOpenHours: data })}
-        isDirty={isDirty}
-      >
-        <BusinessPeriodList>
-          {dayFields.length === 0 && (
-            <EmptyMessage>目前沒有設定任何特殊營業時間</EmptyMessage>
-          )}
-
-          {dayFields.map((day, dayIndex) => (
-            <BusinessPeriodItem
-              key={day.id}
-              id={`specialOpenHours.${dayIndex}`}
-            >
-              <DateField>
-                <Controller
-                  name={`specialOpenHours.${dayIndex}.dateRange`}
-                  control={control}
-                  render={({ field }) => (
-                    <DateRangePicker
-                      defaultMonth={field.value?.from}
-                      startMonth={new Date()}
-                      endMonth={endOfYear(addYears(new Date(), 5))}
-                      selected={field.value}
-                      onSelect={(range) => field.onChange(range ? range : "")}
-                      handleValueReset={() => field.onChange("")}
-                      disabledDate={{ before: new Date() }}
-                    />
-                  )}
-                  rules={{
-                    validate: () =>
-                      validateDateRangeField({
-                        dayIndex,
-                        setError,
-                        clearErrors,
-                        getValues,
-                      }),
-                  }}
-                />
-
-                <RemoveButton onClick={() => remove(dayIndex)}>
-                  <MdOutlineDeleteForever size={20} />
-                </RemoveButton>
-
-                <FormErrorsMessage
-                  errors={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
-                  gridColumn="1 / -1"
-                />
-
-                <ControlledSwitch
-                  control={control}
-                  items={[
-                    {
-                      name: `specialOpenHours.${dayIndex}.isBusinessDay`,
-                      option1: { label: "公休", value: false },
-                      option2: { label: "營業", value: true },
-                    },
-                  ]}
-                  handleChange={() =>
-                    clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
-                  }
-                />
-              </DateField>
-
-              <ControlledTimeRange
-                control={control}
-                dayIndex={dayIndex}
-                fieldArrayName="specialOpenHours"
-              />
-            </BusinessPeriodItem>
-          ))}
-
-          <AppendButton
-            type="button"
+        form={{
+          formId: "specialOpenHours",
+          handleReset: () => reset({ specialOpenHours: data }),
+          isDirty,
+          isUpdating: isPending,
+        }}
+        appendButton={
+          <Button
+            $variant="text"
             onClick={() => {
               append({
                 dateRange: "",
@@ -251,11 +164,86 @@ function SpecialOpenHours({ data = {} }) {
               fadeInAnimation(`specialOpenHours.${dayFields.length}`);
             }}
           >
-            <GoPlus size={18} strokeWidth={0.6} />
+            <Plus />
             新增日期
-          </AppendButton>
-        </BusinessPeriodList>
-      </SettingFormSection>
+          </Button>
+        }
+      >
+        <form id="specialOpenHours" onSubmit={handleSubmit(onSubmit, onError)}>
+          <BusinessPeriodList>
+            {dayFields.length === 0 && (
+              <EmptyMessage>目前沒有設定任何特殊營業時間</EmptyMessage>
+            )}
+
+            {dayFields.map((day, dayIndex) => (
+              <BusinessPeriodItem
+                key={day.id}
+                id={`specialOpenHours.${dayIndex}`}
+              >
+                <h4>例外日期 {dayIndex + 1}</h4>
+                <DateField>
+                  <FormFieldLayout
+                    error={
+                      errors?.specialOpenHours?.[dayIndex]?.errorFallback ||
+                      false
+                    }
+                  >
+                    <Controller
+                      name={`specialOpenHours.${dayIndex}.dateRange`}
+                      control={control}
+                      render={({ field }) => (
+                        <DateRangePicker
+                          defaultMonth={field.value?.from}
+                          startMonth={new Date()}
+                          endMonth={endOfYear(addYears(new Date(), 5))}
+                          selected={field.value}
+                          onSelect={(range) =>
+                            field.onChange(range ? range : "")
+                          }
+                          handleValueReset={() => field.onChange("")}
+                          disabledDate={{ before: new Date() }}
+                        />
+                      )}
+                      rules={{
+                        validate: () =>
+                          validateDateRangeField({
+                            dayIndex,
+                            setError,
+                            clearErrors,
+                            getValues,
+                          }),
+                      }}
+                    />
+                  </FormFieldLayout>
+
+                  <Button $variant="plain" onClick={() => remove(dayIndex)}>
+                    <Trash2 />
+                  </Button>
+
+                  <ControlledSwitch
+                    items={[
+                      {
+                        name: `specialOpenHours.${dayIndex}.isBusinessDay`,
+                        option1: { label: "公休", value: false },
+                        option2: { label: "營業", value: true },
+                      },
+                    ]}
+                    handleChange={() =>
+                      clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
+                    }
+                  />
+                </DateField>
+
+                <ControlledTimeRange
+                  control={control}
+                  dayIndex={dayIndex}
+                  fieldArrayName="specialOpenHours"
+                />
+              </BusinessPeriodItem>
+            ))}
+          </BusinessPeriodList>
+        </form>
+      </SectionContainer>
     </FormProvider>
   );
 }

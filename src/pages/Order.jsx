@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import OrderSummaryView from "../features/orders/OrderSummaryView";
 import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
 import styled from "styled-components";
@@ -6,22 +6,26 @@ import PageHeader from "../ui/PageHeader";
 import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import { useSettings } from "../context/SettingsContext";
 
 const StyledOrderSummary = styled.div`
   display: grid;
-  grid-template-columns: minmax(0px, 1fr) minmax(0px, 28rem);
-  gap: 4rem;
-  padding: 1.6rem 0 3.6rem;
+  grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
+  column-gap: 2.4rem;
+  row-gap: 3.6rem;
+  padding: 0 0 3.6rem;
   font-weight: 500;
   width: 100%;
+
+  @media (max-width: 50em) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const OrderHeader = styled.header`
   background-color: #6366f1;
   color: #fff;
-  padding: 1.6rem 3.6rem;
+  padding: 2rem 2.4rem;
   font-size: 2.4rem;
   grid-column: 1 / -1;
   border-radius: 6px;
@@ -29,38 +33,44 @@ const OrderHeader = styled.header`
 `;
 
 function Order() {
-  const { inventoryIsPending, inventoryError, inventoryIsError } =
-    useGetInventory(true);
   // 根據pathname判別當前是否為編輯狀態
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
-  const { orderData, orderIsPending, orderError, orderIsError } =
-    useGetOrder(isEditPage);
+  const {
+    data: orderData,
+    isPending: orderIsPending,
+    error: orderError,
+    isError: orderIsError,
+  } = useGetOrder();
 
-  const { settings, settingsError, settingsIsPending, settingsIsError } =
-    useSettings();
+  const {
+    settings,
+    error: settingsError,
+    isPending: settingsIsPending,
+    isError: settingsIsError,
+  } = useSettings();
+
+  const pageQueryStatus = {
+    isPending: orderIsPending || settingsIsPending,
+    isError: orderIsError || settingsIsError,
+  };
 
   return (
     <>
       <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
       <QueryStatusFallback
-        isPending={orderIsPending || inventoryIsPending || settingsIsPending}
-        isError={orderIsError || inventoryIsError || settingsIsError}
-        error={orderError || inventoryError || settingsError}
+        status={pageQueryStatus}
+        errorFallback={orderError || settingsError}
       >
         <StyledOrderSummary>
           <OrderHeader>{`取餐號碼 ${formatPickupNumber(
-            orderData?.pickupNumber
+            orderData?.pickupNumber,
           )}`}</OrderHeader>
 
           {isEditPage ? (
-            <OrderSummaryEdit
-              isEdit={true}
-              orderData={orderData}
-              settingsData={settings}
-            />
+            <OrderSummaryEdit orderData={orderData} settingsData={settings} />
           ) : (
-            <OrderSummaryView isEdit={false} orderData={orderData} />
+            <OrderSummaryView orderData={orderData} />
           )}
         </StyledOrderSummary>
       </QueryStatusFallback>

@@ -1,23 +1,21 @@
 // 菜單設定頁面
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { useState } from "react";
 import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
-import Button from "../ui/Button.jsx";
-import { BsFileEarmarkPlus } from "react-icons/bs";
+import Button from "../ui/Button";
 import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 import Filter from "../ui/Filter/Filter.jsx";
 import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
 import styled from "styled-components";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
+import { FilePlus } from "lucide-react";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
-  justify-content: space-between;
-  gap: 4rem;
-  padding-bottom: 3.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  gap: 3.6rem;
 `;
 
 function filterData(menusData, nameSearchParams, categorySearchParams) {
@@ -28,13 +26,13 @@ function filterData(menusData, nameSearchParams, categorySearchParams) {
   // 關鍵字篩選
   if (nameSearchParams && nameSearchParams !== "") {
     displayData = menusData.filter((menu) =>
-      menu.name.includes(nameSearchParams)
+      menu.name.includes(nameSearchParams),
     );
   }
   // 餐點分類篩選
   if (categorySearchParams && categorySearchParams !== "all") {
     displayData = displayData.filter(
-      (menu) => menu.category === categorySearchParams
+      (menu) => menu.category === categorySearchParams,
     );
   }
 
@@ -44,16 +42,16 @@ function filterData(menusData, nameSearchParams, categorySearchParams) {
 function MenuManage() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { menusData, menusIsPending, menusError, menusIsError } = useGetMenus();
+  const { data, isPending, error, isError } = useGetMenus();
 
   const nameSearchParams = searchParams.get("name");
   const categorySearchParams = searchParams.get("category");
 
   // 要展示的數據
   const displayMenusData = filterData(
-    menusData,
+    data,
     nameSearchParams,
-    categorySearchParams
+    categorySearchParams,
   );
 
   const emptyStateMessage =
@@ -65,7 +63,6 @@ function MenuManage() {
     {
       title: "餐點名稱",
       type: "input",
-      inputType: "text",
       queryKey: "name",
       placeholder: "搜尋餐點名稱",
     },
@@ -75,9 +72,9 @@ function MenuManage() {
       queryKey: "category",
       placeholder: "選擇餐點分類",
       options: [
-        { label: "不篩選", value: "all" },
-        ...Array.from(new Set(menusData?.map((data) => data.category))).map(
-          (category) => ({ label: category, value: category })
+        { label: "不篩選", value: "" },
+        ...Array.from(new Set(data?.map((data) => data.category))).map(
+          (category) => ({ label: category, value: category }),
         ),
       ],
     },
@@ -86,34 +83,30 @@ function MenuManage() {
   return (
     <>
       <PageHeader title="菜單設定">
+        <div>
+          <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
+            <FilePlus />
+            <span>新增餐點</span>
+          </Button>
+        </div>
         <Filter filtersConfig={filtersConfig} />
-        <Button
-          $buttonStyle="createNewItem"
-          onClick={() => setIsOpenModal(true)}
-        >
-          <BsFileEarmarkPlus size={18} />
-          <span>新增餐點</span>
-        </Button>
       </PageHeader>
 
       <QueryStatusFallback
-        isPending={menusIsPending}
-        isError={menusIsError}
-        error={menusError}
-        isEmpty={
-          Array.isArray(displayMenusData) && displayMenusData?.length === 0
-        }
-        emptyState={{
-          message: emptyStateMessage,
+        status={{
+          isPending,
+          isError,
+          hasNoData: displayMenusData?.length === 0,
         }}
-        render={() => (
-          <Container>
-            {displayMenusData.map((menu) => (
-              <MenusDataCard menu={menu} key={menu.id} />
-            ))}
-          </Container>
-        )}
-      />
+        errorFallback={error}
+        noDataFallback={{ message: emptyStateMessage }}
+      >
+        <Container>
+          {displayMenusData?.map((menu) => (
+            <MenusDataCard menu={menu} key={menu.id} />
+          ))}
+        </Container>
+      </QueryStatusFallback>
 
       {isOpenModal && (
         <UpsertMenuForm onCloseModal={() => setIsOpenModal(false)} />

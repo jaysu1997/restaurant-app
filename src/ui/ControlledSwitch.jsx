@@ -1,18 +1,19 @@
 import styled from "styled-components";
-import { FiCheck, FiX } from "react-icons/fi";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import { Check, X } from "lucide-react";
 
 const StyledControlledSwitch = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr));
-  gap: 1rem;
-  align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(8.2rem, 1fr));
+  grid-template-rows: minmax(0, max-content);
+  gap: 0.4rem;
 `;
 
 const StyledSwitch = styled.div`
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  height: 3.8rem;
 
   @media (max-width: 288px) {
     justify-content: start;
@@ -52,9 +53,17 @@ const SwitchHandle = styled.div`
   justify-content: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: left 0.3s ease-in-out;
+
+  & svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+  }
 `;
 
-function ControlledSwitch({ control, items, handleChange }) {
+function ControlledSwitch({ items, handleChange, disabled }) {
+  const { control } = useFormContext();
+
   return (
     <StyledControlledSwitch>
       {items.map((item, index) => (
@@ -71,13 +80,14 @@ function ControlledSwitch({ control, items, handleChange }) {
                 <SwitchContainer $checked={checked}>
                   <input
                     type="checkbox"
+                    disabled={disabled}
                     hidden
                     checked={checked}
                     onChange={(e) => {
                       onChange(
                         e.target.checked
                           ? item.option2.value
-                          : item.option1.value
+                          : item.option1.value,
                       );
 
                       // 如果需要在切換value同時執行函式，就使用handleChange prop
@@ -90,11 +100,7 @@ function ControlledSwitch({ control, items, handleChange }) {
                     }}
                   />
                   <SwitchHandle $checked={checked}>
-                    {checked ? (
-                      <FiCheck size={16} color="#007bff" />
-                    ) : (
-                      <FiX size={16} color="#ccc" />
-                    )}
+                    {checked ? <Check color="#007bff" /> : <X color="#ccc" />}
                   </SwitchHandle>
                 </SwitchContainer>
                 <span>{checked ? item.option2.label : item.option1.label}</span>

@@ -1,17 +1,5 @@
-import { handleSupabaseError } from "../utils/handleSupabaseError";
 import supabase from "./supabase";
-
-// 註冊
-export async function signUpApi({ email, password }) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
-
-  handleSupabaseError(error);
-
-  return data;
-}
+import handleSupabaseApiError from "./handleSupabaseApiError";
 
 // 登入
 export async function signInApi({ email, password }) {
@@ -20,7 +8,9 @@ export async function signInApi({ email, password }) {
     password,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error, {
+    default: "登入失敗，請檢查信箱和密碼是否正確。",
+  });
 
   return data;
 }
@@ -29,16 +19,16 @@ export async function signInApi({ email, password }) {
 export async function signOutApi() {
   const { error } = await supabase.auth.signOut();
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 }
 
-// 查看當前是否有以驗證帳戶登入
+// 查看當前是否有已驗證帳戶登入
 export async function getCurrentUserApi() {
   // 先檢查本地是否有帳號登入
   const { data: session, error: sessionError } =
     await supabase.auth.getSession();
 
-  handleSupabaseError(sessionError);
+  handleSupabaseApiError(sessionError);
 
   // 不存在的話回傳null
   if (!session.session) return null;
@@ -46,7 +36,7 @@ export async function getCurrentUserApi() {
   // 如果本機存在Session的話，則可以使用getUser功能獲取用戶數據(可用來驗證用戶是否獲得授權)
   const { data: user, error: userError } = await supabase.auth.getUser();
 
-  handleSupabaseError(userError);
+  handleSupabaseApiError(userError);
 
   // 回傳用戶數據(其實用戶的數據在session中就可以取得，多使用getUser是為了多一層保險並取得用戶的最新數據)
   return user.user;
@@ -60,19 +50,23 @@ export async function upsertAvatarFileApi(updateAvatarPayload) {
     .from("avatar")
     .upload(newFileName, newFile);
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   const { error: userMetaDataError } = await supabase.auth.updateUser({
-    data: { avatar_file: newFileName },
+    data: { avatarFile: newFileName },
   });
 
-  handleSupabaseError(userMetaDataError);
+  handleSupabaseApiError(userMetaDataError);
 
   const { error: removeOlderAvatar } = await supabase.storage
     .from("avatar")
     .remove([oldFileName]);
 
-  handleSupabaseError(removeOlderAvatar);
+  // 舊頭像刪除失敗不影響更新功能，所以不做throw error，只需要簡單通知
+  if (removeOlderAvatar) {
+    console.log("舊頭像刪除失敗");
+    console.warn(removeOlderAvatar);
+  }
 
   return data;
 }
@@ -83,7 +77,7 @@ export async function updateUserProfileApi(userProFileData) {
     data: userProFileData,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -92,18 +86,22 @@ export async function updateUserProfileApi(userProFileData) {
 export async function updateUserPasswordApi(userCredentials) {
   const { email, currentPassword, newPassword } = userCredentials;
 
+  // 先驗證輸入的當前密碼是否正確，避免被他人惡意串改密碼
   const { error: signInError } = await supabase.auth.signInWithPassword({
     email,
     password: currentPassword,
   });
 
-  handleSupabaseError(signInError);
+  handleSupabaseApiError(signInError, {
+    invalid_credentials: "舊密碼錯誤，請重新嘗試。",
+  });
 
+  // 確認帳號密碼都正確之後才能正式更改為新密碼
   const { data, error } = await supabase.auth.updateUser({
     password: newPassword,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error, { weak_password: "密碼長度至少要8碼" });
 
   return data;
 }

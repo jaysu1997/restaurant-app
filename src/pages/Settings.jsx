@@ -15,33 +15,24 @@ const SettingsLayout = styled.div`
   max-width: 60rem;
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 4rem;
-  padding-bottom: 3.6rem;
-`;
-
 function Settings() {
-  const { data, settingsError, settingsIsPending, settingsIsError } =
-    useSettings();
+  const { data, error, isPending, isError } = useSettings();
 
   return (
     <SettingsLayout>
       <PageHeader title="店鋪設定" />
 
       <QueryStatusFallback
-        isPending={settingsIsPending}
-        isError={settingsIsError}
-        error={settingsError}
+        status={{
+          isPending,
+          isError,
+        }}
+        errorFallback={error}
       >
-        <Container>
-          <RegularOpenHours data={data.regularOpenHours} />
-          <SpecialOpenHours data={data.specialOpenHours} />
-          <DineInTableSettings data={data.dineInTableConfig} />
-          <StoreInfo data={data.storeInfo} />
-        </Container>
+        <RegularOpenHours data={data.regularOpenHours} />
+        <SpecialOpenHours data={data.specialOpenHours} />
+        <DineInTableSettings data={data.dineInTableConfig} />
+        <StoreInfo data={data.storeInfo} />
       </QueryStatusFallback>
     </SettingsLayout>
   );

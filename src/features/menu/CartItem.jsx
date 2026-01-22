@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import Button from "../../ui/Button";
 import ServingsControl from "../../ui/ServingsControl";
 import { useEffect, useRef, useState } from "react";
-import { GoTrash, GoPencil } from "react-icons/go";
 import { useOrder } from "../../context/OrderContext";
 import { summarizeMealChoices } from "../../utils/orderHelpers";
 import OrderForm from "../../ui/OrderForm/OrderForm";
+import Button from "../../ui/Button";
+import { Trash2, SquarePen } from "lucide-react";
 
 const OrderCardWrapper = styled.li`
   list-style: none;
@@ -28,7 +28,6 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  line-height: 1.8rem;
 `;
 
 const OrderName = styled.h4`
@@ -76,7 +75,7 @@ function CartItem({ dish }) {
 
       prevIsOpenModalRef.current = isOpenModal;
     },
-    [isOpenModal, dish.servings]
+    [isOpenModal, dish.servings],
   );
 
   return (
@@ -87,16 +86,16 @@ function CartItem({ dish }) {
             <OrderName>{dish.name}</OrderName>
             <OrderAction>
               <Button
-                $buttonStyle="remove"
+                $variant="ghost"
                 onClick={() => {
                   setIsOpenModal(true);
                 }}
               >
-                <GoPencil strokeWidth={0.6} />
+                <SquarePen />
               </Button>
 
               <Button
-                $buttonStyle="remove"
+                $variant="ghost"
                 onClick={() => {
                   dispatch({
                     type: "dishes/removeDish",
@@ -104,7 +103,7 @@ function CartItem({ dish }) {
                   });
                 }}
               >
-                <GoTrash strokeWidth={0.6} />
+                <Trash2 />
               </Button>
             </OrderAction>
           </Row>
@@ -117,26 +116,26 @@ function CartItem({ dish }) {
 
           {dish.note && (
             <Row>
-              <Note>{`"${dish.note}"`}</Note>
+              <Note>&quot;{dish.note}&quot;</Note>
             </Row>
           )}
 
           <Row>
-            <OrderPrice>$ {dishTotalPrice}</OrderPrice>
             <ServingsControl
               type="sm"
               servings={servings}
               setServings={setServings}
-              dishData={dish}
+              orderDish={dish}
               liveUpdate={true}
             />
+            <OrderPrice>$ {dishTotalPrice}</OrderPrice>
           </Row>
         </OrderCard>
       </OrderCardWrapper>
 
       {isOpenModal && (
         <OrderForm
-          dishData={dish}
+          orderDish={dish}
           onCloseModal={() => setIsOpenModal(false)}
           isEdit={true}
         />

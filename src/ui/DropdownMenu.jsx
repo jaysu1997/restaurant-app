@@ -35,6 +35,15 @@ const MenuItem = styled.li`
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
+  }
+
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    flex-shrink: 0;
   }
 `;
 
@@ -54,23 +63,25 @@ function DropdownMenu({
       {children}
       {open && (
         <MenuContainer ref={activeMenuRef}>
-          {itemsConfig.map((item) => {
-            const Icon = item.icon;
+          {itemsConfig
+            .filter((item) => !item.hidden)
+            .map((item) => {
+              const Icon = item.icon;
 
-            return (
-              <MenuItem key={item.name}>
-                <button
-                  onClick={() => {
-                    item.handleClick();
-                    setIsOpenMenu(false);
-                  }}
-                >
-                  <Icon size={16} strokeWidth={0.4} />
-                  <span>{item.name}</span>
-                </button>
-              </MenuItem>
-            );
-          })}
+              return (
+                <MenuItem key={item.name}>
+                  <button
+                    onClick={() => {
+                      item.handleClick();
+                      setIsOpenMenu(false);
+                    }}
+                  >
+                    <Icon />
+                    <span>{item.name}</span>
+                  </button>
+                </MenuItem>
+              );
+            })}
         </MenuContainer>
       )}
     </Wrapper>

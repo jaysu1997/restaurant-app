@@ -33,7 +33,7 @@ function RevenueTrendChart({ analyzedData }) {
             return `${day}日`;
           }}
         />
-        <YAxis width={55} tick={{ fontSize: 14 }} unit="$" />
+        <YAxis width={55} tick={{ fontSize: 12 }} unit="$" />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip
           separator=""

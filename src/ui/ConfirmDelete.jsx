@@ -1,90 +1,33 @@
 import styled from "styled-components";
-import Button from "./Button";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
-import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm";
-import { RiArrowRightSLine } from "react-icons/ri";
-import ButtonSpinner from "./ButtonSpinner";
-import useGetFilterMenuData from "../hooks/data/menus/useGetFilterData";
+import ButtonSpinner from "../ui/ButtonSpinner";
+import useMenuUsage from "../hooks/data/menus/useMenuUsage";
 import QueryStatusFallback from "./QueryStatusFallback";
+import Button from "../ui/Button";
+import ButtonCancel from "../ui/ButtonCancel";
+import FilterMenuList from "../features/inventory/FilterMenuList";
 
 const StyledConfirmDelete = styled.div`
-  max-width: 36rem;
+  width: 36rem;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
 
   padding: 2rem;
-  gap: 1.2rem;
+  gap: 2.4rem;
   font-size: 1.6rem;
 `;
 
 const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   font-size: 1.6rem;
 
   strong {
     color: #dc2626;
     word-break: break-all;
-  }
-`;
-
-const Accordion = styled.div`
-  width: 100%;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  overflow: hidden;
-  font-size: 1.2rem;
-`;
-
-const AccordionTitle = styled.button`
-  width: 100%;
-  height: 3.6rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0.8rem 1.2rem;
-  gap: 0.4rem;
-  background-color: #f9fafb;
-  transition: background-color 0.3s;
-  font-size: 1.4rem;
-  line-height: 1.4;
-
-  svg {
-    transition: transform 0.3s;
-    transform: ${({ $collapse }) =>
-      $collapse ? "rotate(-90deg)" : "rotate(90deg)"};
-  }
-
-  &:hover {
-    background-color: #f1f5f9;
-  }
-`;
-
-const AccordionContent = styled.div`
-  overflow: hidden;
-  height: ${({ $height }) => $height};
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-  visibility: ${({ $visible }) => ($visible ? "visible" : "hidden")};
-  transition: height 0.3s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s ease,
-    visibility 0.6s ease;
-
-  .content-inner {
-    padding: 0.6rem 1.2rem;
-    font-size: 1.4rem;
-    line-height: 1.6;
-  }
-
-  span[tabindex="0"] {
-    color: #3b82f6;
-    cursor: pointer;
-  }
-
-  span[tabindex="0"]:hover {
-    color: #2563eb;
-    text-decoration: underline;
-  }
-
-  span[tabindex="0"]:focus {
-    outline: 2px solid #007bff;
   }
 `;
 
@@ -111,26 +54,27 @@ const ConfirmCheckBox = styled.div`
 
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
+  justify-content: center;
+  gap: 2rem;
 `;
 
 // 執行食材獲取的功能或許需要優化，目前這看起來有點醜，未來應該要分割
 function ConfirmDelete({
   onCloseModal,
   data,
-  modalType,
+  showRelatedData = false,
   render,
   handleDelete,
   isDeleting,
 }) {
   const [confirm, setConfirm] = useState(false);
-  // 只有在庫存數據刪除的時候，才需要執行以下custom hook以及展示FilterMenuList
-  const shouldFetchFilterData = modalType === "inventory";
-  const { filterMenuData, isPending, isError, error } = useGetFilterMenuData(
-    data.label,
-    shouldFetchFilterData
-  );
+
+  const {
+    data: filterMenuData,
+    isPending,
+    isError,
+    error,
+  } = useMenuUsage(data.id, showRelatedData);
 
   return (
     <Modal
@@ -141,13 +85,15 @@ function ConfirmDelete({
     >
       <StyledConfirmDelete>
         <QueryStatusFallback
-          isPending={shouldFetchFilterData && isPending}
-          isError={shouldFetchFilterData && isError}
-          error={error}
+          status={{
+            isPending: showRelatedData && isPending,
+            isError: showRelatedData && isError,
+          }}
+          errorFallback={error}
         >
           <Content>{render()}</Content>
 
-          {shouldFetchFilterData && (
+          {showRelatedData && (
             <FilterMenuList filterMenuData={filterMenuData} name={data.label} />
           )}
 
@@ -162,11 +108,9 @@ function ConfirmDelete({
           </ConfirmCheckBox>
 
           <ButtonRow>
-            <Button $buttonStyle="cancel" onClick={onCloseModal}>
-              取消
-            </Button>
             <Button
-              $buttonStyle="confirmDelete"
+              $variant="danger"
+              $isLoading={isDeleting}
               disabled={confirm === false || isDeleting}
               onClick={() => {
                 handleDelete(data.id, {
@@ -174,8 +118,11 @@ function ConfirmDelete({
                 });
               }}
             >
-              {isDeleting ? <ButtonSpinner /> : "刪除"}
+              <span>刪除</span>
+              {isDeleting && <ButtonSpinner />}
             </Button>
+
+            <ButtonCancel onClick={onCloseModal} />
           </ButtonRow>
         </QueryStatusFallback>
       </StyledConfirmDelete>
@@ -184,73 +131,3 @@ function ConfirmDelete({
 }
 
 export default ConfirmDelete;
-
-// 刪除食材時才需要顯示的內容
-function FilterMenuList({ name, filterMenuData }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [height, setHeight] = useState("0px");
-  const [isVisible, setIsVisible] = useState(false);
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (isExpanded) {
-      const scrollHeight = el.scrollHeight;
-      setHeight(`${scrollHeight}px`);
-      setIsVisible(true);
-    } else {
-      setHeight("0px");
-      setIsVisible(false);
-    }
-  }, [isExpanded]);
-
-  const handleToggle = () => {
-    // 先讓內容可見，再設定展開，避免 scrollHeight 為 0
-    if (!isExpanded) setIsVisible(true);
-    setIsExpanded((prev) => !prev);
-  };
-
-  return (
-    <>
-      <Accordion>
-        <AccordionTitle $collapse={isExpanded} onClick={handleToggle}>
-          <RiArrowRightSLine size={14} />
-          <span>查看使用{name}的餐點</span>
-        </AccordionTitle>
-
-        <AccordionContent
-          ref={contentRef}
-          $height={height}
-          $visible={isVisible}
-        >
-          <div className="content-inner">
-            {filterMenuData.length !== 0 ? (
-              filterMenuData.map((menu, index) => (
-                <Fragment key={menu.id}>
-                  <span
-                    role="button"
-                    tabIndex="0"
-                    onClick={() => setActiveMenu(menu)}
-                  >
-                    {menu.name}
-                  </span>
-                  {index < filterMenuData.length - 1 ? "、" : "。"}
-                </Fragment>
-              ))
-            ) : (
-              <span>無</span>
-            )}
-          </div>
-        </AccordionContent>
-      </Accordion>
-
-      {activeMenu && (
-        <UpsertMenuForm
-          onCloseModal={() => setActiveMenu(null)}
-          menu={activeMenu}
-        />
-      )}
-    </>
-  );
-}

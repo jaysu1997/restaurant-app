@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useOrder } from "../../context/OrderContext";
 import CartItem from "./CartItem";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
 import {
   buildOrderData,
@@ -10,34 +10,67 @@ import {
 import EmptyShoppingCart from "./EmptyShoppingCart";
 import useCreateOrder from "../../hooks/data/orders/useCreateOrder";
 import ButtonSpinner from "../../ui/ButtonSpinner";
+import Button from "../../ui/Button";
+import { useState } from "react";
+import useScrollLock from "../../hooks/ui/useScrollLock";
+import Dot from "../../ui/Dot";
+import { X, ShoppingCart as ShoppingCartIcon } from "lucide-react";
 
 const StyledShoppingCart = styled.aside`
-  grid-column: 2 / 3;
-  grid-row: 1 / -1;
+  position: fixed;
   border: 1px solid #dcdcdc;
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 6px;
-  font-size: 1.4rem;
-  height: min(64.8rem, calc(100dvh - 17.8rem));
-  position: sticky;
-  top: 17.8rem;
+
+  height: min(64.8rem, calc(100dvh - 18.4rem));
+  width: 21.6rem;
   overflow: hidden;
+
+  top: 18.4rem;
+  left: calc(50% + 50.4rem);
+
+  @media (max-width: 93em) {
+    left: auto;
+    right: 2.4rem;
+  }
+
+  @media (max-width: 50em) {
+    right: 1rem;
+    display: ${({ $isOpen }) => !$isOpen && "none"};
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 11;
+    border: none;
+  }
 `;
 
 const Header = styled.header`
-  display: flex;
-  flex-direction: column;
   padding: 0.8rem 1.6rem;
   border-bottom: 1px solid #dcdcdc;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
   z-index: 1;
 
-  h4 {
-    font-size: 2.8rem;
-    margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    font-size: 2.6rem;
+    font-weight: 600;
+  }
+
+  button {
+    display: none;
+  }
+
+  @media (max-width: 50em) {
+    button {
+      display: flex;
+    }
   }
 `;
 
@@ -46,8 +79,8 @@ const ShoppingList = styled.ul`
   flex-direction: column;
   padding: 0 1.6rem;
   height: 100%;
+  font-size: 1.4rem;
   overflow-y: scroll;
-  scrollbar-width: thin;
 `;
 
 const Row = styled.div`
@@ -71,31 +104,103 @@ const Footer = styled.footer`
   padding: 1.6rem;
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
   gap: 1.2rem;
-  font-size: 1.6rem;
   font-weight: 600;
 `;
 
-const SubmitButton = styled.button`
-  height: 3.2rem;
-  width: 100%;
-  padding: 0.6rem;
+const CartOpenButton = styled.button`
+  /* 基本隱藏：大螢幕不顯示 */
+  display: none;
+
+  /* 位置與尺寸 */
+  position: fixed;
+  bottom: 1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  padding: 0.8rem 2rem;
   border-radius: 999px;
-  background-color: #1d4ed8;
-  color: #fff;
-  font-size: 1.4rem;
-  display: flex;
+
+  /* 內容排版 */
   align-items: center;
   justify-content: center;
-  gap: 0.2rem;
+  gap: 0.6rem;
 
-  &:not(:disabled):hover {
-    background-color: #2563eb;
+  /* 視覺樣式 */
+  background-color: #2563eb;
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 500;
+
+  /* 陰影與過渡 */
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.2),
+    0 0 6px rgba(37, 99, 235, 0.2);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+
+  & svg {
+    width: 1.8rem;
+    height: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  /* 點擊回饋 */
+  &:active {
+    transform: translateX(-50%) scale(0.97);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.2),
+      0 0 4px rgba(37, 99, 235, 0.15);
+  }
+
+  /* 小螢幕（800px以下）時顯示 */
+  @media (max-width: 50em) {
+    display: flex;
+  }
+`;
+
+const CloseButton = styled.button`
+  width: 2.8rem;
+  height: 2.8rem;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  & svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    border: 1px solid #374151;
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+
+  &:hover::before {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
   }
 `;
 
 function ShoppingCart({ settingsData }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useScrollLock(50, isOpen, () => setIsOpen(false), "conditional");
+
   const {
-    state: { dishes, curOrderPage },
+    state: { dishes },
+    dispatch,
   } = useOrder();
 
   const {
@@ -108,19 +213,23 @@ function ShoppingCart({ settingsData }) {
     formState: { isValid },
   } = useForm();
 
-  const { createOrder, orderCreating } = useCreateOrder(reset);
-
-  // 因為munu和edit-order共用相同useReducer，所以在切換頁面時可能出現ui渲染閃爍問題，因此增加判別條件解決閃爍(讓購物車ui只渲染點餐頁面的數據)
-  const isCreatingOrder = curOrderPage === "/menu";
+  const { createOrder, orderCreating } = useCreateOrder();
 
   const takeOut = watch("diningMethod") === "外帶";
 
   const { totalServings, totalPrice } = calculateOrderSummary(dishes);
 
   function onSubmit(data) {
+    console.log(dishes);
     const orderData = buildOrderData(dishes, data);
 
-    createOrder(orderData);
+    createOrder(orderData, {
+      onSuccess: () => {
+        dispatch({ type: "order/reset" });
+        reset();
+        setIsOpen(false);
+      },
+    });
   }
 
   function onError(error) {
@@ -128,53 +237,68 @@ function ShoppingCart({ settingsData }) {
   }
 
   return (
-    <StyledShoppingCart>
-      <Header>
-        <h4>購物車</h4>
-      </Header>
+    <FormProvider control={control} register={register} setValue={setValue}>
+      <StyledShoppingCart $isOpen={isOpen}>
+        <Header>
+          <h3>購物車</h3>
 
-      {dishes.length !== 0 && isCreatingOrder ? (
-        <ShoppingList>
-          {dishes.map((dish) => (
-            <CartItem dish={dish} key={dish.uniqueId} />
-          ))}
+          <CloseButton onClick={() => setIsOpen(false)}>
+            <X />
+          </CloseButton>
+        </Header>
 
-          <OrderInfoField
-            register={register}
-            control={control}
-            takeOut={takeOut}
-            setValue={setValue}
-            dishes={dishes}
-            settingsData={settingsData}
-          />
-        </ShoppingList>
-      ) : (
-        <EmptyShoppingCart />
+        {dishes.length !== 0 ? (
+          <ShoppingList>
+            {dishes.map((dish) => (
+              <CartItem dish={dish} key={dish.uniqueId} />
+            ))}
+
+            <OrderInfoField
+              takeOut={takeOut}
+              dishes={dishes}
+              settingsData={settingsData}
+            />
+          </ShoppingList>
+        ) : (
+          <EmptyShoppingCart />
+        )}
+
+        {dishes.length !== 0 && (
+          <Footer>
+            <Row>
+              <span>總計</span>
+            </Row>
+            <Row>
+              <span>{`${totalServings}份餐點`}</span>
+              <span className="emphasize">{`$ ${totalPrice}`}</span>
+            </Row>
+
+            <Row>
+              <Button
+                type="submit"
+                $isFullWidth
+                $isLoading={orderCreating}
+                disabled={dishes.length === 0 || orderCreating || !isValid}
+                onClick={handleSubmit(onSubmit, onError)}
+              >
+                <span>提交</span>
+                {orderCreating && <ButtonSpinner />}
+              </Button>
+            </Row>
+          </Footer>
+        )}
+      </StyledShoppingCart>
+
+      {dishes.length !== 0 && (
+        <CartOpenButton onClick={() => setIsOpen(true)}>
+          <ShoppingCartIcon />
+          <Dot $size={0.8} />
+          <span>{`共 ${totalServings} 份`}</span>
+          <Dot $size={0.8} />
+          <span>{`$ ${totalPrice}`}</span>
+        </CartOpenButton>
       )}
-
-      {dishes.length !== 0 && isCreatingOrder && (
-        <Footer>
-          <Row>
-            <span>總計</span>
-          </Row>
-          <Row>
-            <span>{`${isCreatingOrder ? totalServings : 0}份餐點`}</span>
-            <span className="emphasize">{`$ ${
-              isCreatingOrder ? totalPrice : 0
-            }`}</span>
-          </Row>
-
-          <Row>
-            <SubmitButton
-              disabled={dishes.length === 0 || orderCreating || !isValid}
-              onClick={handleSubmit(onSubmit, onError)}
-            >
-              {orderCreating ? <ButtonSpinner /> : "提交"}
-            </SubmitButton>
-          </Row>
-        </Footer>
-      )}
-    </StyledShoppingCart>
+    </FormProvider>
   );
 }
 

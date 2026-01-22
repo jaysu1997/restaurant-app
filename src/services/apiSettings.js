@@ -1,4 +1,4 @@
-import { handleSupabaseError } from "../utils/handleSupabaseError";
+import handleSupabaseApiError from "./handleSupabaseApiError";
 import supabase from "./supabase";
 
 // 取得所有店鋪設定
@@ -9,7 +9,7 @@ export async function getSettingsApi() {
     .eq("id", 1)
     .single();
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -22,7 +22,7 @@ export async function upsertSettingsApi(settingData) {
     .select()
     .single();
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }

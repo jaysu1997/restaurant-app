@@ -1,6 +1,6 @@
 // 訂單相關api
 import supabase from "./supabase.js";
-import { handleSupabaseError } from "../utils/handleSupabaseError";
+import handleSupabaseApiError from "./handleSupabaseApiError";
 import { format, startOfDay, subDays } from "date-fns";
 
 // 建立新的餐點訂單api
@@ -9,7 +9,7 @@ export async function createOrderApi(orderData) {
     order_data: orderData,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
@@ -31,19 +31,16 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
     query = query.gte("createdTime", from).lt("createdTime", to);
   }
 
-  if (pickupNumber) {
+  if (pickupNumber !== null) {
     query = query.eq("pickupNumber", pickupNumber);
   }
 
   const { data, count, error } = await query.range(
     (page - 1) * itemsPerPage,
-    page * itemsPerPage - 1
+    page * itemsPerPage - 1,
   );
 
-  handleSupabaseError(error, {
-    for: "PGRST103",
-    message: "找不到指定的分頁，建議從第一頁開始查看。",
-  });
+  handleSupabaseApiError(error);
 
   // 回傳訂單數據、當前分頁、最大分頁數
   return {
@@ -57,15 +54,16 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
 export async function getLast7DaysOrdersApi() {
   const startDate = format(
     startOfDay(subDays(new Date(), 6)),
-    "yyyy-MM-dd HH:mm:ss"
+    "yyyy-MM-dd HH:mm:ss",
   );
   const { data, error } = await supabase
     .from("orders")
     .select("*")
     .gte("createdTime", startDate);
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
+  // return [];
   return data;
 }
 
@@ -77,9 +75,8 @@ export async function getOrderApi(orderId) {
     .eq("id", orderId)
     .single();
 
-  handleSupabaseError(error, {
-    for: "PGRST116",
-    message: "查無此訂單，請確認訂單 ID 是否正確。",
+  handleSupabaseApiError(error, {
+    PGRST116: "查無此訂單，請確認訂單 ID 是否正確。",
   });
 
   // 使用single，所以是直接回傳一個物件(不是物件陣列)
@@ -92,17 +89,18 @@ export async function deleteOrderApi(orderId) {
     order_id: orderId,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }
 
+// 更新指定訂單
 export async function updateOrderApi(oderData) {
   const { data, error } = await supabase.rpc("update_order", {
     order_data: oderData,
   });
 
-  handleSupabaseError(error);
+  handleSupabaseApiError(error);
 
   return data;
 }

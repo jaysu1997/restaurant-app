@@ -12,16 +12,10 @@ const Container = styled.div`
   flex-direction: column;
   gap: 2.8rem;
   width: 100%;
-  padding-bottom: 3.6rem;
 `;
 
 function Dashboard() {
-  const {
-    analyzedData,
-    analyzedDataIsPending,
-    analyzedDataIsError,
-    analyzedDataError,
-  } = useAnalyzedOrders();
+  const { analyzedData, isPending, isError, error } = useAnalyzedOrders();
 
   const { status } = useSettings();
 
@@ -35,16 +29,17 @@ function Dashboard() {
       </PageHeader>
 
       <QueryStatusFallback
-        isPending={analyzedDataIsPending}
-        isError={analyzedDataIsError}
-        error={analyzedDataError}
-        render={() => (
-          <Container>
-            <StatsCards analyzedData={analyzedData} />
-            <StatsCharts analyzedData={analyzedData} />
-          </Container>
-        )}
-      />
+        status={{
+          isPending,
+          isError,
+        }}
+        errorFallback={error}
+      >
+        <Container>
+          <StatsCards analyzedData={analyzedData} />
+          <StatsCharts analyzedData={analyzedData} />
+        </Container>
+      </QueryStatusFallback>
     </>
   );
 }

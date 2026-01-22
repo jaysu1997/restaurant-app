@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import SwiperBar from "./SwiperBar";
 import DishCard from "../../ui/DishCard";
 import ShoppingCart from "./ShoppingCart";
@@ -12,6 +12,11 @@ const Container = styled.div`
   grid-template-rows: auto 1fr;
   gap: 2.4rem;
   width: 100%;
+
+  @media (max-width: 50em) {
+    grid-template-columns: 1fr;
+    padding-bottom: 3.6rem;
+  }
 `;
 
 const Menus = styled.ul`
@@ -22,7 +27,6 @@ const Menus = styled.ul`
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 1.6rem;
   height: fit-content;
-  padding-bottom: 3.6rem;
 `;
 
 function MenuView({ menusData, settingsData }) {
@@ -58,7 +62,7 @@ function MenuView({ menusData, settingsData }) {
 
       {isOpenModal.type === "OrderForm" && (
         <OrderForm
-          dishData={isOpenModal.data}
+          orderDish={isOpenModal.data}
           isEdit={false}
           onCloseModal={() => setIsOpenModal(false)}
         />

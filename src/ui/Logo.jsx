@@ -9,11 +9,22 @@ const StyledLogo = styled.div`
     color: #ea580c;
     font-size: 2rem;
   }
+
+  @media (max-width: 80em) {
+    h1 {
+      font-size: 1.6rem;
+    }
+  }
 `;
 
 const Img = styled.img`
   height: 5.6rem;
-  width: 5.6rem;
+  width: auto;
+
+  @media (max-width: 80em) {
+    height: 4rem;
+    width: auto;
+  }
 `;
 
 function Logo() {

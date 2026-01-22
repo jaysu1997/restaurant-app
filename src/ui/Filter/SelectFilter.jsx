@@ -1,23 +1,14 @@
-import Select from "react-select";
+import StyledSelect from "../../ui/StyledSelect";
 
 function SelectFilter({ filterValue, handleValueChange, ...filters }) {
   const { queryKey, placeholder, options } = filters;
 
   return (
-    <Select
+    <StyledSelect
       options={options}
       value={filterValue}
       onChange={(e) => handleValueChange(queryKey, e)}
       placeholder={placeholder}
-      isSearchable={false}
-      styles={{
-        control: (baseStyles) => ({
-          ...baseStyles,
-          "&:hover": {
-            borderColor: baseStyles.borderColor,
-          },
-        }),
-      }}
     />
   );
 }

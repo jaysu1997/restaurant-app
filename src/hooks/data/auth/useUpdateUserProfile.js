@@ -12,8 +12,12 @@ function useUpdateUserProfile() {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       StyledHotToast({ type: "success", title: "個人資料更新成功" });
     },
-    onError: () => {
-      StyledHotToast({ type: "error", title: "個人資料更新失敗" });
+    onError: (error) => {
+      StyledHotToast({
+        type: "error",
+        title: "個人資料更新失敗",
+        content: error.message,
+      });
     },
   });
 

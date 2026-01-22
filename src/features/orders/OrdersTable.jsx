@@ -11,7 +11,7 @@ const OrderContainer = styled.div`
   border: 1px solid #dfdfdf;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 
-  @media (max-width: 768px) {
+  @media (max-width: 48em) {
     border: none;
     box-shadow: none;
   }
@@ -20,8 +20,8 @@ const OrderContainer = styled.div`
 const OrderHeader = styled.header`
   display: grid;
   grid-template-columns:
-    minmax(0, 5.6rem) minmax(0, 1fr) minmax(0, 1.5fr) repeat(3, minmax(0, 1fr))
-    minmax(0, 2.8rem);
+    6.4rem minmax(0, 0.5fr) minmax(0, 1fr) repeat(3, minmax(0, 0.5fr))
+    3.2rem;
   align-items: center;
   justify-items: start;
   gap: 0.8rem;
@@ -32,7 +32,7 @@ const OrderHeader = styled.header`
   color: #fafafa;
   border-radius: 6px 6px 0 0;
 
-  @media (max-width: 768px) {
+  @media (max-width: 48em) {
     display: none;
   }
 `;
@@ -41,9 +41,9 @@ const OrderBody = styled.section`
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 768px) {
+  @media (max-width: 48em) {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
     gap: 1rem;
   }
 `;
@@ -57,8 +57,8 @@ function OrdersTable({ ordersData }) {
         <div aria-hidden="true"></div>
         <div>取餐號碼</div>
         <div>建立時間</div>
-        <div>訂單狀態</div>
         <div>消費金額</div>
+        <div>訂單狀態</div>
         <div>付款狀態</div>
         <div aria-hidden="true"></div>
       </OrderHeader>

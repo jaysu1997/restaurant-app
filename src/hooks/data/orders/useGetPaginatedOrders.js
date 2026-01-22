@@ -4,13 +4,11 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { getPaginatedOrdersApi } from "../../../services/apiOrder";
-import {
-  isValidPositiveInteger,
-  safeParseDate,
-} from "../../../utils/orderHelpers";
+import { safeParseDate } from "../../../utils/orderHelpers";
 import { addDays, format } from "date-fns";
+import { parsePositiveInt, withFallbackRetry } from "../../../utils/helpers";
 
 // 將日期篩選條件轉換成supabase時間欄位的要求格式
 function getCreatedTimeSearchParams(createdTime) {
@@ -34,13 +32,19 @@ function useGetPaginatedOrders() {
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   // 篩選條件(參數)
-  const page = isValidPositiveInteger(searchParams.get("page"), 1);
-  const pickupNumber = isValidPositiveInteger(
-    Number(searchParams.get("pickupNumber")),
-    null
-  );
+  const page = parsePositiveInt(searchParams.get("page"), {
+    min: 1,
+    fallback: 1,
+  });
+
+  // 為了避免輸入的篩選值不是正整數導致數據獲取error，改由-1代替(回傳結果會是無符合數據的空陣列)，null則是沒做篩選
+  const pickupNumber = parsePositiveInt(searchParams.get("pickupNumber"), {
+    min: 1,
+    fallback: searchParams.get("pickupNumber") !== null ? -1 : null,
+  });
+
   const createdTime = getCreatedTimeSearchParams(
-    searchParams.get("createdTime")
+    searchParams.get("createdTime"),
   );
 
   const {
@@ -48,6 +52,7 @@ function useGetPaginatedOrders() {
     isPending,
     error,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ["orders", page, createdTime, pickupNumber],
     queryFn: () => getPaginatedOrdersApi(page, createdTime, pickupNumber),
@@ -74,7 +79,7 @@ function useGetPaginatedOrders() {
     maxPage,
     isPending,
     isError,
-    error,
+    error: withFallbackRetry(error, refetch),
     createdTime,
     pickupNumber,
   };

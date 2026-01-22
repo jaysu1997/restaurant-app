@@ -3,13 +3,11 @@ import "swiper/css/navigation";
 import styled from "styled-components";
 import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 
 const StyleSwiper = styled(Swiper)`
   grid-column: 1 / 2;
   width: 100%;
-  /* max-width: 96rem; */
-  /* z-index: 0; */
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`
@@ -32,23 +30,15 @@ export default function SwiperBar({ categories }) {
 
   return (
     <StyleSwiper
-      slidesPerView={2.5}
-      spaceBetween={10}
+      slidesPerView={3.5}
+      spaceBetween={5}
       freeMode={true}
       grabCursor={true}
       modules={[FreeMode]}
       breakpoints={{
         640: {
-          slidesPerView: 2.5,
-          spaceBetween: 5,
-        },
-        768: {
-          slidesPerView: 3.5,
-          spaceBetween: 5,
-        },
-        1024: {
           slidesPerView: 4.5,
-          spaceBetween: 5,
+          spaceBetween: 10,
         },
       }}
     >
