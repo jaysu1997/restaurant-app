@@ -6,14 +6,13 @@ import { Menu } from "lucide-react";
 
 const StyleHeader = styled.header`
   width: 100%;
-  border-bottom: 1px solid #dcdcdc;
   height: 6.4rem;
   background-color: #fff;
   position: sticky;
   top: 0;
   z-index: 3;
   grid-column: 1 / -1;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.078);
+  box-shadow: inset 0px -1px #e5e7eb;
 
   display: grid;
   grid-template-columns: 24rem 1fr;

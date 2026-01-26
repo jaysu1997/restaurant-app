@@ -7,12 +7,14 @@ import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import { useSettings } from "../context/SettingsContext";
+import PageWrapper from "../ui/PageWrapper";
 
 const StyledOrderSummary = styled.div`
   display: grid;
   grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
-  column-gap: 2.4rem;
-  row-gap: 3.6rem;
+  /* column-gap: 2.4rem;
+  row-gap: 3.6rem; */
+  gap: 2.8rem;
   padding: 0 0 3.6rem;
   font-weight: 500;
   width: 100%;
@@ -56,7 +58,7 @@ function Order() {
   };
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
       <QueryStatusFallback
         status={pageQueryStatus}
@@ -74,7 +76,7 @@ function Order() {
           )}
         </StyledOrderSummary>
       </QueryStatusFallback>
-    </>
+    </PageWrapper>
   );
 }
 

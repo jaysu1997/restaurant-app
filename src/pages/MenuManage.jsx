@@ -10,12 +10,13 @@ import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
 import styled from "styled-components";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import { FilePlus } from "lucide-react";
+import PageWrapper from "../ui/PageWrapper.jsx";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
-  gap: 3.6rem;
+  gap: 2.8rem;
 `;
 
 function filterData(menusData, nameSearchParams, categorySearchParams) {
@@ -81,7 +82,7 @@ function MenuManage() {
   ];
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader title="菜單設定">
         <div>
           <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
@@ -111,7 +112,7 @@ function MenuManage() {
       {isOpenModal && (
         <UpsertMenuForm onCloseModal={() => setIsOpenModal(false)} />
       )}
-    </>
+    </PageWrapper>
   );
 }
 

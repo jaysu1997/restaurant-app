@@ -1,15 +1,14 @@
+// ok
 import styled from "styled-components";
 import {
   ClipboardList,
   CircleDollarSign,
   TrendingUpDown,
   Trophy,
-  Minus,
-  ArrowBigDown,
-  ArrowBigUp,
 } from "lucide-react";
+import StatItem from "./StatItem";
 
-const StyledStatsCardRow = styled.section`
+const StyledStatsCards = styled.section`
   display: grid;
   grid-template-columns: repeat(4, minmax(15rem, 1fr));
   gap: 2.8rem;
@@ -17,47 +16,6 @@ const StyledStatsCardRow = styled.section`
   @media (max-width: 48em) {
     grid-template-columns: repeat(2, minmax(15rem, 1fr));
     gap: 2rem;
-  }
-`;
-
-const StatCard = styled.article`
-  border-radius: 6px;
-  padding: 2rem;
-  display: grid;
-  grid-template-columns: auto 2rem;
-  grid-template-rows: auto auto;
-  column-gap: 1rem;
-  row-gap: 0.6rem;
-  background-color: ${(props) => props.$bgColor};
-  border: 1px solid ${(props) => props.$bgColor};
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-
-  align-items: center;
-`;
-
-const StatHeading = styled.h6`
-  color: #6b7280;
-  font-size: 1.3rem;
-  font-weight: 500;
-`;
-
-const StatData = styled.div`
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-width: 0;
-
-  span {
-    font-size: 1.8rem;
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  svg {
-    flex-shrink: 0;
   }
 `;
 
@@ -73,6 +31,7 @@ function StatsCards({ analyzedData }) {
       cardColor: "#dbeafe",
       iconColor: "#2563eb",
       icon: ClipboardList,
+      trend: null,
     },
     {
       heading: "今日營收金額",
@@ -80,6 +39,7 @@ function StatsCards({ analyzedData }) {
       cardColor: "#dcfce7",
       iconColor: "#16a34a",
       icon: CircleDollarSign,
+      trend: null,
     },
     {
       heading: "今日營收趨勢",
@@ -87,58 +47,24 @@ function StatsCards({ analyzedData }) {
       cardColor: "#f3e8ff",
       iconColor: "#9333ea",
       icon: TrendingUpDown,
+      trend: todayRevenueTrend,
     },
     {
       heading: "今日熱銷商品",
-      value: todayTopDishes[0]?.name,
+      value: todayTopDishes.length === 0 ? null : todayTopDishes[0].name,
       cardColor: "#ffedd5",
       iconColor: "#ea580c",
       icon: Trophy,
+      trend: null,
     },
   ];
 
   return (
-    <StyledStatsCardRow>
-      {statCardItems.map((item, index) => {
-        const Icon = item.icon;
-
-        return (
-          <StatCard $bgColor={item.cardColor} key={index}>
-            <StatHeading>{item.heading}</StatHeading>
-            <Icon className="icon-lg" color={item.iconColor} />
-
-            <StatData>
-              <span>
-                {!item.value && item.value !== 0 ? (
-                  <>
-                    <Minus className="icon-xl" />
-                    <Minus className="icon-xl" />
-                  </>
-                ) : (
-                  item.value
-                )}
-              </span>
-
-              {item.heading === "今日營收趨勢" ? (
-                todayRevenueTrend >= 0 ? (
-                  <ArrowBigUp
-                    color="#22c55e"
-                    fill="#22c55e"
-                    className="icon-lg"
-                  />
-                ) : (
-                  <ArrowBigDown
-                    color="#f43f5e"
-                    fill="#f43f5e"
-                    className="icon-lg"
-                  />
-                )
-              ) : undefined}
-            </StatData>
-          </StatCard>
-        );
-      })}
-    </StyledStatsCardRow>
+    <StyledStatsCards>
+      {statCardItems.map((item, index) => (
+        <StatItem item={item} key={index} />
+      ))}
+    </StyledStatsCards>
   );
 }
 

@@ -5,17 +5,24 @@ const StyledDishCard = styled.li`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
   gap: 0.2rem;
-  padding: 0.6rem 1.2rem;
+
+  padding: 0.8rem 1.2rem;
+  background-color: #fff;
   border-radius: 6px;
-  border: 2px solid #dcdcdc;
-  transition: all 0.3s;
+  border: 1px solid #e5e7eb;
+
   cursor: pointer;
 
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+
   &:hover {
-    background-color: #f0f9ff;
-    border: 2px solid #93c5fd;
+    background-color: #eff6ff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
   }
 `;
 

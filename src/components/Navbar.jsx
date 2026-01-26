@@ -42,7 +42,7 @@ const Nav = styled.nav`
   align-items: center;
   flex: 0 0 24rem;
   background-color: #fff;
-  border-right: 1px solid #dcdcdc;
+  box-shadow: inset -1px 0px #e5e7eb;
   overflow-y: auto;
 
   @media (max-width: 80em) {

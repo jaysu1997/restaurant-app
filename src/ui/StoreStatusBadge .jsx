@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 
 const BadgeWrapper = styled.div`
@@ -28,8 +29,8 @@ const Badge = styled.div`
 `;
 
 const Indicator = styled.span`
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 50%;
   background-color: ${({ $isBusinessDay }) =>
     $isBusinessDay ? "#10b981" : "#9ca3af"};
@@ -45,10 +46,13 @@ const Tooltip = styled.div`
   padding: 0.6rem 1rem;
   border-radius: 2px;
   white-space: nowrap;
-  opacity: 0;
-  transition: all 0.2s ease;
   z-index: 1;
   user-select: none;
+
+  opacity: 0;
+  transition:
+    transform 0.6s ease,
+    opacity 0.3s ease;
 
   &::after {
     content: "";

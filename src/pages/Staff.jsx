@@ -8,6 +8,7 @@ import { UserRoundPlus } from "lucide-react";
 import Button from "../ui/Button";
 import { useState } from "react";
 import Modal from "../ui/Modal";
+import PageWrapper from "../ui/PageWrapper";
 
 const StaffLayout = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ function Staff() {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   return (
-    <StaffLayout>
+    <PageWrapper $maxWidth="60rem">
       <PageHeader title="員工管理">
         <Button
           $iconSize="1.8rem"
@@ -33,29 +34,31 @@ function Staff() {
         </Button>
       </PageHeader>
 
-      <QueryStatusFallback
-        status={{
-          isPending,
-          isError,
-        }}
-        errorFallback={error}
-      >
-        {isOpenModal.type === "create" && (
-          <Modal
-            maxWidth={36}
-            modalHeader="註冊新帳號"
-            onCloseModal={() => setIsOpenModal(false)}
-          >
-            <SignUp setIsOpenModal={setIsOpenModal} />
-          </Modal>
-        )}
-        <StaffList
-          staffList={data}
-          isOpenModal={isOpenModal}
-          setIsOpenModal={setIsOpenModal}
-        />
-      </QueryStatusFallback>
-    </StaffLayout>
+      <StaffLayout>
+        <QueryStatusFallback
+          status={{
+            isPending,
+            isError,
+          }}
+          errorFallback={error}
+        >
+          {isOpenModal.type === "create" && (
+            <Modal
+              maxWidth={36}
+              modalHeader="註冊新帳號"
+              onCloseModal={() => setIsOpenModal(false)}
+            >
+              <SignUp setIsOpenModal={setIsOpenModal} />
+            </Modal>
+          )}
+          <StaffList
+            staffList={data}
+            isOpenModal={isOpenModal}
+            setIsOpenModal={setIsOpenModal}
+          />
+        </QueryStatusFallback>
+      </StaffLayout>
+    </PageWrapper>
   );
 }
 

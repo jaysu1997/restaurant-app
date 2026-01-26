@@ -1,3 +1,4 @@
+// ok
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -28,6 +29,7 @@ const FilledTrack = styled.span`
   border-radius: 3px;
   background-color: #2563eb;
   z-index: 1;
+  width: ${({ $percent }) => `${$percent}%`};
 `;
 
 const Thumb = styled.span`
@@ -35,6 +37,7 @@ const Thumb = styled.span`
   background: #fff;
   position: absolute;
   top: 50%;
+  left: ${({ $percent }) => `calc(${$percent}% - 1rem)`};
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
@@ -52,11 +55,12 @@ const Thumb = styled.span`
   }
 `;
 
+// 縮放圖片拖曳條
 function Slider({ min = 1, max = 3, zoom, setZoom }) {
   const sliderRef = useRef(null);
   const [dragging, setDragging] = useState(false);
 
-  // 將當前放大值映射成百分比(ui需要)
+  // 將當前放大值映射成百分比(刻度)
   const percent = ((zoom - min) / (max - min)) * 100;
 
   function percentToZoom(clientX) {
@@ -65,7 +69,7 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
     const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
     const raw = min + (x / rect.width) * (max - min);
 
-    // 以下寫法設定可讓zoom倍數值的間距為0.1，且不會有過長的浮點數
+    // 讓zoom倍數值的間距為0.1，且不會有過長的浮點數
     return Math.round(raw * 10) / 10;
   }
 
@@ -93,6 +97,7 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
     sliderRef.current.releasePointerCapture(e.pointerId);
   }
 
+  // 使用point事件會更通用且適當
   return (
     <StyledSlider
       ref={sliderRef}
@@ -101,8 +106,8 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
       onPointerUp={handlePointerUp}
     >
       <Track />
-      <FilledTrack style={{ width: `${percent}%` }} />
-      <Thumb style={{ left: `calc(${percent}% - 1rem)` }} />
+      <FilledTrack $percent={percent} />
+      <Thumb $percent={percent} />
     </StyledSlider>
   );
 }

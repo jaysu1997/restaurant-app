@@ -14,7 +14,7 @@ function updateLast7DaysStats(
   last7DaysStats,
   createdTime,
   order,
-  sevenDaysAgoStart
+  sevenDaysAgoStart,
 ) {
   const index = differenceInCalendarDays(createdTime, sevenDaysAgoStart);
   last7DaysStats[index].totalRevenue += order.totalPrice;
@@ -65,6 +65,7 @@ function analyzeOrders(orders) {
   const now = new Date();
   // 7天之前
   const sevenDaysAgoStart = startOfDay(subDays(now, 6));
+
   // 近7天營收統計
   const last7DaysStats = eachDayOfInterval({
     start: sevenDaysAgoStart,
@@ -88,23 +89,22 @@ function analyzeOrders(orders) {
   const dishesSaleStats = new Map();
 
   for (const order of orders) {
+    // 解析建立時間
     const createdTime = parseISO(order.createdTime);
 
-    if (createdTime > now || createdTime < sevenDaysAgoStart) continue;
+    // 統計今日訂單數據
+    if (isToday(createdTime)) {
+      todayOrders.unshift(order);
+
+      // 今日各小時訂單筆數統計
+      updateHourlyOrders(hourlyOrderCounts, createdTime);
+
+      // 今日各餐點銷售份數與金額累計
+      updateDishStats(dishesSaleStats, order);
+    }
 
     // 近7天的營收統計
     updateLast7DaysStats(last7DaysStats, createdTime, order, sevenDaysAgoStart);
-
-    // 統計今日訂單數據
-    if (!isToday(createdTime)) continue;
-
-    todayOrders.unshift(order);
-
-    // 今日各小時訂單筆數統計
-    updateHourlyOrders(hourlyOrderCounts, createdTime);
-
-    // 今日各餐點銷售份數與金額累計
-    updateDishStats(dishesSaleStats, order);
   }
 
   return {

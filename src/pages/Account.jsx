@@ -4,24 +4,26 @@ import UserProfileSetting from "../features/account/UserProfileSetting";
 import UpdatePassword from "../features/account/UpdatePassword";
 import useUser from "../hooks/data/auth/useUser";
 import UpdateUserAvatar from "../features/account/UpdateUserAvatar";
+import PageWrapper from "../ui/PageWrapper";
 
 const AccountContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3.6rem;
-  width: clamp(0px, 100%, 60rem);
+  gap: 2.8rem;
 `;
 
 function Account() {
   const { user } = useUser();
 
   return (
-    <AccountContainer>
+    <PageWrapper $maxWidth="60rem">
       <PageHeader title="用戶設定" />
-      <UpdateUserAvatar userData={user} />
-      <UserProfileSetting userData={user} />
-      <UpdatePassword userData={user} />
-    </AccountContainer>
+      <AccountContainer>
+        <UpdateUserAvatar userData={user} />
+        <UserProfileSetting userData={user} />
+        <UpdatePassword userData={user} />
+      </AccountContainer>
+    </PageWrapper>
   );
 }
 

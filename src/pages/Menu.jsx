@@ -5,6 +5,8 @@ import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
 import { useSettings } from "../context/SettingsContext";
 import { useOrder } from "../context/OrderContext";
+import PageWrapper from "../ui/PageWrapper";
+import { useEffect } from "react";
 
 function Menu() {
   const {
@@ -25,10 +27,23 @@ function Menu() {
 
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
   const {
+    data: inventoryData,
     isPending: inventoryIsPending,
     error: inventoryError,
     isError: inventoryIsError,
-  } = useGetInventory(dispatch);
+  } = useGetInventory();
+
+  useEffect(
+    function () {
+      if (!inventoryData) return;
+
+      dispatch({
+        type: "inventory/setAll",
+        payload: inventoryData,
+      });
+    },
+    [dispatch, inventoryData],
+  );
 
   const pageQueryStatus = {
     isPending: menusIsPending || inventoryIsPending || settingsIsPending,
@@ -37,7 +52,7 @@ function Menu() {
   };
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader title="點餐系統" />
 
       <QueryStatusFallback
@@ -51,7 +66,7 @@ function Menu() {
       >
         <MenuView menusData={menusData} settingsData={settings} />
       </QueryStatusFallback>
-    </>
+    </PageWrapper>
   );
 }
 

@@ -3,6 +3,7 @@ import Tag from "../../ui/Tag";
 import { formatPickupNumber } from "../../utils/orderHelpers";
 import { useNavigate } from "react-router";
 import { ArrowRight } from "lucide-react";
+import SectionContainer from "../../ui/SectionContainer";
 
 const OrderList = styled.ul`
   height: 30rem;
@@ -76,33 +77,37 @@ function formatDishes(dishes) {
 }
 
 // 今日訂單列表
-function TodayOrderList({ analyzedData }) {
+function TodayOrderList({ data }) {
   const navigate = useNavigate();
 
-  const { todayOrders } = analyzedData;
-
-  if (todayOrders.length === 0)
-    return <EmptyState>今日尚無任何訂單</EmptyState>;
+  if (data.length === 0)
+    return (
+      <SectionContainer title="今日訂單列表">
+        <EmptyState>今日尚無任何訂單</EmptyState>
+      </SectionContainer>
+    );
 
   return (
-    <OrderList>
-      {todayOrders.map((order) => (
-        <Order key={order.id}>
-          <span>{formatPickupNumber(order.pickupNumber)}</span>
-          <Tag $tagStatus={order.status}>{order.status}</Tag>
-          <span>{formatDishes(order.dishes)}</span>
-          <span className="emphasize">{`$ ${order.totalPrice}`}</span>
-          <button
-            onClick={() =>
-              navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
-            }
-          >
-            <span>檢視</span>
-            <ArrowRight className="icon-sm" strokeWidth={3.2} />
-          </button>
-        </Order>
-      ))}
-    </OrderList>
+    <SectionContainer title="今日訂單列表">
+      <OrderList>
+        {data.map((order) => (
+          <Order key={order.id}>
+            <span>{formatPickupNumber(order.pickupNumber)}</span>
+            <Tag $tagStatus={order.status}>{order.status}</Tag>
+            <span>{formatDishes(order.dishes)}</span>
+            <span className="emphasize">{`$ ${order.totalPrice}`}</span>
+            <button
+              onClick={() =>
+                navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
+              }
+            >
+              <span>檢視</span>
+              <ArrowRight className="icon-sm" strokeWidth={3.2} />
+            </button>
+          </Order>
+        ))}
+      </OrderList>
+    </SectionContainer>
   );
 }
 

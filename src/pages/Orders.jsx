@@ -2,6 +2,7 @@ import OrdersTable from "../features/orders/OrdersTable";
 import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
 import Filter from "../ui/Filter/Filter";
 import PageHeader from "../ui/PageHeader";
+import PageWrapper from "../ui/PageWrapper";
 import Pagination from "../ui/Pagination";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 
@@ -37,7 +38,7 @@ function Orders() {
       : "目前沒有任何已經建立的訂單數據。";
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader title="訂單管理">
         <Filter filtersConfig={filtersConfig} />
       </PageHeader>
@@ -54,7 +55,7 @@ function Orders() {
         <OrdersTable ordersData={ordersData} />
         <Pagination curPage={Number(curPage)} maxPage={Number(maxPage)} />
       </QueryStatusFallback>
-    </>
+    </PageWrapper>
   );
 }
 

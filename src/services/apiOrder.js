@@ -56,6 +56,7 @@ export async function getLast7DaysOrdersApi() {
     startOfDay(subDays(new Date(), 6)),
     "yyyy-MM-dd HH:mm:ss",
   );
+
   const { data, error } = await supabase
     .from("orders")
     .select("*")
@@ -63,7 +64,6 @@ export async function getLast7DaysOrdersApi() {
 
   handleSupabaseApiError(error);
 
-  // return [];
   return data;
 }
 

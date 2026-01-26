@@ -22,17 +22,20 @@ const StyledUpdateUserAvatar = styled.div`
 
 function UpdateUserAvatar({ userData }) {
   const [imgUrl, setImgUrl] = useState(undefined);
-
+  // 頭像圖檔來源
   const avatarFile = userData?.user_metadata?.avatarFile;
   const avatarUrl = `${AVATAR_URL}${avatarFile}`;
 
   function handleSelectFile(e) {
+    // 確認有選擇圖檔
     const fileLength = e.target.files.length;
 
+    // 如果記憶體中有舊的臨時url先清除(釋放空間)
     if (imgUrl) {
       URL.revokeObjectURL(imgUrl);
     }
 
+    // 為剛剛上傳的圖檔建立一個臨時網址，用來預覽
     if (fileLength) {
       const url = URL.createObjectURL(e.target.files[0]);
       setImgUrl(url);
@@ -55,7 +58,7 @@ function UpdateUserAvatar({ userData }) {
         <Button
           $variant="tertiary"
           as="label"
-          htmlFor="avatar"
+          htmlFor="upload-avatar"
           role="avatarUploadButton"
         >
           <Upload />
@@ -66,7 +69,7 @@ function UpdateUserAvatar({ userData }) {
       </StyledUpdateUserAvatar>
 
       <input
-        id="avatar"
+        id="upload-avatar"
         name="avatar"
         type="file"
         accept="image/png, image/jpeg, image/webp"

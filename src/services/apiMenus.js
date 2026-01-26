@@ -7,7 +7,7 @@ export async function getMenusApi() {
     .from("menus")
     .select()
     .order("category", { ascending: true })
-    .order("price", { ascending: true });
+    .order("id", { ascending: true });
 
   handleSupabaseApiError(error);
 

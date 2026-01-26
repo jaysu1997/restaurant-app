@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 
 const StyledPageHeader = styled.header`
@@ -10,7 +11,6 @@ const StyledPageHeader = styled.header`
 
 const PageHeading = styled.h1`
   font-size: 3.2rem;
-  font-weight: 700;
 `;
 
 const PageActions = styled.div`

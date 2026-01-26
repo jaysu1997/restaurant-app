@@ -19,9 +19,9 @@ import Button from "../../ui/Button";
 import { parsePositiveInt } from "../../utils/helpers";
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  max-height: 75dvh;
+  display: grid;
+  grid-template-rows: 1fr 7.2rem;
+  max-height: calc(90dvh - 5.7rem);
   width: min(36rem, 95dvw);
   font-size: 1.4rem;
 `;
@@ -57,6 +57,9 @@ const Footer = styled.footer`
   padding: 1.6rem;
   z-index: 1;
   box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
+
+  position: sticky;
+  bottom: 0;
 `;
 
 function OrderForm({ orderDish, onCloseModal, isEdit = false }) {

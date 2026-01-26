@@ -8,14 +8,21 @@ import StyledHotToast from "../../ui/StyledHotToast";
 import ButtonSubmit from "../../ui/ButtonSubmit";
 import ButtonCancel from "../../ui/ButtonCancel";
 
-const Wrapper = styled.section`
+const StyledAvatarCropper = styled.section`
   width: min(56rem, 95dvw);
+  max-height: calc(90dvh - 5.7rem);
+  display: flex;
+  flex-direction: column;
 `;
 
 const Container = styled.div`
-  position: relative;
   width: 100%;
-  aspect-ratio: 1.5 / 1;
+  height: 28rem;
+`;
+
+const Wrapper = styled.div`
+  position: relative;
+  height: 100%;
 `;
 
 const Footer = styled.footer`
@@ -24,6 +31,7 @@ const Footer = styled.footer`
   align-items: center;
   gap: 1.6rem;
   padding: 2rem;
+  height: 7.9rem;
 `;
 
 const ButtonGroup = styled.div`
@@ -31,11 +39,11 @@ const ButtonGroup = styled.div`
   gap: 1.2rem;
 `;
 
-// 使用Canvas將裁切區域轉成Blob Url
+// 使用canvas將裁切區域轉成Blob Url
 const getCroppedImg = (imageSrc, pixelCrop) => {
-  // 因為監聽圖片onload是非同步功能，所以使用Promise方便處理
+  // 因為監聽圖片onload是非同步功能，所以使用Promise處理比較方便
   return new Promise((resolve, reject) => {
-    // 裁切後固定輸出成300x300尺寸的圖檔
+    // 固定裁切成300x300的圖檔輸出
     const outputSize = 300;
 
     const image = new Image();
@@ -47,7 +55,7 @@ const getCroppedImg = (imageSrc, pixelCrop) => {
       canvas.height = outputSize;
       const ctx = canvas.getContext("2d");
 
-      // 重要：高品質縮放
+      // 高品質縮放
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
 
@@ -74,7 +82,7 @@ const getCroppedImg = (imageSrc, pixelCrop) => {
   });
 };
 
-// 頭像裁切元件
+// 頭像預覽裁切元件
 function AvatarCropper({ userData, imgUrl, onCloseModal }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -99,9 +107,7 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
 
       // 上傳新的圖檔並更新數據
       mutate(updateAvatarPayload, {
-        onSuccess: () => {
-          onCloseModal();
-        },
+        onSuccess: () => onCloseModal(),
       });
     } catch (err) {
       console.error("頭像裁切失敗", err);
@@ -110,34 +116,41 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
   }
 
   return (
-    <Modal modalHeader="選擇頭像範圍" onCloseModal={onCloseModal}>
-      <Wrapper>
+    <Modal
+      modalHeader="選擇頭像範圍"
+      onCloseModal={onCloseModal}
+      scrollBar={false}
+    >
+      <StyledAvatarCropper>
         <Container>
-          <Cropper
-            image={imgUrl}
-            crop={crop}
-            zoom={zoom}
-            aspect={1}
-            cropShape="round"
-            showGrid={false}
-            onCropChange={setCrop}
-            onCropComplete={onCropComplete}
-            onZoomChange={setZoom}
-            zoomWithScroll={false}
-          />
+          <Wrapper>
+            <Cropper
+              image={imgUrl}
+              crop={crop}
+              zoom={zoom}
+              aspect={1}
+              cropShape="round"
+              showGrid={false}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+              zoomWithScroll={false}
+            />
+          </Wrapper>
         </Container>
-      </Wrapper>
-      <Footer>
-        <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
-        <ButtonGroup>
-          <ButtonSubmit
-            isLoading={isPending}
-            disabled={isPending}
-            onClick={handleSave}
-          />
-          <ButtonCancel onClick={onCloseModal} disabled={isPending} />
-        </ButtonGroup>
-      </Footer>
+
+        <Footer>
+          <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
+          <ButtonGroup>
+            <ButtonSubmit
+              isLoading={isPending}
+              disabled={isPending}
+              onClick={handleSave}
+            />
+            <ButtonCancel onClick={onCloseModal} disabled={isPending} />
+          </ButtonGroup>
+        </Footer>
+      </StyledAvatarCropper>
     </Modal>
   );
 }

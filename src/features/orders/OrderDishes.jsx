@@ -49,7 +49,12 @@ const OrderDishRow = styled.li`
       display: none;
     }
 
+    .dishServings {
+      grid-row: 3;
+    }
+
     .dishPrice {
+      grid-row: 3;
       justify-self: end;
       white-space: nowrap;
     }
@@ -121,7 +126,7 @@ function OrderDishes({ dishes, isEdit }) {
             {dish.note && <p className="dishNote">{`" ${dish.note} "`}</p>}
           </ItemMeta>
 
-          <span>{dish.servings} 份</span>
+          <span className="dishServings">{dish.servings} 份</span>
           <span className="emphasize dishPrice">
             $ {dish.itemTotalPrice * dish.servings}
           </span>

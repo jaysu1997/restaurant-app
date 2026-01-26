@@ -6,11 +6,11 @@ import DishCard from "../../ui/DishCard";
 import ShoppingCart from "./ShoppingCart";
 import OrderForm from "../../ui/OrderForm/OrderForm";
 
-const Container = styled.div`
+const MenuContainer = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 96rem) 21.6rem;
   grid-template-rows: auto 1fr;
-  gap: 2.4rem;
+  gap: 2.8rem;
   width: 100%;
 
   @media (max-width: 50em) {
@@ -25,7 +25,7 @@ const Menus = styled.ul`
   max-width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: 1.6rem;
+  gap: 2.4rem;
   height: fit-content;
 `;
 
@@ -41,12 +41,12 @@ function MenuView({ menusData, settingsData }) {
   // 要呈現的餐點
   const dishes =
     filter === "all"
-      ? menusData.toSorted((a, b) => a.category.localeCompare(b.category))
+      ? menusData
       : menusData.filter((menu) => menu.category === filter);
 
   return (
     <>
-      <Container>
+      <MenuContainer>
         <SwiperBar categories={categories} />
         <Menus>
           {dishes.map((dish) => (
@@ -58,7 +58,7 @@ function MenuView({ menusData, settingsData }) {
           ))}
         </Menus>
         <ShoppingCart settingsData={settingsData} />
-      </Container>
+      </MenuContainer>
 
       {isOpenModal.type === "OrderForm" && (
         <OrderForm

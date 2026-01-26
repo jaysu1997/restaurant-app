@@ -31,12 +31,19 @@ function OrderSummaryEdit({ orderData, settingsData }) {
     dispatch,
   } = useOrder();
 
-  const {
-    data: inventoryData,
-    isPending,
-    error,
-    isError,
-  } = useGetInventory(dispatch);
+  const { data: inventoryData, isPending, error, isError } = useGetInventory();
+
+  useEffect(
+    function () {
+      if (!inventoryData) return;
+
+      dispatch({
+        type: "inventory/setAll",
+        payload: inventoryData,
+      });
+    },
+    [dispatch, inventoryData],
+  );
 
   useEffect(() => {
     dispatch({

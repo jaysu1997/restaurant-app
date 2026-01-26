@@ -10,12 +10,13 @@ import Filter from "../ui/Filter/Filter";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import Button from "../ui/Button";
 import { FilePlus } from "lucide-react";
+import PageWrapper from "../ui/PageWrapper";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: 3.6rem;
+  gap: 2.8rem;
 `;
 
 const filtersConfig = [
@@ -81,7 +82,7 @@ function Inventory() {
       : "目前沒有任何食材數據，請點擊新增食材開始新建食材數據。";
 
   return (
-    <>
+    <PageWrapper>
       <PageHeader title="庫存管理">
         <div>
           <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
@@ -113,7 +114,7 @@ function Inventory() {
       {isOpenModal && (
         <UpsertInventoryForm onCloseModal={() => setIsOpenModal(false)} />
       )}
-    </>
+    </PageWrapper>
   );
 }
 

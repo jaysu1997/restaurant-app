@@ -1,31 +1,16 @@
 import * as styled from "styled-components";
 
 // focus-visiable需要設定
-
-// color
-// #fff
-// #dfdfdf
-// #ddd
-// #ccc
-// #6b7280
-
-// #fecaca
-// #f87171
-// #f43f5e
-// #ff3333
-// #dc2626
-
 // focus color
 // #2684ff
 
+// space
+
+// color
+
 // shadow
-// rgba(0, 0, 0, 0.04)
 
 // border-radius
-// 4px
-// 6px
-// 999px
-// 50%
 
 export const GlobalStyles = styled.createGlobalStyle`
   /* :root {

@@ -1,9 +1,10 @@
+// ok
+
 import styled from "styled-components";
 import TodayOrderList from "./TodayOrderList";
 import RevenueTrendChart from "./RevenueTrendChart";
 import PeakHoursChart from "./PeakHoursChart";
 import TopDishesChart from "./TopDishesChart";
-import SectionContainer from "../../ui/SectionContainer";
 
 const StatsChartRow = styled.section`
   display: grid;
@@ -18,36 +19,15 @@ const StatsChartRow = styled.section`
 
 // 圖表
 function StatsCharts({ analyzedData }) {
-  const statChartItems = [
-    {
-      heading: "今日訂單列表",
-      chart: TodayOrderList,
-    },
-    {
-      heading: "今日熱銷排名",
-      chart: TopDishesChart,
-    },
-    {
-      heading: "今日熱門時段",
-      chart: PeakHoursChart,
-    },
-    {
-      heading: "一週營收變化",
-      chart: RevenueTrendChart,
-    },
-  ];
+  const { todayOrders, todayTopDishes, hourlyOrderCounts, last7DaysStats } =
+    analyzedData;
 
   return (
     <StatsChartRow>
-      {statChartItems.map((item, index) => {
-        const Chart = item.chart;
-
-        return (
-          <SectionContainer title={item.heading} key={index}>
-            <Chart analyzedData={analyzedData} />
-          </SectionContainer>
-        );
-      })}
+      <TodayOrderList data={todayOrders} />
+      <TopDishesChart data={todayTopDishes} />
+      <PeakHoursChart data={hourlyOrderCounts} />
+      <RevenueTrendChart data={last7DaysStats} />
     </StatsChartRow>
   );
 }
