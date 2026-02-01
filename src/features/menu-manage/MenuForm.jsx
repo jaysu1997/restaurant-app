@@ -1,10 +1,9 @@
 // 用來新增或更新單筆menu數據的表單
 import { useForm, FormProvider } from "react-hook-form";
-import { useRef } from "react";
 import Modal from "../../ui/Modal";
-import { createNewIngredients } from "./createNewIngredients";
+import prepareMenuSubmitData from "./menuSubmitNormalizer";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
-import useUpsertMenu from "../../hooks/data/menus/useUpsertMenu";
+import useSubmitMenuForm from "../../hooks/data/menus/useSubmitMenuForm";
 import QueryStatusFallback from "../../ui/QueryStatusFallback";
 import ButtonCancel from "../../ui/ButtonCancel";
 import ButtonSubmit from "../../ui/ButtonSubmit";
@@ -34,16 +33,11 @@ const Footer = styled.footer`
   gap: 2.4rem;
 `;
 
-function UpsertMenuForm({ onCloseModal, menu }) {
-  const {
-    data: inventoryData,
-    isPending: inventoryIsPending,
-    error: inventoryError,
-    isError: inventoryIsError,
-  } = useGetInventory();
+function MenuForm({ onCloseModal, menu }) {
+  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
+    useGetInventory();
 
-  const { upsert, isUpserting } = useUpsertMenu();
-  const newIngredientRef = useRef(new Map());
+  const { submitMenuForm, isSubmittingMenuForm } = useSubmitMenuForm();
 
   const methods = useForm({
     defaultValues: menu || {
@@ -52,40 +46,17 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   });
 
   const {
-    setValue,
     getValues,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = methods;
 
-  // 當 <CreatableSelect /> 建立新選項時
-  function handleCreateNewItems(optionValue, fieldName) {
-    let uuid = newIngredientRef.current.get(optionValue);
-
-    if (!uuid) {
-      uuid = crypto.randomUUID();
-      newIngredientRef.current.set(optionValue, uuid);
-    }
-
-    setValue(fieldName, {
-      label: optionValue,
-      value: optionValue,
-      uuid,
-    });
-  }
-
   function onSubmit(data) {
-    // 要新增到庫存數據表單的新食材
-    const newIngredients = createNewIngredients(data, newIngredientRef.current);
-    // 排序餐點自訂項目(以便點餐時，必填項目的ui在前面)
-    const sortedCustomize = [...data.customize].sort((a, b) => {
-      if (a.isRequired === b.isRequired) return 0;
-      return a.isRequired === "required" ? -1 : 1;
-    });
-
+    // 整理好要上傳的數據格式
+    const { menuData, newIngredients } = prepareMenuSubmitData(data);
     // 執行表單數據上傳
-    upsert(
-      { menuData: { ...data, customize: sortedCustomize }, newIngredients },
+    submitMenuForm(
+      { menuData, newIngredients },
       { onSuccess: () => onCloseModal?.() },
     );
   }
@@ -139,16 +110,12 @@ function UpsertMenuForm({ onCloseModal, menu }) {
     <Modal modalHeader="餐點設定表單" maxWidth={56} onCloseModal={onCloseModal}>
       <QueryStatusFallback
         status={{
-          isPending: inventoryIsPending,
+          isLoading: inventoryIsLoading,
           isError: inventoryIsError,
         }}
         errorFallback={inventoryError}
       >
-        <FormProvider
-          {...methods}
-          handleCreateNewItems={handleCreateNewItems}
-          isDisabled={isUpserting}
-        >
+        <FormProvider {...methods}>
           <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
             {fieldsConfig.map((field) => (
               <FormSection
@@ -165,12 +132,19 @@ function UpsertMenuForm({ onCloseModal, menu }) {
               />
             ))}
 
-            <IngredientScetion inventoryData={inventoryData} />
-            <CustomizeScetion inventoryData={inventoryData} />
+            <IngredientScetion inventoryData={inventory} />
+
+            <CustomizeScetion inventoryData={inventory} />
 
             <Footer>
-              <ButtonSubmit isLoading={isUpserting} disabled={isUpserting} />
-              <ButtonCancel disabled={isUpserting} onClick={onCloseModal} />
+              <ButtonSubmit
+                isProcessing={isSubmittingMenuForm || isSubmitting}
+                disabled={isSubmittingMenuForm || isSubmitting}
+              />
+              <ButtonCancel
+                onClick={onCloseModal}
+                disabled={isSubmittingMenuForm || isSubmitting}
+              />
             </Footer>
           </StyledForm>
         </FormProvider>
@@ -179,4 +153,4 @@ function UpsertMenuForm({ onCloseModal, menu }) {
   );
 }
 
-export default UpsertMenuForm;
+export default MenuForm;

@@ -80,9 +80,9 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
 
   const [updating, setUpdating] = useState({});
 
-  const { mutate } = useUpdateStaff();
+  const { updateStaff } = useUpdateStaff();
   const { user } = useUser();
-  const { mutate: deleteStaff, isPending } = useDeleteStaff();
+  const { deleteStaff, isDeletingStaff } = useDeleteStaff();
 
   const sortedList = staffList.toSorted((a, b) => {
     const priority = (item) => {
@@ -98,7 +98,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
     if (currentRole === optionValue) return;
     setUpdating((updating) => ({ ...updating, [id]: true }));
 
-    mutate(
+    updateStaff(
       { userId: id, role: optionValue },
       {
         onSettled: () => {
@@ -158,7 +158,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
         <ConfirmDelete
           onCloseModal={() => setIsOpenModal(false)}
           handleDelete={deleteStaff}
-          isDeleting={isPending}
+          isDeleting={isDeletingStaff}
           data={isOpenModal.data}
           showRelatedData={false}
           render={() => (

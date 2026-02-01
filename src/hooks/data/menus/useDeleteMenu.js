@@ -5,11 +5,7 @@ import StyledHotToast from "../../../ui/StyledHotToast";
 function useDeleteMenu() {
   const queryClient = useQueryClient();
 
-  const {
-    mutate: deleteMenu,
-    isPending: menuDeleting,
-    error: deleteError,
-  } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: (id) => deleteMenuApi(id),
     onSuccess: () => {
       StyledHotToast({
@@ -27,7 +23,7 @@ function useDeleteMenu() {
     },
   });
 
-  return { deleteMenu, menuDeleting, deleteError };
+  return { deleteMenu: mutate, IsDeletingMenu: isPending };
 }
 
 export default useDeleteMenu;

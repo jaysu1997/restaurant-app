@@ -2,7 +2,7 @@ import styled from "styled-components";
 import ControlledSwitch from "../../ui/ControlledSwitch";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
-import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import { sortTimeSlots } from "./sortTimeSlots";
 import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
@@ -30,7 +30,7 @@ const BusinessPeriodItem = styled.li`
 const DateField = styled.div`
   display: grid;
   grid-template-columns: auto auto;
-  /* grid-template-rows: 3.8rem; */
+  grid-template-rows: 3.8rem;
   row-gap: 0.6rem;
   padding-bottom: 0.6rem;
   align-items: center;
@@ -42,11 +42,13 @@ const DateField = styled.div`
   }
 `;
 
-function RegularOpenHours({ data = {} }) {
-  const { mutate, isPending } = useUpsertSettings();
+function RegularOpenHours({ settings }) {
+  const { submitSettings, isSubmittingSettings } = useSubmitSettings();
+
+  const { regularOpenHours } = settings;
 
   const methods = useForm({
-    defaultValues: { regularOpenHours: data },
+    defaultValues: { regularOpenHours },
   });
 
   const {
@@ -64,11 +66,9 @@ function RegularOpenHours({ data = {} }) {
   });
 
   function onSubmit(data) {
-    console.log(data);
-
     const sortedData = sortTimeSlots(data.regularOpenHours);
 
-    mutate(
+    submitSettings(
       { regularOpenHours: sortedData },
       {
         onSuccess: (newData) =>
@@ -90,9 +90,9 @@ function RegularOpenHours({ data = {} }) {
         description="設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。"
         form={{
           formId: "regularOpenHours",
-          handleReset: () => reset({ regularOpenHours: data }),
+          handleReset: () => reset(),
           isDirty,
-          isUpdating: isPending,
+          isProcessing: isSubmittingSettings,
         }}
       >
         <form id="regularOpenHours" onSubmit={handleSubmit(onSubmit, onError)}>
@@ -110,13 +110,11 @@ function RegularOpenHours({ data = {} }) {
                   />
 
                   <ControlledSwitch
-                    items={[
-                      {
-                        name: `regularOpenHours.${dayIndex}.isBusinessDay`,
-                        option1: { label: "公休", value: false },
-                        option2: { label: "營業", value: true },
-                      },
-                    ]}
+                    options={{
+                      name: `regularOpenHours.${dayIndex}.isBusinessDay`,
+                      option1: { label: "公休", value: false },
+                      option2: { label: "營業", value: true },
+                    }}
                     handleChange={() =>
                       clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
                     }

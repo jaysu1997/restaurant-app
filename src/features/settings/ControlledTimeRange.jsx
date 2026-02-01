@@ -2,8 +2,7 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
-import { fadeInAnimation } from "../../utils/dom";
-import { generateTimeOptions } from "../../context/settingsHelpers";
+import { generateTimeOptions } from "../../context/settings/settingsHelpers";
 import { endOfDay, startOfDay } from "date-fns";
 import { Trash2, Plus, Minus } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
@@ -134,13 +133,7 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
               <Button
                 $variant="plain"
                 $hoverColor="#2563eb"
-                onClick={() => {
-                  append({ openTime: "", closeTime: "" });
-                  // 淡入欄位動畫
-                  fadeInAnimation(
-                    `${fieldArrayName}.${dayIndex}.timeSlots.${fields.length}`,
-                  );
-                }}
+                onClick={() => append({ openTime: "", closeTime: "" })}
               >
                 <Plus strokeWidth={2.4} />
               </Button>
@@ -154,7 +147,7 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
                 onClick={() => {
                   remove(slotIndex);
 
-                  // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在(但是這樣好像也會變成提早驗證其他欄位，所以或許需要再考慮看看?)
+                  // 需要執行validateFn，確保會重新驗證重疊的錯誤是否還存在(但是這樣好像也會變成提早驗證其他欄位，所以或許需要再考慮看看?)，或許應該刪除
                   fields.length > 1 && validateFn();
                 }}
               >

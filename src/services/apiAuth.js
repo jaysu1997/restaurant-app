@@ -2,7 +2,7 @@ import supabase from "./supabase";
 import handleSupabaseApiError from "./handleSupabaseApiError";
 
 // 登入
-export async function signInApi({ email, password }) {
+export async function loginApi({ email, password }) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -16,7 +16,7 @@ export async function signInApi({ email, password }) {
 }
 
 // 登出
-export async function signOutApi() {
+export async function logoutApi() {
   const { error } = await supabase.auth.signOut();
 
   handleSupabaseApiError(error);
@@ -43,7 +43,7 @@ export async function getCurrentUserApi() {
 }
 
 // 更新用戶的頭像
-export async function upsertAvatarFileApi(updateAvatarPayload) {
+export async function updateAvatarFileApi(updateAvatarPayload) {
   const { oldFileName, newFileName, newFile } = updateAvatarPayload;
 
   const { data, error } = await supabase.storage

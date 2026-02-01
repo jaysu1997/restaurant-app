@@ -1,13 +1,13 @@
 // 菜單設定數據表單
 import DataDisplayCard from "../../ui/DataDisplayCard";
 import { useState } from "react";
-import UpsertMenuForm from "./UpsertMenuForm";
+import MenuForm from "./MenuForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import useDeleteMenu from "../../hooks/data/menus/useDeleteMenu";
 
 function MenusDataCard({ menu }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { deleteMenu, menuDeleting } = useDeleteMenu();
+  const { deleteMenu, IsDeletingMenu } = useDeleteMenu();
   // 菜單數據
   const { name, category, price } = menu;
 
@@ -29,7 +29,7 @@ function MenusDataCard({ menu }) {
       />
 
       {isOpenModal.type === "edit" && (
-        <UpsertMenuForm
+        <MenuForm
           onCloseModal={() => setIsOpenModal(false)}
           menu={isOpenModal.data}
         />
@@ -39,7 +39,7 @@ function MenusDataCard({ menu }) {
         <ConfirmDelete
           onCloseModal={() => setIsOpenModal(false)}
           handleDelete={deleteMenu}
-          isDeleting={menuDeleting}
+          isDeleting={IsDeletingMenu}
           data={isOpenModal.data}
           showRelatedData={false}
           render={() => (

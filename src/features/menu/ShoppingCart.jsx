@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useOrder } from "../../context/OrderContext";
+import useOrder from "../../context/order/useOrder";
 import CartItem from "./CartItem";
 import { FormProvider, useForm } from "react-hook-form";
 import OrderInfoField from "./OrderInfoField";
@@ -213,7 +213,7 @@ function ShoppingCart({ settingsData }) {
     formState: { isValid },
   } = useForm();
 
-  const { createOrder, orderCreating } = useCreateOrder();
+  const { createOrder, isCreatingOrder } = useCreateOrder();
 
   const takeOut = watch("diningMethod") === "外帶";
 
@@ -277,12 +277,12 @@ function ShoppingCart({ settingsData }) {
               <Button
                 type="submit"
                 $isFullWidth
-                $isLoading={orderCreating}
-                disabled={dishes.length === 0 || orderCreating || !isValid}
+                $isProcessing={isCreatingOrder}
+                disabled={dishes.length === 0 || isCreatingOrder || !isValid}
                 onClick={handleSubmit(onSubmit, onError)}
               >
                 <span>提交</span>
-                {orderCreating && <ButtonSpinner />}
+                {isCreatingOrder && <ButtonSpinner />}
               </Button>
             </Row>
           </Footer>

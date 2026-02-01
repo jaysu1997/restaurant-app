@@ -99,7 +99,7 @@ const Button = styled.button.attrs((props) => ({
   type: props.type || "button",
 }))`
   cursor: pointer;
-  position: ${({ $isLoading }) => ($isLoading ? "relative" : "static")};
+  position: ${({ $isProcessing }) => ($isProcessing ? "relative" : "static")};
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -128,7 +128,8 @@ const Button = styled.button.attrs((props) => ({
 
   /* 載入中顯示動畫 */
   & > span {
-    visibility: ${({ $isLoading }) => ($isLoading ? "hidden" : "visible")};
+    visibility: ${({ $isProcessing }) =>
+      $isProcessing ? "hidden" : "visible"};
   }
 
   ${({ $variant = "primary" }) => variant[$variant]}

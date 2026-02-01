@@ -34,9 +34,7 @@ const IconButton = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  background-color: ${({ $isDisabled }) =>
-    $isDisabled ? "rgba(239, 239, 239, 0.3)" : "#fff"};
+  background-color: #fff;
 
   button {
     width: 1.8rem;
@@ -50,19 +48,18 @@ const IconButton = styled.div`
   }
 `;
 
-function FormInput({ id, type = "text", disabled, button, ...rest }) {
+function FormInput({ id, type = "text", button, ...rest }) {
   return (
     <InputWrapper>
       <Input
         id={id}
         type={type}
-        disabled={disabled}
         // 這裡通常是用來放入RHF的props
         {...rest}
       />
       {button?.icon && (
-        <IconButton $isDisabled={disabled}>
-          <button type="button" onClick={button?.action} disabled={disabled}>
+        <IconButton>
+          <button type="button" onClick={button?.action}>
             {button?.icon}
           </button>
         </IconButton>

@@ -10,10 +10,10 @@ function useGetMenus() {
   });
 
   return {
-    data,
-    isPending,
-    error: withFallbackRetry(error, refetch),
-    isError,
+    menus: data,
+    menusIsLoading: isPending,
+    menusIsError: isError,
+    menusError: withFallbackRetry(error, refetch),
   };
 }
 

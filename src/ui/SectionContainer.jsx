@@ -3,6 +3,8 @@ import ContentContainer from "./ContentContainer";
 import Description from "./Description";
 import ButtonSubmit from "./ButtonSubmit";
 import ButtonCancel from "./ButtonCancel";
+import Button from "./Button";
+import { Plus } from "lucide-react";
 
 const Section = styled.section`
   display: flex;
@@ -68,7 +70,7 @@ function SectionContainer({
   appendButton,
   children,
 }) {
-  const { formId, handleReset, isDirty, isUpdating } = form;
+  const { formId, handleReset, isDirty, isProcessing } = form;
 
   return (
     <ContentContainer>
@@ -85,20 +87,26 @@ function SectionContainer({
 
         <Content>
           {children}
-          {appendButton}
+
+          {appendButton && (
+            <Button $variant="text" onClick={appendButton.actionFn}>
+              <Plus />
+              {appendButton.label}
+            </Button>
+          )}
         </Content>
 
         {formId && (
           <ButtonGroup>
             <ButtonSubmit
               form={formId}
-              isLoading={isUpdating}
-              disabled={!isDirty || isUpdating}
+              isProcessing={isProcessing}
+              disabled={!isDirty || isProcessing}
             />
 
             <ButtonCancel
               onClick={handleReset}
-              disabled={!isDirty || isUpdating}
+              disabled={!isDirty || isProcessing}
             />
           </ButtonGroup>
         )}

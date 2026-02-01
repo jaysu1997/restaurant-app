@@ -41,7 +41,7 @@ function groupDishesByCategory(dishes) {
 
 function MiniMenu() {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { data, isPending, error, isError } = useGetMenus();
+  const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
 
   return (
     <>
@@ -62,11 +62,11 @@ function MiniMenu() {
           <StyledMiniMenu>
             <QueryStatusFallback
               status={{
-                isPending,
-                isError,
-                hasNoData: data?.length === 0,
+                isLoading: menusIsLoading,
+                isError: menusIsError,
+                hasNoData: menus?.length === 0,
               }}
-              errorFallback={error}
+              errorFallback={menusError}
               noDataFallback={{
                 message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
                 actionLabel: "新增餐點",
@@ -74,7 +74,7 @@ function MiniMenu() {
               }}
             >
               <MenuList>
-                {groupDishesByCategory(data).map((menu) => (
+                {groupDishesByCategory(menus).map((menu) => (
                   <CategoryGroup
                     key={menu.category}
                     category={menu.category}

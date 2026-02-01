@@ -7,17 +7,18 @@ import Inventory from "./pages/Inventory";
 import Settings from "./pages/Settings";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-import { OrderProvider } from "./context/OrderContext";
 import Order from "./pages/Order";
 import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
 import Dashboard from "./pages/Dashboard";
-import { SettingsProvider } from "./context/SettingsContext";
-import SignIn from "./pages/SignIn";
+import Login from "./pages/Login";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import Account from "./pages/Account";
 import ScrollToTop from "./components/ScrollToTop";
 import Staff from "./pages/Staff";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SettingsProvider } from "./context/settings/SettingsContext";
+import { OrderProvider } from "./context/order/OrderContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,10 @@ const queryClient = new QueryClient({
   },
 });
 
+// isProcessing
+
+// form submit disabled 建議加上 || isSubmitting
+
 // SEO、lighthouse檢查
 
 // 可能有好幾個使用SectionContainer的元件都需要檢查一下欄位之間的距離，或許可以統一設定form的gap為0.4rem，目前好像是個別設定的
@@ -45,6 +50,7 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
@@ -89,7 +95,7 @@ export default function App() {
               }
             />
           </Route>
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

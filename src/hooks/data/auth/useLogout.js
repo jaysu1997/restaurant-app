@@ -1,22 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signOutApi } from "../../../services/apiAuth";
+import { logoutApi } from "../../../services/apiAuth";
 import { useNavigate } from "react-router";
 import StyledHotToast from "../../../ui/StyledHotToast";
 
-function useSignOut() {
+function useLogout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const {
-    mutate: signOut,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: signOutApi,
+  const { mutate, isPending } = useMutation({
+    mutationFn: logoutApi,
     onSuccess: () => {
       // 登出後刪除用戶數據，避免被利用
       queryClient.removeQueries({ queryKey: ["user"], exact: true });
-      navigate("/signin", { replace: true });
+      navigate("/login", { replace: true });
     },
     onError: (error) => {
       StyledHotToast({
@@ -27,7 +23,7 @@ function useSignOut() {
     },
   });
 
-  return { signOut, isPending, error };
+  return { logout: mutate, isLoggingOut: isPending };
 }
 
-export default useSignOut;
+export default useLogout;

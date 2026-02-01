@@ -1,9 +1,10 @@
+// ok
 import { useState } from "react";
 import Modal from "../../ui/Modal";
 import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
-import useUpsertUserAvatar from "../../hooks/data/auth/useUpsertUserAvatar";
+import useUpdateUserAvatar from "../../hooks/data/auth/useUpdateUserAvatar";
 import StyledHotToast from "../../ui/StyledHotToast";
 import ButtonSubmit from "../../ui/ButtonSubmit";
 import ButtonCancel from "../../ui/ButtonCancel";
@@ -87,7 +88,7 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const { mutate, isPending } = useUpsertUserAvatar();
+  const { updateUserAvatar, isUpdateUserAvatar } = useUpdateUserAvatar();
 
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -106,7 +107,7 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
       };
 
       // 上傳新的圖檔並更新數據
-      mutate(updateAvatarPayload, {
+      updateUserAvatar(updateAvatarPayload, {
         onSuccess: () => onCloseModal(),
       });
     } catch (err) {
@@ -143,11 +144,14 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
           <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
           <ButtonGroup>
             <ButtonSubmit
-              isLoading={isPending}
-              disabled={isPending}
+              isProcessing={isUpdateUserAvatar}
+              disabled={isUpdateUserAvatar}
               onClick={handleSave}
             />
-            <ButtonCancel onClick={onCloseModal} disabled={isPending} />
+            <ButtonCancel
+              onClick={onCloseModal}
+              disabled={isUpdateUserAvatar}
+            />
           </ButtonGroup>
         </Footer>
       </StyledAvatarCropper>

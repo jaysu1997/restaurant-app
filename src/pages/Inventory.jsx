@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import InventoryDataCard from "../features/inventory/InventoryDataCard";
-import UpsertInventoryForm from "../features/inventory/UpsertInventoryForm";
+import InventoryForm from "../features/inventory/InventoryForm";
 import { useSearchParams } from "react-router";
 import PageHeader from "../ui/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
@@ -64,14 +64,15 @@ function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
 function Inventory() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { data, isPending, error, isError } = useGetInventory();
+  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
+    useGetInventory();
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");
 
   // 要展示的數據
   const displayInventoryData = filterData(
-    data,
+    inventory,
     nameSearchParams,
     quantitySearchParams,
   );
@@ -95,11 +96,11 @@ function Inventory() {
 
       <QueryStatusFallback
         status={{
-          isPending,
-          isError,
+          isLoading: inventoryIsLoading,
+          isError: inventoryIsError,
           hasNoData: displayInventoryData?.length === 0,
         }}
-        errorFallback={error}
+        errorFallback={inventoryError}
         noDataFallback={{
           message: emptyStateMessage,
         }}
@@ -112,7 +113,7 @@ function Inventory() {
       </QueryStatusFallback>
 
       {isOpenModal && (
-        <UpsertInventoryForm onCloseModal={() => setIsOpenModal(false)} />
+        <InventoryForm onCloseModal={() => setIsOpenModal(false)} />
       )}
     </PageWrapper>
   );

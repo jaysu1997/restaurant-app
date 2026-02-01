@@ -3,14 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertMenuApi } from "../../../services/apiMenus";
 import StyledHotToast from "../../../ui/StyledHotToast";
 
-function useUpsertMenu() {
+function useSubmitMenuForm() {
   const queryClient = useQueryClient();
 
-  const {
-    mutate: upsert,
-    isPending: isUpserting,
-    error: upsertError,
-  } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: upsertMenuApi,
     onSuccess: () => {
       // 這種用法好像並沒有在文檔中看到，但可以同時將多個queryKey無效
@@ -29,7 +25,7 @@ function useUpsertMenu() {
     },
   });
 
-  return { upsert, isUpserting, upsertError };
+  return { submitMenuForm: mutate, isSubmittingMenuForm: isPending };
 }
 
-export default useUpsertMenu;
+export default useSubmitMenuForm;

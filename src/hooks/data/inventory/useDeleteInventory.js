@@ -7,11 +7,7 @@ import StyledHotToast from "../../../ui/StyledHotToast";
 function useDeleteInventory() {
   const queryClient = useQueryClient();
 
-  const {
-    mutate: deleteInventory,
-    isPending: inventoryDeleting,
-    error: deleteError,
-  } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: deleteInventoryApi,
     onSuccess: () => {
       StyledHotToast({
@@ -30,7 +26,7 @@ function useDeleteInventory() {
     },
   });
 
-  return { deleteInventory, inventoryDeleting, deleteError };
+  return { deleteInventory: mutate, isDeletingInventory: isPending };
 }
 
 export default useDeleteInventory;

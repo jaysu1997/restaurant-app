@@ -6,8 +6,8 @@ import PageHeader from "../ui/PageHeader";
 import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import { useSettings } from "../context/SettingsContext";
 import PageWrapper from "../ui/PageWrapper";
+import useSettings from "../context/settings/useSettings";
 
 const StyledOrderSummary = styled.div`
   display: grid;
@@ -38,22 +38,13 @@ function Order() {
   // 根據pathname判別當前是否為編輯狀態
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
-  const {
-    data: orderData,
-    isPending: orderIsPending,
-    error: orderError,
-    isError: orderIsError,
-  } = useGetOrder();
+  const { order, orderIsLoading, orderIsError, orderError } = useGetOrder();
 
-  const {
-    settings,
-    error: settingsError,
-    isPending: settingsIsPending,
-    isError: settingsIsError,
-  } = useSettings();
+  const { derivedSettings, settingsIsLoading, settingsIsError, settingsError } =
+    useSettings();
 
   const pageQueryStatus = {
-    isPending: orderIsPending || settingsIsPending,
+    isLoading: orderIsLoading || settingsIsLoading,
     isError: orderIsError || settingsIsError,
   };
 
@@ -66,13 +57,16 @@ function Order() {
       >
         <StyledOrderSummary>
           <OrderHeader>{`取餐號碼 ${formatPickupNumber(
-            orderData?.pickupNumber,
+            order?.pickupNumber,
           )}`}</OrderHeader>
 
           {isEditPage ? (
-            <OrderSummaryEdit orderData={orderData} settingsData={settings} />
+            <OrderSummaryEdit
+              orderData={order}
+              settingsData={derivedSettings}
+            />
           ) : (
-            <OrderSummaryView orderData={orderData} />
+            <OrderSummaryView orderData={order} />
           )}
         </StyledOrderSummary>
       </QueryStatusFallback>

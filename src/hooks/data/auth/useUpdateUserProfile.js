@@ -6,7 +6,7 @@ import StyledHotToast from "../../../ui/StyledHotToast";
 function useUpdateUserProfile() {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: updateUserProfileApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
@@ -21,7 +21,7 @@ function useUpdateUserProfile() {
     },
   });
 
-  return { mutate, isPending, error };
+  return { updateUserProfile: mutate, isUpdateUserProfile: isPending };
 }
 
 export default useUpdateUserProfile;

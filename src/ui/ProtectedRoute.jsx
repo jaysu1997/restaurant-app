@@ -4,17 +4,17 @@ import { useNavigate } from "react-router";
 
 function ProtectedRoute({ children, roles }) {
   const navigate = useNavigate();
-  const { userIsPending, user } = useUser();
+  const { user, userIsLoading } = useUser();
   const userRole = user?.user_metadata?.role;
 
   const isAuthorized = user && (!roles || roles.includes(userRole));
 
   useEffect(() => {
-    if (userIsPending) return;
+    if (userIsLoading) return;
 
     // 未登入 → Login
     if (!user) {
-      navigate("/signin", { replace: true });
+      navigate("/login", { replace: true });
       return;
     }
 
@@ -23,10 +23,10 @@ function ProtectedRoute({ children, roles }) {
       navigate("/", { replace: true });
       return;
     }
-  }, [userIsPending, user, isAuthorized, navigate]);
+  }, [userIsLoading, user, isAuthorized, navigate]);
 
   // 🛑 user 還沒載入完成 → 不要渲染任何東西
-  if (userIsPending) return null;
+  if (userIsLoading) return null;
 
   // 🛑 user 已載入，但沒有權限 → 也不要渲染 children
   if (!isAuthorized) return null;

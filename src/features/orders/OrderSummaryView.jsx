@@ -4,10 +4,10 @@ import OrderDishes from "./OrderDishes";
 import OrderOperation from "./OrderOperation";
 // 這裡的format可能需要整理(變成通用助手或是統一成一個函式)
 import { formatCreatedTime } from "../../utils/orderHelpers";
-import { formatToHourMinute } from "../../context/settingsHelpers";
 import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
 import Note from "../../ui/Note";
+import { formatToHourMinute } from "../../context/settings/settingsHelpers";
 
 function OrderSummaryView({ orderData }) {
   const {

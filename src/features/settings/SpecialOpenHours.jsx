@@ -9,14 +9,13 @@ import {
   useForm,
 } from "react-hook-form";
 import { addYears, compareAsc, endOfYear, isAfter, isToday } from "date-fns";
-import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import { checkOverlapConflicts, validateValues } from "./validateOverlap";
 import { sortTimeSlots } from "./sortTimeSlots";
-import { fadeInAnimation } from "../../utils/dom";
 import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
 import Button from "../../ui/Button";
-import { Plus, Trash2, CalendarClock } from "lucide-react";
+import { Trash2, CalendarClock } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
 
 const BusinessPeriodList = styled.ul`
@@ -35,13 +34,20 @@ const BusinessPeriodItem = styled.li`
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
+`;
+
+const Header = styled.div`
+  grid-column: 1 / -1;
+  margin-bottom: 2rem;
+
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 
   h4 {
-    grid-column: 1 / -1;
     font-size: 1.8rem;
     font-weight: 600;
     color: #292929;
-    margin-bottom: 1rem;
   }
 `;
 
@@ -85,12 +91,15 @@ function validateDateRangeField({ setError, clearErrors, getValues }) {
   checkOverlapConflicts({ validSlots, path, setError });
 }
 
-function SpecialOpenHours({ data = {} }) {
-  const { mutate, isPending } = useUpsertSettings();
+// 所有按鈕、select都要加上disabled樣式設計
+function SpecialOpenHours({ settings }) {
+  const { submitSettings, isSubmittingSettings } = useSubmitSettings();
+
+  const { specialOpenHours } = settings;
 
   const methods = useForm({
     defaultValues: {
-      specialOpenHours: data.filter((date) => {
+      specialOpenHours: specialOpenHours.filter((date) => {
         const start = date.dateRange.to;
         return isToday(start) || isAfter(start, new Date());
       }),
@@ -125,7 +134,7 @@ function SpecialOpenHours({ data = {} }) {
       compareAsc(a.dateRange.from, b.dateRange.from),
     );
 
-    mutate(
+    submitSettings(
       { specialOpenHours: sortTimeSlots(sortedData) },
       {
         onSuccess: (newData) =>
@@ -147,27 +156,20 @@ function SpecialOpenHours({ data = {} }) {
         description="需要臨時調整特定日期的營業時段，可在此處添加設定，設定值會覆蓋一般營業時間。"
         form={{
           formId: "specialOpenHours",
-          handleReset: () => reset({ specialOpenHours: data }),
+          handleReset: () => reset(),
           isDirty,
-          isUpdating: isPending,
+          isProcessing: isSubmittingSettings,
         }}
-        appendButton={
-          <Button
-            $variant="text"
-            onClick={() => {
-              append({
-                dateRange: "",
-                isBusinessDay: false,
-                timeSlots: [{ openTime: "", closeTime: "" }],
-              });
-              // 淡入欄位動畫
-              fadeInAnimation(`specialOpenHours.${dayFields.length}`);
-            }}
-          >
-            <Plus />
-            新增日期
-          </Button>
-        }
+        appendButton={{
+          label: "新增日期",
+          actionFn: () => {
+            append({
+              dateRange: "",
+              isBusinessDay: false,
+              timeSlots: [{ openTime: "", closeTime: "" }],
+            });
+          },
+        }}
       >
         <form id="specialOpenHours" onSubmit={handleSubmit(onSubmit, onError)}>
           <BusinessPeriodList>
@@ -180,13 +182,23 @@ function SpecialOpenHours({ data = {} }) {
                 key={day.id}
                 id={`specialOpenHours.${dayIndex}`}
               >
-                <h4>例外日期 {dayIndex + 1}</h4>
+                <Header>
+                  <h4>例外日期 {dayIndex + 1}</h4>
+                  <ControlledSwitch
+                    options={{
+                      name: `specialOpenHours.${dayIndex}.isBusinessDay`,
+                      option1: { label: "公休", value: false },
+                      option2: { label: "營業", value: true },
+                    }}
+                    handleChange={() =>
+                      clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
+                    }
+                  />
+                </Header>
+
                 <DateField>
                   <FormFieldLayout
-                    error={
-                      errors?.specialOpenHours?.[dayIndex]?.errorFallback ||
-                      false
-                    }
+                    error={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
                   >
                     <Controller
                       name={`specialOpenHours.${dayIndex}.dateRange`}
@@ -219,19 +231,6 @@ function SpecialOpenHours({ data = {} }) {
                   <Button $variant="plain" onClick={() => remove(dayIndex)}>
                     <Trash2 />
                   </Button>
-
-                  <ControlledSwitch
-                    items={[
-                      {
-                        name: `specialOpenHours.${dayIndex}.isBusinessDay`,
-                        option1: { label: "公休", value: false },
-                        option2: { label: "營業", value: true },
-                      },
-                    ]}
-                    handleChange={() =>
-                      clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
-                    }
-                  />
                 </DateField>
 
                 <ControlledTimeRange

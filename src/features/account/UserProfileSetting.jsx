@@ -8,16 +8,15 @@ import { UserRoundPen } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
-// 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
-  display: grid;
-  column-gap: 1rem;
-  row-gap: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   font-size: 1.4rem;
 `;
 
 function UserProfileSetting({ userData }) {
-  const { mutate, isPending } = useUpdateUserProfile();
+  const { updateUserProfile, isUpdateUserProfile } = useUpdateUserProfile();
   const {
     register,
     handleSubmit,
@@ -31,7 +30,7 @@ function UserProfileSetting({ userData }) {
   });
 
   function onSubmit(data) {
-    mutate(data, {
+    updateUserProfile(data, {
       onSuccess: (newData) =>
         reset({
           name: newData.user.user_metadata.name,
@@ -53,14 +52,13 @@ function UserProfileSetting({ userData }) {
         formId: "userProfile",
         handleReset: () => reset(),
         isDirty: isDirty,
-        isUpdating: isPending,
+        isProcessing: isUpdateUserProfile,
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="userProfile">
         <FormFieldLayout id="name" label="用戶名稱" error={errors?.name}>
           <FormInput
             id="name"
-            disabled={isPending}
             {...register("name", {
               setValueAs: trimString,
               required: "用戶名稱不可空白",
@@ -79,7 +77,6 @@ function UserProfileSetting({ userData }) {
         >
           <FormInput
             id="personalPhone"
-            disabled={isPending}
             {...register("personalPhone", {
               setValueAs: trimString,
               required: "連絡電話不能空白",

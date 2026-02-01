@@ -7,16 +7,16 @@ import SectionContainer from "../../ui/SectionContainer";
 import { KeyRound } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
 
-// 以下這些ui或許都能夠做成重複使用的版本
 const Form = styled.form`
-  display: grid;
-  column-gap: 1rem;
-  row-gap: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   font-size: 1.4rem;
 `;
 
 function UpdatePassword({ userData }) {
-  const { mutate, isPending } = useUpdateUserPassword();
+  const { updateUserPassword, isUpdatingUserPassword } =
+    useUpdateUserPassword();
 
   const {
     register,
@@ -42,7 +42,7 @@ function UpdatePassword({ userData }) {
       newPassword,
     };
 
-    mutate(userCredentials, {
+    updateUserPassword(userCredentials, {
       onError: (error) => {
         // 現有密碼輸入錯誤
         if (error.code === "invalid_credentials") {
@@ -68,7 +68,7 @@ function UpdatePassword({ userData }) {
         formId: "updatePassword",
         handleReset: () => reset(),
         isDirty: isDirty,
-        isUpdating: isPending,
+        isProcessing: isUpdatingUserPassword,
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="updatePassword">
@@ -80,7 +80,6 @@ function UpdatePassword({ userData }) {
           <PasswordInput
             id="password"
             autoComplete="current-password"
-            disabled={isPending}
             {...register("currentPassword", {
               required: "密碼必須填寫",
               minLength: { value: 8, message: "密碼至少要有8碼" },
@@ -96,7 +95,6 @@ function UpdatePassword({ userData }) {
           <PasswordInput
             id="newPassword"
             autoComplete="new-password"
-            disabled={isPending}
             {...register("newPassword", {
               required: "請輸入新的密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
@@ -116,7 +114,6 @@ function UpdatePassword({ userData }) {
           <PasswordInput
             id="confirmPassword"
             autoComplete="new-password"
-            disabled={isPending}
             {...register("confirmPassword", {
               required: "請再次輸入新密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },

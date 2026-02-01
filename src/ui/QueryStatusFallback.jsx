@@ -13,9 +13,9 @@ function QueryStatusFallback({
   children,
 }) {
   const navigate = useNavigate();
-  const { isPending, isError, hasNoData } = status;
+  const { isLoading, isError, hasNoData } = status;
 
-  if (isPending) return <LoadingBars />;
+  if (isLoading) return <LoadingBars />;
 
   let statusConfig = null;
 

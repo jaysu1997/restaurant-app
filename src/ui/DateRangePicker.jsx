@@ -112,7 +112,7 @@ function DateRangePicker({
         onClick={() => setIsOpenDayPicker((isOpen) => !isOpen)}
       >
         <input
-          name="startDate"
+          name="dateRange"
           value={selected ? formatRangeDate(selected) : ""}
           placeholder="選擇日期範圍"
           readOnly

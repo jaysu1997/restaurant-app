@@ -1,4 +1,7 @@
-import { applyInventoryUsage, findDishIndexById } from "../utils/orderHelpers";
+import {
+  applyInventoryUsage,
+  findDishIndexById,
+} from "../../utils/orderHelpers";
 
 // 單筆訂單數據建立與編輯useReducer
 export const initialState = {
@@ -32,10 +35,11 @@ export function reducer(state, action) {
     }
     // 單選選項新增
     case "currentCustomization/setSingleChoice": {
-      const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
-        item.customizeId === action.payload.customizeId
-          ? { ...item, selectOptions: [action.payload] }
-          : item
+      const newCurDishCustomizeOption = state.currentCustomization.map(
+        (item) =>
+          item.customizeId === action.payload.customizeId
+            ? { ...item, selectOptions: [action.payload] }
+            : item,
       );
 
       return {
@@ -45,13 +49,14 @@ export function reducer(state, action) {
     }
     // 多選選項新增
     case "currentCustomization/addMultipleChoice": {
-      const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
-        item.customizeId === action.payload.customizeId
-          ? {
-              ...item,
-              selectOptions: [...item.selectOptions, action.payload],
-            }
-          : item
+      const newCurDishCustomizeOption = state.currentCustomization.map(
+        (item) =>
+          item.customizeId === action.payload.customizeId
+            ? {
+                ...item,
+                selectOptions: [...item.selectOptions, action.payload],
+              }
+            : item,
       );
 
       return {
@@ -61,15 +66,16 @@ export function reducer(state, action) {
     }
     // 選項刪除
     case "currentCustomization/removeChoice": {
-      const newCurDishCustomizeOption = state.currentCustomization.map((item) =>
-        item.customizeId === action.payload.customizeId
-          ? {
-              ...item,
-              selectOptions: item.selectOptions.filter(
-                (option) => option.optionLabel !== action.payload.optionLabel
-              ),
-            }
-          : item
+      const newCurDishCustomizeOption = state.currentCustomization.map(
+        (item) =>
+          item.customizeId === action.payload.customizeId
+            ? {
+                ...item,
+                selectOptions: item.selectOptions.filter(
+                  (option) => option.optionLabel !== action.payload.optionLabel,
+                ),
+              }
+            : item,
       );
       return {
         ...state,
@@ -180,7 +186,7 @@ export function reducer(state, action) {
       const dishesData = dishes.map((curDish) => ({
         ...curDish,
         ingredientsUsagePerServing: new Map(
-          Object.entries(curDish.ingredientsUsagePerServing)
+          Object.entries(curDish.ingredientsUsagePerServing),
         ),
       }));
 

@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { useFieldArray, useForm } from "react-hook-form";
-import { fadeInAnimation } from "../../utils/dom";
-import useUpsertSettings from "../../hooks/data/settings/useUpsertSettings";
+import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import StyledHotToast from "../../ui/StyledHotToast";
-import { generateTableNumbers } from "../../context/settingsHelpers";
+import { generateTableNumbers } from "../../context/settings/settingsHelpers";
 import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
 import Button from "../../ui/Button";
@@ -68,8 +67,10 @@ const Preview = styled.div`
   }
 `;
 
-function DineInTableSettings({ data = {} }) {
-  const { mutate, isPending } = useUpsertSettings();
+function DineInTableSettings({ settings }) {
+  const { submitSettings, isSubmittingSettings } = useSubmitSettings();
+
+  const { dineInTableConfig } = settings;
 
   const {
     register,
@@ -80,7 +81,7 @@ function DineInTableSettings({ data = {} }) {
     watch,
     getValues,
   } = useForm({
-    defaultValues: { dineInTableConfig: data },
+    defaultValues: { dineInTableConfig },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -91,7 +92,7 @@ function DineInTableSettings({ data = {} }) {
   function onSubmit(data) {
     console.log("成功", data);
 
-    mutate(data, {
+    submitSettings(data, {
       onSuccess: (newData) =>
         reset({ dineInTableConfig: newData.dineInTableConfig }),
     });
@@ -109,23 +110,14 @@ function DineInTableSettings({ data = {} }) {
       description="設定內用餐桌的區域分類與桌號配置，用於點餐時標記內用桌位。"
       form={{
         formId: "dineInTableConfig",
-        handleReset: () => reset({ dineInTableConfig: data }),
+        handleReset: () => reset(),
         isDirty,
-        isUpdating: isPending,
+        isProcessing: isSubmittingSettings,
       }}
-      appendButton={
-        <Button
-          $variant="text"
-          onClick={() => {
-            append({ zoneName: "", tableCount: 1 });
-            // 淡入欄位動畫
-            fadeInAnimation(`dineInTableConfig.${fields.length}`);
-          }}
-        >
-          <Plus />
-          新增分區
-        </Button>
-      }
+      appendButton={{
+        label: "新增分區",
+        actionFn: () => append({ zoneName: "", tableCount: 1 }),
+      }}
     >
       <form id="dineInTableConfig" onSubmit={handleSubmit(onSubmit, onError)}>
         <Content>

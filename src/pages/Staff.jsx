@@ -2,7 +2,7 @@ import styled from "styled-components";
 import useGetStaff from "../hooks/data/staff/useGetStaff";
 import PageHeader from "../ui/PageHeader";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import SignUp from "../features/staff/SignUp";
+import Signup from "../features/staff/SignUp";
 import StaffList from "../features/staff/StaffList";
 import { UserRoundPlus } from "lucide-react";
 import Button from "../ui/Button";
@@ -19,8 +19,8 @@ const StaffLayout = styled.div`
 `;
 
 function Staff() {
-  const { data, isPending, error, isError } = useGetStaff();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const { staff, staffIsLoading, staffIsError, staffError } = useGetStaff();
 
   return (
     <PageWrapper $maxWidth="60rem">
@@ -37,10 +37,10 @@ function Staff() {
       <StaffLayout>
         <QueryStatusFallback
           status={{
-            isPending,
-            isError,
+            isLoading: staffIsLoading,
+            isError: staffIsError,
           }}
-          errorFallback={error}
+          errorFallback={staffError}
         >
           {isOpenModal.type === "create" && (
             <Modal
@@ -48,11 +48,11 @@ function Staff() {
               modalHeader="註冊新帳號"
               onCloseModal={() => setIsOpenModal(false)}
             >
-              <SignUp setIsOpenModal={setIsOpenModal} />
+              <Signup setIsOpenModal={setIsOpenModal} />
             </Modal>
           )}
           <StaffList
-            staffList={data}
+            staffList={staff}
             isOpenModal={isOpenModal}
             setIsOpenModal={setIsOpenModal}
           />

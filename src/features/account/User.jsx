@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import useSignOut from "../../hooks/data/auth/useSignOut";
+import useLogout from "../../hooks/data/auth/useLogout";
 import useUser from "../../hooks/data/auth/useUser";
 import DropdownMenu from "../../ui/DropdownMenu";
 import UserAvatar from "../../ui/UserAvatar";
@@ -69,9 +69,9 @@ const UserRole = styled(UserName)`
 function User() {
   const navigate = useNavigate();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const { signOut, isPending } = useSignOut();
+  const { logout } = useLogout();
 
-  const { userIsPending, user } = useUser();
+  const { user } = useUser();
   const userName = user?.user_metadata?.name;
   const userRole = user?.user_metadata?.role;
   const avatarFile = user?.user_metadata?.avatarFile;
@@ -86,7 +86,7 @@ function User() {
     {
       name: "登出",
       icon: LogOut,
-      handleClick: () => signOut(),
+      handleClick: () => logout(),
     },
   ];
 

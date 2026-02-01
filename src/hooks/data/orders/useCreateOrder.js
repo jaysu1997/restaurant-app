@@ -7,11 +7,7 @@ import { formatPickupNumber } from "../../../utils/orderHelpers";
 function useCreateOrder() {
   const queryClient = useQueryClient();
 
-  const {
-    mutate: createOrder,
-    isPending: orderCreating,
-    error,
-  } = useMutation({
+  const { mutate: createOrder, isPending } = useMutation({
     mutationFn: createOrderApi,
     onSuccess: (data) => {
       StyledHotToast({
@@ -32,7 +28,7 @@ function useCreateOrder() {
     },
   });
 
-  return { createOrder, orderCreating, error };
+  return { createOrder, isCreatingOrder: isPending };
 }
 
 export default useCreateOrder;

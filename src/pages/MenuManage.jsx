@@ -1,7 +1,7 @@
 // 菜單設定頁面
 import { useSearchParams } from "react-router";
 import { useState } from "react";
-import UpsertMenuForm from "../features/menu-manage/UpsertMenuForm.jsx";
+import MenuForm from "../features/menu-manage/MenuForm.jsx";
 import Button from "../ui/Button";
 import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
@@ -43,14 +43,14 @@ function filterData(menusData, nameSearchParams, categorySearchParams) {
 function MenuManage() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { data, isPending, error, isError } = useGetMenus();
+  const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
 
   const nameSearchParams = searchParams.get("name");
   const categorySearchParams = searchParams.get("category");
 
   // 要展示的數據
   const displayMenusData = filterData(
-    data,
+    menus,
     nameSearchParams,
     categorySearchParams,
   );
@@ -74,7 +74,7 @@ function MenuManage() {
       placeholder: "選擇餐點分類",
       options: [
         { label: "不篩選", value: "" },
-        ...Array.from(new Set(data?.map((data) => data.category))).map(
+        ...Array.from(new Set(menus?.map((data) => data.category))).map(
           (category) => ({ label: category, value: category }),
         ),
       ],
@@ -95,11 +95,11 @@ function MenuManage() {
 
       <QueryStatusFallback
         status={{
-          isPending,
-          isError,
+          isLoading: menusIsLoading,
+          isError: menusIsError,
           hasNoData: displayMenusData?.length === 0,
         }}
-        errorFallback={error}
+        errorFallback={menusError}
         noDataFallback={{ message: emptyStateMessage }}
       >
         <Container>
@@ -109,9 +109,7 @@ function MenuManage() {
         </Container>
       </QueryStatusFallback>
 
-      {isOpenModal && (
-        <UpsertMenuForm onCloseModal={() => setIsOpenModal(false)} />
-      )}
+      {isOpenModal && <MenuForm onCloseModal={() => setIsOpenModal(false)} />}
     </PageWrapper>
   );
 }

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useOrder } from "../../context/OrderContext";
+import useOrder from "../../context/order/useOrder";
 import Option from "./Option";
 
 // 不同選項要求和狀態的樣式設定
@@ -69,7 +69,7 @@ function CustomizeArea({ customizeData, isEdit = false }) {
 
   // 用來控制項目CSS樣式(填寫狀態)
   const [isAnswered, setIsAnswered] = useState(
-    isEdit && isRequired === "required" ? "isAnswered" : isRequired
+    isEdit && isRequired === "required" ? "isAnswered" : isRequired,
   );
 
   // 當前訂購餐點的項目選擇
@@ -109,7 +109,7 @@ function CustomizeArea({ customizeData, isEdit = false }) {
       if (isRequired === "required") {
         // 當前選項長度為1，代表目前只有存在一個選項，被移除後就沒有選取任何值
         const optionLength = currentCustomization.find(
-          (customize) => customize.customizeId === customizeId
+          (customize) => customize.customizeId === customizeId,
         )?.selectOptions.length;
 
         optionLength === 1 && setIsAnswered("required");

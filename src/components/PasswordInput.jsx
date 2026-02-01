@@ -3,7 +3,7 @@ import FormInput from "../ui/FormInput";
 import { Eye, EyeClosed } from "lucide-react";
 
 // 密碼input ui元件
-function PasswordInput({ id, disabled, ...rest }) {
+function PasswordInput({ id, ...rest }) {
   const [isHidden, setIsHidden] = useState(true);
   const type = isHidden ? "password" : "text";
 
@@ -15,7 +15,6 @@ function PasswordInput({ id, disabled, ...rest }) {
         action: () => setIsHidden((prev) => !prev),
       }}
       type={type}
-      disabled={disabled}
       {...rest}
     />
   );

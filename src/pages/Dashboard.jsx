@@ -3,12 +3,12 @@ import StatsCharts from "../features/dashboard/StatsCharts";
 import PageHeader from "../ui/PageHeader";
 import styled from "styled-components";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import useAnalyzedOrders from "../hooks/data/orders/useAnalyzedOrders";
+import useRecentOrders from "../hooks/data/orders/useRecentOrders";
 import StoreStatusBadge from "../ui/StoreStatusBadge ";
-import { useSettings } from "../context/SettingsContext";
 import PageWrapper from "../ui/PageWrapper";
 import { useMemo } from "react";
 import analyzeOrders from "../features/dashboard/analyzeOrders";
+import useSettings from "../context/settings/useSettings";
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -18,16 +18,21 @@ const DashboardContainer = styled.div`
 `;
 
 function Dashboard() {
-  const { data, isPending, isError, error } = useAnalyzedOrders();
+  const {
+    recentOrders,
+    recentOrdersIsLoading,
+    recentOrdersIsError,
+    recentOrdersError,
+  } = useRecentOrders();
 
   const { status } = useSettings();
 
   // 取得數據後進行分析
   const analyzedData = useMemo(() => {
-    if (!data) return null;
+    if (!recentOrders) return null;
 
-    return analyzeOrders(data);
-  }, [data]);
+    return analyzeOrders(recentOrders);
+  }, [recentOrders]);
 
   return (
     <PageWrapper>
@@ -39,8 +44,11 @@ function Dashboard() {
       </PageHeader>
 
       <QueryStatusFallback
-        status={{ isPending, isError }}
-        errorFallback={error}
+        status={{
+          isLoading: recentOrdersIsLoading,
+          isError: recentOrdersIsError,
+        }}
+        errorFallback={recentOrdersError}
       >
         <DashboardContainer>
           <StatsCards analyzedData={analyzedData} />

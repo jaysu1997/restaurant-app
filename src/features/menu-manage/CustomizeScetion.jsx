@@ -2,7 +2,6 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
-import { fadeInAnimation } from "../../utils/dom";
 import OptionSection from "./OptionSection";
 
 function CustomizeScetion({ inventoryData }) {
@@ -75,9 +74,6 @@ function CustomizeScetion({ inventoryData }) {
             ],
             selectOptions: [],
           });
-
-          // 淡入欄位動畫
-          fadeInAnimation(`customize.${fields.length}`);
         }}
       >
         <Plus />

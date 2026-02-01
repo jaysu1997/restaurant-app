@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import ServingsControl from "../../ui/ServingsControl";
 import { useEffect, useRef, useState } from "react";
-import { useOrder } from "../../context/OrderContext";
+import useOrder from "../../context/order/useOrder";
 import { summarizeMealChoices } from "../../utils/orderHelpers";
 import OrderForm from "../../ui/OrderForm/OrderForm";
 import Button from "../../ui/Button";

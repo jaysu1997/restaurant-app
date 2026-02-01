@@ -6,7 +6,7 @@ import {
 import { Pencil, Trash2 } from "lucide-react";
 import styled from "styled-components";
 import { useState } from "react";
-import { useOrder } from "../../context/OrderContext";
+import useOrder from "../../context/order/useOrder";
 import OrderForm from "../../ui/OrderForm/OrderForm";
 import MiniMenu from "./MiniMenu";
 import Button from "../../ui/Button";

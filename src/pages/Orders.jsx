@@ -44,7 +44,11 @@ function Orders() {
       </PageHeader>
 
       <QueryStatusFallback
-        status={{ isPending, isError, hasNoData: ordersData?.length === 0 }}
+        status={{
+          isLoading: isPending,
+          isError,
+          hasNoData: ordersData?.length === 0,
+        }}
         errorFallback={error}
         noDataFallback={{
           message: emptyStateMessage,

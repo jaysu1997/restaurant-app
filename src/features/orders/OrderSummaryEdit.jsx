@@ -1,6 +1,5 @@
 // 訂單詳情(編輯)
 import OrderDishes from "./OrderDishes";
-import { useOrder } from "../../context/OrderContext";
 import { FormProvider, useForm } from "react-hook-form";
 import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
 import ControlledSelect from "../../ui/ControlledSelect";
@@ -9,10 +8,6 @@ import Note from "../../ui/Note";
 import OrderOperation from "./OrderOperation";
 import { buildOrderData, formatCreatedTime } from "../../utils/orderHelpers";
 import useUpdateOrder from "../../hooks/data/orders/useUpdateOrder";
-import {
-  generatePickupTimeOptions,
-  formatToHourMinute,
-} from "../../context/settingsHelpers";
 import useGetInventory from "../../hooks/data/inventory/useGetInventory";
 import QueryStatusFallback from "../../ui/QueryStatusFallback";
 import { toOption } from "../../utils/selectHelpers";
@@ -21,28 +16,34 @@ import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
 import FormFieldLayout from "../../ui/FormFieldLayout";
 import { Navigate } from "react-router";
+import {
+  formatToHourMinute,
+  generatePickupTimeOptions,
+} from "../../context/settings/settingsHelpers";
+import useOrder from "../../context/order/useOrder";
 
 // 這裡的樣式需要修正(整體布局都需要)
 function OrderSummaryEdit({ orderData, settingsData }) {
-  const { updateOrder, updating } = useUpdateOrder();
+  const { updateOrder, isUpdatingOrder } = useUpdateOrder();
 
   const {
     state: { dishes },
     dispatch,
   } = useOrder();
 
-  const { data: inventoryData, isPending, error, isError } = useGetInventory();
+  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
+    useGetInventory();
 
   useEffect(
     function () {
-      if (!inventoryData) return;
+      if (!inventory) return;
 
       dispatch({
         type: "inventory/setAll",
-        payload: inventoryData,
+        payload: inventory,
       });
     },
-    [dispatch, inventoryData],
+    [dispatch, inventory],
   );
 
   useEffect(() => {
@@ -83,7 +84,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
     !settingsData.todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
 
   function onSubmit(data) {
-    const orderData = buildOrderData(dishes, data, inventoryData);
+    const orderData = buildOrderData(dishes, data, inventory);
 
     updateOrder(orderData);
   }
@@ -102,10 +103,10 @@ function OrderSummaryEdit({ orderData, settingsData }) {
   return (
     <QueryStatusFallback
       status={{
-        isPending,
-        isError,
+        isLoading: inventoryIsLoading,
+        isError: inventoryIsError,
       }}
-      errorFallback={error}
+      errorFallback={inventoryError}
     >
       <FormProvider control={control} setValue={setValue}>
         <ContentContainer>
@@ -156,6 +157,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                   rules={{
                     required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
                   }}
+                  key={takeOut ? "pickupTime" : "tableNumber"}
                 />
               </FormFieldLayout>
             </div>
@@ -174,6 +176,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                   rules={{
                     required: "請選擇付款狀態",
                   }}
+                  key="paid"
                 />
               </FormFieldLayout>
             </div>
@@ -200,6 +203,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                       return true;
                     },
                   }}
+                  key="status"
                 />
               </FormFieldLayout>
             </div>
@@ -214,7 +218,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
 
         <OrderOperation
           isEdit={true}
-          isUpdating={updating}
+          isUpdating={isUpdatingOrder}
           disabeldSubmit={dishes.length === 0}
           orderData={orderData}
           handleSubmit={handleSubmit(onSubmit, onError)}

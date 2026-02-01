@@ -2,11 +2,11 @@ import styled from "styled-components";
 import { useState } from "react";
 import Modal from "./Modal";
 import ButtonSpinner from "../ui/ButtonSpinner";
-import useMenuUsage from "../hooks/data/menus/useMenuUsage";
+import useIngredientRelatedMenus from "../hooks/data/menus/useIngredientRelatedMenus";
 import QueryStatusFallback from "./QueryStatusFallback";
 import Button from "../ui/Button";
 import ButtonCancel from "../ui/ButtonCancel";
-import FilterMenuList from "../features/inventory/FilterMenuList";
+import RelatedMenus from "../features/inventory/RelatedMenus";
 
 const StyledConfirmDelete = styled.div`
   width: 36rem;
@@ -70,11 +70,11 @@ function ConfirmDelete({
   const [confirm, setConfirm] = useState(false);
 
   const {
-    data: filterMenuData,
-    isPending,
-    isError,
-    error,
-  } = useMenuUsage(data.id, showRelatedData);
+    relatedMenus,
+    relatedMenusIsLoading,
+    relatedMenusIsError,
+    relatedMenusError,
+  } = useIngredientRelatedMenus(data.id, showRelatedData);
 
   return (
     <Modal
@@ -86,15 +86,15 @@ function ConfirmDelete({
       <StyledConfirmDelete>
         <QueryStatusFallback
           status={{
-            isPending: showRelatedData && isPending,
-            isError: showRelatedData && isError,
+            isLoading: showRelatedData && relatedMenusIsLoading,
+            isError: showRelatedData && relatedMenusIsError,
           }}
-          errorFallback={error}
+          errorFallback={relatedMenusError}
         >
           <Content>{render()}</Content>
 
           {showRelatedData && (
-            <FilterMenuList filterMenuData={filterMenuData} name={data.label} />
+            <RelatedMenus relatedMenus={relatedMenus} name={data.label} />
           )}
 
           <ConfirmCheckBox>
@@ -110,7 +110,7 @@ function ConfirmDelete({
           <ButtonRow>
             <Button
               $variant="danger"
-              $isLoading={isDeleting}
+              $isProcessing={isDeleting}
               disabled={confirm === false || isDeleting}
               onClick={() => {
                 handleDelete(data.id, {

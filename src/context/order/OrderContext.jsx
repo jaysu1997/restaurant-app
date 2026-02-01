@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { initialState, reducer } from "./orderReducer";
 
 const OrderContext = createContext();
@@ -18,13 +18,4 @@ function OrderProvider({ children }) {
   );
 }
 
-function useOrder() {
-  const context = useContext(OrderContext);
-
-  if (context === undefined)
-    throw new Error("useOrder 必須在 OrderProvider 中使用");
-
-  return context;
-}
-
-export { OrderProvider, useOrder };
+export { OrderProvider, OrderContext };

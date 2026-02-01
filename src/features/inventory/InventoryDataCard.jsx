@@ -1,12 +1,12 @@
 import { useState } from "react";
 import DataDisplayCard from "../../ui/DataDisplayCard";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import UpsertInventoryForm from "./UpsertInventoryForm";
+import InventoryForm from "./InventoryForm";
 import useDeleteInventory from "../../hooks/data/inventory/useDeleteInventory";
 
 function InventoryDataCard({ inventory }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { deleteInventory, inventoryDeleting } = useDeleteInventory();
+  const { deleteInventory, isDeletingInventory } = useDeleteInventory();
   const { label, remainingQuantity } = inventory;
 
   const inventoryDataFormat = [
@@ -27,7 +27,7 @@ function InventoryDataCard({ inventory }) {
       />
 
       {isOpenModal.type === "edit" && (
-        <UpsertInventoryForm
+        <InventoryForm
           onCloseModal={() => setIsOpenModal(false)}
           inventory={isOpenModal.data}
         />
@@ -37,7 +37,7 @@ function InventoryDataCard({ inventory }) {
         <ConfirmDelete
           onCloseModal={() => setIsOpenModal(false)}
           handleDelete={deleteInventory}
-          isDeleting={inventoryDeleting}
+          isDeleting={isDeletingInventory}
           data={isOpenModal.data}
           showRelatedData={true}
           render={() => (

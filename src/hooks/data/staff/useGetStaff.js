@@ -10,10 +10,10 @@ function useGetStaff() {
   });
 
   return {
-    data: data?.users,
-    isPending,
-    error: withFallbackRetry(error, refetch),
-    isError,
+    staff: data?.users,
+    staffIsLoading: isPending,
+    staffIsError: isError,
+    staffError: withFallbackRetry(error, refetch),
   };
 }
 

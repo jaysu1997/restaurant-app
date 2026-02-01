@@ -2,7 +2,6 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
-import { fadeInAnimation } from "../../utils/dom";
 import { parsePositiveInt } from "../../utils/helpers";
 
 function OptionSection({ nestedIndex, inventoryData }) {
@@ -84,9 +83,6 @@ function OptionSection({ nestedIndex, inventoryData }) {
             ingredient: "",
             quantity: "",
           });
-
-          // 淡入欄位動畫
-          fadeInAnimation(`customize.${nestedIndex}.options.${fields.length}`);
         }}
       >
         <Plus />

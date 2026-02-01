@@ -119,21 +119,4 @@ export const GlobalStyles = styled.createGlobalStyle`
   .emphasize {
     color: #dc2626;
   }
-
-  /* 淡入動畫 */
-  .fadeIn {
-    animation: fadeIn 0.3s ease forwards;
-  }
-
-  /* 原本是用translateY，但是在append新欄位時會造成圖層問題，然導致剛新增欄位後展開daypicker，會看到按鈕浮在daypicker之上，所以改用margin-top */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      margin-top: -30px;
-    }
-    to {
-      opacity: 1;
-      margin-top: 0;
-    }
-  }
 `;

@@ -1,6 +1,6 @@
 // 控制和設定餐點份數的元件
 import styled from "styled-components";
-import { useOrder } from "../context/OrderContext";
+import useOrder from "../context/order/useOrder";
 import { useState } from "react";
 import StyledHotToast from "./StyledHotToast";
 import { checkInventoryAvailability } from "../utils/orderHelpers";

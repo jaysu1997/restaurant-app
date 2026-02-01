@@ -4,17 +4,16 @@ import { getInventoryApi } from "../../../services/apiInventory";
 import { withFallbackRetry } from "../../../utils/helpers";
 
 function useGetInventory() {
-  const { data, isPending, error, isError, isSuccess, refetch } = useQuery({
+  const { data, isPending, error, isError, refetch } = useQuery({
     queryKey: ["inventory"],
     queryFn: getInventoryApi,
   });
 
   return {
-    data,
-    isPending,
-    error: withFallbackRetry(error, refetch),
-    isError,
-    isSuccess,
+    inventory: data,
+    inventoryIsLoading: isPending,
+    inventoryIsError: isError,
+    inventoryError: withFallbackRetry(error, refetch),
   };
 }
 

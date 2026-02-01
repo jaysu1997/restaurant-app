@@ -55,12 +55,7 @@ function UpdateUserAvatar({ userData }) {
       <StyledUpdateUserAvatar>
         <UserAvatar avatarUrl={avatarUrl} />
 
-        <Button
-          $variant="tertiary"
-          as="label"
-          htmlFor="upload-avatar"
-          role="avatarUploadButton"
-        >
+        <Button $variant="tertiary" as="label" htmlFor="upload-avatar">
           <Upload />
           選擇新頭像
         </Button>

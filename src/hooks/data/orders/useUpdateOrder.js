@@ -7,11 +7,7 @@ function useUpdateOrder() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const {
-    mutate: updateOrder,
-    isPending: updating,
-    error,
-  } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: updateOrderApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
@@ -30,7 +26,7 @@ function useUpdateOrder() {
     },
   });
 
-  return { updateOrder, updating, error };
+  return { updateOrder: mutate, isUpdatingOrder: isPending };
 }
 
 export default useUpdateOrder;

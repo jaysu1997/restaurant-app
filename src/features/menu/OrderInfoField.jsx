@@ -3,8 +3,8 @@ import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import Note from "../../ui/Note";
 import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
-import { generatePickupTimeOptions } from "../../context/settingsHelpers";
 import { useFormContext } from "react-hook-form";
+import { generatePickupTimeOptions } from "../../context/settings/settingsHelpers";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -69,6 +69,7 @@ function OrderInfoField({ takeOut, dishes, settingsData }) {
           rules={{
             required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
           }}
+          key={takeOut ? "pickupTime" : "tableNumber"}
         />
       </Row>
 
@@ -90,6 +91,7 @@ function OrderInfoField({ takeOut, dishes, settingsData }) {
           rules={{
             required: "請選擇付款狀態",
           }}
+          key="paid"
         />
       </Row>
 

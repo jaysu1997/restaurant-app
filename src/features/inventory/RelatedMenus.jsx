@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Fragment, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import UpsertMenuForm from "../menu-manage/UpsertMenuForm";
+import MenuForm from "../menu-manage/MenuForm";
 
 const Accordion = styled.div`
   width: 100%;
@@ -68,7 +68,7 @@ const AccordionContent = styled.div`
 `;
 
 // 刪除食材時才需要顯示的內容
-function FilterMenuList({ name, filterMenuData }) {
+function RelatedMenus({ name, relatedMenus }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
 
@@ -85,8 +85,8 @@ function FilterMenuList({ name, filterMenuData }) {
         </AccordionTitle>
 
         <AccordionContent $isExpanded={isExpanded}>
-          {filterMenuData.length !== 0 ? (
-            filterMenuData.map((menu, index) => (
+          {relatedMenus.length !== 0 ? (
+            relatedMenus.map((menu, index) => (
               <Fragment key={menu.id}>
                 <span
                   role="button"
@@ -95,7 +95,7 @@ function FilterMenuList({ name, filterMenuData }) {
                 >
                   {menu.name}
                 </span>
-                {index < filterMenuData.length - 1 ? "、" : "。"}
+                {index < relatedMenus.length - 1 ? "、" : "。"}
               </Fragment>
             ))
           ) : (
@@ -105,13 +105,10 @@ function FilterMenuList({ name, filterMenuData }) {
       </Accordion>
 
       {activeMenu && (
-        <UpsertMenuForm
-          onCloseModal={() => setActiveMenu(null)}
-          menu={activeMenu}
-        />
+        <MenuForm onCloseModal={() => setActiveMenu(null)} menu={activeMenu} />
       )}
     </>
   );
 }
 
-export default FilterMenuList;
+export default RelatedMenus;

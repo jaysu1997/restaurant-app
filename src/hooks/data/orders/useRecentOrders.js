@@ -3,18 +3,18 @@ import { getLast7DaysOrdersApi } from "../../../services/apiOrder";
 import { withFallbackRetry } from "../../../utils/helpers";
 
 // 取得所有訂單數據
-function useAnalyzedOrders() {
+function useRecentOrders() {
   const { data, isPending, error, isError, refetch } = useQuery({
     queryKey: ["last7DaysOrders"],
     queryFn: getLast7DaysOrdersApi,
   });
 
   return {
-    data,
-    isPending,
-    isError,
-    error: withFallbackRetry(error, refetch),
+    recentOrders: data,
+    recentOrdersIsLoading: isPending,
+    recentOrdersIsError: isError,
+    recentOrdersError: withFallbackRetry(error, refetch),
   };
 }
 
-export default useAnalyzedOrders;
+export default useRecentOrders;

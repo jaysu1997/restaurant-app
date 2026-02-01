@@ -62,6 +62,14 @@ const Description = styled.p`
   color: #6b7280;
 `;
 
+const SwitchContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.2rem, 1fr));
+  grid-template-rows: 3.8rem;
+  gap: 0.4rem;
+  align-items: center;
+`;
+
 function FormSection({
   id,
   isFullWidth = false,
@@ -72,7 +80,7 @@ function FormSection({
   inventoryData,
   children,
 }) {
-  const { register, isDisabled } = useFormContext();
+  const { register } = useFormContext();
 
   return (
     <Section $isFullWidth={isFullWidth} $isGroup={isGroup} id={id}>
@@ -106,7 +114,6 @@ function FormSection({
                 id={field.name}
                 placeholder={field.placeholder}
                 {...register(field.name, {
-                  disabled: isDisabled,
                   required: "此欄位必須填寫",
                   ...(field.rules ? field.rules : {}),
                 })}
@@ -114,16 +121,10 @@ function FormSection({
             )}
 
             {field.type === "select" && (
-              <SelectField
-                name={field.name}
-                inventoryData={inventoryData}
-                disabled={isDisabled}
-              />
+              <SelectField name={field.name} inventoryData={inventoryData} />
             )}
 
-            {field.type === "switch" && (
-              <SwitchField disabled={isDisabled} index={field.index} />
-            )}
+            {field.type === "switch" && <SwitchField index={field.index} />}
           </FormFieldLayout>
         ))}
 
@@ -132,7 +133,7 @@ function FormSection({
   );
 }
 
-function SelectField({ name, inventoryData, disabled }) {
+function SelectField({ name, inventoryData }) {
   return (
     <ControlledSelect
       name={name}
@@ -146,28 +147,29 @@ function SelectField({ name, inventoryData, disabled }) {
       ]}
       creatable={true}
       placeholder="選擇現有食材或輸入新食材"
-      disabled={disabled}
     />
   );
 }
 
-function SwitchField({ disabled, index }) {
+function SwitchField({ index }) {
   return (
-    <ControlledSwitch
-      disabled={disabled}
-      items={[
-        {
+    <SwitchContainer>
+      <ControlledSwitch
+        options={{
           name: `customize.${index}.isRequired`,
           option1: { label: "選填", value: "optional" },
           option2: { label: "必填", value: "required" },
-        },
-        {
+        }}
+      />
+
+      <ControlledSwitch
+        options={{
           name: `customize.${index}.choiceType`,
           option1: { label: "多選", value: "multiple" },
           option2: { label: "單選", value: "single" },
-        },
-      ]}
-    />
+        }}
+      />
+    </SwitchContainer>
   );
 }
 

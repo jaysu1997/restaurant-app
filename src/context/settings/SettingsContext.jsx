@@ -1,18 +1,12 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import useGetSettings from "../hooks/data/settings/useGetSettings";
+import { createContext, useEffect, useMemo, useRef, useState } from "react";
+import useGetSettings from "../../hooks/data/settings/useGetSettings";
+
+import { isToday, startOfTomorrow } from "date-fns";
 import {
   generateDineInTableOptions,
   getOpenHoursInfo,
   getOpenStatus,
 } from "./settingsHelpers";
-import { isToday, startOfTomorrow } from "date-fns";
 
 // 更新當前營業狀態
 function updateCurrentStatus(todayOpenInfo, setStatus, slotsTimerRef) {
@@ -36,7 +30,8 @@ const SettingsContext = createContext();
 
 // 這裡有一個小問題需要修正，我設計取餐時間必須要至少在當前時間+20分鐘之後，但是同時這樣的設計也用在購物車的欄位設定中，但是這會有一個問題，那就是在休息之前不到20分鐘(但可能還剩下15分鐘)，就會變成無法點餐的狀態。內用和外帶都不行，或許比較可行的做法是縮短成10分鐘，或是其他邏輯?
 function SettingsProvider({ children }) {
-  const { data, error, isPending, isSuccess, isError } = useGetSettings();
+  const { settings, settingsIsLoading, settingsIsError, settingsError } =
+    useGetSettings();
 
   const slotsTimerRef = useRef(null);
 
@@ -47,33 +42,37 @@ function SettingsProvider({ children }) {
   });
 
   // 先使用useMemo處理好來自遠端的數據
-  const settings = useMemo(() => {
-    if (!isSuccess) return;
+  const derivedSettings = useMemo(() => {
+    if (!settings) return;
 
     // 生成內用桌號選項
-    const dineInTableOptions = generateDineInTableOptions(data);
+    const dineInTableOptions = generateDineInTableOptions(settings);
 
     // 取得當天營業設定(是否營業以及營業時段)
-    const todayOpenInfo = getOpenHoursInfo(data, today);
+    const todayOpenInfo = getOpenHoursInfo(settings, today);
 
     return {
       dineInTableOptions,
       todayOpenInfo,
     };
-  }, [data, isSuccess, today]);
+  }, [settings, today]);
 
   // 設定一個會自動更新當前營業狀態的函式
   useEffect(() => {
-    if (!settings?.todayOpenInfo) return;
+    if (!derivedSettings?.todayOpenInfo) return;
 
-    updateCurrentStatus(settings.todayOpenInfo, setStatus, slotsTimerRef);
+    updateCurrentStatus(
+      derivedSettings.todayOpenInfo,
+      setStatus,
+      slotsTimerRef,
+    );
 
     // setTimeout需要放在函式中遞迴執行才能夠自動執行，為了確保cleanup可以清除最新的timer，需要使用useRef幫忙紀錄
     return () => {
       // 不是修改dom，不用理會警告
       clearTimeout(slotsTimerRef.current);
     };
-  }, [settings?.todayOpenInfo]);
+  }, [derivedSettings?.todayOpenInfo]);
 
   // 跨夜(新的一天)timer
   useEffect(() => {
@@ -97,12 +96,12 @@ function SettingsProvider({ children }) {
   return (
     <SettingsContext.Provider
       value={{
-        data,
         settings,
+        derivedSettings,
         status,
-        error,
-        isPending,
-        isError,
+        settingsIsLoading,
+        settingsIsError,
+        settingsError,
       }}
     >
       {children}
@@ -110,13 +109,4 @@ function SettingsProvider({ children }) {
   );
 }
 
-function useSettings() {
-  const context = useContext(SettingsContext);
-
-  if (context === undefined)
-    throw new Error("useSettings 必須在 SettingsProvider 中使用");
-
-  return context;
-}
-
-export { SettingsProvider, useSettings };
+export { SettingsProvider, SettingsContext };

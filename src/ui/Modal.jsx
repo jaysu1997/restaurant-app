@@ -39,7 +39,6 @@ const Header = styled.header`
   justify-content: space-between;
   min-height: 5.7rem;
   align-items: center;
-  z-index: 1;
   width: 100%;
   overflow: hidden;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);

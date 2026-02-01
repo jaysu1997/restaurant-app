@@ -3,52 +3,39 @@ import MenuView from "../features/menu/MenuView";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
-import { useSettings } from "../context/SettingsContext";
-import { useOrder } from "../context/OrderContext";
+import useOrder from "../context/order/useOrder";
 import PageWrapper from "../ui/PageWrapper";
 import { useEffect } from "react";
+import useSettings from "../context/settings/useSettings";
 
 function Menu() {
-  const {
-    settings,
-    error: settingsError,
-    isPending: settingsIsPending,
-    isError: settingsIsError,
-  } = useSettings();
+  const { derivedSettings, settingsIsLoading, settingsIsError, settingsError } =
+    useSettings();
 
-  const {
-    data: menusData,
-    isPending: menusIsPending,
-    error: menusError,
-    isError: menusIsError,
-  } = useGetMenus();
+  const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
 
   const { dispatch } = useOrder();
 
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
-  const {
-    data: inventoryData,
-    isPending: inventoryIsPending,
-    error: inventoryError,
-    isError: inventoryIsError,
-  } = useGetInventory();
+  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
+    useGetInventory();
 
   useEffect(
     function () {
-      if (!inventoryData) return;
+      if (!inventory) return;
 
       dispatch({
         type: "inventory/setAll",
-        payload: inventoryData,
+        payload: inventory,
       });
     },
-    [dispatch, inventoryData],
+    [dispatch, inventory],
   );
 
   const pageQueryStatus = {
-    isPending: menusIsPending || inventoryIsPending || settingsIsPending,
+    isLoading: menusIsLoading || inventoryIsLoading || settingsIsLoading,
     isError: menusIsError || inventoryIsError || settingsIsError,
-    hasNoData: menusData?.length === 0,
+    hasNoData: menus?.length === 0,
   };
 
   return (
@@ -64,7 +51,7 @@ function Menu() {
           redirectTo: "/menu-manage",
         }}
       >
-        <MenuView menusData={menusData} settingsData={settings} />
+        <MenuView menusData={menus} settingsData={derivedSettings} />
       </QueryStatusFallback>
     </PageWrapper>
   );

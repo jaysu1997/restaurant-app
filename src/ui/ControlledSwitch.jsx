@@ -1,19 +1,12 @@
 import styled from "styled-components";
-import { Controller, useFormContext } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { Check, X } from "lucide-react";
 
-const StyledControlledSwitch = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8.2rem, 1fr));
-  grid-template-rows: minmax(0, max-content);
-  gap: 0.4rem;
-`;
-
-const StyledSwitch = styled.div`
+const StyledSwitch = styled.label`
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  height: 3.8rem;
+  cursor: pointer;
 
   @media (max-width: 288px) {
     justify-content: start;
@@ -23,18 +16,18 @@ const StyledSwitch = styled.div`
     font-size: 1.4rem;
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
+    user-select: none;
   }
 `;
 
 // 開關容器
-const SwitchContainer = styled.label`
+const SwitchContainer = styled.div`
   display: flex;
   align-items: center;
   width: 5rem;
   height: 2.6rem;
   background: ${(props) => (props.$checked ? "#007bff" : "#ccc")};
   border-radius: 999px;
-  cursor: pointer;
   position: relative;
   transition: background 0.3s ease-in-out;
 `;
@@ -61,55 +54,43 @@ const SwitchHandle = styled.div`
   }
 `;
 
-function ControlledSwitch({ items, handleChange, disabled }) {
+function ControlledSwitch({ options, handleChange }) {
   const { control } = useFormContext();
 
+  const { field } = useController({
+    name: options.name,
+    control,
+    defaultValue: options.option1.value,
+  });
+
+  const checked = field.value === options.option2.value;
+
   return (
-    <StyledControlledSwitch>
-      {items.map((item, index) => (
-        <Controller
-          key={index}
-          name={item.name}
-          control={control}
-          defaultValue={item.option1.value}
-          render={({ field: { value, onChange } }) => {
-            const checked = value === item.option2.value;
+    <StyledSwitch>
+      <SwitchContainer $checked={checked}>
+        <input
+          type="checkbox"
+          hidden
+          checked={checked}
+          onChange={(e) => {
+            const nextValue = e.target.checked
+              ? options.option2.value
+              : options.option1.value;
 
-            return (
-              <StyledSwitch>
-                <SwitchContainer $checked={checked}>
-                  <input
-                    type="checkbox"
-                    disabled={disabled}
-                    hidden
-                    checked={checked}
-                    onChange={(e) => {
-                      onChange(
-                        e.target.checked
-                          ? item.option2.value
-                          : item.option1.value,
-                      );
+            field.onChange(nextValue);
 
-                      // 如果需要在切換value同時執行函式，就使用handleChange prop
-                      if (
-                        typeof handleChange === "function" &&
-                        !e.target.checked
-                      ) {
-                        handleChange();
-                      }
-                    }}
-                  />
-                  <SwitchHandle $checked={checked}>
-                    {checked ? <Check color="#007bff" /> : <X color="#ccc" />}
-                  </SwitchHandle>
-                </SwitchContainer>
-                <span>{checked ? item.option2.label : item.option1.label}</span>
-              </StyledSwitch>
-            );
+            if (typeof handleChange === "function" && !e.target.checked) {
+              handleChange();
+            }
           }}
         />
-      ))}
-    </StyledControlledSwitch>
+        <SwitchHandle $checked={checked}>
+          {checked ? <Check color="#007bff" /> : <X color="#ccc" />}
+        </SwitchHandle>
+      </SwitchContainer>
+
+      <span>{checked ? options.option2.label : options.option1.label}</span>
+    </StyledSwitch>
   );
 }
 

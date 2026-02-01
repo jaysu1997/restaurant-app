@@ -31,7 +31,7 @@ const ToggleButton = styled.button`
 `;
 
 function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
-  const { mutate, isPending } = useDeleteOrder();
+  const { deleteOrder, isDeletingOrder } = useDeleteOrder();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const navigate = useNavigate();
 
@@ -82,8 +82,8 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
       {isOpenModal && (
         <ConfirmDelete
           onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={mutate}
-          isDeleting={isPending}
+          handleDelete={deleteOrder}
+          isDeleting={isDeletingOrder}
           data={orderData}
           showRelatedData={false}
           render={() => (

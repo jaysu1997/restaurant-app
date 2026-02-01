@@ -1,11 +1,11 @@
 import ButtonSpinner from "./ButtonSpinner";
 import Button from "./Button";
 
-function ButtonSubmit({ isLoading, ...rest }) {
+function ButtonSubmit({ isProcessing, ...rest }) {
   return (
-    <Button type="submit" $isLoading={isLoading} {...rest}>
+    <Button type="submit" $isProcessing={isProcessing} {...rest}>
       <span>儲存</span>
-      {isLoading && <ButtonSpinner />}
+      {isProcessing && <ButtonSpinner />}
     </Button>
   );
 }

@@ -1,17 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { updateUserPasswordApi } from "../../../services/apiAuth";
 import StyledHotToast from "../../../ui/StyledHotToast";
-import useSignOut from "./useSignOut";
+import useLogout from "./useLogout";
 
 // 更新用戶密碼
 function useUpdateUserPassword() {
-  const { signOut } = useSignOut();
+  const { logout } = useLogout();
 
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: updateUserPasswordApi,
     onSuccess: () => {
       StyledHotToast({ type: "success", title: "密碼已更新，請重新登入。" });
-      setTimeout(() => signOut(), 2000);
+      setTimeout(() => logout(), 2000);
     },
     onError: (error) => {
       StyledHotToast({
@@ -22,7 +22,7 @@ function useUpdateUserPassword() {
     },
   });
 
-  return { mutate, isPending, error };
+  return { updateUserPassword: mutate, isUpdatingUserPassword: isPending };
 }
 
 export default useUpdateUserPassword;

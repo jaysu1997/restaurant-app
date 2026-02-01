@@ -7,15 +7,16 @@ function useDeleteOrder() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: deleteOrderApi,
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      queryClient.removeQueries({ queryKey: ["order", variables] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       StyledHotToast({
         type: "success",
         title: "訂單刪除成功",
       });
-      navigate("/orders", { replace: true });
+      navigate("/orders");
     },
     onError: (error) => {
       StyledHotToast({
@@ -26,7 +27,7 @@ function useDeleteOrder() {
     },
   });
 
-  return { mutate, isPending, error };
+  return { deleteOrder: mutate, isDeletingOrder: isPending };
 }
 
 export default useDeleteOrder;

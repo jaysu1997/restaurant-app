@@ -7,14 +7,10 @@ import {
 } from "../../../services/apiInventory";
 import StyledHotToast from "../../../ui/StyledHotToast";
 
-function useUpsertInventory() {
+function useSubmitInventory() {
   const queryClient = useQueryClient();
 
-  const {
-    mutate: upsert,
-    isPending: isUpserting,
-    error: upsertError,
-  } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (inventoryData) => {
       // 有id就是更新，沒有則是新增
       return inventoryData.id
@@ -35,7 +31,7 @@ function useUpsertInventory() {
     },
   });
 
-  return { upsert, isUpserting, upsertError };
+  return { submitInventory: mutate, isSubmittingInventory: isPending };
 }
 
-export default useUpsertInventory;
+export default useSubmitInventory;

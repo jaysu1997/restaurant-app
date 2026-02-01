@@ -1,5 +1,17 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Description from "./Description";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    margin-top: -30px;
+  }
+
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+`;
 
 const StyledStatusView = styled.div`
   width: 100%;
@@ -11,6 +23,7 @@ const StyledStatusView = styled.div`
   gap: 3.2rem;
   padding: 3.6rem 1rem;
   text-align: center;
+  animation: ${fadeIn} 0.3s ease forwards;
 `;
 
 const Illustration = styled.div`
@@ -30,7 +43,7 @@ function StatusView({
   children,
 }) {
   return (
-    <StyledStatusView className="fadeIn" $minHeight={minHeight}>
+    <StyledStatusView $minHeight={minHeight}>
       <Illustration>{img}</Illustration>
       <h2>{heading}</h2>
       <Description>{description}</Description>

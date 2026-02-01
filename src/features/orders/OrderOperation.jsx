@@ -33,14 +33,14 @@ function OrderOperation({
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { mutate, isPending } = useDeleteOrder();
+  const { deleteOrder, isDeletingOrder } = useDeleteOrder();
 
   return (
     <>
       <Footer>
         {isEdit && (
           <ButtonSubmit
-            isLoading={isUpdating}
+            isProcessing={isUpdating}
             disabled={disabeldSubmit || isUpdating}
             onClick={() => handleSubmit()}
           />
@@ -79,8 +79,8 @@ function OrderOperation({
       {isOpenModal && (
         <ConfirmDelete
           onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={mutate}
-          isDeleting={isPending}
+          handleDelete={deleteOrder}
+          isDeleting={isDeletingOrder}
           data={orderData}
           showRelatedData={false}
           render={() => (

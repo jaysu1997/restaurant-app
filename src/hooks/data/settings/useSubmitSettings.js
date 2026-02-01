@@ -3,10 +3,10 @@ import { upsertSettingsApi } from "../../../services/apiSettings";
 import StyledHotToast from "../../../ui/StyledHotToast";
 
 // 更新or新增店鋪設定
-function useUpsertSettings() {
+function useSubmitSettings() {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: upsertSettingsApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
@@ -17,7 +17,7 @@ function useUpsertSettings() {
     },
   });
 
-  return { mutate, isPending, error };
+  return { submitSettings: mutate, isSubmittingSettings: isPending };
 }
 
-export default useUpsertSettings;
+export default useSubmitSettings;

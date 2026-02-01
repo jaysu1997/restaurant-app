@@ -2,7 +2,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import StyledHotToast from "../../ui/StyledHotToast";
 import Modal from "../../ui/Modal";
-import useUpsertInventory from "../../hooks/data/inventory/useUpsertInventory";
+import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
 import ButtonSubmit from "../../ui/ButtonSubmit";
 import ButtonCancel from "../../ui/ButtonCancel";
 import styled from "styled-components";
@@ -23,7 +23,7 @@ const Footer = styled.footer`
   gap: 2.4rem;
 `;
 
-function UpsertInventoryForm({ inventory, onCloseModal }) {
+function InventoryForm({ inventory, onCloseModal }) {
   const isEdit = inventory ? true : false;
   const methods = useForm({
     defaultValues: inventory || {},
@@ -34,7 +34,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
     formState: { errors },
   } = methods;
 
-  const { upsert, isUpserting } = useUpsertInventory();
+  const { submitInventory, isSubmittingInventory } = useSubmitInventory();
   const [searchParams, setSearchParams] = useSearchParams();
 
   function onSubmit(data) {
@@ -46,7 +46,7 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
       value: data.label,
     };
 
-    upsert(inventoryData, {
+    submitInventory(inventoryData, {
       onSuccess: () => {
         StyledHotToast({
           type: "success",
@@ -68,7 +68,8 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   return (
     <Modal modalHeader="食材設定表單" maxWidth={56} onCloseModal={onCloseModal}>
       <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
-        <FormProvider {...methods} isDisabled={isUpserting}>
+        {/* 這裡的isDisabled沒用 */}
+        <FormProvider {...methods}>
           <FormSection
             descriptions={
               isEdit
@@ -111,8 +112,14 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
           </FormSection>
 
           <Footer>
-            <ButtonSubmit disabled={isUpserting} isLoading={isUpserting} />
-            <ButtonCancel disabled={isUpserting} onClick={onCloseModal} />
+            <ButtonSubmit
+              disabled={isSubmittingInventory}
+              isProcessing={isSubmittingInventory}
+            />
+            <ButtonCancel
+              disabled={isSubmittingInventory}
+              onClick={onCloseModal}
+            />
           </Footer>
         </FormProvider>
       </StyledForm>
@@ -120,4 +127,4 @@ function UpsertInventoryForm({ inventory, onCloseModal }) {
   );
 }
 
-export default UpsertInventoryForm;
+export default InventoryForm;
