@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useSearchParams } from "react-router";
 
 const StyleSwiper = styled(Swiper)`
-  grid-column: 1 / 2;
   width: 100%;
+  cursor: grab;
 `;
 
 const StyleSwiperSlide = styled(SwiperSlide)`
@@ -17,10 +17,16 @@ const StyleSwiperSlide = styled(SwiperSlide)`
   color: #fff;
   background-color: ${(props) => (props.$isActive ? "#171717" : "#737373")};
   padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 6px;
 `;
 
-export default function SwiperBar({ categories }) {
+export default function SwiperBar({ menus }) {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // 使用Set()過濾重複的分類
+  const categories = [...new Set(menus.map((menu) => menu.category))];
 
   // 根據選擇的option值來改變URL的searchParams
   function handleFilter(e) {
@@ -33,7 +39,6 @@ export default function SwiperBar({ categories }) {
       slidesPerView={3.5}
       spaceBetween={5}
       freeMode={true}
-      grabCursor={true}
       modules={[FreeMode]}
       breakpoints={{
         640: {
@@ -49,6 +54,7 @@ export default function SwiperBar({ categories }) {
           !searchParams.get("category") ||
           searchParams.get("category") === "all"
         }
+        key="全部"
       >
         全部
       </StyleSwiperSlide>

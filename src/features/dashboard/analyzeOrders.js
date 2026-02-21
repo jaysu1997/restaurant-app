@@ -30,12 +30,12 @@ function updateHourlyOrders(hourlyOrderCounts, createdTime) {
 // 更新今天的餐點銷售份數和銷售額
 function updateDishStats(dishMap, order) {
   order.dishes.forEach((dish) => {
-    const { name, servings, itemTotalPrice } = dish;
+    const { name, servings, unitPrice } = dish;
     const current = dishMap.get(name) || { totalServings: 0, totalSales: 0 };
 
     dishMap.set(name, {
       totalServings: current.totalServings + servings,
-      totalSales: current.totalSales + itemTotalPrice * servings,
+      totalSales: current.totalSales + unitPrice * servings,
     });
   });
 }

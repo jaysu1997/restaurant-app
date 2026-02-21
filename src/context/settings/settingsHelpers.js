@@ -28,7 +28,7 @@ export function generateTableNumbers(zoneName, tableCount) {
 
   return Array.from(
     { length: count },
-    (_, i) => `${zoneName}${zoneName.trim() ? " - " : ""}${i + 1}`
+    (_, i) => `${zoneName}${zoneName.trim() ? " - " : ""}${i + 1}`,
   );
 }
 
@@ -67,7 +67,7 @@ export function matchOpenHours(settingsData, date) {
       isWithinInterval(date, {
         start: startOfDay(new Date(special.dateRange.from)),
         end: endOfDay(new Date(special.dateRange.to)),
-      })
+      }),
     ) || regularOpenHours.at(getDay(date) - 1);
 
   // 需要深拷貝，否則會修改到原始數據造成錯誤
@@ -117,7 +117,7 @@ export function getOpenHoursInfo(settingsData, date) {
 export function generateTimeOptions(start, end) {
   const timeOptions = eachMinuteOfInterval(
     { start: start, end: end },
-    { step: 5 }
+    { step: 5 },
   ).map((time) => {
     return {
       label: `${isTomorrow(time) ? "明天 " : ""}${formatToHourMinute(time)}`,
@@ -146,7 +146,7 @@ export function generatePickupTimeOptions(todayOpenInfo) {
   const minuteRemainder = now.getMinutes() % 5;
   const earliestPickupTime = addMinutes(
     now,
-    minuteRemainder === 0 ? 15 : 20 - minuteRemainder
+    minuteRemainder === 0 ? 15 : 20 - minuteRemainder,
   );
 
   const pickupTime = todayOpenInfo.timeSlots
@@ -212,4 +212,26 @@ export function getOpenStatus(todayOpenInfo) {
   }
 
   return { isOpenNow, tooltip, nextUpdateTime };
+}
+
+export function startOpenStatusTimer({ todayOpenInfo, setStatus, timerRef }) {
+  if (timerRef.current) {
+    clearTimeout(timerRef.current);
+  }
+
+  const { isOpenNow, tooltip, nextUpdateTime } = getOpenStatus(todayOpenInfo);
+
+  setStatus({ isOpenNow, tooltip });
+
+  if (nextUpdateTime) {
+    const countdown = nextUpdateTime.getTime() - Date.now();
+
+    timerRef.current = setTimeout(() => {
+      startOpenStatusTimer({
+        todayOpenInfo,
+        setStatus,
+        timerRef,
+      });
+    }, countdown);
+  }
 }

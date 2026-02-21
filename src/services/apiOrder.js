@@ -60,7 +60,8 @@ export async function getLast7DaysOrdersApi() {
   const { data, error } = await supabase
     .from("orders")
     .select("*")
-    .gte("createdTime", startDate);
+    .gte("createdTime", startDate)
+    .order("pickupNumber");
 
   handleSupabaseApiError(error);
 

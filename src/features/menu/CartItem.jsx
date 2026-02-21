@@ -1,32 +1,25 @@
+// ok
 import styled from "styled-components";
 import ServingsControl from "../../ui/ServingsControl";
-import { useEffect, useRef, useState } from "react";
+import { useMemo } from "react";
 import useOrder from "../../context/order/useOrder";
-import { summarizeMealChoices } from "../../utils/orderHelpers";
-import OrderForm from "../../ui/OrderForm/OrderForm";
-import Button from "../../ui/Button";
-import { Trash2, SquarePen } from "lucide-react";
+import {
+  checkInventoryAvailability,
+  summarizeMealChoices,
+} from "../../utils/orderHelpers";
+import ItemActions from "../../ui/ItemActions";
 
-const OrderCardWrapper = styled.li`
+const StyledCartItem = styled.li`
   list-style: none;
   border-bottom: 1px solid #d3d3d3;
-`;
-
-const OrderCard = styled.div`
-  width: 100%;
-  padding: 1.2rem 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 1.4rem;
-  min-height: 10rem;
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr minmax(5.4rem, auto);
+  align-content: space-between;
   align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 0;
+  font-size: 1.4rem;
+  min-height: 12rem;
   width: 100%;
 `;
 
@@ -37,110 +30,67 @@ const OrderName = styled.h4`
   font-weight: 600;
 `;
 
-const OrderAction = styled.div`
-  display: flex;
-  gap: 0.2rem;
+const SelectedOptions = styled.p`
+  font-size: 1.2rem;
+  grid-column: 1 / -1;
 `;
 
-const OrderCustomize = styled.p`
-  font-size: 1.2rem;
-`;
-
-const Note = styled.p`
-  font-size: 1.2rem;
+const DishNote = styled(SelectedOptions)`
   color: #707070;
-  overflow-wrap: break-word;
-  width: 100%;
 `;
 
 const OrderPrice = styled.span`
   color: #dc2626;
   font-weight: 600;
+  justify-self: end;
 `;
 
 function CartItem({ dish }) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [servings, setServings] = useState(dish.servings);
-  const { dispatch } = useOrder();
-  const prevIsOpenModalRef = useRef(isOpenModal);
+  const {
+    dispatch,
+    state: { inventoryMap },
+  } = useOrder();
+
   const customizeChoices = summarizeMealChoices(dish);
-  const dishTotalPrice = dish.itemTotalPrice * dish.servings;
+  const dishTotalPrice = dish.unitPrice * dish.servings;
 
-  // 開啟OrderForm「更新」購物車中已訂購餐點的servings，並不會同步更新CartItem元件的servings，所以使用這個useEffect同步更新(至於useReducer中的數據則會同步更新，但如果這裡不進行同步，後續直接使用CartItem更新份量會造成錯誤)
-  useEffect(
-    function () {
-      if (prevIsOpenModalRef.current && !isOpenModal) {
-        setServings(dish.servings);
-      }
+  // 計算剩餘食材是否能夠支持再增加更多份數
+  const canIncrease = useMemo(() => {
+    const inventoryCheck = checkInventoryAvailability({
+      unitUsage: dish.unitUsage,
+      servings: 1, // 嘗試只加 1 份
+      inventoryMap,
+    });
 
-      prevIsOpenModalRef.current = isOpenModal;
-    },
-    [isOpenModal, dish.servings],
-  );
+    return inventoryCheck.isAvailable;
+  }, [dish.unitUsage, inventoryMap]);
 
   return (
-    <>
-      <OrderCardWrapper>
-        <OrderCard>
-          <Row>
-            <OrderName>{dish.name}</OrderName>
-            <OrderAction>
-              <Button
-                $variant="ghost"
-                onClick={() => {
-                  setIsOpenModal(true);
-                }}
-              >
-                <SquarePen />
-              </Button>
+    <StyledCartItem>
+      <OrderName>{dish.name}</OrderName>
+      <ItemActions dish={dish} />
 
-              <Button
-                $variant="ghost"
-                onClick={() => {
-                  dispatch({
-                    type: "dishes/removeDish",
-                    payload: dish.uniqueId,
-                  });
-                }}
-              >
-                <Trash2 />
-              </Button>
-            </OrderAction>
-          </Row>
-
-          {customizeChoices.length !== 0 && (
-            <Row>
-              <OrderCustomize>{customizeChoices}</OrderCustomize>
-            </Row>
-          )}
-
-          {dish.note && (
-            <Row>
-              <Note>&quot;{dish.note}&quot;</Note>
-            </Row>
-          )}
-
-          <Row>
-            <ServingsControl
-              type="sm"
-              servings={servings}
-              setServings={setServings}
-              orderDish={dish}
-              liveUpdate={true}
-            />
-            <OrderPrice>$ {dishTotalPrice}</OrderPrice>
-          </Row>
-        </OrderCard>
-      </OrderCardWrapper>
-
-      {isOpenModal && (
-        <OrderForm
-          orderDish={dish}
-          onCloseModal={() => setIsOpenModal(false)}
-          isEdit={true}
-        />
+      {customizeChoices.length !== 0 && (
+        <SelectedOptions>{customizeChoices}</SelectedOptions>
       )}
-    </>
+
+      {dish.note && <DishNote>&quot;{dish.note}&quot;</DishNote>}
+
+      <ServingsControl
+        canIncrease={canIncrease}
+        servings={dish.servings}
+        onChange={(next) => {
+          dispatch({
+            type: "dishes/updateDishServings",
+            payload: {
+              servings: next,
+              uniqueId: dish.uniqueId,
+            },
+          });
+        }}
+      />
+      <OrderPrice>$ {dishTotalPrice}</OrderPrice>
+    </StyledCartItem>
   );
 }
 

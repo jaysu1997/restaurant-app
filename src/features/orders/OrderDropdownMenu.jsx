@@ -37,11 +37,6 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
 
   const { id, pickupNumber, createdTime, status } = orderData;
 
-  function handleToggle(e) {
-    e.stopPropagation();
-    setIsOpenMenu((isOpenMenu) => (isOpenMenu === id ? false : id));
-  }
-
   const itemsConfig = [
     {
       name: "檢視訂單",
@@ -68,12 +63,15 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
       <DropdownMenu
         itemsConfig={itemsConfig}
         open={isOpenMenu === id}
-        setIsOpenMenu={setIsOpenMenu}
         isOpenMenu={isOpenMenu}
+        onClose={() => setIsOpenMenu(false)}
       >
         <ToggleButton
           $isActive={isOpenMenu === id}
-          onClick={(e) => handleToggle(e)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpenMenu((isOpenMenu) => (isOpenMenu === id ? false : id));
+          }}
         >
           <Ellipsis strokeWidth={2.4} />
         </ToggleButton>

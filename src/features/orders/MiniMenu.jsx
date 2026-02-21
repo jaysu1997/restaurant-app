@@ -54,11 +54,7 @@ function MiniMenu() {
       </Button>
 
       {isOpenModal.type === "MiniMenu" && (
-        <Modal
-          onCloseModal={() => setIsOpenModal(false)}
-          modalHeader="菜單"
-          maxWidth={36}
-        >
+        <Modal onCloseModal={() => setIsOpenModal(false)} modalHeader="菜單">
           <StyledMiniMenu>
             <QueryStatusFallback
               status={{

@@ -1,31 +1,25 @@
-import { Check, Square } from "lucide-react";
+// ok
 import styled from "styled-components";
-
-// 不同選項要求和狀態的樣式設定
-const hoverBgColor = {
-  optional: "#e7e5e4",
-  required: "#fecdd3",
-  isAnswered: "#bae6fd",
-};
+import { Check, Square } from "lucide-react";
 
 const StyledOption = styled.label`
   display: grid;
   grid-template-columns: 2rem 1fr auto;
+  grid-template-rows: 2.8rem;
   align-items: center;
   gap: 1.2rem;
-  height: 4rem;
-  line-height: 1.4;
   position: relative;
   padding: 0.6rem;
   border-radius: 6px;
   cursor: pointer;
 
-  &:not(:has(input:disabled)):hover {
+  &:hover {
     background-color: ${({ $hoverBgColor }) => $hoverBgColor};
   }
 
-  svg {
-    transition: all 0.2s;
+  span {
+    font-weight: 400;
+    font-size: 1.4rem;
   }
 
   svg:first-of-type {
@@ -38,7 +32,6 @@ const StyledOption = styled.label`
     left: 0.8rem;
     color: #fff;
     opacity: ${({ $checked }) => ($checked ? "1" : "0")};
-    transform: ${({ $checked }) => ($checked ? "scale(1)" : "scale(0.5)")};
   }
 `;
 
@@ -49,37 +42,17 @@ const OptionName = styled.span`
 `;
 
 // 單一選項ui
-function Option({
-  isAnswered,
-  customizeData,
-  optionData,
-  handleClick,
-  currentCustomization,
-}) {
-  const { customizeId, choiceType, isRequired } = customizeData;
-
-  const { optionId, optionLabel, extraPrice, ingredient, quantity } =
-    optionData;
-
-  // 數據內容與格式
-  const payload = {
-    customizeId,
-    optionId,
-    optionLabel,
-    extraPrice,
-    ingredientUuid: ingredient.uuid || null,
-    ingredientName: ingredient.value,
-    quantity,
-  };
+function Option({ optionHover, optionData, onToggle, selectedOptions }) {
+  const { optionId, optionLabel, extraPrice } = optionData;
 
   // 當前選項是否是被選中的選項
-  const isChecked = currentCustomization
-    .find((customize) => customize.customizeId === customizeId)
-    ?.selectOptions.some((option) => option.optionId === optionId);
+  const isChecked = selectedOptions.some(
+    (option) => option.optionId === optionId,
+  );
 
   return (
     <StyledOption
-      $hoverBgColor={hoverBgColor[isAnswered]}
+      $hoverBgColor={optionHover}
       htmlFor={optionId}
       $checked={isChecked}
     >
@@ -89,18 +62,14 @@ function Option({
         id={optionId}
         // 避免數據尚未處理完成時isChecked = undefined報出受控元件error，所以設false為默認值
         checked={isChecked ?? false}
-        onChange={(e) => {
-          handleClick(e, payload);
-        }}
+        onChange={(e) => onToggle(e)}
       />
 
       <Square className="icon-lg" />
       <Check className="icon-md" strokeWidth={3} />
 
-      <OptionName>{optionData.optionLabel}</OptionName>
-      <span>
-        {optionData.extraPrice === 0 ? "免費" : `+ $ ${optionData.extraPrice}`}
-      </span>
+      <OptionName>{optionLabel}</OptionName>
+      <span>{extraPrice === 0 ? "免費" : `+ $ ${extraPrice}`}</span>
     </StyledOption>
   );
 }

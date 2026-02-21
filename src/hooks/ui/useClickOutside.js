@@ -1,25 +1,22 @@
 // 用來處理點擊外部關閉Modal或popup的功能
 import { useEffect } from "react";
 
-function useClickOutside(ref, isOpenMenu, setIsOpenMenu, useCapture = true) {
-  useEffect(
-    function () {
-      if (!isOpenMenu) return;
+function useClickOutside(ref, isOpen, onClose) {
+  useEffect(() => {
+    if (!isOpen) return;
 
-      function handleClickOutside(e) {
-        if (ref.current && !ref.current.contains(e.target)) {
-          e.stopPropagation();
-          setIsOpenMenu(false);
-        }
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) {
+        onClose();
       }
+    }
 
-      document.addEventListener("click", handleClickOutside, useCapture);
-      return () => {
-        document.removeEventListener("click", handleClickOutside, useCapture);
-      };
-    },
-    [ref, isOpenMenu, setIsOpenMenu, useCapture]
-  );
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [ref, isOpen, onClose]);
 }
 
 export default useClickOutside;

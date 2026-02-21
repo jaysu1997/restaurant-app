@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import Note from "../../ui/Note";
-import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
+import DiningMethodSegmented from "../../ui/DiningMethodSegmented";
 import { useFormContext } from "react-hook-form";
 import { generatePickupTimeOptions } from "../../context/settings/settingsHelpers";
 
@@ -26,24 +26,21 @@ const Row = styled.div`
   }
 `;
 
-function OrderInfoField({ takeOut, dishes, settingsData }) {
-  const { register } = useFormContext();
+function OrderInfoField({ hasItems, derivedSettings }) {
+  const { register, watch } = useFormContext();
+  const takeOut = watch("diningMethod") === "外帶";
+  const { todayOpenInfo, dineInTableOptions } = derivedSettings;
 
-  const pickupTimeOptions = generatePickupTimeOptions(
-    settingsData.todayOpenInfo,
-  );
+  const pickupTimeOptions = generatePickupTimeOptions(todayOpenInfo);
 
-  const isDisabled =
-    !settingsData.todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
+  const isOrderingAvailable =
+    !todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
 
   return (
     <StyledOrderInfoField>
       <Row>
         <label>用餐方式</label>
-        <DiningMethodSwitch
-          takeOut={takeOut}
-          isDisabled={dishes.length === 0}
-        />
+        <DiningMethodSegmented isDisabled={!hasItems || isOrderingAvailable} />
       </Row>
 
       <Row>
@@ -53,22 +50,18 @@ function OrderInfoField({ takeOut, dishes, settingsData }) {
         </label>
 
         <ControlledSelect
-          options={
-            takeOut ? pickupTimeOptions : settingsData.dineInTableOptions
-          }
+          options={takeOut ? pickupTimeOptions : dineInTableOptions}
           name={takeOut ? "pickupTime" : "tableNumber"}
           creatable={false}
           placeholder={
-            !isDisabled
+            !isOrderingAvailable
               ? takeOut
                 ? "選擇取餐時間"
                 : "選擇桌號"
-              : "非營業時間無法點餐"
+              : "非營業時間"
           }
-          disabled={isDisabled}
-          rules={{
-            required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
-          }}
+          disabled={isOrderingAvailable}
+          rules={{ required: true }}
           key={takeOut ? "pickupTime" : "tableNumber"}
         />
       </Row>
@@ -86,11 +79,9 @@ function OrderInfoField({ takeOut, dishes, settingsData }) {
           ]}
           name="paid"
           creatable={false}
-          placeholder="請選擇付款狀態"
-          disabled={isDisabled}
-          rules={{
-            required: "請選擇付款狀態",
-          }}
+          placeholder={!isOrderingAvailable ? "請選擇付款狀態" : "非營業時間"}
+          disabled={isOrderingAvailable}
+          rules={{ required: true }}
           key="paid"
         />
       </Row>

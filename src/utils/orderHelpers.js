@@ -16,16 +16,14 @@ export function generateDishItemId(dishes) {
 }
 
 // 統計餐點需要消耗的食材數量(1份)
-export function calcIngredientsUsagePerServing(
-  ingredients,
-  currentCustomization
-) {
+export function calcIngredientsUsage(orderDish, activeCustomization) {
+  const { ingredients } = orderDish;
   // 總食材消耗數據
-  const ingredientsUsagePerServing = new Map();
+  const unitUsage = new Map();
 
   function addIngredientUsage(uuid, name, quantity) {
-    const record = ingredientsUsagePerServing.get(uuid);
-    ingredientsUsagePerServing.set(uuid, {
+    const record = unitUsage.get(uuid);
+    unitUsage.set(uuid, {
       name: record?.name || name,
       quantity: (record?.quantity ?? 0) + quantity,
     });
@@ -40,20 +38,22 @@ export function calcIngredientsUsagePerServing(
   });
 
   // 額外項目增加的消耗
-  currentCustomization.forEach((customize) => {
+  activeCustomization.forEach((customize) => {
     const { selectOptions } = customize;
     if (selectOptions.length === 0) return;
 
     selectOptions.forEach((option) => {
-      const { ingredientUuid: uuid, quantity, ingredientName: name } = option;
+      const { ingredient, quantity } = option;
 
-      // null代表此選項無額外食材消耗，所以跳過
-      if (uuid === null) return;
+      // 沒有uuid代表此選項無額外食材消耗，所以跳過
+      if (!ingredient?.uuid) return;
+
+      const { uuid, value: name } = ingredient;
       addIngredientUsage(uuid, name, quantity);
     });
   });
 
-  return ingredientsUsagePerServing;
+  return unitUsage;
 }
 
 // 將訂單建立時間格式化
@@ -88,69 +88,98 @@ export function calculateOrderSummary(order) {
   const { totalServings, totalPrice } = order.reduce(
     (acc, cur) => {
       acc.totalServings += cur.servings;
-      acc.totalPrice += cur.servings * cur.itemTotalPrice;
+      acc.totalPrice += cur.servings * cur.unitPrice;
       return acc;
     },
-    { totalServings: 0, totalPrice: 0 }
+    { totalServings: 0, totalPrice: 0 },
   );
 
   return { totalServings, totalPrice };
 }
 
-// 檢查庫存剩餘數量是否充足
+// 檢查庫存是否可供應本次點餐
 export function checkInventoryAvailability({
-  ingredientsUsagePerServing,
+  unitUsage,
   servings,
   inventoryMap,
-  previousIngredientsUsage = null,
+  prevTotalUsage = null,
 }) {
-  const shortages = [];
+  // 計算目前設定下的總消耗
+  const curTotalUsage = getTotalIngredientsUsage(unitUsage, servings);
 
-  const currentIngredientUsage = getTotalIngredientsUsage(
-    ingredientsUsagePerServing,
-    servings
-  );
+  // 編輯模式：先把原本已消耗的食材補回來
+  if (prevTotalUsage) {
+    prevTotalUsage.forEach(({ name, quantity }, uuid) => {
+      const current = curTotalUsage.get(uuid);
+      const currentQuantity = current ? current.quantity : 0;
 
-  // 如果是更新已訂購點餐，先把之前消耗的食材補回去
-  if (previousIngredientsUsage) {
-    previousIngredientsUsage.forEach(({ name, quantity }, uuid) => {
-      const ingredientData = currentIngredientUsage.get(uuid);
-      const curQuantity = ingredientData ? ingredientData.quantity : 0;
-
-      currentIngredientUsage.set(uuid, {
+      curTotalUsage.set(uuid, {
         name,
-        quantity: curQuantity - quantity,
+        quantity: currentQuantity - quantity,
       });
     });
   }
 
-  // 檢查庫存剩餘食材是否能夠滿足點餐的總消耗需求
-  currentIngredientUsage.forEach(({ name, quantity }, uuid) => {
-    const ingredientData = inventoryMap.get(uuid);
-    // 避免某個食材被刪除之後庫存找不到對應數據(跳過就好)
-    if (!ingredientData) return;
+  /* ---------- ① 檢查食材是否存在 ---------- */
 
-    const { remainingQuantity } = ingredientData;
+  const missingIngredients = [];
 
-    // 剩餘數量不足
-    if (remainingQuantity < quantity) {
-      // 之前預計要消耗的食材總數
-      const previousUsage = previousIngredientsUsage
-        ? previousIngredientsUsage.get(uuid).quantity
-        : 0;
-      // 當前設定下每1份需要消耗的食材數量
-      const usagePerServing = ingredientsUsagePerServing.get(uuid).quantity;
-      // 剩餘食材能夠供應的最大餐點份數
-      const maxCapacity =
-        remainingQuantity <= 0
-          ? 0
-          : Math.floor((remainingQuantity + previousUsage) / usagePerServing);
-
-      shortages.push({ name, maxCapacity });
+  curTotalUsage.forEach(({ name }, uuid) => {
+    if (!inventoryMap.has(uuid)) {
+      missingIngredients.push(name);
     }
   });
 
-  return shortages;
+  if (missingIngredients.length > 0) {
+    return {
+      isAvailable: false,
+      title: "食材不存在",
+      message: `以下食材不存在：\n ${missingIngredients.join("、")}。`,
+    };
+  }
+
+  /* ---------- ② 檢查庫存是否充足 ---------- */
+
+  const shortages = [];
+  let maxAvailableServings = Infinity;
+
+  curTotalUsage.forEach(({ name, quantity }, uuid) => {
+    const { remainingQuantity } = inventoryMap.get(uuid);
+
+    if (remainingQuantity < quantity) {
+      shortages.push(name);
+
+      const previousUsage = prevTotalUsage
+        ? (prevTotalUsage.get(uuid)?.quantity ?? 0)
+        : 0;
+
+      const usagePerServing = unitUsage.get(uuid).quantity;
+
+      const ingredientMaxCapacity = Math.max(
+        0,
+        Math.floor((remainingQuantity + previousUsage) / usagePerServing),
+      );
+
+      maxAvailableServings = Math.min(
+        maxAvailableServings,
+        ingredientMaxCapacity,
+      );
+    }
+  });
+
+  if (shortages.length > 0) {
+    return {
+      isAvailable: false,
+      title: `庫存不足（最多供應 ${maxAvailableServings} 份）`,
+      message: `以下食材庫存不足：\n ${shortages.join("、")}。`,
+    };
+  }
+
+  /* ---------- ③ 庫存充足 ---------- */
+
+  return {
+    isAvailable: true,
+  };
 }
 
 // 整合要上傳的訂單數據
@@ -161,7 +190,7 @@ export function buildOrderData(dishes, data) {
   // 計算訂單的食材總共使用量
   const totalIngredientsUsage = Object.fromEntries(
     dishes.reduce((acc, dish) => {
-      dish.ingredientsUsagePerServing.forEach(({ quantity, name }, uuid) => {
+      dish.unitUsage.forEach(({ quantity, name }, uuid) => {
         const { quantity: curQuantity = 0 } = acc.get(uuid) || {};
         acc.set(uuid, {
           name,
@@ -170,16 +199,14 @@ export function buildOrderData(dishes, data) {
       });
 
       return acc;
-    }, new Map())
+    }, new Map()),
   );
 
   const orderData = {
     ...data,
     dishes: dishes.map((dish) => ({
       ...dish,
-      ingredientsUsagePerServing: Object.fromEntries(
-        dish.ingredientsUsagePerServing
-      ),
+      unitUsage: Object.fromEntries(dish.unitUsage),
     })),
     totalServings,
     totalPrice,
@@ -201,25 +228,21 @@ export function safeParseDate(dateStr) {
 }
 
 // 計算總共要消耗的食材
-export function getTotalIngredientsUsage(ingredientsUsagePerServing, servings) {
-  const ingredientsUsage = new Map();
+export function getTotalIngredientsUsage(unitUsage, servings) {
+  const totalIngredientsUsage = new Map();
 
-  ingredientsUsagePerServing.forEach(({ name, quantity }, uuid) => {
-    ingredientsUsage.set(uuid, { name, quantity: quantity * servings });
+  unitUsage.forEach(({ name, quantity }, uuid) => {
+    totalIngredientsUsage.set(uuid, { name, quantity: quantity * servings });
   });
 
-  return ingredientsUsage;
+  return totalIngredientsUsage;
 }
 
-// 根據食材消耗需求，扣除庫存的數據
-export function applyInventoryUsage({
-  inventoryMap,
-  ingredientsUsagePerServing,
-  servings,
-}) {
-  ingredientsUsagePerServing.forEach(({ quantity, name }, uuid) => {
+// 根據食材消耗需求，扣除/補回庫存的數據
+export function applyInventoryUsage({ inventoryMap, unitUsage, servings }) {
+  unitUsage.forEach(({ quantity, name }, uuid) => {
     const ingredientData = inventoryMap.get(uuid);
-    // 避免某個食材被刪除之後庫存找不到對應數據(跳過就好)
+    // 避免某個食材被刪除之後庫存找不到對應數據(跳過就好，不會影響到supabase的庫存數據)
     if (!ingredientData) return;
 
     const { remainingQuantity } = ingredientData;
@@ -234,4 +257,19 @@ export function applyInventoryUsage({
 // 根據uniqueId尋找餐點在dishes中的索引值
 export function findDishIndexById(dishes, uniqueId) {
   return dishes.findIndex((dish) => dish.uniqueId === uniqueId);
+}
+
+// 計算當前訂購餐點的單價(1份)
+export function calcUnitPrice(customization, orderDish) {
+  const { price, discount } = orderDish;
+
+  const customizationExtra = customization.reduce((acc, cur) => {
+    const extra = cur.selectOptions.reduce(
+      (sum, opt) => sum + opt.extraPrice,
+      0,
+    );
+    return acc + extra;
+  }, 0);
+
+  return price - discount + customizationExtra;
 }

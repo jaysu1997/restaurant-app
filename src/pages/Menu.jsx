@@ -1,5 +1,4 @@
 import PageHeader from "../ui/PageHeader";
-import MenuView from "../features/menu/MenuView";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
@@ -7,6 +6,23 @@ import useOrder from "../context/order/useOrder";
 import PageWrapper from "../ui/PageWrapper";
 import { useEffect } from "react";
 import useSettings from "../context/settings/useSettings";
+import SwiperBar from "../features/menu/SwiperBar";
+import styled from "styled-components";
+import MenuList from "../features/menu/MenuList";
+import ShoppingCart from "../features/menu/ShoppingCart";
+
+const MenuContainer = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 93.2rem) 24rem;
+  grid-template-rows: auto 1fr;
+  gap: 2.8rem;
+  width: 100%;
+
+  @media (max-width: 50em) {
+    grid-template-columns: 1fr;
+    padding-bottom: 3.6rem;
+  }
+`;
 
 function Menu() {
   const { derivedSettings, settingsIsLoading, settingsIsError, settingsError } =
@@ -51,7 +67,11 @@ function Menu() {
           redirectTo: "/menu-manage",
         }}
       >
-        <MenuView menusData={menus} settingsData={derivedSettings} />
+        <MenuContainer>
+          <SwiperBar menus={menus} />
+          <MenuList menus={menus} />
+          <ShoppingCart derivedSettings={derivedSettings} />
+        </MenuContainer>
       </QueryStatusFallback>
     </PageWrapper>
   );

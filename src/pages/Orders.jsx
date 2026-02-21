@@ -9,7 +9,7 @@ import QueryStatusFallback from "../ui/QueryStatusFallback";
 const filtersConfig = [
   {
     title: "取餐號碼",
-    type: "input",
+    type: "numberInput",
     queryKey: "pickupNumber",
     placeholder: "搜尋取餐號碼(不含#)",
   },

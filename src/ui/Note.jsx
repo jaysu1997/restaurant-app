@@ -24,26 +24,20 @@ const TextArea = styled.textarea`
     border-color: #2684ff;
     box-shadow: 0 0 0 1px #2684ff;
   }
-
-  &:read-only {
-    background-color: #f9fafb;
-    cursor: default;
-  }
 `;
 
-const ReadOnlyText = styled.span`
+const NoteView = styled.span`
   width: 100%;
-  white-space: pre-wrap; /* 保留換行 */
+  white-space: pre-wrap;
   word-break: break-word;
 `;
 
-function Note({ register, children, readOnly = false, value, maxLength = 50 }) {
-  // 這裡的register中應該要加上trim
+function Note({ register, children, mode = "edit", value, maxLength = 50 }) {
   return (
     <StyledNote>
       {children}
-      {readOnly && <ReadOnlyText>{value || "無"}</ReadOnlyText>}
-      {!readOnly && (
+      {mode === "view" && <NoteView>{value || "無"}</NoteView>}
+      {mode === "edit" && (
         <TextArea
           maxLength={maxLength}
           placeholder={`備註內容最多${maxLength}個字`}

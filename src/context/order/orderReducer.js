@@ -8,7 +8,7 @@ export const initialState = {
   // 存放訂單所有餐點數據
   dishes: [],
   // 臨時存放當前餐點自訂項目選擇數據
-  currentCustomization: [],
+  activeCustomization: [],
   // 存放食材庫存數據
   inventoryMap: new Map(),
 };
@@ -30,108 +30,102 @@ export function reducer(state, action) {
     case "orderForm/init": {
       return {
         ...state,
-        currentCustomization: [...action.payload],
+        activeCustomization: [...action.payload],
       };
     }
     // 單選選項新增
-    case "currentCustomization/setSingleChoice": {
-      const newCurDishCustomizeOption = state.currentCustomization.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? { ...item, selectOptions: [action.payload] }
-            : item,
+    case "activeCustomization/setSingleChoice": {
+      const newCurDishCustomizeOption = state.activeCustomization.map((item) =>
+        item.customizeId === action.payload.customizeId
+          ? { ...item, selectOptions: [action.payload] }
+          : item,
       );
 
       return {
         ...state,
-        currentCustomization: [...newCurDishCustomizeOption],
+        activeCustomization: [...newCurDishCustomizeOption],
       };
     }
     // 多選選項新增
-    case "currentCustomization/addMultipleChoice": {
-      const newCurDishCustomizeOption = state.currentCustomization.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? {
-                ...item,
-                selectOptions: [...item.selectOptions, action.payload],
-              }
-            : item,
+    case "activeCustomization/addMultipleChoice": {
+      const newCurDishCustomizeOption = state.activeCustomization.map((item) =>
+        item.customizeId === action.payload.customizeId
+          ? {
+              ...item,
+              selectOptions: [...item.selectOptions, action.payload],
+            }
+          : item,
       );
 
       return {
         ...state,
-        currentCustomization: [...newCurDishCustomizeOption],
+        activeCustomization: [...newCurDishCustomizeOption],
       };
     }
     // 選項刪除
-    case "currentCustomization/removeChoice": {
-      const newCurDishCustomizeOption = state.currentCustomization.map(
-        (item) =>
-          item.customizeId === action.payload.customizeId
-            ? {
-                ...item,
-                selectOptions: item.selectOptions.filter(
-                  (option) => option.optionLabel !== action.payload.optionLabel,
-                ),
-              }
-            : item,
+    case "activeCustomization/removeChoice": {
+      const newCurDishCustomizeOption = state.activeCustomization.map((item) =>
+        item.customizeId === action.payload.customizeId
+          ? {
+              ...item,
+              selectOptions: item.selectOptions.filter(
+                (option) => option.optionId !== action.payload.optionId,
+              ),
+            }
+          : item,
       );
       return {
         ...state,
-        currentCustomization: [...newCurDishCustomizeOption],
+        activeCustomization: [...newCurDishCustomizeOption],
       };
     }
     // 新增餐點
     case "dishes/addDish": {
       const dishData = action.payload;
-      const { ingredientsUsagePerServing, servings } = dishData;
+      const { unitUsage, servings } = dishData;
       const newState = structuredClone(state);
 
       // 新增餐點
       newState.dishes.push({
         ...dishData,
-        customize: state.currentCustomization,
+        customize: state.activeCustomization,
       });
 
       // 將庫存食材 - 本次餐點所需食材
       applyInventoryUsage({
         inventoryMap: newState.inventoryMap,
-        ingredientsUsagePerServing,
+        unitUsage,
         servings,
       });
-
-      console.log(newState);
 
       return newState;
     }
     // 編輯餐點數據
     case "dishes/updateDish": {
-      const { dishData, previousIngredientsUsage } = action.payload;
-      const { ingredientsUsagePerServing, servings, uniqueId } = dishData;
+      const { dishData, prevTotalUsage } = action.payload;
+      const { unitUsage, servings, uniqueId } = dishData;
       const newState = structuredClone(state);
 
       const dishIndex = findDishIndexById(newState.dishes, uniqueId);
 
       // 更新數據
       newState.dishes[dishIndex] = dishData;
-      newState.dishes[dishIndex].customize = state.currentCustomization;
+      newState.dishes[dishIndex].customize = state.activeCustomization;
 
       // 先把原本消耗的所有食材加回庫存
       applyInventoryUsage({
         inventoryMap: newState.inventoryMap,
-        ingredientsUsagePerServing: previousIngredientsUsage,
+        unitUsage: prevTotalUsage,
         servings: -1,
       });
 
       // 將庫存食材 - 本次餐點所需食材
       applyInventoryUsage({
         inventoryMap: newState.inventoryMap,
-        ingredientsUsagePerServing,
+        unitUsage,
         servings,
       });
 
-      console.log(newState);
       return newState;
     }
     // 刪除指定餐點
@@ -139,13 +133,12 @@ export function reducer(state, action) {
       const newState = structuredClone(state);
       const dishIndex = findDishIndexById(newState.dishes, action.payload);
 
-      const { ingredientsUsagePerServing, servings } =
-        newState.dishes[dishIndex];
+      const { unitUsage, servings } = newState.dishes[dishIndex];
 
       // 把原本消耗的所有食材加回庫存
       applyInventoryUsage({
         inventoryMap: newState.inventoryMap,
-        ingredientsUsagePerServing,
+        unitUsage,
         servings: -servings,
       });
 
@@ -166,7 +159,7 @@ export function reducer(state, action) {
       // 更新庫存剩餘存量(可增可減)
       applyInventoryUsage({
         inventoryMap: newState.inventoryMap,
-        ingredientsUsagePerServing: orderDish.ingredientsUsagePerServing,
+        unitUsage: orderDish.unitUsage,
         servings: servingsDiff,
       });
 
@@ -185,9 +178,7 @@ export function reducer(state, action) {
 
       const dishesData = dishes.map((curDish) => ({
         ...curDish,
-        ingredientsUsagePerServing: new Map(
-          Object.entries(curDish.ingredientsUsagePerServing),
-        ),
+        unitUsage: new Map(Object.entries(curDish.unitUsage)),
       }));
 
       return {

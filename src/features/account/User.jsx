@@ -95,13 +95,12 @@ function User() {
       <DropdownMenu
         itemsConfig={itemsConfig}
         open={isOpenMenu}
-        setIsOpenMenu={setIsOpenMenu}
         isOpenMenu={isOpenMenu}
+        onClose={() => setIsOpenMenu(false)}
       >
         <UserButton
           $open={isOpenMenu}
-          onClick={(e) => {
-            e.stopPropagation();
+          onClick={() => {
             setIsOpenMenu((isOpenMenu) => !isOpenMenu);
           }}
         >

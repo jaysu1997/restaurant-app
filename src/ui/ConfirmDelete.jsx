@@ -80,7 +80,6 @@ function ConfirmDelete({
     <Modal
       modalHeader="確認刪除"
       headerColor="#991b1b"
-      maxWidth={36}
       onCloseModal={onCloseModal}
     >
       <StyledConfirmDelete>

@@ -111,7 +111,6 @@ const Button = styled.button.attrs((props) => ({
   padding: 0.8rem 2rem;
 
   transition: background-color 0.2s;
-
   width: ${({ $isFullWidth }) => ($isFullWidth ? "100%" : "max-content")};
   min-width: max-content;
   border-radius: 999px;

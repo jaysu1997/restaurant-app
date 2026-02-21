@@ -66,7 +66,7 @@ function InventoryForm({ inventory, onCloseModal }) {
   }
 
   return (
-    <Modal modalHeader="食材設定表單" maxWidth={56} onCloseModal={onCloseModal}>
+    <Modal modalHeader="食材設定表單" onCloseModal={onCloseModal}>
       <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
         {/* 這裡的isDisabled沒用 */}
         <FormProvider {...methods}>

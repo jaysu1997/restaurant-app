@@ -37,10 +37,7 @@ function Dashboard() {
   return (
     <PageWrapper>
       <PageHeader title="營運總覽">
-        <StoreStatusBadge
-          isOpenNow={status.isOpenNow}
-          tooltip={status.tooltip}
-        />
+        <StoreStatusBadge status={status} />
       </PageHeader>
 
       <QueryStatusFallback

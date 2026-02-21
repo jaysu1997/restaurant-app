@@ -11,7 +11,7 @@ import ButtonCancel from "../../ui/ButtonCancel";
 
 const StyledAvatarCropper = styled.section`
   width: min(56rem, 95dvw);
-  max-height: calc(90dvh - 5.7rem);
+  max-height: calc(90dvh - 5.6rem);
   display: flex;
   flex-direction: column;
 `;
@@ -121,6 +121,7 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
       modalHeader="選擇頭像範圍"
       onCloseModal={onCloseModal}
       scrollBar={false}
+      maxWidth={56}
     >
       <StyledAvatarCropper>
         <Container>

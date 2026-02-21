@@ -18,7 +18,7 @@ const StyledForm = styled.form`
   grid-template-columns: 1fr 1fr;
   max-width: 100%;
   width: 56rem;
-  gap: 2rem;
+  gap: 2.4rem;
   padding: 2rem;
 
   @media (max-width: 48em) {

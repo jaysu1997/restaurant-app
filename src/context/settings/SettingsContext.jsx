@@ -1,34 +1,14 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react";
 import useGetSettings from "../../hooks/data/settings/useGetSettings";
-
 import { isToday, startOfTomorrow } from "date-fns";
 import {
   generateDineInTableOptions,
   getOpenHoursInfo,
-  getOpenStatus,
+  startOpenStatusTimer,
 } from "./settingsHelpers";
-
-// 更新當前營業狀態
-function updateCurrentStatus(todayOpenInfo, setStatus, slotsTimerRef) {
-  if (slotsTimerRef.current) {
-    clearTimeout(slotsTimerRef.current);
-  }
-
-  const { isOpenNow, tooltip, nextUpdateTime } = getOpenStatus(todayOpenInfo);
-  setStatus({ isOpenNow, tooltip });
-
-  // 計算倒數毫秒
-  if (nextUpdateTime) {
-    const countdown = nextUpdateTime.getTime() - Date.now();
-    slotsTimerRef.current = setTimeout(() => {
-      updateCurrentStatus(todayOpenInfo, setStatus, slotsTimerRef);
-    }, countdown);
-  }
-}
 
 const SettingsContext = createContext();
 
-// 這裡有一個小問題需要修正，我設計取餐時間必須要至少在當前時間+20分鐘之後，但是同時這樣的設計也用在購物車的欄位設定中，但是這會有一個問題，那就是在休息之前不到20分鐘(但可能還剩下15分鐘)，就會變成無法點餐的狀態。內用和外帶都不行，或許比較可行的做法是縮短成10分鐘，或是其他邏輯?
 function SettingsProvider({ children }) {
   const { settings, settingsIsLoading, settingsIsError, settingsError } =
     useGetSettings();
@@ -61,11 +41,11 @@ function SettingsProvider({ children }) {
   useEffect(() => {
     if (!derivedSettings?.todayOpenInfo) return;
 
-    updateCurrentStatus(
-      derivedSettings.todayOpenInfo,
+    startOpenStatusTimer({
+      todayOpenInfo: derivedSettings.todayOpenInfo,
       setStatus,
-      slotsTimerRef,
-    );
+      timerRef: slotsTimerRef,
+    });
 
     // setTimeout需要放在函式中遞迴執行才能夠自動執行，為了確保cleanup可以清除最新的timer，需要使用useRef幫忙紀錄
     return () => {
@@ -92,7 +72,6 @@ function SettingsProvider({ children }) {
     };
   }, [today]);
 
-  // 設定settings默認值(因為有些使用settings的地方不適合使用<QueryStatusFallback />的fallback)
   return (
     <SettingsContext.Provider
       value={{

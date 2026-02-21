@@ -1,40 +1,34 @@
 import { useEffect } from "react";
 
-function lockScroll(locked) {
-  document.documentElement.style.overflowY = locked ? "hidden" : "scroll";
+let lockCount = 0; //
+
+function applyLock() {
+  if (lockCount === 0) {
+    document.documentElement.style.overflow = "hidden";
+  }
+  lockCount += 1;
 }
 
-function useScrollLock(breakPoint, isOpen, onClose, mode = "conditional") {
+function releaseLock() {
+  lockCount -= 1;
+
+  if (lockCount <= 0) {
+    lockCount = 0;
+    document.documentElement.style.overflow = "";
+  }
+}
+
+// 當元件處於RWD且正開啟中的狀態下，鎖定scrollbar(不能滾動)
+function useScrollLock(shouldLock) {
   useEffect(() => {
-    // 當前裝置的寬度低於斷點，且元件處於開啟狀態才會套用滾軸鎖定
-    const mediaQuery = window.matchMedia(`(width > ${breakPoint}em)`);
+    if (!shouldLock) return;
 
-    if (isOpen) {
-      if (mode === "always" || !mediaQuery.matches) {
-        lockScroll(isOpen);
-      }
-    }
-
-    function handleMediaChange(e) {
-      const isMatched = e.matches;
-
-      if (isOpen && !isMatched) {
-        lockScroll(isOpen);
-      }
-
-      if (isMatched && isOpen) {
-        lockScroll(false);
-        onClose();
-      }
-    }
-
-    mediaQuery.addEventListener("change", handleMediaChange);
+    applyLock();
 
     return () => {
-      lockScroll(false);
-      mediaQuery.removeEventListener("change", handleMediaChange);
+      releaseLock();
     };
-  }, [breakPoint, isOpen, onClose, mode]);
+  }, [shouldLock]);
 }
 
 export default useScrollLock;

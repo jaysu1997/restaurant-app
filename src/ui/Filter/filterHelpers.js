@@ -8,7 +8,7 @@ function getInitialFilterState(searchParams, filtersConfig) {
     let value = "";
 
     if (searchParams.get(queryKey)) {
-      if (type === "input") {
+      if (type === "textInput" || type === "numberInput") {
         value = searchParams.get(queryKey);
       }
       if (type === "select") {
@@ -33,16 +33,19 @@ function handleSearchParams(
   tempFilters,
   searchParams,
   setSearchParams,
-  setIsContainerOpen
+  setIsContainerOpen,
 ) {
-  let isValid = true;
-
   for (const [key, obj] of Object.entries(tempFilters)) {
     let searchParamsValue = "";
 
     // 篩選輸入類型為input(text)所要進行的處理方式
-    if (obj.type === "input" && obj.value) {
+    if (obj.type === "textInput" && obj.value) {
       searchParamsValue = obj.value.trim();
+    }
+
+    // 篩選輸入類型為input(number)所要進行的處理方式
+    if (obj.type === "numberInput" && obj.value) {
+      searchParamsValue = obj.value.trim().replace(/^#\s*/, "");
     }
 
     // 篩選輸入類型為select所要進行的處理方式
@@ -54,7 +57,7 @@ function handleSearchParams(
     if (obj.type === "datePicker" && obj.value?.from && obj.value?.to) {
       searchParamsValue = `${format(obj.value.from, "yyyy-MM-dd")}_${format(
         obj.value.to,
-        "yyyy-MM-dd"
+        "yyyy-MM-dd",
       )}`;
     }
 
@@ -66,14 +69,12 @@ function handleSearchParams(
     }
   }
 
-  if (isValid) {
-    if (pathname === "/orders") {
-      searchParams.set("page", "1");
-    }
-
-    setSearchParams(searchParams);
-    setIsContainerOpen(false);
+  if (pathname === "/orders") {
+    searchParams.set("page", "1");
   }
+
+  setSearchParams(searchParams);
+  setIsContainerOpen(false);
 }
 
 export { getInitialFilterState, handleSearchParams, safeParseDate };

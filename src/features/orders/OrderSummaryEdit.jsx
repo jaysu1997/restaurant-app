@@ -1,7 +1,7 @@
 // 訂單詳情(編輯)
 import OrderDishes from "./OrderDishes";
 import { FormProvider, useForm } from "react-hook-form";
-import DiningMethodSwitch from "../../ui/DiningMethodSwitch";
+import DiningMethodSegmented from "../../ui/DiningMethodSegmented";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { useEffect } from "react";
 import Note from "../../ui/Note";
@@ -80,7 +80,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
     settingsData.todayOpenInfo,
   );
 
-  const isDisabled =
+  const isOrderingAvailable =
     !settingsData.todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
 
   function onSubmit(data) {
@@ -128,9 +128,8 @@ function OrderSummaryEdit({ orderData, settingsData }) {
           <OrderCard>
             <div>
               <label>用餐方式：</label>
-              <DiningMethodSwitch
-                takeOut={takeOut}
-                isDisabled={dishes.length === 0}
+              <DiningMethodSegmented
+                isDisabled={dishes.length === 0 || isOrderingAvailable}
               />
             </div>
             <div>
@@ -146,14 +145,8 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                   }
                   name={takeOut ? "pickupTime" : "tableNumber"}
                   creatable={false}
-                  placeholder={
-                    !isDisabled
-                      ? takeOut
-                        ? "選擇取餐時間"
-                        : "選擇桌號"
-                      : "非營業時間"
-                  }
-                  disabled={isDisabled}
+                  placeholder={takeOut ? "選擇取餐時間" : "選擇桌號"}
+                  disabled={isOrderingAvailable}
                   rules={{
                     required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
                   }}
@@ -172,10 +165,11 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                   ]}
                   name="paid"
                   creatable={false}
-                  placeholder="付款狀態"
+                  placeholder="請選擇付款狀態"
                   rules={{
                     required: "請選擇付款狀態",
                   }}
+                  disabled={isOrderingAvailable}
                   key="paid"
                 />
               </FormFieldLayout>
@@ -191,6 +185,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                   ]}
                   name="status"
                   creatable={false}
+                  disabled={isOrderingAvailable}
                   placeholder="訂單狀態"
                   rules={{
                     required: "請選擇訂單狀態",

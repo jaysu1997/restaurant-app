@@ -16,7 +16,6 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 import Account from "./pages/Account";
 import ScrollToTop from "./components/ScrollToTop";
 import Staff from "./pages/Staff";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SettingsProvider } from "./context/settings/SettingsContext";
 import { OrderProvider } from "./context/order/OrderContext";
 
@@ -35,6 +34,10 @@ const queryClient = new QueryClient({
   },
 });
 
+// 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?
+
+// 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)
+
 // isProcessing
 
 // form submit disabled 建議加上 || isSubmitting
@@ -50,7 +53,6 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <ScrollToTop />
         <Routes>

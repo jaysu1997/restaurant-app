@@ -14,7 +14,7 @@ const Section = styled.div`
   grid-template-columns: ${({ $isFullWidth }) =>
     $isFullWidth ? "1fr 1fr" : "1fr"};
 
-  column-gap: 2rem;
+  column-gap: 2.4rem;
   row-gap: 1.4rem;
   font-size: 1.4rem;
 

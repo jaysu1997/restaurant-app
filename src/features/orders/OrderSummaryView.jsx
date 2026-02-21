@@ -67,7 +67,7 @@ function OrderSummaryView({ orderData }) {
       </ContentContainer>
 
       <ContentContainer>
-        <Note value={note} readOnly>
+        <Note value={note} mode="view">
           <label>訂單備註：</label>
         </Note>
       </ContentContainer>

@@ -1,3 +1,4 @@
+// ok
 // 餐點品項卡片
 import styled from "styled-components";
 
@@ -6,12 +7,10 @@ const StyledDishCard = styled.li`
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-
   padding: 0.8rem 1.2rem;
   background-color: #fff;
   border-radius: 6px;
   border: 1px solid #e5e7eb;
-
   cursor: pointer;
 
   transition:
@@ -40,19 +39,16 @@ function DishCard({ dish, setIsOpenModal }) {
     .map((ing) => ing.ingredient.label)
     .join(", ");
 
+  const finalPrice = `$ ${dish.price - dish.discount}`;
+
   return (
     <StyledDishCard
-      onClick={() => {
-        setIsOpenModal({ type: "OrderForm", data: dish });
-      }}
+      onClick={() => setIsOpenModal({ type: "OrderForm", data: dish })}
     >
       <Row $fontColor="#1f2937" $fontWeight="500">
         {dish.name}
       </Row>
-      <Row $fontColor="#dc2626">
-        <span>$ </span>
-        {dish.price - dish.discount}
-      </Row>
+      <Row $fontColor="#dc2626">{finalPrice}</Row>
       <Row $fontColor="#6b7280">{ingredientsList}</Row>
     </StyledDishCard>
   );

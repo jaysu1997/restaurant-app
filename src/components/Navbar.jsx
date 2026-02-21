@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import useUser from "../hooks/data/auth/useUser";
-import useClickOutside from "../hooks/ui/useClickOutside";
 import { useRef } from "react";
 import StyleNavLink from "../ui/StyledNavLink";
 import useScrollLock from "../hooks/ui/useScrollLock";
@@ -13,6 +12,7 @@ import {
   UserRoundCog,
   Soup,
 } from "lucide-react";
+import useMediaQuery from "../hooks/ui/useMediaQuery";
 
 const Wrapper = styled.div`
   position: sticky;
@@ -25,10 +25,11 @@ const Wrapper = styled.div`
     z-index: 999;
     top: 0;
     left: 0;
-    height: 100dvh;
-    width: ${({ $isOpen }) => ($isOpen ? "100%" : "0")};
-    background-color: rgba(0, 0, 0, 0.55);
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
+    pointer-events: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
 
     opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
     transition: opacity 0.25s;
@@ -40,13 +41,13 @@ const Nav = styled.nav`
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 0 0 24rem;
+  width: 24rem;
   background-color: #fff;
   box-shadow: inset -1px 0px #e5e7eb;
   overflow-y: auto;
 
   @media (max-width: 80em) {
-    flex-basis: 20rem;
+    width: 20rem;
   }
 
   @media (max-width: 64em) {
@@ -85,13 +86,21 @@ function Navbar({ isOpen, setIsOpen }) {
   const isManager = userRole === "店長";
 
   const navRef = useRef(null);
-  useClickOutside(navRef, isOpen, setIsOpen);
+  const isMatched = useMediaQuery(64, () => setIsOpen(false));
 
   // 自動關閉以及html滾動功能
-  useScrollLock(64, isOpen, () => setIsOpen(false), "conditional");
+  useScrollLock(isMatched && isOpen);
 
   return (
-    <Wrapper $isOpen={isOpen}>
+    <Wrapper
+      $isOpen={isOpen}
+      inert={isMatched && !isOpen}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          setIsOpen(false);
+        }
+      }}
+    >
       <Nav ref={navRef} $isOpen={isOpen}>
         <NavList>
           {navigationsLink.map((nav) => {

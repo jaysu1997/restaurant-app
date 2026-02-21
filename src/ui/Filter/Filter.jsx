@@ -9,6 +9,7 @@ import { getInitialFilterState, handleSearchParams } from "./filterHelpers";
 import Button from "../../ui/Button";
 import FilterIcon from "../../ui/FilterIcon";
 import useScrollLock from "../../hooks/ui/useScrollLock";
+import useMediaQuery from "../../hooks/ui/useMediaQuery";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -20,23 +21,18 @@ const Wrapper = styled.div`
   right: 0;
   z-index: 2;
   width: min(95dvw, 28rem);
-  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
 
   @media (max-width: 40em) {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 20;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
-    opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
-    pointer-events: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
-    transition: opacity 0.2s;
+    opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+    transition: opacity 0.25s ease;
   }
 `;
 
@@ -50,14 +46,20 @@ const FilterContainer = styled.div`
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   border: 1px solid #e3e5e7;
+  opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
+  transition:
+    transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.2s ease;
 
   @media (max-width: 40em) {
     position: absolute;
     width: 100%;
     max-height: 85%;
     border-radius: 4px 4px 0 0;
-    bottom: ${({ $isOpen }) => ($isOpen ? "0" : "-100%")};
-    transition: bottom 0.3s;
+    bottom: 0;
+
+    transform: ${({ $isOpen }) =>
+      $isOpen ? "translateY(0)" : "translateY(100%)"};
   }
 `;
 
@@ -117,23 +119,16 @@ function Filter({ filtersConfig }) {
   // 臨時存放篩選條件值的地方
   const [tempFilters, setTempFilters] = useState(initialFilterState);
   // 篩選modal的展開折疊控制
-  const [isContainerOpen, setIsContainerOpen] = useState(false);
-  const filterContainerRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const containerRef = useRef(null);
 
-  useClickOutside(
-    filterContainerRef,
-    isContainerOpen,
-    setIsContainerOpen,
-    true,
-  );
+  const onClose = () => setIsOpen(false);
 
-  // 自動關閉以及html滾動功能
-  useScrollLock(
-    40,
-    isContainerOpen,
-    () => setIsContainerOpen(false),
-    "conditional",
-  );
+  useClickOutside(containerRef, isOpen, onClose);
+
+  const isMatched = useMediaQuery(40, onClose);
+  useScrollLock(isMatched && isOpen);
 
   // 清除條件按鈕disabled(filter輸入框有無輸入值)
   const isButtonDisabled = !Object.values(tempFilters).some(
@@ -148,7 +143,8 @@ function Filter({ filtersConfig }) {
   const filterComponents = {
     select: SelectFilter,
     datePicker: DateRangeFilter,
-    input: SearchFilter,
+    textInput: SearchFilter,
+    numberInput: SearchFilter,
   };
 
   // 處理篩選器輸入值更新的功能
@@ -160,70 +156,86 @@ function Filter({ filtersConfig }) {
   }
 
   return (
-    <StyledFilter>
+    <StyledFilter ref={containerRef}>
       <Button
         $variant="outline"
         $iconSize="1.8rem"
-        onClick={() =>
-          setIsContainerOpen((isContainerOpen) => {
-            if (!isContainerOpen) {
-              setTempFilters(initialFilterState);
-            }
-            return !isContainerOpen;
-          })
-        }
+        onClick={() => {
+          if (isOpen) {
+            setIsOpen(false);
+          } else {
+            setIsMounted(true);
+            requestAnimationFrame(() => setIsOpen(true));
+          }
+        }}
       >
         <FilterIcon checked={hasActiveFilters} />
         <span>篩選數據</span>
       </Button>
 
-      <Wrapper $isOpen={isContainerOpen}>
-        <FilterContainer ref={filterContainerRef} $isOpen={isContainerOpen}>
-          <FilterTitle>篩選數據</FilterTitle>
-          {filtersConfig.map((filter) => {
-            // 根據filterConfig動態決定要使用哪種篩選框
-            const FilterComponent = filterComponents[filter.type];
-            return (
-              <FilterGroup key={filter.queryKey}>
-                <label>{filter.title}</label>
-                <FilterComponent
-                  {...filter}
-                  filterValue={tempFilters[filter.queryKey].value}
-                  handleValueChange={handleValueChange}
-                />
-              </FilterGroup>
-            );
-          })}
-          <ActionButtonGroup>
-            <ResetFiltersButton
-              disabled={isButtonDisabled}
-              onClick={() =>
-                setTempFilters((prev) =>
-                  Object.keys(prev).reduce((acc, key) => {
-                    acc[key] = { ...prev[key], value: "" };
-                    return acc;
-                  }, {}),
-                )
+      {isMounted && (
+        <Wrapper
+          $isOpen={isOpen}
+          onClick={(e) => {
+            if (isMatched && e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
+        >
+          <FilterContainer
+            $isOpen={isOpen}
+            onTransitionEnd={() => {
+              if (!isOpen) {
+                setIsMounted(false);
               }
-            >
-              清空條件
-            </ResetFiltersButton>
-            <ApplyFiltersButton
-              onClick={() =>
-                handleSearchParams(
-                  pathname,
-                  tempFilters,
-                  searchParams,
-                  setSearchParams,
-                  setIsContainerOpen,
-                )
-              }
-            >
-              確認
-            </ApplyFiltersButton>
-          </ActionButtonGroup>
-        </FilterContainer>
-      </Wrapper>
+            }}
+          >
+            <FilterTitle>篩選數據</FilterTitle>
+            {filtersConfig.map((filter) => {
+              // 根據filterConfig動態決定要使用哪種篩選框
+              const FilterComponent = filterComponents[filter.type];
+              return (
+                <FilterGroup key={filter.queryKey}>
+                  <label>{filter.title}</label>
+                  <FilterComponent
+                    {...filter}
+                    filterValue={tempFilters[filter.queryKey].value}
+                    handleValueChange={handleValueChange}
+                  />
+                </FilterGroup>
+              );
+            })}
+            <ActionButtonGroup>
+              <ResetFiltersButton
+                disabled={isButtonDisabled}
+                onClick={() =>
+                  setTempFilters((prev) =>
+                    Object.keys(prev).reduce((acc, key) => {
+                      acc[key] = { ...prev[key], value: "" };
+                      return acc;
+                    }, {}),
+                  )
+                }
+              >
+                清空條件
+              </ResetFiltersButton>
+              <ApplyFiltersButton
+                onClick={() =>
+                  handleSearchParams(
+                    pathname,
+                    tempFilters,
+                    searchParams,
+                    setSearchParams,
+                    setIsOpen,
+                  )
+                }
+              >
+                確認
+              </ApplyFiltersButton>
+            </ActionButtonGroup>
+          </FilterContainer>
+        </Wrapper>
+      )}
     </StyledFilter>
   );
 }

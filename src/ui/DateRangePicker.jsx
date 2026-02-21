@@ -94,9 +94,9 @@ function DateRangePicker({
   disabledDate,
 }) {
   const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
-  const daypickerRef = useRef(null);
+  const wrapperRef = useRef(null);
 
-  useClickOutside(daypickerRef, isOpenDayPicker, setIsOpenDayPicker, true);
+  useClickOutside(wrapperRef, isOpenDayPicker, () => setIsOpenDayPicker(false));
 
   function formatRangeDate(selectedDate) {
     return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
@@ -106,7 +106,7 @@ function DateRangePicker({
   }
 
   return (
-    <StyledDatePicker>
+    <StyledDatePicker ref={wrapperRef}>
       <DateField
         $isActive={isOpenDayPicker}
         onClick={() => setIsOpenDayPicker((isOpen) => !isOpen)}
@@ -122,7 +122,7 @@ function DateRangePicker({
       </DateField>
 
       {isOpenDayPicker && (
-        <StyledPopup ref={daypickerRef}>
+        <StyledPopup>
           <StyledDayPicker
             animate
             captionLayout="dropdown"
@@ -141,7 +141,12 @@ function DateRangePicker({
               清除
             </UtilityButton>
 
-            <UtilityButton onClick={() => setIsOpenDayPicker(false)}>
+            <UtilityButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpenDayPicker(false);
+              }}
+            >
               確認
             </UtilityButton>
           </Footer>

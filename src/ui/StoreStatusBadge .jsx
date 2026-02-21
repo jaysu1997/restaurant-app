@@ -66,7 +66,8 @@ const Tooltip = styled.div`
 `;
 
 // 當前營業狀態ui與tooltip
-function StoreStatusBadge({ isOpenNow = false, tooltip = "今日公休" }) {
+function StoreStatusBadge({ status }) {
+  const { isOpenNow = false, tooltip = "今日公休" } = status;
   return (
     <BadgeWrapper>
       <Badge $isBusinessDay={isOpenNow}>

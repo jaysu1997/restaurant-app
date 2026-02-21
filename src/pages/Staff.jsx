@@ -44,7 +44,6 @@ function Staff() {
         >
           {isOpenModal.type === "create" && (
             <Modal
-              maxWidth={36}
               modalHeader="註冊新帳號"
               onCloseModal={() => setIsOpenModal(false)}
             >

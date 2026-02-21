@@ -3,13 +3,9 @@ import {
   summarizeMealChoices,
   calculateOrderSummary,
 } from "../../utils/orderHelpers";
-import { Pencil, Trash2 } from "lucide-react";
 import styled from "styled-components";
-import { useState } from "react";
-import useOrder from "../../context/order/useOrder";
-import OrderForm from "../../ui/OrderForm/OrderForm";
 import MiniMenu from "./MiniMenu";
-import Button from "../../ui/Button";
+import ItemActions from "../../ui/ItemActions";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -18,7 +14,7 @@ const OrderDishesList = styled.ul`
 
 const OrderDishRow = styled.li`
   display: grid;
-  grid-template-columns: 1.2fr repeat(2, minmax(5.6rem, 0.4fr)) 5.6rem;
+  grid-template-columns: 1.2fr repeat(2, minmax(5.4rem, 0.4fr)) 5.6rem;
   gap: 1.2rem;
   padding: 1rem;
 
@@ -58,17 +54,6 @@ const OrderDishRow = styled.li`
       justify-self: end;
       white-space: nowrap;
     }
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: end;
-  gap: 0.2rem;
-
-  @media (max-width: 35em) {
-    grid-row: 1;
-    grid-column: 2;
   }
 `;
 
@@ -128,9 +113,9 @@ function OrderDishes({ dishes, isEdit }) {
 
           <span className="dishServings">{dish.servings} 份</span>
           <span className="emphasize dishPrice">
-            $ {dish.itemTotalPrice * dish.servings}
+            $ {dish.unitPrice * dish.servings}
           </span>
-          {isEdit && <OrderEditButton dish={dish} />}
+          {isEdit && <ItemActions dish={dish} />}
         </OrderDishRow>
       ))}
 
@@ -139,45 +124,10 @@ function OrderDishes({ dishes, isEdit }) {
         <div>
           <span>總計：</span>
           <span>共 {totalServings} 份</span>
-          <span>,</span>
           <span className="emphasize">$ {totalPrice}</span>
         </div>
       </OrderSummary>
     </OrderDishesList>
-  );
-}
-
-function OrderEditButton({ dish }) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const { dispatch } = useOrder();
-
-  return (
-    <>
-      <ButtonGroup>
-        <Button $variant="ghost" onClick={() => setIsOpenModal(dish)}>
-          <Pencil />
-        </Button>
-        <Button
-          $variant="ghost"
-          onClick={() =>
-            dispatch({
-              type: "dishes/removeDish",
-              payload: dish.uniqueId,
-            })
-          }
-        >
-          <Trash2 />
-        </Button>
-      </ButtonGroup>
-
-      {isOpenModal && (
-        <OrderForm
-          orderDish={isOpenModal}
-          onCloseModal={() => setIsOpenModal(false)}
-          isEdit={true}
-        />
-      )}
-    </>
   );
 }
 

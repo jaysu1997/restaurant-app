@@ -48,21 +48,15 @@ const MenuItem = styled.li`
 `;
 
 // 下拉按鈕菜單元件
-function DropdownMenu({
-  itemsConfig,
-  open,
-  setIsOpenMenu,
-  isOpenMenu,
-  children,
-}) {
-  const activeMenuRef = useRef(null);
-  useClickOutside(activeMenuRef, isOpenMenu, setIsOpenMenu, false);
+function DropdownMenu({ itemsConfig, open, onClose, isOpenMenu, children }) {
+  const wrapperRef = useRef(null);
+  useClickOutside(wrapperRef, isOpenMenu, onClose);
 
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef}>
       {children}
       {open && (
-        <MenuContainer ref={activeMenuRef}>
+        <MenuContainer>
           {itemsConfig
             .filter((item) => !item.hidden)
             .map((item) => {
@@ -73,7 +67,7 @@ function DropdownMenu({
                   <button
                     onClick={() => {
                       item.handleClick();
-                      setIsOpenMenu(false);
+                      onClose();
                     }}
                   >
                     <Icon />

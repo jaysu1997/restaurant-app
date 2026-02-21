@@ -5,12 +5,11 @@ import useLogin from "../hooks/data/auth/useLogin";
 import useUser from "../hooks/data/auth/useUser";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import ButtonSpinner from "../ui/ButtonSpinner";
 import PasswordInput from "../components/PasswordInput";
-import Button from "../ui/Button";
 import FormInput from "../ui/FormInput";
 import FormFieldLayout from "../ui/FormFieldLayout";
 import { isValidEmail } from "../utils/validation";
+import ButtonSubmit from "../ui/ButtonSubmit";
 
 const LoginLayout = styled.div`
   width: 100%;
@@ -145,15 +144,12 @@ function Login() {
           </FormFieldLayout>
 
           <MarginTop>
-            <Button
-              type="submit"
-              $isFullWidth={true}
-              $isProcessing={isProcessing}
+            <ButtonSubmit
+              label="登入"
+              isFullWidth
+              isProcessing={isProcessing}
               disabled={isProcessing}
-            >
-              <span>登入</span>
-              {isProcessing && <ButtonSpinner />}
-            </Button>
+            />
           </MarginTop>
         </LoginForm>
       </StyledLogin>
