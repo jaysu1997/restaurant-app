@@ -10,7 +10,7 @@ import Filter from "../ui/Filter/Filter";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import Button from "../ui/Button";
 import { FilePlus } from "lucide-react";
-import PageWrapper from "../ui/PageWrapper";
+import PageContainer from "../ui/PageContainer";
 
 const Container = styled.ul`
   display: grid;
@@ -32,11 +32,10 @@ const filtersConfig = [
     queryKey: "quantity",
     placeholder: "選擇庫存剩餘量",
     options: [
-      { label: "不篩選", value: "" },
-      { label: "庫存低於100", value: "100" },
-      { label: "庫存低於50", value: "50" },
-      { label: "庫存低於10", value: "10" },
-      { label: "庫存已耗盡", value: "0" },
+      { label: "已耗盡", value: "0" },
+      { label: "10 以下", value: "10" },
+      { label: "50 以下", value: "50" },
+      { label: "100 以下", value: "100" },
     ],
   },
 ];
@@ -83,7 +82,7 @@ function Inventory() {
       : "目前沒有任何食材數據，請點擊新增食材開始新建食材數據。";
 
   return (
-    <PageWrapper>
+    <PageContainer>
       <PageHeader title="庫存管理">
         <div>
           <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
@@ -91,7 +90,9 @@ function Inventory() {
             <span>新增食材</span>
           </Button>
         </div>
-        <Filter filtersConfig={filtersConfig} />
+        {!inventoryIsLoading && inventory?.length > 0 && (
+          <Filter filtersConfig={filtersConfig} />
+        )}
       </PageHeader>
 
       <QueryStatusFallback
@@ -115,7 +116,7 @@ function Inventory() {
       {isOpenModal && (
         <InventoryForm onCloseModal={() => setIsOpenModal(false)} />
       )}
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

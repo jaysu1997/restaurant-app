@@ -17,12 +17,12 @@ const ToggleButton = styled.button`
   border-radius: 4px;
   height: 2.8rem;
   width: 2.8rem;
-  background-color: ${(props) => (props.$isActive ? "#e5e7eb" : "transparent")};
+  background-color: ${({ $isActive }) =>
+    $isActive ? "#e5e7eb" : "transparent"};
 
   & svg {
     width: 2rem;
     height: 2rem;
-    flex-shrink: 0;
   }
 
   &:hover {
@@ -30,12 +30,13 @@ const ToggleButton = styled.button`
   }
 `;
 
-function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
-  const { deleteOrder, isDeletingOrder } = useDeleteOrder();
-  const [isOpenModal, setIsOpenModal] = useState(false);
+function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const deleteMutation = useDeleteOrder();
 
   const { id, pickupNumber, createdTime, status } = orderData;
+  const isFinished = status === "已完成";
 
   const itemsConfig = [
     {
@@ -48,13 +49,13 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
       name: "編輯訂單",
       icon: SquarePen,
       handleClick: () => navigate(`/order/${id}/edit`),
-      hidden: status === "已完成" ? true : false,
+      hidden: isFinished,
     },
     {
       name: "刪除訂單",
       icon: Trash2,
-      handleClick: () => setIsOpenModal(true),
-      hidden: status === "已完成" ? true : false,
+      handleClick: () => setIsOpen(true),
+      hidden: isFinished,
     },
   ];
 
@@ -62,34 +63,30 @@ function OrderDropdownMenu({ orderData, isOpenMenu, setIsOpenMenu }) {
     <>
       <DropdownMenu
         itemsConfig={itemsConfig}
-        open={isOpenMenu === id}
-        isOpenMenu={isOpenMenu}
-        onClose={() => setIsOpenMenu(false)}
+        isOpen={openMenuId === id}
+        onClose={() => setOpenMenuId(null)}
       >
         <ToggleButton
-          $isActive={isOpenMenu === id}
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsOpenMenu((isOpenMenu) => (isOpenMenu === id ? false : id));
+          $isActive={openMenuId === id}
+          onClick={() => {
+            setOpenMenuId((isOpenMenu) => (isOpenMenu === id ? null : id));
           }}
         >
           <Ellipsis strokeWidth={2.4} />
         </ToggleButton>
       </DropdownMenu>
 
-      {isOpenModal && (
+      {isOpen && (
         <ConfirmDelete
-          onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={deleteOrder}
-          isDeleting={isDeletingOrder}
+          setIsOpenModal={setIsOpen}
+          deleteMutation={deleteMutation}
           data={orderData}
           showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除
-              <strong>{`取餐號碼${formatPickupNumber(pickupNumber)}`}</strong>
-              &#8203;&nbsp;(
-              {formatCreatedTime(createdTime)})？
+              <strong> {`取餐號碼${formatPickupNumber(pickupNumber)}`} </strong>
+              ({formatCreatedTime(createdTime)})?
             </p>
           )}
         />

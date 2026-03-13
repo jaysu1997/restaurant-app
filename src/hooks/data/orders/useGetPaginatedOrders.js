@@ -6,22 +6,20 @@ import {
 } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { getPaginatedOrdersApi } from "../../../services/apiOrder";
-import { safeParseDate } from "../../../utils/orderHelpers";
-import { addDays, format } from "date-fns";
+import { parseDateRange } from "../../../utils/orderHelpers";
+import { addDays } from "date-fns";
 import { parsePositiveInt, withFallbackRetry } from "../../../utils/helpers";
 
 // 將日期篩選條件轉換成supabase時間欄位的要求格式
-function getCreatedTimeSearchParams(createdTime) {
-  if (!createdTime) return null;
+function getCreatedTime(searchParams) {
+  const dateRange = parseDateRange(searchParams);
 
-  const [fromStr, toStr] = createdTime.split("_");
-  const fromDate = safeParseDate(fromStr);
-  const toDate = safeParseDate(toStr);
+  if (dateRange) {
+    const { from: fromDate, to: toDate } = dateRange;
 
-  if (fromDate && toDate) {
     return {
-      from: format(fromDate, "yyyy-MM-dd HH:mm:ss"),
-      to: format(addDays(toDate, 1), "yyyy-MM-dd HH:mm:ss"),
+      from: fromDate.toISOString(),
+      to: addDays(toDate, 1).toISOString(),
     };
   }
 
@@ -43,9 +41,7 @@ function useGetPaginatedOrders() {
     fallback: searchParams.get("pickupNumber") !== null ? -1 : null,
   });
 
-  const createdTime = getCreatedTimeSearchParams(
-    searchParams.get("createdTime"),
-  );
+  const createdTime = getCreatedTime(searchParams);
 
   const {
     data: { ordersData = [], curPage = 1, maxPage = 1 } = {},

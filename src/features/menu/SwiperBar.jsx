@@ -17,12 +17,13 @@ const StyleSwiperSlide = styled(SwiperSlide)`
   color: #fff;
   background-color: ${(props) => (props.$isActive ? "#171717" : "#737373")};
   padding: 0.6rem 1.2rem;
+  height: 3.6rem;
   cursor: pointer;
   user-select: none;
   border-radius: 6px;
 `;
 
-export default function SwiperBar({ menus }) {
+function SwiperBar({ menus }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 使用Set()過濾重複的分類
@@ -71,3 +72,5 @@ export default function SwiperBar({ menus }) {
     </StyleSwiper>
   );
 }
+
+export default SwiperBar;

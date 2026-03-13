@@ -1,5 +1,5 @@
 // 這裡可能有不少函式之後可能要移到別的資料夾，因為這些函式並非全域通用
-import { format, isValid, parse } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
 // 生成訂單餐點uniqueId
@@ -220,11 +220,28 @@ export function buildOrderData(dishes, data) {
   return orderData;
 }
 
-// 檢查日期searchParams是否格式正確(預防url手動更改後造成的格式錯誤問題)
-export function safeParseDate(dateStr) {
-  if (typeof dateStr !== "string") return undefined;
-  const date = parse(dateStr, "yyyy-MM-dd", new Date());
-  return isValid(date) ? date : undefined;
+// 解析日期篩選條件(searchParams)
+export function parseDateRange(searchParams) {
+  const createdTimeParams = searchParams.get("createdTime");
+
+  // 預防無value和錯誤的searchParams url
+  if (!createdTimeParams) return null;
+
+  const parts = createdTimeParams.split("_");
+
+  if (parts.length !== 2) return null;
+
+  const [fromStr, toStr] = parts;
+  const fromDate = parseISO(fromStr);
+  const toDate = parseISO(toStr);
+
+  if (!isValid(fromDate) || !isValid(toDate)) return null;
+
+  // 回傳日期物件
+  return {
+    from: fromDate,
+    to: toDate,
+  };
 }
 
 // 計算總共要消耗的食材

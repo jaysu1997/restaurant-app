@@ -214,6 +214,7 @@ function SpecialOpenHours({ settings }) {
                           }
                           handleValueReset={() => field.onChange("")}
                           disabledDate={{ before: new Date() }}
+                          display="popover"
                         />
                       )}
                       rules={{

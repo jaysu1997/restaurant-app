@@ -23,7 +23,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      retry: 2,
+      // retry: 2,
+      retry: false,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },
@@ -34,9 +35,11 @@ const queryClient = new QueryClient({
   },
 });
 
-// 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?
+// 列表類的ui，如果有border設計問題，建議都改成& + &解決
 
-// 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)
+// 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?或許可以一律套用class?
+
+// 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)，或許可以分成日期時間helper、正則helpers...
 
 // isProcessing
 

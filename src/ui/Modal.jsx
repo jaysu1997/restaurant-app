@@ -1,18 +1,10 @@
 import styled from "styled-components";
-import { createPortal } from "react-dom";
 import useScrollLock from "../hooks/ui/useScrollLock";
-import { X } from "lucide-react";
 import CloseButton from "./CloseButton";
+import StyledOverlay from "./StyledOverlay";
+import { createPortal } from "react-dom";
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
+const Overlay = styled(StyledOverlay)`
   display: flex;
   justify-content: center;
   align-items: center;

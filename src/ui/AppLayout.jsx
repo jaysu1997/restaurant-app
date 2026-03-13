@@ -1,9 +1,9 @@
 // ok
-import Navbar from "../components/Navbar";
 import styled from "styled-components";
+import { useState } from "react";
 import Header from "../ui/Header";
 import { Outlet } from "react-router";
-import { useState } from "react";
+import Navbar from "../components/Navbar";
 
 const StyledAppLayout = styled.div`
   display: grid;

@@ -33,7 +33,7 @@ function OrderOperation({
   const { orderId } = useParams();
   const navigate = useNavigate();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { deleteOrder, isDeletingOrder } = useDeleteOrder();
+  const deleteMutation = useDeleteOrder();
 
   return (
     <>
@@ -78,9 +78,8 @@ function OrderOperation({
 
       {isOpenModal && (
         <ConfirmDelete
-          onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={deleteOrder}
-          isDeleting={isDeletingOrder}
+          setIsOpenModal={setIsOpenModal}
+          deleteMutation={deleteMutation}
           data={orderData}
           showRelatedData={false}
           render={() => (

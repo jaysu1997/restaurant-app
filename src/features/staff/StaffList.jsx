@@ -82,7 +82,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
 
   const { updateStaff } = useUpdateStaff();
   const { user } = useUser();
-  const { deleteStaff, isDeletingStaff } = useDeleteStaff();
+  const deleteMutation = useDeleteStaff();
 
   const sortedList = staffList.toSorted((a, b) => {
     const priority = (item) => {
@@ -156,18 +156,19 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
 
       {isOpenModal.type === "delete" && (
         <ConfirmDelete
-          onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={deleteStaff}
-          isDeleting={isDeletingStaff}
+          setIsOpenModal={setIsOpenModal}
+          deleteMutation={deleteMutation}
           data={isOpenModal.data}
           showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除
               <strong>
-                {isOpenModal.data.user_metadata.name} ({isOpenModal.data.email})
+                {" "}
+                {isOpenModal.data.user_metadata.name} ({isOpenModal.data.email}
+                ){" "}
               </strong>
-              ？
+              ?
             </p>
           )}
         />

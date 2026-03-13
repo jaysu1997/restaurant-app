@@ -68,7 +68,7 @@ const UserRole = styled(UserName)`
 
 function User() {
   const navigate = useNavigate();
-  const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { logout } = useLogout();
 
   const { user } = useUser();
@@ -94,14 +94,13 @@ function User() {
     <StyledUser>
       <DropdownMenu
         itemsConfig={itemsConfig}
-        open={isOpenMenu}
-        isOpenMenu={isOpenMenu}
-        onClose={() => setIsOpenMenu(false)}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
       >
         <UserButton
-          $open={isOpenMenu}
+          $open={isOpen}
           onClick={() => {
-            setIsOpenMenu((isOpenMenu) => !isOpenMenu);
+            setIsOpen((isOpenMenu) => !isOpenMenu);
           }}
         >
           <UserAvatar avatarUrl={avatarUrl} />

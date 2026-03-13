@@ -11,7 +11,7 @@ import FormFieldLayout from "../ui/FormFieldLayout";
 import { isValidEmail } from "../utils/validation";
 import ButtonSubmit from "../ui/ButtonSubmit";
 
-const LoginLayout = styled.div`
+const PageLayout = styled.div`
   width: 100%;
   min-height: 100dvh;
   display: flex;
@@ -34,7 +34,7 @@ const Logo = styled.img`
   height: auto;
 `;
 
-const Heading = styled.h3`
+const LoginHeading = styled.h3`
   font-size: 2rem;
 `;
 
@@ -61,10 +61,10 @@ const LoginForm = styled.form`
     font-size: 1.4rem;
     font-weight: 500;
   }
-`;
 
-const MarginTop = styled.div`
-  margin-top: 2rem;
+  & > button {
+    margin-top: 2rem;
+  }
 `;
 
 // 登入頁面UI元件
@@ -110,10 +110,10 @@ function Login() {
   if (userIsLoading || user) return null;
 
   return (
-    <LoginLayout>
+    <PageLayout>
       <StyledLogin>
         <Logo src="/logo.webp" alt="logo" />
-        <Heading>登入 Aurora Bites</Heading>
+        <LoginHeading>登入 Aurora Bites</LoginHeading>
 
         {/* 登入失敗提示訊息ui */}
         {errors?.root && (
@@ -143,17 +143,15 @@ function Login() {
             />
           </FormFieldLayout>
 
-          <MarginTop>
-            <ButtonSubmit
-              label="登入"
-              isFullWidth
-              isProcessing={isProcessing}
-              disabled={isProcessing}
-            />
-          </MarginTop>
+          <ButtonSubmit
+            label="登入"
+            isFullWidth
+            isProcessing={isProcessing}
+            disabled={isProcessing}
+          />
         </LoginForm>
       </StyledLogin>
-    </LoginLayout>
+    </PageLayout>
   );
 }
 

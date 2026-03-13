@@ -10,13 +10,13 @@ const variant = {
     }
   `,
   secondary: css`
-    color: #3b82f6;
+    color: #3b82f6 !important;
     background-color: #fff;
     border-color: #3b82f6;
 
     &:not(:disabled):hover {
       background-color: #3b82f6;
-      color: #fff;
+      color: #fff !important ;
     }
   `,
   tertiary: css`
@@ -49,11 +49,11 @@ const variant = {
     padding: 0.6rem 0.8rem;
     border-radius: 4px;
     background-color: #fff;
+    height: 3.6rem;
 
     & svg {
       width: 1.8rem;
       height: 1.8rem;
-      flex-shrink: 0;
     }
 
     &:not(:disabled):hover {
@@ -69,7 +69,6 @@ const variant = {
     & svg {
       width: 1.4rem;
       height: 1.4rem;
-      flex-shrink: 0;
     }
 
     &:not(:disabled):hover {
@@ -86,7 +85,6 @@ const variant = {
     & svg {
       width: 2rem;
       height: 2rem;
-      flex-shrink: 0;
     }
 
     &:not(:disabled):hover {
@@ -111,6 +109,7 @@ const Button = styled.button.attrs((props) => ({
   padding: 0.8rem 2rem;
 
   transition: background-color 0.2s;
+  height: 4rem;
   width: ${({ $isFullWidth }) => ($isFullWidth ? "100%" : "max-content")};
   min-width: max-content;
   border-radius: 999px;
@@ -122,7 +121,6 @@ const Button = styled.button.attrs((props) => ({
   & svg {
     width: ${({ $iconSize }) => ($iconSize ? $iconSize : "1.6rem")};
     height: ${({ $iconSize }) => ($iconSize ? $iconSize : "1.6rem")};
-    flex-shrink: 0;
   }
 
   /* 載入中顯示動畫 */

@@ -1,3 +1,4 @@
+// ok
 import { useRef } from "react";
 import styled from "styled-components";
 import useClickOutside from "../hooks/ui/useClickOutside";
@@ -29,33 +30,29 @@ const MenuItem = styled.li`
 
   button {
     width: 100%;
-    height: fit-content;
     padding: 1rem 2rem;
     gap: 1rem;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     font-weight: 400;
     font-size: 1.4rem;
-    line-height: 2rem;
   }
 
   svg {
     width: 1.8rem;
     height: 1.8rem;
-    flex-shrink: 0;
   }
 `;
 
 // 下拉按鈕菜單元件
-function DropdownMenu({ itemsConfig, open, onClose, isOpenMenu, children }) {
+function DropdownMenu({ itemsConfig, onClose, isOpen, children }) {
   const wrapperRef = useRef(null);
-  useClickOutside(wrapperRef, isOpenMenu, onClose);
+  useClickOutside(wrapperRef, isOpen, onClose);
 
   return (
     <Wrapper ref={wrapperRef}>
       {children}
-      {open && (
+      {isOpen && (
         <MenuContainer>
           {itemsConfig
             .filter((item) => !item.hidden)

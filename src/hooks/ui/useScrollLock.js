@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
-let lockCount = 0; //
+let lockCount = 0;
 
 function applyLock() {
   if (lockCount === 0) {
-    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflowY = "hidden";
   }
   lockCount += 1;
 }
@@ -14,7 +14,7 @@ function releaseLock() {
 
   if (lockCount <= 0) {
     lockCount = 0;
-    document.documentElement.style.overflow = "";
+    document.body.style.overflowY = "";
   }
 }
 

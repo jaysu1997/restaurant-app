@@ -1,3 +1,4 @@
+// ok
 import PageNotFoundIcon from "../assets/page-not-found.svg?react";
 import { useNavigate } from "react-router";
 import StatusView from "../ui/StatusView";

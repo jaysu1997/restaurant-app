@@ -26,7 +26,7 @@ function useDeleteInventory() {
     },
   });
 
-  return { deleteInventory: mutate, isDeletingInventory: isPending };
+  return { mutate, isPending };
 }
 
 export default useDeleteInventory;

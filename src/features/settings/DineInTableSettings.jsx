@@ -24,6 +24,11 @@ const Content = styled.ul`
 
     align-items: center;
   }
+
+  label {
+    color: #525252;
+    font-weight: 500;
+  }
 `;
 
 // 或許這個title也可以重複使用

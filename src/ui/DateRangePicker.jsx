@@ -1,14 +1,16 @@
 // 日期範圍選擇元件
 import styled, { css } from "styled-components";
-import { zhTW } from "react-day-picker/locale";
 import { format } from "date-fns";
 import { useRef, useState } from "react";
-import useClickOutside from "../hooks/ui/useClickOutside";
-import StyledDayPicker from "./StyledDayPicker";
+import StyledDayRangePicker from "./StyledDayRangePicker";
 import { CalendarRange } from "lucide-react";
+import useClickOutside from "../hooks/ui/useClickOutside";
 
-const StyledDatePicker = styled.div`
+const StyledDateRangePicker = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const DateField = styled.div`
@@ -19,22 +21,15 @@ const DateField = styled.div`
   gap: 0.2rem;
   padding: 0.2rem 0.8rem;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ $isOpen }) => ($isOpen ? "#2684ff" : "#ddd")};
+  box-shadow: ${({ $isOpen }) => ($isOpen ? "0 0 0 1px #2684ff" : "none")};
   border-radius: 4px;
   background-color: #fff;
   cursor: pointer;
 
-  ${(props) =>
-    props.$isActive &&
-    css`
-      border-color: #2684ff;
-      box-shadow: 0 0 0 1px #2684ff;
-    `}
-
   input {
     font-size: 1.4rem;
     width: 100%;
-    max-width: 160px;
     cursor: pointer;
   }
 
@@ -42,40 +37,51 @@ const DateField = styled.div`
     color: #3b82f6;
     width: 2rem;
     height: 2rem;
-    flex-shrink: 0;
+  }
+
+  &:hover {
+    border-color: ${({ $isOpen }) => ($isOpen ? "#2684ff" : "#b3b3b3")};
   }
 `;
 
-const StyledPopup = styled.div`
+const Panel = styled.div`
+  overflow: hidden;
+  border-radius: 8px;
+
+  max-height: ${({ $isOpen }) => ($isOpen ? "100rem" : "0px")};
+  opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
+
+  transition:
+    max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease;
+
+  ${({ $popover }) =>
+    $popover &&
+    css`
+      position: absolute;
+      top: 5rem;
+      z-index: 10;
+      margin: 0;
+      box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e3e5e7;
+    `}
+`;
+
+const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
-  position: absolute;
-  top: 5rem;
-  left: 50%;
-  z-index: 999;
-  transform: translateX(-50%);
-
-  background-color: #fff;
-  border: 1px solid #e3e5e7;
-  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  padding: 1.2rem;
-
-  @media (max-width: 40em) {
-    top: auto;
-    bottom: 5rem;
-  }
+  background-color: #fafafa;
+  margin-top: ${({ $popover }) => ($popover ? "0" : "1.2rem")};
+  padding: ${({ $popover }) => ($popover ? "1.6rem" : "1rem 0")};
 `;
 
 const Footer = styled.footer`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
 `;
 
-const UtilityButton = styled.button`
+const ActionButton = styled.button`
   display: flex;
   padding: 0.5rem 1.2rem;
   color: #1d4ed8;
@@ -92,11 +98,16 @@ function DateRangePicker({
   onSelect,
   handleValueReset,
   disabledDate,
+  display = "inline",
 }) {
-  const [isOpenDayPicker, setIsOpenDayPicker] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [cellSize, setCellSize] = useState(0);
   const wrapperRef = useRef(null);
 
-  useClickOutside(wrapperRef, isOpenDayPicker, () => setIsOpenDayPicker(false));
+  const onClose = () => setIsOpen(false);
+  const isPopover = display === "popover";
+
+  useClickOutside(wrapperRef, isOpen && isPopover, onClose);
 
   function formatRangeDate(selectedDate) {
     return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
@@ -105,30 +116,31 @@ function DateRangePicker({
     )}`;
   }
 
+  function handleClick() {
+    if (!isOpen) {
+      const rect = wrapperRef.current?.getBoundingClientRect();
+      setCellSize(rect.width / 7);
+    }
+
+    setIsOpen((open) => !open);
+  }
+
   return (
-    <StyledDatePicker ref={wrapperRef}>
-      <DateField
-        $isActive={isOpenDayPicker}
-        onClick={() => setIsOpenDayPicker((isOpen) => !isOpen)}
-      >
+    <StyledDateRangePicker ref={wrapperRef}>
+      <DateField $isOpen={isOpen} onClick={handleClick}>
         <input
           name="dateRange"
           value={selected ? formatRangeDate(selected) : ""}
           placeholder="選擇日期範圍"
           readOnly
         />
-
         <CalendarRange />
       </DateField>
 
-      {isOpenDayPicker && (
-        <StyledPopup>
-          <StyledDayPicker
-            animate
-            captionLayout="dropdown"
-            mode="range"
-            weekStartsOn={0}
-            locale={zhTW}
+      <Panel $isOpen={isOpen} inert={!isOpen} $popover={isPopover}>
+        <Content $popover={isPopover}>
+          <StyledDayRangePicker
+            $cellSize={cellSize}
             defaultMonth={defaultMonth || new Date()}
             startMonth={startMonth}
             endMonth={endMonth}
@@ -136,23 +148,24 @@ function DateRangePicker({
             onSelect={onSelect}
             disabled={disabledDate}
           />
-          <Footer>
-            <UtilityButton onClick={handleValueReset} disabled={!selected}>
-              清除
-            </UtilityButton>
+          {isPopover && (
+            <Footer>
+              <ActionButton
+                type="button"
+                onClick={handleValueReset}
+                disabled={!selected}
+              >
+                清除
+              </ActionButton>
 
-            <UtilityButton
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpenDayPicker(false);
-              }}
-            >
-              確認
-            </UtilityButton>
-          </Footer>
-        </StyledPopup>
-      )}
-    </StyledDatePicker>
+              <ActionButton type="button" onClick={onClose}>
+                確認
+              </ActionButton>
+            </Footer>
+          )}
+        </Content>
+      </Panel>
+    </StyledDateRangePicker>
   );
 }
 

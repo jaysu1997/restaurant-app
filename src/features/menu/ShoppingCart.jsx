@@ -28,6 +28,7 @@ const StyledShoppingCart = styled.aside`
   height: min(64.8rem, calc(100dvh - 18rem));
   width: 24rem;
   overflow: hidden;
+  z-index: 100;
 
   @media (max-width: 93em) {
     right: 2.4rem;
@@ -39,7 +40,6 @@ const StyledShoppingCart = styled.aside`
     inset: 0;
     height: 100%;
     width: 100%;
-    z-index: 11;
     border: none;
     border-radius: 0;
   }
@@ -73,6 +73,7 @@ const CartContent = styled.div`
   padding: 0 1.6rem;
   height: 100%;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 `;
 
 const CartList = styled.ul`

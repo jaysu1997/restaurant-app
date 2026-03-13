@@ -5,7 +5,7 @@ import SpecialOpenHours from "../features/settings/SpecialOpenHours.jsx";
 import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
 import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
-import PageWrapper from "../ui/PageWrapper.jsx";
+import PageContainer from "../ui/PageContainer.jsx";
 import useSettings from "../context/settings/useSettings.js";
 
 const SettingsLayout = styled.div`
@@ -21,7 +21,7 @@ function Settings() {
     useSettings();
 
   return (
-    <PageWrapper $maxWidth="60rem">
+    <PageContainer $maxWidth="60rem">
       <PageHeader title="店鋪設定" />
 
       <SettingsLayout>
@@ -38,7 +38,7 @@ function Settings() {
           <StoreInfo settings={settings} />
         </QueryStatusFallback>
       </SettingsLayout>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

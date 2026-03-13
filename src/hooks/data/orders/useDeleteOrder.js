@@ -27,7 +27,7 @@ function useDeleteOrder() {
     },
   });
 
-  return { deleteOrder: mutate, isDeletingOrder: isPending };
+  return { mutate, isPending };
 }
 
 export default useDeleteOrder;

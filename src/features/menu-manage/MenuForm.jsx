@@ -20,6 +20,9 @@ const StyledForm = styled.form`
   width: 56rem;
   gap: 2.4rem;
   padding: 2rem;
+  height: calc(90dvh - 5.6rem);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 
   @media (max-width: 48em) {
     grid-template-columns: 1fr;
@@ -107,7 +110,12 @@ function MenuForm({ onCloseModal, menu }) {
   ];
 
   return (
-    <Modal modalHeader="餐點設定表單" maxWidth={56} onCloseModal={onCloseModal}>
+    <Modal
+      modalHeader="餐點設定表單"
+      maxWidth={56}
+      onCloseModal={onCloseModal}
+      scrollBar={false}
+    >
       <QueryStatusFallback
         status={{
           isLoading: inventoryIsLoading,

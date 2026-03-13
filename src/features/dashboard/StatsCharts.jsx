@@ -1,5 +1,4 @@
 // ok
-
 import styled from "styled-components";
 import TodayOrderList from "./TodayOrderList";
 import RevenueTrendChart from "./RevenueTrendChart";
@@ -9,7 +8,6 @@ import TopDishesChart from "./TopDishesChart";
 const StatsChartRow = styled.section`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 42rem;
   gap: 2.8rem;
 
   @media (max-width: 48em) {

@@ -3,15 +3,16 @@ import styled from "styled-components";
 
 const BadgeWrapper = styled.div`
   position: relative;
-  font-size: 1.4rem;
 `;
 
 const Badge = styled.div`
+  cursor: default;
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   padding: 0.4rem 1.2rem;
   font-weight: 500;
+  font-size: 1.4rem;
   border-radius: 999px;
   background-color: ${({ $isBusinessDay }) =>
     $isBusinessDay ? "#d1fae5" : "#e5e7eb"};
@@ -20,11 +21,6 @@ const Badge = styled.div`
   &:hover + div {
     opacity: 1;
     transform: translateY(1rem);
-  }
-
-  @media (max-width: 30em) {
-    font-size: 1.3rem;
-    padding: 0.3rem 1rem;
   }
 `;
 
@@ -40,13 +36,13 @@ const Tooltip = styled.div`
   position: absolute;
   bottom: -100%;
   right: 0px;
+  z-index: 1;
   background-color: #111827;
   color: white;
   font-size: 1.2rem;
   padding: 0.6rem 1rem;
   border-radius: 2px;
   white-space: nowrap;
-  z-index: 1;
   user-select: none;
 
   opacity: 0;

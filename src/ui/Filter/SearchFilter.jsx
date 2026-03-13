@@ -1,4 +1,3 @@
-import { X } from "lucide-react";
 import FormInput from "../../ui/FormInput";
 
 function SearchFilter({ filterValue, handleValueChange, ...filters }) {
@@ -10,10 +9,6 @@ function SearchFilter({ filterValue, handleValueChange, ...filters }) {
       value={filterValue}
       onChange={(e) => {
         handleValueChange(queryKey, e.target.value);
-      }}
-      button={{
-        icon: <X />,
-        action: () => handleValueChange(queryKey, ""),
       }}
     />
   );

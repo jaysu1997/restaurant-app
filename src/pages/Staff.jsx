@@ -8,7 +8,7 @@ import { UserRoundPlus } from "lucide-react";
 import Button from "../ui/Button";
 import { useState } from "react";
 import Modal from "../ui/Modal";
-import PageWrapper from "../ui/PageWrapper";
+import PageContainer from "../ui/PageContainer";
 
 const StaffLayout = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ function Staff() {
   const { staff, staffIsLoading, staffIsError, staffError } = useGetStaff();
 
   return (
-    <PageWrapper $maxWidth="60rem">
+    <PageContainer $maxWidth="60rem">
       <PageHeader title="員工管理">
         <Button
           $iconSize="1.8rem"
@@ -57,7 +57,7 @@ function Staff() {
           />
         </QueryStatusFallback>
       </StaffLayout>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

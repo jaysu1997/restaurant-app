@@ -6,14 +6,18 @@ const StyledStatItem = styled.article`
   border-radius: 6px;
   padding: 2rem;
   display: grid;
-  grid-template-columns: auto 2rem;
-  grid-template-rows: auto auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
   column-gap: 1rem;
   row-gap: 0.6rem;
   background-color: ${(props) => props.$bgColor};
   border: 1px solid ${(props) => props.$bgColor};
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+  }
 `;
 
 const StatHeading = styled.h6`
@@ -36,41 +40,36 @@ const StatData = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
-  svg {
-    flex-shrink: 0;
-  }
 `;
 
 function StatItem({ item }) {
-  const Icon = item.icon;
-  // 需要渲染趨勢icon
-  const shouldShowTrend = item.trend != null;
-  const trendDirection = item.trend > 0 ? "up" : item.trend < 0 ? "down" : null;
+  const { icon: Icon, iconColor, trend, cardColor, heading, value } = item;
+  const shouldShowTrend = trend != null;
+  const trendDirection = trend > 0 ? "up" : trend < 0 ? "down" : null;
 
   return (
-    <StyledStatItem $bgColor={item.cardColor}>
-      <StatHeading>{item.heading}</StatHeading>
-      <Icon className="icon-lg" color={item.iconColor} />
+    <StyledStatItem $bgColor={cardColor}>
+      <StatHeading>{heading}</StatHeading>
+      <Icon color={iconColor} />
 
       <StatData>
         <span>
-          {item.value === null ? (
+          {value === null ? (
             <>
-              <Minus className="icon-xl" />
-              <Minus className="icon-xl" />
+              <Minus />
+              <Minus />
             </>
           ) : (
-            item.value
+            value
           )}
         </span>
 
         {shouldShowTrend && trendDirection === "up" && (
-          <ArrowBigUp color="#22c55e" fill="#22c55e" className="icon-lg" />
+          <ArrowBigUp color="#22c55e" fill="#22c55e" />
         )}
 
         {shouldShowTrend && trendDirection === "down" && (
-          <ArrowBigDown color="#f43f5e" fill="#f43f5e" className="icon-lg" />
+          <ArrowBigDown color="#f43f5e" fill="#f43f5e" />
         )}
       </StatData>
     </StyledStatItem>

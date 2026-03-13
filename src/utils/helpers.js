@@ -7,6 +7,7 @@ export function trimString(value) {
   return value;
 }
 
+// 正整數
 export function parsePositiveInt(
   value,
   { min = 0, max = Infinity, fallback = null },

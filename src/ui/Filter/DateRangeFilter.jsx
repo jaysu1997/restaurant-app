@@ -12,6 +12,7 @@ function DateRangeFilter({ filterValue, handleValueChange, ...filters }) {
       onSelect={(range) => handleValueChange(queryKey, range ? range : "")}
       handleValueReset={() => handleValueChange(queryKey, "")}
       disabledDate={{ after: new Date() }}
+      display="inline"
     />
   );
 }

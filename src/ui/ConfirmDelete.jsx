@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react";
 import Modal from "./Modal";
 import ButtonSpinner from "../ui/ButtonSpinner";
 import useIngredientRelatedMenus from "../hooks/data/menus/useIngredientRelatedMenus";
@@ -13,7 +12,6 @@ const StyledConfirmDelete = styled.div`
   max-width: 100%;
   display: flex;
   flex-direction: column;
-
   padding: 2rem;
   gap: 2.4rem;
   font-size: 1.6rem;
@@ -22,7 +20,7 @@ const StyledConfirmDelete = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.6rem;
   font-size: 1.6rem;
 
   strong {
@@ -31,43 +29,25 @@ const Content = styled.div`
   }
 `;
 
-const ConfirmCheckBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  height: fit-content;
-  font-weight: 600;
-  font-size: 1.4rem;
-
-  input {
-    width: 1.6rem;
-    height: 1.6rem;
-    cursor: pointer;
-  }
-
-  label {
-    line-height: 1.6;
-    cursor: pointer;
-  }
-`;
-
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 2rem;
+  gap: 1.6rem;
+  margin-top: 2rem;
 `;
 
 // 執行食材獲取的功能或許需要優化，目前這看起來有點醜，未來應該要分割
 function ConfirmDelete({
-  onCloseModal,
   data,
   showRelatedData = false,
   render,
-  handleDelete,
-  isDeleting,
+  deleteMutation,
+  setIsOpenModal,
 }) {
-  const [confirm, setConfirm] = useState(false);
+  // 刪除功能
+  const { mutate: handleDelete, isPending: isDeleting } = deleteMutation;
+
+  // 關閉確認刪除modal
+  const onCloseModal = () => setIsOpenModal(false);
 
   const {
     relatedMenus,
@@ -93,24 +73,20 @@ function ConfirmDelete({
           <Content>{render()}</Content>
 
           {showRelatedData && (
-            <RelatedMenus relatedMenus={relatedMenus} name={data.label} />
+            <RelatedMenus
+              relatedMenus={relatedMenus}
+              setIsOpenModal={setIsOpenModal}
+            />
           )}
 
-          <ConfirmCheckBox>
-            <input
-              type="checkbox"
-              id="confirm"
-              checked={confirm}
-              onChange={(e) => setConfirm(e.target.checked)}
-            />
-            <label htmlFor="confirm">是的，我確認</label>
-          </ConfirmCheckBox>
-
           <ButtonRow>
+            <ButtonCancel onClick={onCloseModal} $isFullWidth={true} />
+
             <Button
               $variant="danger"
               $isProcessing={isDeleting}
-              disabled={confirm === false || isDeleting}
+              $isFullWidth={true}
+              disabled={isDeleting}
               onClick={() => {
                 handleDelete(data.id, {
                   onSuccess: () => onCloseModal(),
@@ -120,8 +96,6 @@ function ConfirmDelete({
               <span>刪除</span>
               {isDeleting && <ButtonSpinner />}
             </Button>
-
-            <ButtonCancel onClick={onCloseModal} />
           </ButtonRow>
         </QueryStatusFallback>
       </StyledConfirmDelete>

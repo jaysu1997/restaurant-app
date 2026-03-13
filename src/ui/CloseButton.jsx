@@ -9,11 +9,11 @@ const StyledCloseButton = styled.button`
   justify-content: center;
   align-items: center;
   position: relative;
+  flex-shrink: 0;
 
   & svg {
     width: 1.6rem;
     height: 1.6rem;
-    flex-shrink: 0;
   }
 
   &::before {

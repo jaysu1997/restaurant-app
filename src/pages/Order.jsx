@@ -6,7 +6,7 @@ import PageHeader from "../ui/PageHeader";
 import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import PageWrapper from "../ui/PageWrapper";
+import PageContainer from "../ui/PageContainer";
 import useSettings from "../context/settings/useSettings";
 
 const StyledOrderSummary = styled.div`
@@ -49,7 +49,7 @@ function Order() {
   };
 
   return (
-    <PageWrapper>
+    <PageContainer>
       <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
       <QueryStatusFallback
         status={pageQueryStatus}
@@ -70,7 +70,7 @@ function Order() {
           )}
         </StyledOrderSummary>
       </QueryStatusFallback>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

@@ -3,10 +3,11 @@ import DataDisplayCard from "../../ui/DataDisplayCard";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import InventoryForm from "./InventoryForm";
 import useDeleteInventory from "../../hooks/data/inventory/useDeleteInventory";
+import MenuForm from "../menu-manage/MenuForm";
 
 function InventoryDataCard({ inventory }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { deleteInventory, isDeletingInventory } = useDeleteInventory();
+  const deleteMutation = useDeleteInventory();
   const { label, remainingQuantity } = inventory;
 
   const inventoryDataFormat = [
@@ -35,22 +36,29 @@ function InventoryDataCard({ inventory }) {
 
       {isOpenModal.type === "delete" && (
         <ConfirmDelete
-          onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={deleteInventory}
-          isDeleting={isDeletingInventory}
+          setIsOpenModal={setIsOpenModal}
+          deleteMutation={deleteMutation}
           data={isOpenModal.data}
           showRelatedData={true}
           render={() => (
             <>
               <p>
-                請確認是否要刪除「<strong>{isOpenModal.data.label}</strong>
-                」？
+                請確認是否要刪除<strong> {isOpenModal.data.label} </strong>?
               </p>
               <p>
                 各餐點中使用此食材的備料與選項也會同步刪除，此操作無法復原。
               </p>
             </>
           )}
+        />
+      )}
+
+      {isOpenModal.type === "menuForm" && (
+        <MenuForm
+          onCloseModal={() =>
+            setIsOpenModal({ type: "delete", data: inventory })
+          }
+          menu={isOpenModal.data}
         />
       )}
     </>

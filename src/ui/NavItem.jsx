@@ -32,4 +32,16 @@ const StyleNavLink = styled(NavLink)`
   }
 `;
 
-export default StyleNavLink;
+function NavItem({ navData, onClose }) {
+  const Icon = navData.icon;
+  return (
+    <li>
+      <StyleNavLink to={navData.to} onClick={onClose}>
+        <Icon />
+        <span>{navData.title}</span>
+      </StyleNavLink>
+    </li>
+  );
+}
+
+export default NavItem;

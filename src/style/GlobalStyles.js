@@ -28,7 +28,6 @@ export const GlobalStyles = styled.createGlobalStyle`
   html {
     font-size: 62.5%;
     scrollbar-gutter: stable;
-    overflow-y: scroll;
   }
 
   body {
@@ -40,6 +39,9 @@ export const GlobalStyles = styled.createGlobalStyle`
     color: #1f2937;
     background-color: #f9fafb;
     min-height: 100dvh;
+
+    overflow-y: scroll;
+    padding-right: 0px !important;
   }
 
   h1,
@@ -81,6 +83,10 @@ export const GlobalStyles = styled.createGlobalStyle`
     }
   }
 
+  svg {
+    flex-shrink: 0;
+  }
+
   input {
     outline: none;
     border: none;
@@ -95,25 +101,21 @@ export const GlobalStyles = styled.createGlobalStyle`
   .icon-sm {
     width: 1.4rem;
     height: 1.4rem;
-    flex-shrink: 0;
   }
 
   .icon-md {
     width: 1.6rem;
     height: 1.6rem;
-    flex-shrink: 0;
   }
 
   .icon-lg {
     width: 2rem;
     height: 2rem;
-    flex-shrink: 0;
   }
 
   .icon-xl {
     width: 2.4rem;
     height: 2.4rem;
-    flex-shrink: 0;
   }
 
   .emphasize {

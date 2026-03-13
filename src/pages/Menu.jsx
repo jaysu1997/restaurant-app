@@ -3,7 +3,7 @@ import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
 import useOrder from "../context/order/useOrder";
-import PageWrapper from "../ui/PageWrapper";
+import PageContainer from "../ui/PageContainer";
 import { useEffect } from "react";
 import useSettings from "../context/settings/useSettings";
 import SwiperBar from "../features/menu/SwiperBar";
@@ -55,7 +55,7 @@ function Menu() {
   };
 
   return (
-    <PageWrapper>
+    <PageContainer>
       <PageHeader title="點餐系統" />
 
       <QueryStatusFallback
@@ -73,7 +73,7 @@ function Menu() {
           <ShoppingCart derivedSettings={derivedSettings} />
         </MenuContainer>
       </QueryStatusFallback>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

@@ -36,6 +36,11 @@ const DateField = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  label {
+    color: #525252;
+    font-weight: 500;
+  }
+
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
     grid-template-rows: auto;

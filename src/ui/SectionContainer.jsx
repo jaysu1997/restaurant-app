@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 import ContentContainer from "./ContentContainer";
 import Description from "./Description";
@@ -11,11 +12,6 @@ const Section = styled.section`
   flex-direction: column;
   gap: 4rem;
   font-size: 1.4rem;
-
-  label {
-    color: #525252;
-    font-weight: 500;
-  }
 `;
 
 const SectionHeader = styled.header`
@@ -24,16 +20,15 @@ const SectionHeader = styled.header`
   gap: 1.6rem;
 `;
 
-const Header = styled.header`
+const TitleRow = styled.div`
   display: flex;
   align-items: center;
   gap: 1.2rem;
 
-  svg {
+  & > svg {
     color: #6b7280;
     width: 2rem;
     height: 2rem;
-    flex-shrink: 0;
   }
 `;
 
@@ -41,12 +36,6 @@ const Title = styled.h3`
   font-size: 2.2rem;
   font-weight: 700;
   color: #292929;
-`;
-
-const Icon = styled.div`
-  width: 2rem;
-  height: 2rem;
-  flex-shrink: 0;
 `;
 
 const Content = styled.div`
@@ -77,10 +66,10 @@ function SectionContainer({
       <Section>
         {title && (
           <SectionHeader>
-            <Header>
+            <TitleRow>
               <Title>{title}</Title>
-              <Icon>{icon}</Icon>
-            </Header>
+              {icon}
+            </TitleRow>
             {description && <Description>{description}</Description>}
           </SectionHeader>
         )}

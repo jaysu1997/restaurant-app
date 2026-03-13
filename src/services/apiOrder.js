@@ -28,6 +28,7 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
 
   if (createdTime) {
     const { from, to } = createdTime;
+
     query = query.gte("createdTime", from).lt("createdTime", to);
   }
 

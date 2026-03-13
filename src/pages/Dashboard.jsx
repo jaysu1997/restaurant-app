@@ -5,7 +5,7 @@ import styled from "styled-components";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useRecentOrders from "../hooks/data/orders/useRecentOrders";
 import StoreStatusBadge from "../ui/StoreStatusBadge ";
-import PageWrapper from "../ui/PageWrapper";
+import PageContainer from "../ui/PageContainer";
 import { useMemo } from "react";
 import analyzeOrders from "../features/dashboard/analyzeOrders";
 import useSettings from "../context/settings/useSettings";
@@ -35,7 +35,7 @@ function Dashboard() {
   }, [recentOrders]);
 
   return (
-    <PageWrapper>
+    <PageContainer>
       <PageHeader title="營運總覽">
         <StoreStatusBadge status={status} />
       </PageHeader>
@@ -52,7 +52,7 @@ function Dashboard() {
           <StatsCharts analyzedData={analyzedData} />
         </DashboardContainer>
       </QueryStatusFallback>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

@@ -10,7 +10,7 @@ import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
 import styled from "styled-components";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import { FilePlus } from "lucide-react";
-import PageWrapper from "../ui/PageWrapper.jsx";
+import PageContainer from "../ui/PageContainer.jsx";
 
 const Container = styled.ul`
   display: grid;
@@ -73,7 +73,6 @@ function MenuManage() {
       queryKey: "category",
       placeholder: "選擇餐點分類",
       options: [
-        { label: "不篩選", value: "" },
         ...Array.from(new Set(menus?.map((data) => data.category))).map(
           (category) => ({ label: category, value: category }),
         ),
@@ -82,7 +81,7 @@ function MenuManage() {
   ];
 
   return (
-    <PageWrapper>
+    <PageContainer>
       <PageHeader title="菜單設定">
         <div>
           <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
@@ -90,7 +89,9 @@ function MenuManage() {
             <span>新增餐點</span>
           </Button>
         </div>
-        <Filter filtersConfig={filtersConfig} />
+        {!menusIsLoading && menus?.length > 0 && (
+          <Filter filtersConfig={filtersConfig} />
+        )}
       </PageHeader>
 
       <QueryStatusFallback
@@ -110,7 +111,7 @@ function MenuManage() {
       </QueryStatusFallback>
 
       {isOpenModal && <MenuForm onCloseModal={() => setIsOpenModal(false)} />}
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

@@ -1,3 +1,4 @@
+// ok
 // 表格的狀態標籤ui
 import styled, { css } from "styled-components";
 
@@ -21,13 +22,15 @@ const tagStyles = {
 };
 
 const Tag = styled.span`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.4rem 1.2rem;
   font-size: 1.4rem;
   font-weight: 700;
   border-radius: 6px;
-  width: fit-content;
-  height: fit-content;
+  width: 6.6rem;
+  height: 3rem;
 
   ${(props) => tagStyles[props.$tagStatus] || tagStyles["準備中"]}
 `;

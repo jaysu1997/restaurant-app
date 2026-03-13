@@ -7,7 +7,7 @@ import useDeleteMenu from "../../hooks/data/menus/useDeleteMenu";
 
 function MenusDataCard({ menu }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const { deleteMenu, IsDeletingMenu } = useDeleteMenu();
+  const deleteMutation = useDeleteMenu();
   // 菜單數據
   const { name, category, price } = menu;
 
@@ -37,14 +37,13 @@ function MenusDataCard({ menu }) {
 
       {isOpenModal.type === "delete" && (
         <ConfirmDelete
-          onCloseModal={() => setIsOpenModal(false)}
-          handleDelete={deleteMenu}
-          isDeleting={IsDeletingMenu}
+          setIsOpenModal={setIsOpenModal}
+          deleteMutation={deleteMutation}
           data={isOpenModal.data}
           showRelatedData={false}
           render={() => (
             <p>
-              請確認是否要刪除「<strong>{isOpenModal.data.name}</strong>」？
+              請確認是否要刪除<strong> {isOpenModal.data.name} </strong>?
             </p>
           )}
         />

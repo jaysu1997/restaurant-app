@@ -74,7 +74,7 @@ function InventoryForm({ inventory, onCloseModal }) {
             descriptions={
               isEdit
                 ? [
-                    "食材名稱變更後，所有使用此食材的餐點備料與選項會將自動更新為新名稱。",
+                    "食材名稱變更後，各餐點中使用此食材的備料與選項也會同步更新為新名稱。",
                   ]
                 : null
             }

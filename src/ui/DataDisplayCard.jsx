@@ -60,7 +60,6 @@ const EditButton = styled.button`
   & svg {
     width: 1.5rem;
     height: 1.5rem;
-    flex-shrink: 0;
   }
 
   &:hover {
@@ -79,7 +78,6 @@ const DeleteButton = styled(EditButton)`
 const Divider = styled.div`
   background-color: #d1d5db;
   width: 1px;
-  flex-shrink: 0;
 `;
 
 function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {

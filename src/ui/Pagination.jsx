@@ -23,7 +23,6 @@ const PaginationControls = styled.div`
   svg {
     width: 2rem;
     height: 2rem;
-    flex-shrink: 0;
   }
 
   strong {
@@ -78,6 +77,7 @@ const JumpSection = styled.div`
   }
 `;
 
+// 時間篩選有問題
 function Pagination({ curPage, maxPage }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef(null);

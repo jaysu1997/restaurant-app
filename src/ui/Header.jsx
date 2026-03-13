@@ -10,7 +10,7 @@ const StyleHeader = styled.header`
   background-color: #fff;
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: 50;
   grid-column: 1 / -1;
   box-shadow: inset 0px -1px #e5e7eb;
 
@@ -35,7 +35,6 @@ const ToggleButton = styled.button`
   svg {
     width: 3.6rem;
     height: 3.6rem;
-    flex-shrink: 0;
   }
 
   @media (max-width: 64em) {

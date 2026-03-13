@@ -12,10 +12,9 @@ import ItemActions from "../../ui/ItemActions";
 const StyledCartItem = styled.li`
   list-style: none;
   border-bottom: 1px solid #d3d3d3;
-  display: grid;
-  grid-template-columns: 1fr minmax(5.4rem, auto);
-  align-content: space-between;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 1rem;
   padding: 1.2rem 0;
   font-size: 1.4rem;
@@ -45,6 +44,12 @@ const OrderPrice = styled.span`
   justify-self: end;
 `;
 
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 function CartItem({ dish }) {
   const {
     dispatch,
@@ -67,8 +72,10 @@ function CartItem({ dish }) {
 
   return (
     <StyledCartItem>
-      <OrderName>{dish.name}</OrderName>
-      <ItemActions dish={dish} />
+      <Row>
+        <OrderName>{dish.name}</OrderName>
+        <ItemActions dish={dish} />
+      </Row>
 
       {customizeChoices.length !== 0 && (
         <SelectedOptions>{customizeChoices}</SelectedOptions>
@@ -76,20 +83,22 @@ function CartItem({ dish }) {
 
       {dish.note && <DishNote>&quot;{dish.note}&quot;</DishNote>}
 
-      <ServingsControl
-        canIncrease={canIncrease}
-        servings={dish.servings}
-        onChange={(next) => {
-          dispatch({
-            type: "dishes/updateDishServings",
-            payload: {
-              servings: next,
-              uniqueId: dish.uniqueId,
-            },
-          });
-        }}
-      />
-      <OrderPrice>$ {dishTotalPrice}</OrderPrice>
+      <Row>
+        <OrderPrice>$ {dishTotalPrice}</OrderPrice>
+        <ServingsControl
+          canIncrease={canIncrease}
+          servings={dish.servings}
+          onChange={(next) => {
+            dispatch({
+              type: "dishes/updateDishServings",
+              payload: {
+                servings: next,
+                uniqueId: dish.uniqueId,
+              },
+            });
+          }}
+        />
+      </Row>
     </StyledCartItem>
   );
 }

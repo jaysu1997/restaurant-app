@@ -206,7 +206,7 @@ restaurant-app
 │  │  │  ├─ Option.jsx
 │  │  │  └─ OrderForm.jsx
 │  │  ├─ PageHeader.jsx
-│  │  ├─ PageWrapper.jsx
+│  │  ├─ PageContainer.jsx
 │  │  ├─ Pagination.jsx
 │  │  ├─ ProtectedRoute.jsx
 │  │  ├─ QueryStatusFallback.jsx
