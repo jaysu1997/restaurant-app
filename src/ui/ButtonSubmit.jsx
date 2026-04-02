@@ -4,14 +4,14 @@ import Button from "./Button";
 function ButtonSubmit({
   label = "儲存",
   isProcessing = false,
-  isFullWidth = false,
+  fullWidth = false,
   ...rest
 }) {
   return (
     <Button
       type="submit"
       $isProcessing={isProcessing}
-      $isFullWidth={isFullWidth}
+      $isFullWidth={fullWidth}
       {...rest}
     >
       <span>{label}</span>

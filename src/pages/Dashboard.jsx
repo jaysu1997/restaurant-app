@@ -1,14 +1,13 @@
-import StatsCards from "../features/dashboard/StatsCards";
-import StatsCharts from "../features/dashboard/StatsCharts";
+// ok
+import StatsCards from "../features/dashboard/components/StatsCards";
+import StatsCharts from "../features/dashboard/components/StatsCharts";
 import PageHeader from "../ui/PageHeader";
 import styled from "styled-components";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import useRecentOrders from "../hooks/data/orders/useRecentOrders";
-import StoreStatusBadge from "../ui/StoreStatusBadge ";
 import PageContainer from "../ui/PageContainer";
-import { useMemo } from "react";
-import analyzeOrders from "../features/dashboard/analyzeOrders";
-import useSettings from "../context/settings/useSettings";
+import { getDashboardStats } from "../features/dashboard/utils/getDashboardStats";
+import useRecentOrders from "../hooks/data/orders/useRecentOrders";
+import StoreStatusBadge from "../features/dashboard/components/StoreStatusBadge";
 
 const DashboardContainer = styled.div`
   display: flex;
@@ -25,19 +24,13 @@ function Dashboard() {
     recentOrdersError,
   } = useRecentOrders();
 
-  const { status } = useSettings();
-
   // 取得數據後進行分析
-  const analyzedData = useMemo(() => {
-    if (!recentOrders) return null;
-
-    return analyzeOrders(recentOrders);
-  }, [recentOrders]);
+  const analyzedData = getDashboardStats(recentOrders);
 
   return (
     <PageContainer>
       <PageHeader title="營運總覽">
-        <StoreStatusBadge status={status} />
+        <StoreStatusBadge />
       </PageHeader>
 
       <QueryStatusFallback

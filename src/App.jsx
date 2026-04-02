@@ -1,23 +1,23 @@
-import { BrowserRouter, Route, Routes } from "react-router";
-import AppLayout from "./ui/AppLayout";
-import Menu from "./pages/Menu";
-import Orders from "./pages/Orders";
-import MenuManage from "./pages/MenuManage";
-import Inventory from "./pages/Inventory";
-import Settings from "./pages/Settings";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "react-hot-toast";
-import Order from "./pages/Order";
-import PageNotFound from "./pages/PageNotFound";
 import "react-day-picker/style.css";
-import Dashboard from "./pages/Dashboard";
+import { Toaster } from "react-hot-toast";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AppLayout from "./components/AppLayout";
+import Menu from "./pages/Menu";
 import Login from "./pages/Login";
-import ProtectedRoute from "./ui/ProtectedRoute";
-import Account from "./pages/Account";
-import ScrollToTop from "./components/ScrollToTop";
+import Order from "./pages/Order";
 import Staff from "./pages/Staff";
+import Orders from "./pages/Orders";
+import Account from "./pages/Account";
+import Settings from "./pages/Settings";
+import Inventory from "./pages/Inventory";
+import Dashboard from "./pages/Dashboard";
+import MenuManage from "./pages/MenuManage";
+import PageNotFound from "./pages/PageNotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
+import { OrderProvider } from "./context/orders/OrderContext";
 import { SettingsProvider } from "./context/settings/SettingsContext";
-import { OrderProvider } from "./context/order/OrderContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +35,8 @@ const queryClient = new QueryClient({
   },
 });
 
+// 重構2.0 state
+
 // 列表類的ui，如果有border設計問題，建議都改成& + &解決
 
 // 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?或許可以一律套用class?
@@ -42,8 +44,6 @@ const queryClient = new QueryClient({
 // 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)，或許可以分成日期時間helper、正則helpers...
 
 // isProcessing
-
-// form submit disabled 建議加上 || isSubmitting
 
 // SEO、lighthouse檢查
 

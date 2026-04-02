@@ -21,11 +21,11 @@ const Form = styled.form`
 `;
 
 function UserProfileSetting({ userData }) {
-  const { updateUserProfile, isUpdateUserProfile } = useUpdateUserProfile();
+  const { updateUserProfile, isUpdatingUserProfile } = useUpdateUserProfile();
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
     reset,
   } = useForm({
     defaultValues: {
@@ -34,13 +34,17 @@ function UserProfileSetting({ userData }) {
     },
   });
 
+  const isProcessing = isSubmitting || isUpdatingUserProfile;
+
   function onSubmit(data) {
     updateUserProfile(data, {
-      onSuccess: (newData) =>
-        reset({
-          name: newData.user.user_metadata.name,
-          personalPhone: newData.user.user_metadata.personalPhone,
-        }),
+      onSuccess: (newData) => {
+        // 消除field的focus狀態
+        document.activeElement?.blur();
+
+        const { name, personalPhone } = newData.user.user_metadata;
+        reset({ name, personalPhone });
+      },
     });
   }
 
@@ -57,7 +61,7 @@ function UserProfileSetting({ userData }) {
         formId: "userProfile",
         handleReset: () => reset(),
         isDirty: isDirty,
-        isProcessing: isUpdateUserProfile,
+        isProcessing: isProcessing,
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="userProfile">

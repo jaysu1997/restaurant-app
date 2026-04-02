@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { logoutApi } from "../../../services/apiAuth";
 import { useNavigate } from "react-router";
 import StyledHotToast from "../../../ui/StyledHotToast";
+import { logoutApi } from "../../../services/apiAuth";
 
-function useLogout() {
+export function useLogout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

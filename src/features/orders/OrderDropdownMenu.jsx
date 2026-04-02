@@ -32,13 +32,13 @@ const ToggleButton = styled.button`
 
 function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(null);
   const deleteMutation = useDeleteOrder();
 
   const { id, pickupNumber, createdTime, status } = orderData;
   const isFinished = status === "已完成";
 
-  const itemsConfig = [
+  const actions = [
     {
       name: "檢視訂單",
       icon: Eye,
@@ -62,7 +62,7 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
   return (
     <>
       <DropdownMenu
-        itemsConfig={itemsConfig}
+        items={actions}
         isOpen={openMenuId === id}
         onClose={() => setOpenMenuId(null)}
       >

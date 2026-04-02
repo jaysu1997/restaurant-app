@@ -1,6 +1,7 @@
+// ok
 import styled from "styled-components";
+import NavItem from "./NavItem";
 import useUser from "../hooks/data/auth/useUser";
-import NavItem from "../ui/NavItem";
 import useScrollLock from "../hooks/ui/useScrollLock";
 import {
   LayoutDashboard,
@@ -12,7 +13,7 @@ import {
   Soup,
 } from "lucide-react";
 import useMediaQuery from "../hooks/ui/useMediaQuery";
-import StyledOverlay from "../ui/StyledOverlay";
+import StyledOverlay from "./StyledOverlay";
 
 const Overlay = styled(StyledOverlay)`
   display: none;
@@ -64,7 +65,7 @@ const NavList = styled.ul`
   }
 `;
 
-const navigationsLink = [
+const navItems = [
   { to: "/", icon: LayoutDashboard, title: "營運總覽" },
   { to: "menu", icon: Soup, title: "點餐系統" },
   { to: "/orders", icon: ClipboardList, title: "訂單管理" },
@@ -73,15 +74,12 @@ const navigationsLink = [
   { to: "/settings", icon: Settings, title: "店鋪設定" },
 ];
 
-function Navbar({ isOpen, setIsOpen }) {
+function Navbar({ isOpen, onClose }) {
   const { user } = useUser();
   const userRole = user?.user_metadata?.role;
   const isManager = userRole === "店長";
 
-  const onClose = () => setIsOpen(false);
-
   const isMatched = useMediaQuery(64, onClose);
-
   // html滾動功能鎖定
   useScrollLock(isMatched && isOpen);
 
@@ -99,13 +97,13 @@ function Navbar({ isOpen, setIsOpen }) {
 
       <Nav $isOpen={isOpen} inert={isMatched && !isOpen}>
         <NavList>
-          {navigationsLink.map((nav) => (
-            <NavItem navData={nav} onClose={onClose} key={nav.title} />
+          {navItems.map((navItem) => (
+            <NavItem navItem={navItem} onClose={onClose} key={navItem.title} />
           ))}
 
           {isManager && (
             <NavItem
-              navData={{
+              navItem={{
                 to: "/staff",
                 icon: UserRoundCog,
                 title: "員工管理",

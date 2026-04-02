@@ -45,7 +45,7 @@ function Staff() {
           {isOpenModal.type === "create" && (
             <Modal
               modalHeader="註冊新帳號"
-              onCloseModal={() => setIsOpenModal(false)}
+              onClose={() => setIsOpenModal(false)}
             >
               <Signup setIsOpenModal={setIsOpenModal} />
             </Modal>

@@ -51,35 +51,35 @@ function UpdateUserAvatar({ userData }) {
   }
 
   return (
-    <SectionContainer>
-      <StyledUpdateUserAvatar>
-        <UserAvatar avatarUrl={avatarUrl} />
+    <>
+      <SectionContainer>
+        <StyledUpdateUserAvatar>
+          <UserAvatar avatarUrl={avatarUrl} />
+          <Button $variant="tertiary" as="label" htmlFor="upload-avatar">
+            <Upload />
+            選擇新頭像
+          </Button>
+          <span>必須是 JPEG、PNG、GIF 檔。</span>
+        </StyledUpdateUserAvatar>
 
-        <Button $variant="tertiary" as="label" htmlFor="upload-avatar">
-          <Upload />
-          選擇新頭像
-        </Button>
-
-        <span>必須是 JPEG、PNG、GIF 檔。</span>
-      </StyledUpdateUserAvatar>
-
-      <input
-        id="upload-avatar"
-        name="avatar"
-        type="file"
-        accept="image/png, image/jpeg, image/webp"
-        hidden
-        onChange={(e) => handleSelectFile(e)}
-      />
+        <input
+          id="upload-avatar"
+          name="avatar"
+          type="file"
+          accept="image/png, image/jpeg, image/webp"
+          hidden
+          onChange={(e) => handleSelectFile(e)}
+        />
+      </SectionContainer>
 
       {imgUrl && (
         <AvatarCropper
           userData={userData}
           imgUrl={imgUrl}
-          onCloseModal={handleCloseModal}
+          onClose={handleCloseModal}
         />
       )}
-    </SectionContainer>
+    </>
   );
 }
 

@@ -20,16 +20,18 @@ import {
   formatToHourMinute,
   generatePickupTimeOptions,
 } from "../../context/settings/settingsHelpers";
-import useOrder from "../../context/order/useOrder";
+import useOrderDraft from "../../context/orders/useOrderDraft";
+import useSettings from "../../context/settings/useSettings";
 
 // 這裡的樣式需要修正(整體布局都需要)
-function OrderSummaryEdit({ orderData, settingsData }) {
+function OrderSummaryEdit({ orderData }) {
   const { updateOrder, isUpdatingOrder } = useUpdateOrder();
+  const { todayOpenInfo, dineInTableOptions } = useSettings();
 
   const {
-    state: { dishes },
+    state: { items },
     dispatch,
-  } = useOrder();
+  } = useOrderDraft();
 
   const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
     useGetInventory();
@@ -48,7 +50,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
 
   useEffect(() => {
     dispatch({
-      type: "order/edit",
+      type: "draft/loadFromOrder",
       payload: orderData,
     });
   }, [dispatch, orderData]);
@@ -76,15 +78,13 @@ function OrderSummaryEdit({ orderData, settingsData }) {
 
   const takeOut = watch("diningMethod") === "外帶";
 
-  const pickupTimeOptions = generatePickupTimeOptions(
-    settingsData.todayOpenInfo,
-  );
+  const pickupTimeOptions = generatePickupTimeOptions(todayOpenInfo);
 
   const isOrderingAvailable =
-    !settingsData.todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
+    !todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
 
   function onSubmit(data) {
-    const orderData = buildOrderData(dishes, data, inventory);
+    const orderData = buildOrderData(items, data, inventory);
 
     updateOrder(orderData);
   }
@@ -120,7 +120,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
               <span>{orderUUID}</span>
             </div>
 
-            <OrderDishes dishes={dishes} isEdit={true} />
+            <OrderDishes items={items} isEdit={true} />
           </OrderCard>
         </ContentContainer>
 
@@ -129,7 +129,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
             <div>
               <label>用餐方式：</label>
               <DiningMethodSegmented
-                isDisabled={dishes.length === 0 || isOrderingAvailable}
+                isDisabled={items.length === 0 || isOrderingAvailable}
               />
             </div>
             <div>
@@ -138,11 +138,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
                 error={takeOut ? errors?.pickupTime : errors?.tableNumber}
               >
                 <ControlledSelect
-                  options={
-                    takeOut
-                      ? pickupTimeOptions
-                      : settingsData.dineInTableOptions
-                  }
+                  options={takeOut ? pickupTimeOptions : dineInTableOptions}
                   name={takeOut ? "pickupTime" : "tableNumber"}
                   creatable={false}
                   placeholder={takeOut ? "選擇取餐時間" : "選擇桌號"}
@@ -214,7 +210,7 @@ function OrderSummaryEdit({ orderData, settingsData }) {
         <OrderOperation
           isEdit={true}
           isUpdating={isUpdatingOrder}
-          disabeldSubmit={dishes.length === 0}
+          disabeldSubmit={items.length === 0}
           orderData={orderData}
           handleSubmit={handleSubmit(onSubmit, onError)}
         />

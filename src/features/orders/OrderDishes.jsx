@@ -5,7 +5,11 @@ import {
 } from "../../utils/orderHelpers";
 import styled from "styled-components";
 import MiniMenu from "./MiniMenu";
-import ItemActions from "../../ui/ItemActions";
+import OrderItemActions from "../../ui/OrderItemActions";
+import Button from "../../ui/Button";
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import Price from "../../components/Price";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -31,7 +35,7 @@ const OrderDishRow = styled.li`
     min-height: 0;
   }
 
-  .dishName {
+  .itemName {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -45,13 +49,13 @@ const OrderDishRow = styled.li`
       display: none;
     }
 
-    .dishServings {
-      grid-row: 3;
-    }
-
-    .dishPrice {
+    .itemServings {
       grid-row: 3;
       justify-self: end;
+    }
+
+    .itemPrice {
+      grid-row: 3;
       white-space: nowrap;
     }
   }
@@ -62,7 +66,7 @@ const OrderSummary = styled.div`
   justify-content: flex-end;
   align-items: center;
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 1rem 0;
   gap: 1rem;
   flex-wrap: wrap;
@@ -83,7 +87,7 @@ const ItemMeta = styled.div`
   font-weight: 400;
   font-size: 1.4rem;
 
-  .dishNote {
+  .itemNote {
     color: #6b7280;
   }
 
@@ -92,39 +96,46 @@ const ItemMeta = styled.div`
   }
 `;
 
-function OrderDishes({ dishes, isEdit }) {
-  const { totalServings, totalPrice } = calculateOrderSummary(dishes);
+function OrderDishes({ items, isEdit }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { totalServings, totalPrice } = calculateOrderSummary(items);
 
   return (
     <OrderDishesList>
       <OrderDishRow>
         <span>訂購餐點</span>
-        <span>數量</span>
         <span>金額</span>
+        <span>數量</span>
       </OrderDishRow>
 
-      {dishes.map((dish) => (
-        <OrderDishRow key={dish.uniqueId}>
-          <span className="dishName">{dish.name}</span>
+      {items.map((item) => (
+        <OrderDishRow key={item.uniqueId}>
+          <span className="itemName">{item.name}</span>
           <ItemMeta>
-            {dish.customize.length !== 0 && <p>{summarizeMealChoices(dish)}</p>}
-            {dish.note && <p className="dishNote">{`" ${dish.note} "`}</p>}
+            {item.customize.length !== 0 && <p>{summarizeMealChoices(item)}</p>}
+            {item.note && <p className="itemNote">{`" ${item.note} "`}</p>}
           </ItemMeta>
 
-          <span className="dishServings">{dish.servings} 份</span>
-          <span className="emphasize dishPrice">
-            $ {dish.unitPrice * dish.servings}
-          </span>
-          {isEdit && <ItemActions dish={dish} />}
+          <Price className="itemPrice">
+            $ {item.unitPrice * item.servings}
+          </Price>
+          <span className="itemServings">{item.servings} 份</span>
+          {isEdit && <OrderItemActions item={item} />}
         </OrderDishRow>
       ))}
 
       <OrderSummary>
-        {isEdit && <MiniMenu />}
+        {isEdit && (
+          <Button $variant="text" onClick={() => setIsOpen(true)}>
+            <Plus />
+            新增餐點
+          </Button>
+        )}
+        {isOpen && <MiniMenu onClose={() => setIsOpen(false)} />}
         <div>
           <span>總計：</span>
           <span>共 {totalServings} 份</span>
-          <span className="emphasize">$ {totalPrice}</span>
+          <Price>$ {totalPrice}</Price>
         </div>
       </OrderSummary>
     </OrderDishesList>

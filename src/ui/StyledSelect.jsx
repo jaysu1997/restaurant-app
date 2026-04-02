@@ -36,8 +36,10 @@ function StyledSelect({ creatable = false, ...rest }) {
 
       // 在 select menu 上滾動OK
       if (target && target?.classList?.contains("rs__menu-list")) return;
+
       // 外部滾動則關閉 + blur input
       setMenuOpen(false);
+      document.activeElement?.blur();
     };
 
     document.addEventListener("scroll", handleScroll, true);

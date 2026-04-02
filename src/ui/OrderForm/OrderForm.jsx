@@ -1,6 +1,6 @@
 // 點餐功能表單
 import styled from "styled-components";
-import useOrder from "../../context/order/useOrder";
+import useOrderDraft from "../../context/orders/useOrderDraft";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -11,7 +11,6 @@ import {
   generateDishItemId,
 } from "../../utils/orderHelpers";
 import StyledHotToast from "../StyledHotToast";
-import Modal from "../Modal";
 import Note from "../Note";
 import CustomizationField from "./CustomizationField";
 import ServingsControl from "../ServingsControl";
@@ -20,10 +19,9 @@ import Button from "../../ui/Button";
 
 const Form = styled.form`
   display: grid;
-  grid-template-rows: 1fr 7.2rem;
+  grid-template-rows: minmax(0, 1fr) 7.2rem;
   max-height: calc(90dvh - 5.6rem);
   width: min(36rem, 95dvw);
-  font-size: 1.4rem;
 `;
 
 const Container = styled.div`
@@ -36,8 +34,7 @@ const Container = styled.div`
 
 const Price = styled.span`
   color: #dc2626;
-  font-weight: 600;
-  font-size: 1.6rem;
+  font-weight: 500;
 `;
 
 const Title = styled.h5`
@@ -55,21 +52,22 @@ const Footer = styled.footer`
   gap: 2rem;
   box-shadow: inset 0px 1px #e5e7eb;
   padding: 1.6rem;
+  background-color: #fff;
 `;
 
-function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
+function OrderForm({ orderDish, onClose, isEdit = false }) {
   // 餐點編輯的相關功能
   const {
-    state: { dishes, activeCustomization, inventoryMap },
+    state: { items, activeCustomization, inventoryMap },
     dispatch,
-  } = useOrder();
+  } = useOrderDraft();
 
   const [servings, setServings] = useState(orderDish.servings || 1);
 
   // 初始化useReducer的activeCustomization(自訂項目的詳細數據)
   useEffect(() => {
     dispatch({
-      type: "orderForm/init",
+      type: "customization/init",
       payload: orderDish.customize,
     });
   }, [dispatch, orderDish.customize]);
@@ -107,10 +105,10 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
       const unitPrice = calcUnitPrice(activeCustomization, orderDish);
 
       // 專屬id
-      const uniqueId = orderDish.uniqueId ?? generateDishItemId(dishes);
+      const uniqueId = orderDish.uniqueId ?? generateDishItemId(items);
 
       // 生成要提交的訂餐數據
-      const dishData = {
+      const itemData = {
         ...data,
         unitPrice,
         unitUsage,
@@ -119,11 +117,11 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
       };
 
       dispatch({
-        type: isEdit ? "dishes/updateDish" : "dishes/addDish",
-        payload: isEdit ? { dishData, prevTotalUsage } : dishData,
+        type: isEdit ? "items/update" : "items/add",
+        payload: isEdit ? { itemData, prevTotalUsage } : itemData,
       });
 
-      onCloseModal();
+      onClose();
     } else {
       // 庫存不足
       StyledHotToast({
@@ -139,41 +137,35 @@ function OrderForm({ orderDish, onCloseModal, isEdit = false }) {
   }
 
   return (
-    <Modal
-      modalHeader={orderDish.name}
-      onCloseModal={onCloseModal}
-      scrollBar={false}
-    >
-      <Form onSubmit={handleSubmit(onSubmit, onError)}>
-        <Container>
-          <Price>$ {orderDish.price - orderDish.discount}</Price>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+      <Container>
+        <Price>$ {orderDish.price - orderDish.discount}</Price>
 
-          {activeCustomization.map((customization) => (
-            <CustomizationField
-              customization={customization}
-              key={customization.customizeId}
-            />
-          ))}
-
-          <Note register={register} maxLength={20}>
-            <Title>餐點備註</Title>
-          </Note>
-        </Container>
-
-        <Footer>
-          <ServingsControl
-            servings={servings}
-            onChange={setServings}
-            canIncrease={true}
+        {activeCustomization.map((customization) => (
+          <CustomizationField
+            customization={customization}
+            key={customization.customizeId}
           />
+        ))}
 
-          <Button type="submit" $isFullWidth disabled={!isFormComplete}>
-            <ShoppingBag />
-            加入購物車
-          </Button>
-        </Footer>
-      </Form>
-    </Modal>
+        <Note register={register} maxLength={20}>
+          <Title>餐點備註</Title>
+        </Note>
+      </Container>
+
+      <Footer>
+        <ServingsControl
+          servings={servings}
+          onChange={setServings}
+          canIncrease={true}
+        />
+
+        <Button type="submit" $isFullWidth={true} disabled={!isFormComplete}>
+          <ShoppingBag />
+          加入購物車
+        </Button>
+      </Footer>
+    </Form>
   );
 }
 

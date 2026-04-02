@@ -6,6 +6,7 @@ import ControlledSwitch from "../ui/ControlledSwitch";
 import Button from "../ui/Button";
 import { useFormContext } from "react-hook-form";
 import FormInput from "../ui/FormInput";
+import ReqiuredMark from "../ui/RequiredMark";
 
 // 測試看看(應該要改個名稱，例如UpsertFormSection之類的)
 const Section = styled.div`
@@ -87,7 +88,7 @@ function FormSection({
       {heading && (
         <Heading as={heading.as}>
           {heading.text}
-          {heading.required && <span className="emphasize">*</span>}
+          {heading.required && <ReqiuredMark />}
           {heading.action && (
             <Button $variant="ghost" onClick={heading.action}>
               <Trash2 />

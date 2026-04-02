@@ -27,7 +27,7 @@ function parseFilterQuery(searchParams, filtersConfig) {
 
 // 處理searchParams更新(URL)
 function buildSearchParams(filters, searchParams) {
-  const params = new URLSearchParams(searchParams);
+  const newParams = new URLSearchParams(searchParams);
 
   for (const [key, obj] of Object.entries(filters)) {
     let value = "";
@@ -50,13 +50,13 @@ function buildSearchParams(filters, searchParams) {
 
     // 有篩選的項目新增，沒篩選的刪除
     if (value) {
-      params.set(key, value);
+      newParams.set(key, value);
     } else {
-      params.delete(key);
+      newParams.delete(key);
     }
   }
 
-  return params;
+  return newParams;
 }
 
 export { parseFilterQuery, buildSearchParams };

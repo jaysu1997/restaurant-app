@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import useScrollLock from "../hooks/ui/useScrollLock";
-import CloseButton from "./CloseButton";
-import StyledOverlay from "./StyledOverlay";
+import ModalCloseButton from "../components/ModalCloseButton";
+import StyledOverlay from "../components/StyledOverlay";
 import { createPortal } from "react-dom";
 
 const Overlay = styled(StyledOverlay)`
@@ -56,7 +56,7 @@ const Content = styled.div`
 
 function Modal({
   children,
-  onCloseModal,
+  onClose,
   modalHeader = "表單",
   headerColor = "inherit",
   maxWidth = 36,
@@ -69,7 +69,7 @@ function Modal({
       <StyleModal $maxWidth={maxWidth}>
         <Header>
           <Title $textColor={headerColor}>{modalHeader}</Title>
-          <CloseButton onClose={onCloseModal} />
+          <ModalCloseButton onClose={onClose} />
         </Header>
         <Content $scrollbar={scrollBar}>{children}</Content>
       </StyleModal>

@@ -3,13 +3,13 @@ import { format, isValid, parseISO } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
 // 生成訂單餐點uniqueId
-export function generateDishItemId(dishes) {
+export function generateDishItemId(items) {
   const newId = Math.random().toString(36).slice(2, -1);
   // 檢查ID是否會重複
-  const idExists = dishes.some((dish) => dish.uniqueId === newId);
+  const idExists = items.some((item) => item.uniqueId === newId);
 
   if (idExists) {
-    return generateDishItemId(dishes);
+    return generateDishItemId(items);
   }
 
   return newId;
@@ -69,8 +69,8 @@ export function formatPickupNumber(pickupNumber) {
 }
 
 // 訂單單一餐點的所有自訂項目選擇彙整
-export function summarizeMealChoices(dish) {
-  return dish.customize
+export function summarizeMealChoices(item) {
+  return item.customize
     .reduce((acc, cur) => {
       if (cur.selectOptions.length === 0) return acc;
 
@@ -84,8 +84,8 @@ export function summarizeMealChoices(dish) {
 }
 
 // 計算訂單的總份數和總金額
-export function calculateOrderSummary(order) {
-  const { totalServings, totalPrice } = order.reduce(
+export function calculateOrderSummary(items) {
+  const { totalServings, totalPrice } = items.reduce(
     (acc, cur) => {
       acc.totalServings += cur.servings;
       acc.totalPrice += cur.servings * cur.unitPrice;
@@ -183,18 +183,18 @@ export function checkInventoryAvailability({
 }
 
 // 整合要上傳的訂單數據
-export function buildOrderData(dishes, data) {
+export function buildOrderData(items, data) {
   // 計算餐點總分數與總
-  const { totalServings, totalPrice } = calculateOrderSummary(dishes);
+  const { totalServings, totalPrice } = calculateOrderSummary(items);
 
   // 計算訂單的食材總共使用量
   const totalIngredientsUsage = Object.fromEntries(
-    dishes.reduce((acc, dish) => {
-      dish.unitUsage.forEach(({ quantity, name }, uuid) => {
+    items.reduce((acc, item) => {
+      item.unitUsage.forEach(({ quantity, name }, uuid) => {
         const { quantity: curQuantity = 0 } = acc.get(uuid) || {};
         acc.set(uuid, {
           name,
-          quantity: curQuantity + quantity * dish.servings,
+          quantity: curQuantity + quantity * item.servings,
         });
       });
 
@@ -204,9 +204,9 @@ export function buildOrderData(dishes, data) {
 
   const orderData = {
     ...data,
-    dishes: dishes.map((dish) => ({
-      ...dish,
-      unitUsage: Object.fromEntries(dish.unitUsage),
+    items: items.map((item) => ({
+      ...item,
+      unitUsage: Object.fromEntries(item.unitUsage),
     })),
     totalServings,
     totalPrice,
@@ -271,9 +271,9 @@ export function applyInventoryUsage({ inventoryMap, unitUsage, servings }) {
   });
 }
 
-// 根據uniqueId尋找餐點在dishes中的索引值
-export function findDishIndexById(dishes, uniqueId) {
-  return dishes.findIndex((dish) => dish.uniqueId === uniqueId);
+// 根據uniqueId尋找餐點在items中的索引值
+export function findItemIndexById(items, uniqueId) {
+  return items.findIndex((item) => item.uniqueId === uniqueId);
 }
 
 // 計算當前訂購餐點的單價(1份)

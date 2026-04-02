@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import { Check, Square } from "lucide-react";
 

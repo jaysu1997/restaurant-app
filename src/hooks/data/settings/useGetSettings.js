@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getSettingsApi } from "../../../services/apiSettings";
 import { withFallbackRetry } from "../../../utils/helpers";
+import { getSettingsApi } from "../../../services/apiSettings";
 
 // 取得所有設定的數據
 function useGetSettings() {

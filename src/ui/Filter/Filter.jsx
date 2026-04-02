@@ -11,7 +11,7 @@ import { buildSearchParams, parseFilterQuery } from "./filterHelpers";
 import Button from "../../ui/Button";
 import FilterIcon from "../../ui/FilterIcon";
 import FormFieldLayout from "../FormFieldLayout";
-import StyledOverlay from "../StyledOverlay";
+import StyledOverlay from "../../components/StyledOverlay";
 import { X } from "lucide-react";
 
 const StyledFilter = styled.div`
@@ -154,13 +154,13 @@ function Filter({ filtersConfig }) {
   }
 
   function confirmFilters() {
-    const params = buildSearchParams(draftFilters, searchParams);
+    const newParams = buildSearchParams(draftFilters, searchParams);
 
     if (pathname === "/orders") {
-      params.set("page", "1");
+      newParams.set("page", "1");
     }
 
-    setSearchParams(params);
+    setSearchParams(newParams);
     setIsOpen(false);
   }
 

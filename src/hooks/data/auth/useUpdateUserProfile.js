@@ -21,7 +21,7 @@ function useUpdateUserProfile() {
     },
   });
 
-  return { updateUserProfile: mutate, isUpdateUserProfile: isPending };
+  return { updateUserProfile: mutate, isUpdatingUserProfile: isPending };
 }
 
 export default useUpdateUserProfile;

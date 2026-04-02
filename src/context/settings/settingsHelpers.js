@@ -87,8 +87,8 @@ export function matchOpenHours(settingsData, date) {
 }
 
 // 取得今天的營業資訊
-export function getOpenHoursInfo(settingsData, date) {
-  const now = date;
+export function getOpenHoursInfo(settingsData) {
+  const now = new Date();
   const todayOpenHours = matchOpenHours(settingsData, now);
   const lastTimeSlot = todayOpenHours.timeSlots.at(-1);
 
@@ -174,64 +174,4 @@ export function generatePickupTimeOptions(todayOpenInfo) {
     });
 
   return pickupTime;
-}
-
-// 取得當前是否營業中的狀態
-export function getOpenStatus(todayOpenInfo) {
-  const now = new Date();
-  let nextUpdateTime;
-  let isOpenNow = false;
-  let tooltip = "今日公休";
-
-  const { isBusinessDay, timeSlots } = todayOpenInfo;
-
-  // 公休日
-  if (!isBusinessDay) return { isOpenNow, tooltip, nextUpdateTime };
-
-  for (const slot of timeSlots) {
-    const open = slot.openTime.value;
-    const close = slot.closeTime.value;
-
-    // 休息中
-    if (open > now) {
-      nextUpdateTime = open;
-      tooltip = `${formatToHourMinute(open)} 開始營業`;
-      break;
-
-      // 營業中
-    } else if (isWithinInterval(now, { start: open, end: close })) {
-      isOpenNow = true;
-      nextUpdateTime = close;
-      // 結束時間可能是明日，需要先進行判別
-      const tomorrow = isTomorrow(close);
-      tooltip = `${tomorrow ? "明日 " : ""}${formatToHourMinute(close)} 休息`;
-      break;
-    }
-    // 營業時段都已經結束(打烊)
-    tooltip = "今日已打烊";
-  }
-
-  return { isOpenNow, tooltip, nextUpdateTime };
-}
-
-export function startOpenStatusTimer({ todayOpenInfo, setStatus, timerRef }) {
-  if (timerRef.current) {
-    clearTimeout(timerRef.current);
-  }
-
-  const { isOpenNow, tooltip, nextUpdateTime } = getOpenStatus(todayOpenInfo);
-
-  setStatus({ isOpenNow, tooltip });
-
-  if (nextUpdateTime) {
-    const countdown = nextUpdateTime.getTime() - Date.now();
-
-    timerRef.current = setTimeout(() => {
-      startOpenStatusTimer({
-        todayOpenInfo,
-        setStatus,
-        timerRef,
-      });
-    }, countdown);
-  }
 }

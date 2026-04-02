@@ -113,7 +113,7 @@ function MenuForm({ onCloseModal, menu }) {
     <Modal
       modalHeader="餐點設定表單"
       maxWidth={56}
-      onCloseModal={onCloseModal}
+      onClose={onCloseModal}
       scrollBar={false}
     >
       <QueryStatusFallback

@@ -26,10 +26,11 @@ function UpdatePassword({ userData }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
     reset,
-    watch,
+    trigger,
     setError,
+    getValues,
   } = useForm({
     defaultValues: {
       currentPassword: "",
@@ -37,6 +38,8 @@ function UpdatePassword({ userData }) {
       confirmPassword: "",
     },
   });
+
+  const isProcessing = isSubmitting || isUpdatingUserPassword;
 
   function onSubmit(data) {
     const { currentPassword, newPassword } = data;
@@ -48,6 +51,10 @@ function UpdatePassword({ userData }) {
     };
 
     updateUserPassword(userCredentials, {
+      onSuccess: () => {
+        // 消除field的focus狀態
+        document.activeElement?.blur();
+      },
       onError: (error) => {
         // 現有密碼輸入錯誤
         if (error.code === "invalid_credentials") {
@@ -73,7 +80,7 @@ function UpdatePassword({ userData }) {
         formId: "updatePassword",
         handleReset: () => reset(),
         isDirty: isDirty,
-        isProcessing: isUpdatingUserPassword,
+        isProcessing: isProcessing,
       }}
     >
       <Form onSubmit={handleSubmit(onSubmit, onError)} id="updatePassword">
@@ -104,7 +111,8 @@ function UpdatePassword({ userData }) {
               required: "請輸入新的密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
               validate: (value) => {
-                const currentPassword = watch("currentPassword");
+                const currentPassword = getValues("currentPassword");
+                trigger("confirmPassword");
                 return value !== currentPassword || "新密碼不能與舊密碼相同";
               },
             })}
@@ -123,7 +131,7 @@ function UpdatePassword({ userData }) {
               required: "請再次輸入新密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
               validate: (value) => {
-                const newPassword = watch("newPassword");
+                const newPassword = getValues("newPassword");
                 return value === newPassword || "兩次輸入的新密碼不一致";
               },
             })}

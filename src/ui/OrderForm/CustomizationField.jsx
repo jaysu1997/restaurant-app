@@ -1,6 +1,5 @@
-// ok
 import styled from "styled-components";
-import useOrder from "../../context/order/useOrder";
+import useOrderDraft from "../../context/orders/useOrderDraft";
 import Option from "./Option";
 
 // 不同選項要求和狀態的樣式設定
@@ -59,6 +58,7 @@ const RequiredLabel = styled.span`
 `;
 
 const ChoiceHint = styled.p`
+  font-size: 1.4rem;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.6);
 `;
@@ -85,7 +85,7 @@ function getFieldStatus(customization) {
 
 // 自訂選項區塊
 function CustomizationField({ customization }) {
-  const { dispatch } = useOrder();
+  const { dispatch } = useOrderDraft();
 
   const { choiceType, customizeId, title, options } = customization;
 
@@ -99,13 +99,13 @@ function CustomizationField({ customization }) {
 
     if (!e.target.checked) {
       // 移除選項
-      actionType = "activeCustomization/removeChoice";
+      actionType = "customization/removeOption";
     } else if (choiceType === "multiple") {
       // 多選新增
-      actionType = "activeCustomization/addMultipleChoice";
+      actionType = "customization/addOption";
     } else {
       // 單選新增
-      actionType = "activeCustomization/setSingleChoice";
+      actionType = "customization/setSingle";
     }
 
     dispatch({

@@ -1,4 +1,3 @@
-// ok
 // 控制和設定餐點份數的元件
 import styled from "styled-components";
 import { Minus, Plus } from "lucide-react";

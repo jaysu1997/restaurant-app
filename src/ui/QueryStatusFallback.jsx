@@ -1,8 +1,9 @@
+// ok
 import LoadingBars from "./LoadingBars";
-import ErrorSvg from "../assets/error.svg?react";
-import EmptyState from "../assets/empty-state.svg?react";
+import errorSvg from "../assets/error.svg";
+import emptyStateSvg from "../assets/empty-state.svg";
 import { useNavigate } from "react-router";
-import StatusView from "../ui/StatusView";
+import FeedbackState from "../components/FeedbackState";
 import Button from "../ui/Button";
 
 // 根據數據獲取狀態和結果回傳不同的ui
@@ -21,7 +22,7 @@ function QueryStatusFallback({
 
   if (isError) {
     statusConfig = {
-      img: <ErrorSvg role="img" aria-label="數據獲取失敗警告圖示" />,
+      img: <img src={errorSvg} alt="數據獲取失敗警告圖示" />,
       heading: "數據獲取失敗",
       description: errorFallback?.message,
       actionLabel: errorFallback?.actionLabel,
@@ -31,7 +32,7 @@ function QueryStatusFallback({
 
   if (hasNoData) {
     statusConfig = {
-      img: <EmptyState role="img" aria-label="沒有相關數據圖示" />,
+      img: <img src={emptyStateSvg} alt="沒有相關數據圖示" />,
       heading: "沒有相關數據",
       description: noDataFallback?.message,
       actionLabel: noDataFallback?.actionLabel,
@@ -41,8 +42,8 @@ function QueryStatusFallback({
 
   if (statusConfig) {
     return (
-      <StatusView
-        img={statusConfig.img}
+      <FeedbackState
+        illustration={statusConfig.img}
         heading={statusConfig.heading}
         description={statusConfig.description}
       >
@@ -51,7 +52,7 @@ function QueryStatusFallback({
             {statusConfig.actionLabel}
           </Button>
         )}
-      </StatusView>
+      </FeedbackState>
     );
   }
 

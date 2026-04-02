@@ -1,4 +1,3 @@
-// ok
 // 表格的狀態標籤ui
 import styled, { css } from "styled-components";
 

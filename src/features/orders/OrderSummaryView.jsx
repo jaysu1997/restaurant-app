@@ -18,7 +18,7 @@ function OrderSummaryView({ orderData }) {
     paid,
     createdTime,
     orderUUID,
-    dishes,
+    items,
     note,
   } = orderData;
 
@@ -36,7 +36,7 @@ function OrderSummaryView({ orderData }) {
             <span>{orderUUID}</span>
           </div>
 
-          <OrderDishes dishes={dishes} isEdit={false} />
+          <OrderDishes items={items} isEdit={false} />
         </OrderCard>
       </ContentContainer>
 

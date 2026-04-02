@@ -1,19 +1,3 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
 ```
 restaurant-app
@@ -23,7 +7,6 @@ restaurant-app
 ├─ package.json
 ├─ public
 │  └─ logo.webp
-├─ README.md
 ├─ src
 │  ├─ App.jsx
 │  ├─ assets
@@ -35,43 +18,51 @@ restaurant-app
 │  │  └─ warning.svg
 │  ├─ components
 │  │  ├─ FormSection.jsx
-│  │  ├─ Navbar.jsx
 │  │  ├─ PasswordInput.jsx
 │  │  └─ ScrollToTop.jsx
 │  ├─ context
 │  │  ├─ order
-│  │  │  ├─ OrderContext.jsx
 │  │  │  ├─ orderReducer.js
 │  │  │  └─ useOrder.js
 │  │  └─ settings
-│  │     ├─ SettingsContext.jsx
-│  │     ├─ settingsHelpers.js
-│  │     └─ useSettings.js
 │  ├─ features
 │  │  ├─ account
 │  │  │  ├─ AvatarCropper.jsx
 │  │  │  ├─ Slider.jsx
 │  │  │  ├─ UpdatePassword.jsx
 │  │  │  ├─ UpdateUserAvatar.jsx
-│  │  │  ├─ User.jsx
 │  │  │  └─ UserProfileSetting.jsx
+│  │  ├─ auth
+│  │  │  ├─ api
+│  │  │  │  ├─ getCurrentUser.js
+│  │  │  │  ├─ login.js
+│  │  │  │  └─ logout.js
+│  │  │  └─ hooks
+│  │  │     ├─ useLogin.js
+│  │  │     ├─ useLogout.js
+│  │  │     └─ useUser.js
 │  │  ├─ dashboard
-│  │  │  ├─ analyzeOrders.js
-│  │  │  ├─ PeakHoursChart.jsx
-│  │  │  ├─ RevenueTrendChart.jsx
-│  │  │  ├─ StatItem.jsx
-│  │  │  ├─ StatsCards.jsx
-│  │  │  ├─ StatsCharts.jsx
-│  │  │  ├─ TodayOrderList.jsx
-│  │  │  └─ TopDishesChart.jsx
+│  │  │  ├─ components
+│  │  │  │  ├─ EmptyState.jsx
+│  │  │  │  ├─ PeakHoursChart.jsx
+│  │  │  │  ├─ RevenueTrendChart.jsx
+│  │  │  │  ├─ StatItem.jsx
+│  │  │  │  ├─ StatsCards.jsx
+│  │  │  │  ├─ StatsCharts.jsx
+│  │  │  │  ├─ StoreStatusBadge.jsx
+│  │  │  │  ├─ TodayOrderList.jsx
+│  │  │  │  └─ TopDishesChart.jsx
+│  │  │  └─ utils
+│  │  │     └─ getDashboardStats.js
 │  │  ├─ inventory
 │  │  │  ├─ InventoryDataCard.jsx
 │  │  │  ├─ InventoryForm.jsx
 │  │  │  └─ RelatedMenus.jsx
 │  │  ├─ menu
 │  │  │  ├─ CartItem.jsx
+│  │  │  ├─ CartOpenButton.jsx
 │  │  │  ├─ EmptyShoppingCart.jsx
-│  │  │  ├─ MenuView.jsx
+│  │  │  ├─ MenuList.jsx
 │  │  │  ├─ OrderInfoField.jsx
 │  │  │  ├─ ShoppingCart.jsx
 │  │  │  └─ SwiperBar.jsx
@@ -83,23 +74,38 @@ restaurant-app
 │  │  │  ├─ menuSubmitNormalizer.js
 │  │  │  └─ OptionSection.jsx
 │  │  ├─ orders
+│  │  │  ├─ api
+│  │  │  │  └─ getRecentOrders.js
 │  │  │  ├─ CategoryGroup.jsx
+│  │  │  ├─ context
+│  │  │  │  └─ OrderContext.jsx
+│  │  │  ├─ hooks
+│  │  │  │  └─ useRecentOrders.js
 │  │  │  ├─ MiniMenu.jsx
 │  │  │  ├─ OrderCard.jsx
 │  │  │  ├─ OrderDishes.jsx
 │  │  │  ├─ OrderDropdownMenu.jsx
 │  │  │  ├─ OrderOperation.jsx
-│  │  │  ├─ OrderRow.jsx
 │  │  │  ├─ OrdersTable.jsx
 │  │  │  ├─ OrderSummaryEdit.jsx
 │  │  │  └─ OrderSummaryView.jsx
 │  │  ├─ settings
+│  │  │  ├─ api
+│  │  │  │  └─ getSettings.js
+│  │  │  ├─ context
+│  │  │  │  └─ SettingsContext.jsx
 │  │  │  ├─ ControlledTimeRange.jsx
 │  │  │  ├─ DineInTableSettings.jsx
+│  │  │  ├─ hooks
+│  │  │  │  ├─ useGetSettings.js
+│  │  │  │  ├─ useOpenStatus.js
+│  │  │  │  └─ useSettings.js
 │  │  │  ├─ RegularOpenHours.jsx
 │  │  │  ├─ sortTimeSlots.js
 │  │  │  ├─ SpecialOpenHours.jsx
 │  │  │  ├─ StoreInfo.jsx
+│  │  │  ├─ utils
+│  │  │  │  └─ settingsHelpers.js
 │  │  │  └─ validateOverlap.js
 │  │  └─ staff
 │  │     ├─ Signup.jsx
@@ -107,12 +113,9 @@ restaurant-app
 │  ├─ hooks
 │  │  ├─ data
 │  │  │  ├─ auth
-│  │  │  │  ├─ useLogin.js
-│  │  │  │  ├─ useLogout.js
 │  │  │  │  ├─ useUpdateUserAvatar.js
 │  │  │  │  ├─ useUpdateUserPassword.js
-│  │  │  │  ├─ useUpdateUserProfile.js
-│  │  │  │  └─ useUser.js
+│  │  │  │  └─ useUpdateUserProfile.js
 │  │  │  ├─ inventory
 │  │  │  │  ├─ useDeleteInventory.js
 │  │  │  │  ├─ useGetInventory.js
@@ -127,19 +130,24 @@ restaurant-app
 │  │  │  │  ├─ useDeleteOrder.js
 │  │  │  │  ├─ useGetOrder.js
 │  │  │  │  ├─ useGetPaginatedOrders.js
-│  │  │  │  ├─ useRecentOrders.js
 │  │  │  │  └─ useUpdateOrder.js
 │  │  │  ├─ settings
-│  │  │  │  ├─ useGetSettings.js
 │  │  │  │  └─ useSubmitSettings.js
 │  │  │  └─ staff
 │  │  │     ├─ useCreateStaff.js
 │  │  │     ├─ useDeleteStaff.js
 │  │  │     ├─ useGetStaff.js
 │  │  │     └─ useUpdateStaff.js
-│  │  └─ ui
-│  │     ├─ useClickOutside.js
-│  │     └─ useScrollLock.js
+│  │  ├─ useClickOutside.js
+│  │  ├─ useMediaQuery.js
+│  │  └─ useScrollLock.js
+│  ├─ layout
+│  │  ├─ AppLayout.jsx
+│  │  ├─ Header.jsx
+│  │  ├─ Navbar.jsx
+│  │  ├─ NavItem.jsx
+│  │  ├─ ProtectedRoute.jsx
+│  │  └─ User.jsx
 │  ├─ main.jsx
 │  ├─ pages
 │  │  ├─ Account.jsx
@@ -166,20 +174,19 @@ restaurant-app
 │  ├─ style
 │  │  └─ GlobalStyles.js
 │  ├─ ui
-│  │  ├─ AppLayout.jsx
 │  │  ├─ Button.jsx
 │  │  ├─ ButtonCancel.jsx
 │  │  ├─ ButtonSpinner.jsx
 │  │  ├─ ButtonSubmit.jsx
+│  │  ├─ CloseButton.jsx
 │  │  ├─ ConfirmDelete.jsx
 │  │  ├─ ContentContainer.jsx
-│  │  ├─ ControlledInput.jsx
 │  │  ├─ ControlledSelect.jsx
 │  │  ├─ ControlledSwitch.jsx
 │  │  ├─ DataDisplayCard.jsx
 │  │  ├─ DateRangePicker.jsx
 │  │  ├─ Description.jsx
-│  │  ├─ DiningMethodSwitch.jsx
+│  │  ├─ DiningMethodSegmented.jsx
 │  │  ├─ DishCard.jsx
 │  │  ├─ Dot.jsx
 │  │  ├─ DropdownMenu.jsx
@@ -188,35 +195,32 @@ restaurant-app
 │  │  │  ├─ DateRangeFilter.jsx
 │  │  │  ├─ Filter.jsx
 │  │  │  ├─ filterHelpers.js
-│  │  │  ├─ SearchFilter.jsx
-│  │  │  └─ SelectFilter.jsx
+│  │  │  ├─ OptionFilter.jsx
+│  │  │  └─ SearchFilter.jsx
 │  │  ├─ FilterIcon.jsx
 │  │  ├─ FormFieldLayout.jsx
 │  │  ├─ FormInput.jsx
-│  │  ├─ FormRow.jsx
-│  │  ├─ FormTable.jsx
-│  │  ├─ FormTypography.jsx
-│  │  ├─ Header.jsx
 │  │  ├─ LoadingBars.jsx
 │  │  ├─ Logo.jsx
 │  │  ├─ Modal.jsx
 │  │  ├─ Note.jsx
 │  │  ├─ OrderForm
-│  │  │  ├─ CustomizeArea.jsx
+│  │  │  ├─ CustomizationField.jsx
 │  │  │  ├─ Option.jsx
 │  │  │  └─ OrderForm.jsx
-│  │  ├─ PageHeader.jsx
+│  │  ├─ OrderItemActions.jsx
 │  │  ├─ PageContainer.jsx
+│  │  ├─ PageHeader.jsx
 │  │  ├─ Pagination.jsx
-│  │  ├─ ProtectedRoute.jsx
+│  │  ├─ Price.jsx
 │  │  ├─ QueryStatusFallback.jsx
+│  │  ├─ RequiredMark.jsx
 │  │  ├─ SectionContainer.jsx
 │  │  ├─ ServingsControl.jsx
 │  │  ├─ StatusView.jsx
-│  │  ├─ StoreStatusBadge .jsx
-│  │  ├─ StyledDayPicker.jsx
+│  │  ├─ StyledDayRangePicker.jsx
 │  │  ├─ StyledHotToast.jsx
-│  │  ├─ StyledNavLink.jsx
+│  │  ├─ StyledOverlay.jsx
 │  │  ├─ StyledSelect.jsx
 │  │  ├─ Tag.jsx
 │  │  └─ UserAvatar.jsx

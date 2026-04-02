@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SettingsContext } from "./SettingsContext";
 
+// 搭配SettingsContext使用
 function useSettings() {
   const context = useContext(SettingsContext);
 

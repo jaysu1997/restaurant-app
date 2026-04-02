@@ -1,15 +1,15 @@
+import { useEffect } from "react";
+import styled from "styled-components";
 import PageHeader from "../ui/PageHeader";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
-import useOrder from "../context/order/useOrder";
+import useOrderDraft from "../context/orders/useOrderDraft";
 import PageContainer from "../ui/PageContainer";
-import { useEffect } from "react";
 import useSettings from "../context/settings/useSettings";
-import SwiperBar from "../features/menu/SwiperBar";
-import styled from "styled-components";
-import MenuList from "../features/menu/MenuList";
-import ShoppingCart from "../features/menu/ShoppingCart";
+import MenuList from "../features/menu/components/MenuList";
+import ShoppingCart from "../features/menu/components/ShoppingCart";
+import CategoryBar from "../features/menu/components/CategoryBar";
 
 const MenuContainer = styled.div`
   display: grid;
@@ -25,12 +25,9 @@ const MenuContainer = styled.div`
 `;
 
 function Menu() {
-  const { derivedSettings, settingsIsLoading, settingsIsError, settingsError } =
-    useSettings();
-
+  const { dispatch } = useOrderDraft();
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
-
-  const { dispatch } = useOrder();
+  const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
 
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
   const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
@@ -68,9 +65,9 @@ function Menu() {
         }}
       >
         <MenuContainer>
-          <SwiperBar menus={menus} />
+          <CategoryBar menus={menus} />
           <MenuList menus={menus} />
-          <ShoppingCart derivedSettings={derivedSettings} />
+          <ShoppingCart />
         </MenuContainer>
       </QueryStatusFallback>
     </PageContainer>

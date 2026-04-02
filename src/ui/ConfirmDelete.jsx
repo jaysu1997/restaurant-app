@@ -57,11 +57,7 @@ function ConfirmDelete({
   } = useIngredientRelatedMenus(data.id, showRelatedData);
 
   return (
-    <Modal
-      modalHeader="確認刪除"
-      headerColor="#991b1b"
-      onCloseModal={onCloseModal}
-    >
+    <Modal modalHeader="確認刪除" headerColor="#991b1b" onClose={onCloseModal}>
       <StyledConfirmDelete>
         <QueryStatusFallback
           status={{

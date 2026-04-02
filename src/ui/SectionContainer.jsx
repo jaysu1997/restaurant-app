@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import ContentContainer from "./ContentContainer";
 import Description from "./Description";
@@ -46,7 +45,6 @@ const Content = styled.div`
 
 const ButtonGroup = styled.footer`
   display: flex;
-  justify-content: flex-start;
   gap: 2.4rem;
 `;
 
@@ -60,6 +58,7 @@ function SectionContainer({
   children,
 }) {
   const { formId, handleReset, isDirty, isProcessing } = form;
+  const disabled = !isDirty || isProcessing;
 
   return (
     <ContentContainer>
@@ -90,13 +89,10 @@ function SectionContainer({
             <ButtonSubmit
               form={formId}
               isProcessing={isProcessing}
-              disabled={!isDirty || isProcessing}
+              disabled={disabled}
             />
 
-            <ButtonCancel
-              onClick={handleReset}
-              disabled={!isDirty || isProcessing}
-            />
+            <ButtonCancel onClick={handleReset} disabled={disabled} />
           </ButtonGroup>
         )}
       </Section>

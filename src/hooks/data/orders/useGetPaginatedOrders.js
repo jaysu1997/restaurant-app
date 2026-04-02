@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
-import { getPaginatedOrdersApi } from "../../../services/apiOrder";
+import { getPaginatedOrdersApi } from "../../../services/apiOrders";
 import { parseDateRange } from "../../../utils/orderHelpers";
 import { addDays } from "date-fns";
 import { parsePositiveInt, withFallbackRetry } from "../../../utils/helpers";

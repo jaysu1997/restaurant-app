@@ -17,6 +17,7 @@ const Form = styled.form`
   flex-direction: column;
   font-size: 1.4rem;
   padding: 2rem;
+  gap: 0.4rem;
 
   label {
     color: #525252;

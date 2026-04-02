@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import defaultAvatar from "../assets/default-user.png";
 

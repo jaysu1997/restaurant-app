@@ -1,10 +1,10 @@
 // ok
 import styled from "styled-components";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import useLogin from "../hooks/data/auth/useLogin";
 import useUser from "../hooks/data/auth/useUser";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
 import PasswordInput from "../components/PasswordInput";
 import FormInput from "../ui/FormInput";
 import FormFieldLayout from "../ui/FormFieldLayout";
@@ -87,6 +87,7 @@ function Login() {
 
   const isProcessing = isLoggingIn || isSubmitting;
 
+  // 如果已經有登入帳號就自動轉跳到首頁
   useEffect(() => {
     if (!userIsLoading && user) {
       navigate("/", { replace: true });
@@ -115,7 +116,7 @@ function Login() {
         <Logo src="/logo.webp" alt="logo" />
         <LoginHeading>登入 Aurora Bites</LoginHeading>
 
-        {/* 登入失敗提示訊息ui */}
+        {/* 登入失敗提示訊息 */}
         {errors?.root && (
           <LoginFailMessage>{errors?.root?.message}</LoginFailMessage>
         )}
@@ -145,7 +146,7 @@ function Login() {
 
           <ButtonSubmit
             label="登入"
-            isFullWidth
+            fullWidth={true}
             isProcessing={isProcessing}
             disabled={isProcessing}
           />

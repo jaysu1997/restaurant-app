@@ -60,7 +60,9 @@ export const GlobalStyles = styled.createGlobalStyle`
     font: inherit;
   }
 
-  img {
+  img,
+  svg {
+    display: block;
     max-width: 100%;
   }
 
@@ -116,9 +118,5 @@ export const GlobalStyles = styled.createGlobalStyle`
   .icon-xl {
     width: 2.4rem;
     height: 2.4rem;
-  }
-
-  .emphasize {
-    color: #dc2626;
   }
 `;

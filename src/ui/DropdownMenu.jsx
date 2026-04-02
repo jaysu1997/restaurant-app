@@ -1,4 +1,3 @@
-// ok
 import { useRef } from "react";
 import styled from "styled-components";
 import useClickOutside from "../hooks/ui/useClickOutside";
@@ -45,7 +44,7 @@ const MenuItem = styled.li`
 `;
 
 // 下拉按鈕菜單元件
-function DropdownMenu({ itemsConfig, onClose, isOpen, children }) {
+function DropdownMenu({ items, onClose, isOpen, children }) {
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, isOpen, onClose);
 
@@ -54,21 +53,21 @@ function DropdownMenu({ itemsConfig, onClose, isOpen, children }) {
       {children}
       {isOpen && (
         <MenuContainer>
-          {itemsConfig
+          {items
             .filter((item) => !item.hidden)
             .map((item) => {
-              const Icon = item.icon;
+              const { name, handleClick, icon: Icon } = item;
 
               return (
-                <MenuItem key={item.name}>
+                <MenuItem key={name}>
                   <button
                     onClick={() => {
-                      item.handleClick();
+                      handleClick?.();
                       onClose();
                     }}
                   >
                     <Icon />
-                    <span>{item.name}</span>
+                    <span>{name}</span>
                   </button>
                 </MenuItem>
               );

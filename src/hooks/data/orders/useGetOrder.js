@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getOrderApi } from "../../../services/apiOrder";
+import { getOrderApi } from "../../../services/apiOrders";
 import { useParams } from "react-router";
 import { withFallbackRetry } from "../../../utils/helpers";
 

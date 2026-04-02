@@ -1,4 +1,3 @@
-// ok
 import { useState } from "react";
 import Modal from "../../ui/Modal";
 import Cropper from "react-easy-crop";
@@ -16,19 +15,19 @@ const StyledAvatarCropper = styled.section`
   flex-direction: column;
 `;
 
-const Container = styled.div`
+const CropperContainer = styled.div`
   width: 100%;
   height: 28rem;
 `;
 
-const Wrapper = styled.div`
+const CropperWrapper = styled.div`
   position: relative;
   height: 100%;
 `;
 
-const Footer = styled.footer`
+const CropperFooter = styled.footer`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 1.6rem;
   padding: 2rem;
@@ -84,11 +83,11 @@ const getCroppedImg = (imageSrc, pixelCrop) => {
 };
 
 // 頭像預覽裁切元件
-function AvatarCropper({ userData, imgUrl, onCloseModal }) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
+function AvatarCropper({ userData, imgUrl, onClose }) {
   const [zoom, setZoom] = useState(1);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const { updateUserAvatar, isUpdateUserAvatar } = useUpdateUserAvatar();
+  const { updateUserAvatar, isUpdatingUserAvatar } = useUpdateUserAvatar();
 
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -108,7 +107,7 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
 
       // 上傳新的圖檔並更新數據
       updateUserAvatar(updateAvatarPayload, {
-        onSuccess: () => onCloseModal(),
+        onSuccess: () => onClose(),
       });
     } catch (err) {
       console.error("頭像裁切失敗", err);
@@ -119,13 +118,13 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
   return (
     <Modal
       modalHeader="選擇頭像範圍"
-      onCloseModal={onCloseModal}
+      onClose={onClose}
       scrollBar={false}
       maxWidth={56}
     >
       <StyledAvatarCropper>
-        <Container>
-          <Wrapper>
+        <CropperContainer>
+          <CropperWrapper>
             <Cropper
               image={imgUrl}
               crop={crop}
@@ -138,23 +137,20 @@ function AvatarCropper({ userData, imgUrl, onCloseModal }) {
               onZoomChange={setZoom}
               zoomWithScroll={false}
             />
-          </Wrapper>
-        </Container>
+          </CropperWrapper>
+        </CropperContainer>
 
-        <Footer>
+        <CropperFooter>
           <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
           <ButtonGroup>
             <ButtonSubmit
-              isProcessing={isUpdateUserAvatar}
-              disabled={isUpdateUserAvatar}
+              isProcessing={isUpdatingUserAvatar}
+              disabled={isUpdatingUserAvatar}
               onClick={handleSave}
             />
-            <ButtonCancel
-              onClick={onCloseModal}
-              disabled={isUpdateUserAvatar}
-            />
+            <ButtonCancel onClick={onClose} disabled={isUpdatingUserAvatar} />
           </ButtonGroup>
-        </Footer>
+        </CropperFooter>
       </StyledAvatarCropper>
     </Modal>
   );

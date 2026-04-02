@@ -40,8 +40,7 @@ function Order() {
   const isEditPage = pathname.includes("edit");
   const { order, orderIsLoading, orderIsError, orderError } = useGetOrder();
 
-  const { derivedSettings, settingsIsLoading, settingsIsError, settingsError } =
-    useSettings();
+  const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
 
   const pageQueryStatus = {
     isLoading: orderIsLoading || settingsIsLoading,
@@ -61,10 +60,7 @@ function Order() {
           )}`}</OrderHeader>
 
           {isEditPage ? (
-            <OrderSummaryEdit
-              orderData={order}
-              settingsData={derivedSettings}
-            />
+            <OrderSummaryEdit orderData={order} />
           ) : (
             <OrderSummaryView orderData={order} />
           )}

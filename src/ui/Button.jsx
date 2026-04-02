@@ -20,7 +20,7 @@ const variant = {
     }
   `,
   tertiary: css`
-    color: #3b82f6 !important;
+    color: #3b82f6;
     background-color: #eff6ff;
 
     &:not(:disabled):hover {

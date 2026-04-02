@@ -15,7 +15,7 @@ function useUpdateUserAvatar() {
     onError: () => StyledHotToast({ type: "error", title: "頭像更新失敗" }),
   });
 
-  return { updateUserAvatar: mutate, isUpdateUserAvatar: isPending };
+  return { updateUserAvatar: mutate, isUpdatingUserAvatar: isPending };
 }
 
 export default useUpdateUserAvatar;
