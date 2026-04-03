@@ -8,7 +8,7 @@ export const initialState = {
   // 存放訂單所有餐點數據
   items: [],
   // 臨時存放當前餐點自訂項目選擇數據
-  activeCustomization: [],
+  activeCustomizations: [],
   // 存放食材庫存數據
   inventoryMap: new Map(),
 };
@@ -30,12 +30,12 @@ export function reducer(state, action) {
     case "customization/init": {
       return {
         ...state,
-        activeCustomization: [...action.payload],
+        activeCustomizations: [...action.payload],
       };
     }
     // 單選選項新增
     case "customization/setSingle": {
-      const newCurDishCustomizeOption = state.activeCustomization.map((item) =>
+      const updatedCustomizations = state.activeCustomizations.map((item) =>
         item.customizeId === action.payload.customizeId
           ? { ...item, selectOptions: [action.payload] }
           : item,
@@ -43,12 +43,12 @@ export function reducer(state, action) {
 
       return {
         ...state,
-        activeCustomization: [...newCurDishCustomizeOption],
+        activeCustomizations: [...updatedCustomizations],
       };
     }
     // 多選選項新增
     case "customization/addOption": {
-      const newCurDishCustomizeOption = state.activeCustomization.map((item) =>
+      const updatedCustomizations = state.activeCustomizations.map((item) =>
         item.customizeId === action.payload.customizeId
           ? {
               ...item,
@@ -59,12 +59,12 @@ export function reducer(state, action) {
 
       return {
         ...state,
-        activeCustomization: [...newCurDishCustomizeOption],
+        activeCustomizations: [...updatedCustomizations],
       };
     }
     // 選項刪除
     case "customization/removeOption": {
-      const newCurDishCustomizeOption = state.activeCustomization.map((item) =>
+      const updatedCustomizations = state.activeCustomizations.map((item) =>
         item.customizeId === action.payload.customizeId
           ? {
               ...item,
@@ -76,7 +76,7 @@ export function reducer(state, action) {
       );
       return {
         ...state,
-        activeCustomization: [...newCurDishCustomizeOption],
+        activeCustomizations: [...updatedCustomizations],
       };
     }
     // 新增餐點
@@ -88,7 +88,7 @@ export function reducer(state, action) {
       // 新增餐點
       newState.items.push({
         ...itemData,
-        customize: state.activeCustomization,
+        customize: state.activeCustomizations,
       });
 
       // 將庫存食材 - 本次餐點所需食材
@@ -110,7 +110,7 @@ export function reducer(state, action) {
 
       // 更新數據
       newState.items[itemIndex] = itemData;
-      newState.items[itemIndex].customize = state.activeCustomization;
+      newState.items[itemIndex].customize = state.activeCustomizations;
 
       // 先把原本消耗的所有食材加回庫存
       applyInventoryUsage({
@@ -131,9 +131,9 @@ export function reducer(state, action) {
     // 刪除指定餐點
     case "items/remove": {
       const newState = structuredClone(state);
-      const dishIndex = findItemIndexById(newState.items, action.payload);
+      const itemIndex = findItemIndexById(newState.items, action.payload);
 
-      const { unitUsage, servings } = newState.items[dishIndex];
+      const { unitUsage, servings } = newState.items[itemIndex];
 
       // 把原本消耗的所有食材加回庫存
       applyInventoryUsage({
@@ -143,7 +143,7 @@ export function reducer(state, action) {
       });
 
       // 將指定餐點從點餐列表中移除
-      newState.items.splice(dishIndex, 1);
+      newState.items.splice(itemIndex, 1);
 
       return newState;
     }
@@ -151,20 +151,20 @@ export function reducer(state, action) {
     case "items/updateServings": {
       const { uniqueId, servings } = action.payload;
       const newState = structuredClone(state);
-      const dishIndex = findItemIndexById(newState.items, uniqueId);
+      const itemIndex = findItemIndexById(newState.items, uniqueId);
 
-      const orderDish = newState.items[dishIndex];
-      const servingsDiff = servings - orderDish.servings;
+      const item = newState.items[itemIndex];
+      const servingsDiff = servings - item.servings;
 
       // 更新庫存剩餘存量(可增可減)
       applyInventoryUsage({
         inventoryMap: newState.inventoryMap,
-        unitUsage: orderDish.unitUsage,
+        unitUsage: item.unitUsage,
         servings: servingsDiff,
       });
 
       // 更新餐點份數
-      orderDish.servings = servings;
+      item.servings = servings;
 
       return newState;
     }
@@ -176,9 +176,9 @@ export function reducer(state, action) {
     case "draft/loadFromOrder": {
       const { items } = action.payload;
 
-      const itemsData = items.map((curDish) => ({
-        ...curDish,
-        unitUsage: new Map(Object.entries(curDish.unitUsage)),
+      const itemsData = items.map((item) => ({
+        ...item,
+        unitUsage: new Map(Object.entries(item.unitUsage)),
       }));
 
       return {

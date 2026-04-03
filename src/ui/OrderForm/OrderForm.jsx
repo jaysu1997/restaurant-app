@@ -53,12 +53,13 @@ const Footer = styled.footer`
   box-shadow: inset 0px 1px #e5e7eb;
   padding: 1.6rem;
   background-color: #fff;
+  z-index: 2;
 `;
 
 function OrderForm({ orderDish, onClose, isEdit = false }) {
   // 餐點編輯的相關功能
   const {
-    state: { items, activeCustomization, inventoryMap },
+    state: { items, activeCustomizations, inventoryMap },
     dispatch,
   } = useOrderDraft();
 
@@ -73,7 +74,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
   }, [dispatch, orderDish.customize]);
 
   // 必填項目都完成填寫
-  const isFormComplete = activeCustomization.every(
+  const isFormComplete = activeCustomizations.every(
     ({ isRequired, selectOptions }) =>
       isRequired !== "required" || selectOptions.length > 0,
   );
@@ -84,7 +85,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
 
   function onSubmit(data) {
     // 計算當前訂購餐點所需的食材(單份)
-    const unitUsage = calcIngredientsUsage(orderDish, activeCustomization);
+    const unitUsage = calcIngredientsUsage(orderDish, activeCustomizations);
 
     // 原先餐點所消耗的食材總數(編輯時需用到)
     const prevTotalUsage =
@@ -102,7 +103,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
     // 庫存充足
     if (inventoryCheck.isAvailable) {
       // 單份總價
-      const unitPrice = calcUnitPrice(activeCustomization, orderDish);
+      const unitPrice = calcUnitPrice(activeCustomizations, orderDish);
 
       // 專屬id
       const uniqueId = orderDish.uniqueId ?? generateDishItemId(items);
@@ -141,7 +142,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
       <Container>
         <Price>$ {orderDish.price - orderDish.discount}</Price>
 
-        {activeCustomization.map((customization) => (
+        {activeCustomizations.map((customization) => (
           <CustomizationField
             customization={customization}
             key={customization.customizeId}

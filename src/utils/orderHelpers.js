@@ -277,16 +277,16 @@ export function findItemIndexById(items, uniqueId) {
 }
 
 // 計算當前訂購餐點的單價(1份)
-export function calcUnitPrice(customization, orderDish) {
+export function calcUnitPrice(customizations, orderDish) {
   const { price, discount } = orderDish;
 
-  const customizationExtra = customization.reduce((acc, cur) => {
+  const unitPrice = customizations.reduce((acc, cur) => {
     const extra = cur.selectOptions.reduce(
       (sum, opt) => sum + opt.extraPrice,
       0,
     );
     return acc + extra;
-  }, 0);
+  }, price - discount);
 
-  return price - discount + customizationExtra;
+  return unitPrice;
 }
