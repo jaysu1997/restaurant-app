@@ -5,17 +5,17 @@ import MenuForm from "./MenuForm";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import useDeleteMenu from "../../hooks/data/menus/useDeleteMenu";
 
-function MenusDataCard({ menu }) {
+function MenusDataCard({ menu, inventoryObj }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const deleteMutation = useDeleteMenu();
   // 菜單數據
-  const { name, category, price } = menu;
+  const { name, category, basePrice } = menu;
 
   // 卡片展示格式
   const menuDataFormat = [
     { head: "名稱", body: name },
     { head: "分類", body: category },
-    { head: "售價", body: price },
+    { head: "售價", body: basePrice },
   ];
 
   return (
@@ -32,6 +32,7 @@ function MenusDataCard({ menu }) {
         <MenuForm
           onCloseModal={() => setIsOpenModal(false)}
           menu={isOpenModal.data}
+          inventoryObj={inventoryObj}
         />
       )}
 

@@ -42,7 +42,7 @@ const OptionName = styled.span`
 
 // 單一選項ui
 function Option({ optionHover, optionData, onToggle, selectedOptions }) {
-  const { optionId, optionLabel, extraPrice } = optionData;
+  const { optionId, name, extraPrice } = optionData;
 
   // 當前選項是否是被選中的選項
   const isChecked = selectedOptions.some(
@@ -67,7 +67,7 @@ function Option({ optionHover, optionData, onToggle, selectedOptions }) {
       <Square className="icon-lg" />
       <Check className="icon-md" strokeWidth={3} />
 
-      <OptionName>{optionLabel}</OptionName>
+      <OptionName>{name}</OptionName>
       <span>{extraPrice === 0 ? "免費" : `+ $ ${extraPrice}`}</span>
     </StyledOption>
   );

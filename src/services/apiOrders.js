@@ -13,7 +13,7 @@ export async function getRecentOrdersApi() {
   const { data, error } = await supabase
     .from("orders")
     .select("*")
-    .gte("createdTime", startDate)
+    .gte("createdAt", startDate)
     .order("pickupNumber");
 
   handleSupabaseApiError(error);
@@ -33,7 +33,7 @@ export async function createOrderApi(orderData) {
 }
 
 // 獲取指定範圍訂單數據api
-export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
+export async function getPaginatedOrdersApi(page, createdAt, pickupNumber) {
   // 每一分頁顯示25筆數據
   const itemsPerPage = 25;
 
@@ -42,12 +42,12 @@ export async function getPaginatedOrdersApi(page, createdTime, pickupNumber) {
     .select("*", {
       count: "exact",
     })
-    .order("createdTime", { ascending: false });
+    .order("createdAt", { ascending: false });
 
-  if (createdTime) {
-    const { from, to } = createdTime;
+  if (createdAt) {
+    const { from, to } = createdAt;
 
-    query = query.gte("createdTime", from).lt("createdTime", to);
+    query = query.gte("createdAt", from).lt("createdAt", to);
   }
 
   if (pickupNumber !== null) {

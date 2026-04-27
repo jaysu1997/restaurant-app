@@ -1,22 +1,13 @@
 // 新增or更新庫存食材
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  createInventoryApi,
-  updateInventoryApi,
-} from "../../../services/apiInventory";
+import { upsertInventoryApi } from "../../../services/apiInventory";
 import StyledHotToast from "../../../ui/StyledHotToast";
 
 function useSubmitInventory() {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (inventoryData) => {
-      // 有id就是更新，沒有則是新增
-      return inventoryData.id
-        ? updateInventoryApi(inventoryData)
-        : createInventoryApi(inventoryData);
-    },
+    mutationFn: upsertInventoryApi,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["inventory"],

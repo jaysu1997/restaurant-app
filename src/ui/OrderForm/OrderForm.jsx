@@ -3,13 +3,7 @@ import styled from "styled-components";
 import useOrderDraft from "../../context/orders/useOrderDraft";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  checkInventoryAvailability,
-  calcIngredientsUsage,
-  getTotalIngredientsUsage,
-  calcUnitPrice,
-  generateDishItemId,
-} from "../../utils/orderHelpers";
+import { prepareOrderItem } from "../../utils/orderHelpers";
 import StyledHotToast from "../StyledHotToast";
 import Note from "../Note";
 import CustomizationField from "./CustomizationField";
@@ -59,7 +53,7 @@ const Footer = styled.footer`
 function OrderForm({ orderDish, onClose, isEdit = false }) {
   // 餐點編輯的相關功能
   const {
-    state: { items, activeCustomizations, inventoryMap },
+    state: { activeCustomizations, inventoryObj },
     dispatch,
   } = useOrderDraft();
 
@@ -67,16 +61,24 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
 
   // 初始化useReducer的activeCustomization(自訂項目的詳細數據)
   useEffect(() => {
+    // 初始化customizations
+    const initialCustomizations = isEdit
+      ? orderDish.customizations
+      : orderDish.customizations.map((cus) => ({
+          ...cus,
+          selectedOptions: [],
+        }));
+
     dispatch({
       type: "customization/init",
-      payload: orderDish.customize,
+      payload: initialCustomizations,
     });
-  }, [dispatch, orderDish.customize]);
+  }, [dispatch, orderDish.customizations, isEdit]);
 
   // 必填項目都完成填寫
   const isFormComplete = activeCustomizations.every(
-    ({ isRequired, selectOptions }) =>
-      isRequired !== "required" || selectOptions.length > 0,
+    ({ isRequired, selectedOptions }) =>
+      !isRequired || selectedOptions.length > 0,
   );
 
   const { handleSubmit, register } = useForm({
@@ -84,53 +86,34 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
   });
 
   function onSubmit(data) {
-    // 計算當前訂購餐點所需的食材(單份)
-    const unitUsage = calcIngredientsUsage(orderDish, activeCustomizations);
-
-    // 原先餐點所消耗的食材總數(編輯時需用到)
-    const prevTotalUsage =
-      isEdit &&
-      getTotalIngredientsUsage(orderDish.unitUsage, orderDish.servings);
-
-    // 確認庫存剩餘食材是否可以供應餐點消耗
-    const inventoryCheck = checkInventoryAvailability({
-      unitUsage,
+    const result = prepareOrderItem({
+      orderDish: data,
+      activeCustomizations,
+      inventoryObj,
       servings,
-      inventoryMap,
-      prevTotalUsage,
+      isEdit,
     });
 
-    // 庫存充足
-    if (inventoryCheck.isAvailable) {
-      // 單份總價
-      const unitPrice = calcUnitPrice(activeCustomizations, orderDish);
-
-      // 專屬id
-      const uniqueId = orderDish.uniqueId ?? generateDishItemId(items);
-
-      // 生成要提交的訂餐數據
-      const itemData = {
-        ...data,
-        unitPrice,
-        unitUsage,
-        servings,
-        uniqueId,
-      };
-
-      dispatch({
-        type: isEdit ? "items/update" : "items/add",
-        payload: isEdit ? { itemData, prevTotalUsage } : itemData,
-      });
-
-      onClose();
-    } else {
-      // 庫存不足
+    if (!result.isAvailable) {
       StyledHotToast({
         type: "error",
-        title: inventoryCheck.title,
-        content: <p>{inventoryCheck.message}</p>,
+        title: result.error.title,
+        content: <p>{result.error.message}</p>,
       });
+
+      return;
     }
+
+    dispatch({
+      type: isEdit ? "items/update" : "items/add",
+      payload: {
+        ...result.data,
+        customizations: activeCustomizations,
+        servings,
+      },
+    });
+
+    onClose();
   }
 
   function onError(error) {
@@ -140,12 +123,12 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <Container>
-        <Price>$ {orderDish.price - orderDish.discount}</Price>
+        <Price>$ {orderDish.basePrice - orderDish.discount}</Price>
 
         {activeCustomizations.map((customization) => (
           <CustomizationField
             customization={customization}
-            key={customization.customizeId}
+            key={customization.customizationId}
           />
         ))}
 

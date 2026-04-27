@@ -6,7 +6,6 @@ import OrderOperation from "./OrderOperation";
 import { formatCreatedTime } from "../../utils/orderHelpers";
 import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
-import Note from "../../ui/Note";
 import { formatToHourMinute } from "../../context/settings/settingsHelpers";
 
 function OrderSummaryView({ orderData }) {
@@ -16,7 +15,7 @@ function OrderSummaryView({ orderData }) {
     pickupTime,
     status,
     paid,
-    createdTime,
+    createdAt,
     orderUUID,
     items,
     note,
@@ -28,7 +27,7 @@ function OrderSummaryView({ orderData }) {
         <OrderCard>
           <div>
             <label>建立時間：</label>
-            <span>{formatCreatedTime(createdTime)}</span>
+            <span>{formatCreatedTime(createdAt)}</span>
           </div>
 
           <div>
@@ -67,9 +66,12 @@ function OrderSummaryView({ orderData }) {
       </ContentContainer>
 
       <ContentContainer>
-        <Note value={note} mode="view">
-          <label>訂單備註：</label>
-        </Note>
+        <OrderCard>
+          <div>
+            <label>訂單備註：</label>
+            <span>{note || "無"}</span>
+          </div>
+        </OrderCard>
       </ContentContainer>
 
       <OrderOperation isEdit={false} orderData={orderData} />

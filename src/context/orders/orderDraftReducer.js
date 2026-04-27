@@ -1,7 +1,4 @@
-import {
-  applyInventoryUsage,
-  findItemIndexById,
-} from "../../utils/orderHelpers";
+import { findItemIndexById, updateInventory } from "../../utils/orderHelpers";
 
 // 單筆訂單數據建立與編輯useReducer
 export const initialState = {
@@ -10,21 +7,14 @@ export const initialState = {
   // 臨時存放當前餐點自訂項目選擇數據
   activeCustomizations: [],
   // 存放食材庫存數據
-  inventoryMap: new Map(),
+  inventoryObj: {},
 };
 
 export function reducer(state, action) {
   switch (action.type) {
     // 將所有的庫存數據暫時存放到state中
     case "inventory/setAll": {
-      const newInventoryMap = new Map();
-
-      action.payload.forEach((ingredient) => {
-        const { uuid, value, remainingQuantity } = ingredient;
-        newInventoryMap.set(uuid, { name: value, remainingQuantity });
-      });
-
-      return { ...state, inventoryMap: newInventoryMap };
+      return { ...state, inventoryObj: action.payload };
     }
     // OrderForm初始化
     case "customization/init": {
@@ -36,8 +26,8 @@ export function reducer(state, action) {
     // 單選選項新增
     case "customization/setSingle": {
       const updatedCustomizations = state.activeCustomizations.map((item) =>
-        item.customizeId === action.payload.customizeId
-          ? { ...item, selectOptions: [action.payload] }
+        item.customizationId === action.payload.customizationId
+          ? { ...item, selectedOptions: [action.payload] }
           : item,
       );
 
@@ -49,10 +39,10 @@ export function reducer(state, action) {
     // 多選選項新增
     case "customization/addOption": {
       const updatedCustomizations = state.activeCustomizations.map((item) =>
-        item.customizeId === action.payload.customizeId
+        item.customizationId === action.payload.customizationId
           ? {
               ...item,
-              selectOptions: [...item.selectOptions, action.payload],
+              selectedOptions: [...item.selectedOptions, action.payload],
             }
           : item,
       );
@@ -65,10 +55,10 @@ export function reducer(state, action) {
     // 選項刪除
     case "customization/removeOption": {
       const updatedCustomizations = state.activeCustomizations.map((item) =>
-        item.customizeId === action.payload.customizeId
+        item.customizationId === action.payload.customizationId
           ? {
               ...item,
-              selectOptions: item.selectOptions.filter(
+              selectedOptions: item.selectedOptions.filter(
                 (option) => option.optionId !== action.payload.optionId,
               ),
             }
@@ -81,92 +71,80 @@ export function reducer(state, action) {
     }
     // 新增餐點
     case "items/add": {
-      const itemData = action.payload;
-      const { unitUsage, servings } = itemData;
-      const newState = structuredClone(state);
+      const { deltaUsage, ...itemData } = action.payload;
 
-      // 新增餐點
-      newState.items.push({
-        ...itemData,
-        customize: state.activeCustomizations,
-      });
-
-      // 將庫存食材 - 本次餐點所需食材
-      applyInventoryUsage({
-        inventoryMap: newState.inventoryMap,
-        unitUsage,
-        servings,
-      });
-
-      return newState;
+      return {
+        ...state,
+        items: [...state.items, itemData],
+        inventoryObj: updateInventory(state.inventoryObj, deltaUsage),
+      };
     }
     // 編輯餐點數據
     case "items/update": {
-      const { itemData, prevTotalUsage } = action.payload;
-      const { unitUsage, servings, uniqueId } = itemData;
-      const newState = structuredClone(state);
+      const { deltaUsage, ...itemData } = action.payload;
+      const index = findItemIndexById(state.items, itemData.uniqueId);
+      // 如果找不到對應數據
+      if (index === -1) return state;
 
-      const itemIndex = findItemIndexById(newState.items, uniqueId);
+      const newItems = [...state.items];
+      newItems[index] = { ...state.items[index], ...itemData };
 
-      // 更新數據
-      newState.items[itemIndex] = itemData;
-      newState.items[itemIndex].customize = state.activeCustomizations;
-
-      // 先把原本消耗的所有食材加回庫存
-      applyInventoryUsage({
-        inventoryMap: newState.inventoryMap,
-        unitUsage: prevTotalUsage,
-        servings: -1,
-      });
-
-      // 將庫存食材 - 本次餐點所需食材
-      applyInventoryUsage({
-        inventoryMap: newState.inventoryMap,
-        unitUsage,
-        servings,
-      });
-
-      return newState;
+      return {
+        ...state,
+        items: newItems,
+        inventoryObj: updateInventory(state.inventoryObj, deltaUsage),
+      };
     }
     // 刪除指定餐點
     case "items/remove": {
-      const newState = structuredClone(state);
-      const itemIndex = findItemIndexById(newState.items, action.payload);
+      const index = findItemIndexById(state.items, action.payload);
+      if (index === -1) return state;
 
-      const { unitUsage, servings } = newState.items[itemIndex];
+      const { unitUsage, servings } = state.items[index];
+      // 要退回的食材總數
+      const delta = Object.fromEntries(
+        Object.entries(unitUsage).map(([uuid, { name, quantity }]) => [
+          uuid,
+          { name, quantity: -quantity * servings },
+        ]),
+      );
 
-      // 把原本消耗的所有食材加回庫存
-      applyInventoryUsage({
-        inventoryMap: newState.inventoryMap,
-        unitUsage,
-        servings: -servings,
-      });
+      const newItems = [...state.items];
+      newItems.splice(index, 1);
 
-      // 將指定餐點從點餐列表中移除
-      newState.items.splice(itemIndex, 1);
-
-      return newState;
+      return {
+        ...state,
+        items: newItems,
+        inventoryObj: updateInventory(state.inventoryObj, delta),
+      };
     }
     // 更新餐點份數
     case "items/updateServings": {
       const { uniqueId, servings } = action.payload;
-      const newState = structuredClone(state);
-      const itemIndex = findItemIndexById(newState.items, uniqueId);
+      const index = findItemIndexById(state.items, uniqueId);
+      if (index === -1) return state;
 
-      const item = newState.items[itemIndex];
-      const servingsDiff = servings - item.servings;
+      const { unitUsage, servings: prevServings } = state.items[index];
 
-      // 更新庫存剩餘存量(可增可減)
-      applyInventoryUsage({
-        inventoryMap: newState.inventoryMap,
-        unitUsage: item.unitUsage,
-        servings: servingsDiff,
-      });
+      if (servings === prevServings) return state;
 
-      // 更新餐點份數
-      item.servings = servings;
+      // 份量變化更新
+      const servingsDiff = servings - prevServings;
+      const newItems = [...state.items];
+      newItems[index] = { ...state.items[index], servings };
+      // 變化所帶來的食材消耗差異
+      const delta = Object.fromEntries(
+        Object.entries(unitUsage).map(([uuid, { name, quantity }]) => [
+          uuid,
+          { name, quantity: quantity * servingsDiff },
+        ]),
+      );
 
-      return newState;
+      return {
+        ...state,
+        items: newItems,
+        inventoryObj: updateInventory(state.inventoryObj, delta),
+      };
     }
     // 清空整個order數據
     case "draft/reset": {
@@ -174,16 +152,9 @@ export function reducer(state, action) {
     }
     // 編輯已建立訂單，需要先轉換數據格式以及紀錄訂單已消耗的食材
     case "draft/loadFromOrder": {
-      const { items } = action.payload;
-
-      const itemsData = items.map((item) => ({
-        ...item,
-        unitUsage: new Map(Object.entries(item.unitUsage)),
-      }));
-
       return {
         ...state,
-        items: itemsData,
+        items: action.payload,
       };
     }
 

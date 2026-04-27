@@ -35,7 +35,7 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
   const [isOpen, setIsOpen] = useState(null);
   const deleteMutation = useDeleteOrder();
 
-  const { id, pickupNumber, createdTime, status } = orderData;
+  const { id, pickupNumber, createdAt, status } = orderData;
   const isFinished = status === "已完成";
 
   const actions = [
@@ -86,7 +86,7 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
             <p>
               請確認是否要刪除
               <strong> {`取餐號碼${formatPickupNumber(pickupNumber)}`} </strong>
-              ({formatCreatedTime(createdTime)})?
+              ({formatCreatedTime(createdAt)})?
             </p>
           )}
         />

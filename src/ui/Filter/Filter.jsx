@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useLocation, useSearchParams } from "react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import OptionFilter from "./OptionFilter";
 import SearchFilter from "./SearchFilter";
 import DateRangeFilter from "./DateRangeFilter";
@@ -99,18 +99,10 @@ function Filter({ filtersConfig }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 已套用的 filters (來自 URL)
-  const appliedFilters = useMemo(
-    () => parseFilterQuery(searchParams, filtersConfig),
-    [searchParams, filtersConfig],
-  );
+  const appliedFilters = parseFilterQuery(searchParams, filtersConfig);
 
   // 使用者正在編輯的 filters
   const [draftFilters, setDraftFilters] = useState(appliedFilters);
-
-  // URL 改變時同步
-  useEffect(() => {
-    setDraftFilters(appliedFilters);
-  }, [appliedFilters]);
 
   const onClose = () => setIsOpen(false);
   const isMatched = useMediaQuery(30, onClose);

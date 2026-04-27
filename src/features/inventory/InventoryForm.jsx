@@ -39,14 +39,8 @@ function InventoryForm({ inventory, onCloseModal }) {
 
   function onSubmit(data) {
     console.log(data);
-    // 增加value(配合react-select的格式)
-    const inventoryData = {
-      ...data,
-      label: data.label,
-      value: data.label,
-    };
 
-    submitInventory(inventoryData, {
+    submitInventory(data, {
       onSuccess: () => {
         StyledHotToast({
           type: "success",
@@ -84,8 +78,8 @@ function InventoryForm({ inventory, onCloseModal }) {
               fields={[
                 {
                   type: "input",
-                  name: "label",
-                  errors: errors?.label,
+                  name: "name",
+                  errors: errors?.name,
                   rules: {
                     setValueAs: trimString,
                   },

@@ -78,7 +78,7 @@ function FormSection({
   heading,
   descriptions = undefined,
   fields = [],
-  inventoryData,
+  ingredientOptions,
   children,
 }) {
   const { register } = useFormContext();
@@ -122,7 +122,10 @@ function FormSection({
             )}
 
             {field.type === "select" && (
-              <SelectField name={field.name} inventoryData={inventoryData} />
+              <SelectField
+                name={field.name}
+                ingredientOptions={ingredientOptions}
+              />
             )}
 
             {field.type === "switch" && <SwitchField index={field.index} />}
@@ -134,18 +137,12 @@ function FormSection({
   );
 }
 
-function SelectField({ name, inventoryData }) {
+function SelectField({ name, ingredientOptions }) {
   return (
     <ControlledSelect
       name={name}
       rules={{ required: "食材名稱不能空白" }}
-      options={[
-        {
-          label: "無",
-          value: "",
-        },
-        ...inventoryData,
-      ]}
+      options={ingredientOptions}
       creatable={true}
       placeholder="選擇現有食材或輸入新食材"
     />
@@ -157,15 +154,15 @@ function SwitchField({ index }) {
     <SwitchContainer>
       <ControlledSwitch
         options={{
-          name: `customize.${index}.isRequired`,
-          option1: { label: "選填", value: "optional" },
-          option2: { label: "必填", value: "required" },
+          name: `customizations.${index}.isRequired`,
+          option1: { label: "選填", value: false },
+          option2: { label: "必填", value: true },
         }}
       />
 
       <ControlledSwitch
         options={{
-          name: `customize.${index}.choiceType`,
+          name: `customizations.${index}.type`,
           option1: { label: "多選", value: "multiple" },
           option2: { label: "單選", value: "single" },
         }}

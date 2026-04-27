@@ -89,7 +89,7 @@ function OrderOperation({
                 orderData.pickupNumber,
               )}`}</strong>
               &#8203;&nbsp;(
-              {formatCreatedTime(orderData.createdTime)})？
+              {formatCreatedTime(orderData.createdAt)})？
             </p>
           )}
         />

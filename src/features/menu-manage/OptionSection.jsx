@@ -4,14 +4,14 @@ import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
 import { parsePositiveInt } from "../../utils/helpers";
 
-function OptionSection({ nestedIndex, inventoryData }) {
+function OptionSection({ nestedIndex, ingredientOptions }) {
   const {
     control,
     formState: { errors },
   } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `customize.${nestedIndex}.options`,
+    name: `customizations.${nestedIndex}.options`,
   });
 
   return (
@@ -19,7 +19,6 @@ function OptionSection({ nestedIndex, inventoryData }) {
       {fields.map((field, index) => (
         <FormSection
           key={field.id}
-          id={`customize.${nestedIndex}.options.${index}`}
           isFullWidth={true}
           heading={{
             text: `選項 ${index + 1}`,
@@ -27,21 +26,22 @@ function OptionSection({ nestedIndex, inventoryData }) {
             required: false,
             action: fields.length > 1 ? () => remove(index) : undefined,
           }}
-          inventoryData={inventoryData}
+          ingredientOptions={ingredientOptions}
           fields={[
             {
               type: "input",
-              name: `customize.${nestedIndex}.options.${index}.optionLabel`,
+              name: `customizations.${nestedIndex}.options.${index}.name`,
               errors:
-                errors?.customize?.[nestedIndex]?.options?.[index]?.optionLabel,
+                errors?.customizations?.[nestedIndex]?.options?.[index]?.name,
               label: "選項名稱設定",
               placeholder: "例如：大杯、加蛋",
             },
             {
               type: "input",
-              name: `customize.${nestedIndex}.options.${index}.extraPrice`,
+              name: `customizations.${nestedIndex}.options.${index}.extraPrice`,
               errors:
-                errors?.customize?.[nestedIndex]?.options?.[index]?.extraPrice,
+                errors?.customizations?.[nestedIndex]?.options?.[index]
+                  ?.extraPrice,
               label: "選項額外加價",
               rules: {
                 setValueAs: (value) =>
@@ -52,16 +52,18 @@ function OptionSection({ nestedIndex, inventoryData }) {
             },
             {
               type: "select",
-              name: `customize.${nestedIndex}.options.${index}.ingredient`,
+              name: `customizations.${nestedIndex}.options.${index}.ingredient`,
               errors:
-                errors?.customize?.[nestedIndex]?.options?.[index]?.ingredient,
+                errors?.customizations?.[nestedIndex]?.options?.[index]
+                  ?.ingredient,
               label: "額外消耗食材",
             },
             {
               type: "input",
-              name: `customize.${nestedIndex}.options.${index}.quantity`,
+              name: `customizations.${nestedIndex}.options.${index}.quantity`,
               errors:
-                errors?.customize?.[nestedIndex]?.options?.[index]?.quantity,
+                errors?.customizations?.[nestedIndex]?.options?.[index]
+                  ?.quantity,
               label: "食材消耗數量",
               rules: {
                 setValueAs: (value) =>
@@ -78,7 +80,7 @@ function OptionSection({ nestedIndex, inventoryData }) {
         onClick={() => {
           append({
             optionId: `o_${crypto.randomUUID().slice(0, 8)}`,
-            optionLabel: "",
+            name: "",
             extraPrice: "",
             ingredient: "",
             quantity: "",

@@ -14,7 +14,7 @@ const StyledMenuList = styled.ul`
   gap: 2.4rem;
 `;
 
-function MenuList({ menus }) {
+function MenuList({ menus, inventoryObj }) {
   const [searchParams] = useSearchParams();
   const [selectedDish, setSelectedDish] = useState(null);
 
@@ -37,7 +37,12 @@ function MenuList({ menus }) {
     <>
       <StyledMenuList>
         {filteredDishes.map((dish) => (
-          <DishCard dish={dish} onSelect={setSelectedDish} key={dish.id} />
+          <DishCard
+            dish={dish}
+            onSelect={setSelectedDish}
+            inventoryObj={inventoryObj}
+            key={dish.id}
+          />
         ))}
       </StyledMenuList>
 

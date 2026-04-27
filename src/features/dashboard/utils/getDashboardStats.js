@@ -12,18 +12,18 @@ import {
 // 更新近7天的每日訂單總數和營收
 function updateLast7DaysStats(
   last7DaysStats,
-  createdTime,
+  createdAt,
   order,
   sevenDaysAgoStart,
 ) {
-  const index = differenceInCalendarDays(createdTime, sevenDaysAgoStart);
+  const index = differenceInCalendarDays(createdAt, sevenDaysAgoStart);
   last7DaysStats[index].totalRevenue += order.totalPrice;
   last7DaysStats[index].orderCount += 1;
 }
 
 // 更新今天每小時的訂單總數
-function updateHourlyOrders(hourlyOrderCounts, createdTime) {
-  const hour = getHours(createdTime);
+function updateHourlyOrders(hourlyOrderCounts, createdAt) {
+  const hour = getHours(createdAt);
   hourlyOrderCounts[hour].totalOrders += 1;
 }
 
@@ -95,21 +95,21 @@ export function getDashboardStats(orders = []) {
 
   for (const order of orders) {
     // 解析建立時間
-    const createdTime = parseISO(order.createdTime);
+    const createdAt = parseISO(order.createdAt);
 
     // 統計今日訂單數據
-    if (isToday(createdTime)) {
+    if (isToday(createdAt)) {
       todayOrders.unshift(order);
 
       // 今日各小時訂單筆數統計
-      updateHourlyOrders(hourlyOrderCounts, createdTime);
+      updateHourlyOrders(hourlyOrderCounts, createdAt);
 
       // 今日各餐點銷售份數與金額累計
       updateDishStats(itemSalesStats, order);
     }
 
     // 近7天的營收統計
-    updateLast7DaysStats(last7DaysStats, createdTime, order, sevenDaysAgoStart);
+    updateLast7DaysStats(last7DaysStats, createdAt, order, sevenDaysAgoStart);
   }
 
   return {

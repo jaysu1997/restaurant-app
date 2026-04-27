@@ -4,14 +4,14 @@ import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
 import OptionSection from "./OptionSection";
 
-function CustomizeScetion({ inventoryData }) {
+function CustomizeScetion({ ingredientOptions }) {
   const {
     control,
     formState: { errors },
   } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "customize",
+    name: "customizations",
   });
 
   return (
@@ -26,7 +26,6 @@ function CustomizeScetion({ inventoryData }) {
       {fields.map((field, index) => (
         <FormSection
           key={field.id}
-          id={`customize.${index}`}
           isFullWidth={true}
           isGroup={true}
           heading={{
@@ -38,20 +37,23 @@ function CustomizeScetion({ inventoryData }) {
           fields={[
             {
               type: "input",
-              name: `customize.${index}.title`,
-              errors: errors?.customize?.[index]?.title,
+              name: `customizations.${index}.name`,
+              errors: errors?.customizations?.[index]?.name,
               label: "項目標題",
               placeholder: "例如：份量、加料",
             },
             {
               type: "switch",
-              name: `customize.${index}.setting`,
+              name: `customizations.${index}`,
               index: index,
               label: "項目填寫設定",
             },
           ]}
         >
-          <OptionSection nestedIndex={index} inventoryData={inventoryData} />
+          <OptionSection
+            nestedIndex={index}
+            ingredientOptions={ingredientOptions}
+          />
         </FormSection>
       ))}
 
@@ -59,20 +61,19 @@ function CustomizeScetion({ inventoryData }) {
         $variant="text"
         onClick={() => {
           append({
-            customizeId: `c_${crypto.randomUUID().slice(0, 8)}`,
-            title: "",
-            isRequired: "optional",
-            choiceType: "multiple",
+            customizationId: `c_${crypto.randomUUID().slice(0, 8)}`,
+            name: "",
+            isRequired: false,
+            type: "multiple",
             options: [
               {
                 optionId: `o_${crypto.randomUUID().slice(0, 8)}`,
                 ingredient: "",
                 extraPrice: "",
-                optionLabel: "",
+                name: "",
                 quantity: "",
               },
             ],
-            selectOptions: [],
           });
         }}
       >

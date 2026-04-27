@@ -11,6 +11,7 @@ import styled from "styled-components";
 import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import { FilePlus } from "lucide-react";
 import PageContainer from "../ui/PageContainer.jsx";
+import useGetInventory from "../hooks/data/inventory/useGetInventory.js";
 
 const Container = styled.ul`
   display: grid;
@@ -44,6 +45,8 @@ function MenuManage() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
+  const { inventoryObj, inventoryIsLoading, inventoryIsError, inventoryError } =
+    useGetInventory();
 
   const nameSearchParams = searchParams.get("name");
   const categorySearchParams = searchParams.get("category");
@@ -96,21 +99,30 @@ function MenuManage() {
 
       <QueryStatusFallback
         status={{
-          isLoading: menusIsLoading,
-          isError: menusIsError,
+          isLoading: menusIsLoading || inventoryIsLoading,
+          isError: menusIsError || inventoryIsError,
           hasNoData: displayMenusData?.length === 0,
         }}
-        errorFallback={menusError}
+        errorFallback={menusError || inventoryError}
         noDataFallback={{ message: emptyStateMessage }}
       >
         <Container>
           {displayMenusData?.map((menu) => (
-            <MenusDataCard menu={menu} key={menu.id} />
+            <MenusDataCard
+              menu={menu}
+              inventoryObj={inventoryObj}
+              key={menu.id}
+            />
           ))}
         </Container>
       </QueryStatusFallback>
 
-      {isOpenModal && <MenuForm onCloseModal={() => setIsOpenModal(false)} />}
+      {isOpenModal && (
+        <MenuForm
+          inventoryObj={inventoryObj}
+          onCloseModal={() => setIsOpenModal(false)}
+        />
+      )}
     </PageContainer>
   );
 }

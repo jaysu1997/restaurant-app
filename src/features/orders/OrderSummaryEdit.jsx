@@ -33,8 +33,13 @@ function OrderSummaryEdit({ orderData }) {
     dispatch,
   } = useOrderDraft();
 
-  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
-    useGetInventory();
+  const {
+    inventory,
+    inventoryObj,
+    inventoryIsLoading,
+    inventoryIsError,
+    inventoryError,
+  } = useGetInventory();
 
   useEffect(
     function () {
@@ -42,20 +47,30 @@ function OrderSummaryEdit({ orderData }) {
 
       dispatch({
         type: "inventory/setAll",
-        payload: inventory,
+        payload: inventoryObj,
       });
     },
-    [dispatch, inventory],
+    [dispatch, inventory, inventoryObj],
   );
 
   useEffect(() => {
+    const draftData = orderData.items.map((item) => ({
+      ...item,
+      unitUsage: Object.fromEntries(
+        item.unitUsage.map(({ uuid, name, quantity }) => [
+          uuid,
+          { name, quantity },
+        ]),
+      ),
+    }));
+
     dispatch({
       type: "draft/loadFromOrder",
-      payload: orderData,
+      payload: draftData,
     });
   }, [dispatch, orderData]);
 
-  const { tableNumber, pickupTime, status, paid, createdTime, orderUUID } =
+  const { tableNumber, pickupTime, status, paid, createdAt, orderUUID } =
     orderData;
 
   // 感覺toOption用處不大，或許可以刪除之類的，或是直接把函式放到這個檔案中就好，因為好像用到的地方很少
@@ -85,7 +100,6 @@ function OrderSummaryEdit({ orderData }) {
 
   function onSubmit(data) {
     const orderData = buildOrderData(items, data, inventory);
-
     updateOrder(orderData);
   }
 
@@ -113,7 +127,7 @@ function OrderSummaryEdit({ orderData }) {
           <OrderCard>
             <div>
               <label>建立時間：</label>
-              <span>{formatCreatedTime(createdTime)}</span>
+              <span>{formatCreatedTime(createdAt)}</span>
             </div>
             <div>
               <label>訂單編號：</label>

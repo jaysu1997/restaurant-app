@@ -1,10 +1,8 @@
 // 用來新增或更新單筆menu數據的表單
 import { useForm, FormProvider } from "react-hook-form";
 import Modal from "../../ui/Modal";
-import prepareMenuSubmitData from "./menuSubmitNormalizer";
-import useGetInventory from "../../hooks/data/inventory/useGetInventory";
+import { toMenuPayload, toMenuForm } from "./utils/menuTransform";
 import useSubmitMenuForm from "../../hooks/data/menus/useSubmitMenuForm";
-import QueryStatusFallback from "../../ui/QueryStatusFallback";
 import ButtonCancel from "../../ui/ButtonCancel";
 import ButtonSubmit from "../../ui/ButtonSubmit";
 import styled from "styled-components";
@@ -36,17 +34,18 @@ const Footer = styled.footer`
   gap: 2.4rem;
 `;
 
-function MenuForm({ onCloseModal, menu }) {
-  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
-    useGetInventory();
-
+function MenuForm({ onCloseModal, menu, inventoryObj }) {
   const { submitMenuForm, isSubmittingMenuForm } = useSubmitMenuForm();
 
-  const methods = useForm({
-    defaultValues: menu || {
-      ingredients: [{ ingredient: "", quantity: "" }],
-    },
-  });
+  const formatMenu = toMenuForm(menu, inventoryObj);
+  const ingredientOptions = Object.entries(inventoryObj).map(
+    ([uuid, value]) => ({
+      label: value.name,
+      value: uuid,
+    }),
+  );
+
+  const methods = useForm({ defaultValues: formatMenu });
 
   const {
     getValues,
@@ -56,7 +55,9 @@ function MenuForm({ onCloseModal, menu }) {
 
   function onSubmit(data) {
     // 整理好要上傳的數據格式
-    const { menuData, newIngredients } = prepareMenuSubmitData(data);
+    const { menuData, newIngredients } = toMenuPayload(data);
+    console.log(menuData, newIngredients);
+
     // 執行表單數據上傳
     submitMenuForm(
       { menuData, newIngredients },
@@ -85,7 +86,7 @@ function MenuForm({ onCloseModal, menu }) {
     },
     {
       heading: "定價",
-      name: "price",
+      name: "basePrice",
       rules: {
         setValueAs: (value) =>
           parsePositiveInt(value, { min: 0, fallback: value }),
@@ -100,7 +101,7 @@ function MenuForm({ onCloseModal, menu }) {
           parsePositiveInt(value, { min: 0, fallback: value }),
         validate: (value) => {
           if (typeof value !== "number") return "請輸入 0 以上的整數";
-          if (Number(value) > Number(getValues("price")))
+          if (Number(value) > Number(getValues("basePrice")))
             return "折扣不能超過定價";
 
           return true;
@@ -116,47 +117,43 @@ function MenuForm({ onCloseModal, menu }) {
       onClose={onCloseModal}
       scrollBar={false}
     >
-      <QueryStatusFallback
-        status={{
-          isLoading: inventoryIsLoading,
-          isError: inventoryIsError,
-        }}
-        errorFallback={inventoryError}
-      >
-        <FormProvider {...methods}>
-          <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
-            {fieldsConfig.map((field) => (
-              <FormSection
-                key={field.name}
-                heading={{ text: field.heading, as: "h3", required: true }}
-                fields={[
-                  {
-                    type: "input",
-                    name: field.name,
-                    errors: errors?.[field.name],
-                    rules: field.rules,
-                  },
-                ]}
-              />
-            ))}
+      <FormProvider {...methods}>
+        <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
+          {fieldsConfig.map((field) => (
+            <FormSection
+              key={field.name}
+              heading={{ text: field.heading, as: "h3", required: true }}
+              fields={[
+                {
+                  type: "input",
+                  name: field.name,
+                  errors: errors?.[field.name],
+                  rules: field.rules,
+                },
+              ]}
+            />
+          ))}
 
-            <IngredientScetion inventoryData={inventory} />
+          <IngredientScetion ingredientOptions={ingredientOptions} />
+          <CustomizeScetion
+            ingredientOptions={[
+              { label: "無", value: "", uuid: null },
+              ...ingredientOptions,
+            ]}
+          />
 
-            <CustomizeScetion inventoryData={inventory} />
-
-            <Footer>
-              <ButtonSubmit
-                isProcessing={isSubmittingMenuForm || isSubmitting}
-                disabled={isSubmittingMenuForm || isSubmitting}
-              />
-              <ButtonCancel
-                onClick={onCloseModal}
-                disabled={isSubmittingMenuForm || isSubmitting}
-              />
-            </Footer>
-          </StyledForm>
-        </FormProvider>
-      </QueryStatusFallback>
+          <Footer>
+            <ButtonSubmit
+              isProcessing={isSubmittingMenuForm || isSubmitting}
+              disabled={isSubmittingMenuForm || isSubmitting}
+            />
+            <ButtonCancel
+              onClick={onCloseModal}
+              disabled={isSubmittingMenuForm || isSubmitting}
+            />
+          </Footer>
+        </StyledForm>
+      </FormProvider>
     </Modal>
   );
 }

@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import Button from "../../ui/Button";
 import { parsePositiveInt } from "../../utils/helpers";
 
-function IngredientScetion({ inventoryData }) {
+function IngredientScetion({ ingredientOptions }) {
   const {
     control,
     formState: { errors },
@@ -26,7 +26,6 @@ function IngredientScetion({ inventoryData }) {
       {fields.map((field, index) => (
         <FormSection
           key={field.id}
-          id={`ingredients.${index}`}
           isFullWidth={true}
           isGroup={true}
           heading={{
@@ -35,7 +34,7 @@ function IngredientScetion({ inventoryData }) {
             required: false,
             action: fields.length > 1 ? () => remove(index) : undefined,
           }}
-          inventoryData={inventoryData}
+          ingredientOptions={ingredientOptions}
           fields={[
             {
               type: "select",

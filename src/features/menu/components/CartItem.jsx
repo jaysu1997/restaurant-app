@@ -1,11 +1,7 @@
 import styled from "styled-components";
 import ServingsControl from "../../../ui/ServingsControl";
-import { useMemo } from "react";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
-import {
-  checkInventoryAvailability,
-  summarizeMealChoices,
-} from "../../../utils/orderHelpers";
+import { summarizeMealChoices } from "../../../utils/orderHelpers";
 import OrderItemActions from "../../../ui/OrderItemActions";
 import Price from "../../../components/Price";
 
@@ -45,22 +41,17 @@ const Row = styled.div`
 function CartItem({ item }) {
   const {
     dispatch,
-    state: { inventoryMap },
+    state: { inventoryObj },
   } = useOrderDraft();
 
   const customizeChoices = summarizeMealChoices(item);
   const itemTotalPrice = item.unitPrice * item.servings;
 
   // 計算剩餘食材是否能夠支持再增加更多份數
-  const canIncrease = useMemo(() => {
-    const inventoryCheck = checkInventoryAvailability({
-      unitUsage: item.unitUsage,
-      servings: 1, // 嘗試只加 1 份
-      inventoryMap,
-    });
-
-    return inventoryCheck.isAvailable;
-  }, [item.unitUsage, inventoryMap]);
+  const canIncrease = Object.entries(item.unitUsage).every(
+    ([uuid, { quantity }]) =>
+      quantity <= (inventoryObj[uuid]?.remainingQuantity ?? 0),
+  );
 
   return (
     <StyledCartItem>

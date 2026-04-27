@@ -13,11 +13,7 @@ function SettingsProvider({ children }) {
     useGetSettings();
 
   // 生成內用桌號選項
-  const dineInTableOptions = useMemo(() => {
-    if (!settings) return;
-
-    return generateDineInTableOptions(settings);
-  }, [settings]);
+  const dineInTableOptions = generateDineInTableOptions(settings);
 
   // 取得當天營業設定(是否有營業以及營業時段)
   const todayOpenInfo = useMemo(() => {

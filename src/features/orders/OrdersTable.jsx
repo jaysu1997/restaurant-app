@@ -153,7 +153,7 @@ function OrdersTable({ ordersData }) {
             </div>
 
             <div>
-              <span>{formatCreatedTime(orderData.createdTime)}</span>
+              <span>{formatCreatedTime(orderData.createdAt)}</span>
 
               <OrderDropdownMenu
                 orderData={orderData}

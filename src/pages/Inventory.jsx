@@ -47,7 +47,7 @@ function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
 
   if (nameSearchParams && nameSearchParams !== "") {
     displayData = inventoryData.filter((inventory) =>
-      inventory.label.includes(nameSearchParams),
+      inventory.name.includes(nameSearchParams),
     );
   }
 
@@ -63,8 +63,13 @@ function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
 function Inventory() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
-    useGetInventory();
+  const {
+    inventory,
+    inventoryObj,
+    inventoryIsLoading,
+    inventoryIsError,
+    inventoryError,
+  } = useGetInventory();
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");
@@ -107,8 +112,12 @@ function Inventory() {
         }}
       >
         <Container>
-          {displayInventoryData?.map((inventory) => (
-            <InventoryDataCard inventory={inventory} key={inventory.id} />
+          {displayInventoryData?.map((item) => (
+            <InventoryDataCard
+              item={item}
+              inventoryObj={inventoryObj}
+              key={item.id}
+            />
           ))}
         </Container>
       </QueryStatusFallback>

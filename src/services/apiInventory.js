@@ -25,36 +25,15 @@ export async function getIngredientRelatedMenusApi(id) {
   return data;
 }
 
-// 更新食材(會同步更新餐點中的備料和選項)
-export async function updateInventoryApi(inventoryData) {
-  const { id, label, value, remainingQuantity } = inventoryData;
-
-  const { data, error } = await supabase.rpc(
-    "update_inventory_and_update_menus",
-    {
-      inventory_id: id,
-      new_label: label,
-      new_value: value,
-      new_remaining_quantity: remainingQuantity,
-    },
-  );
-
-  handleSupabaseApiError(error, {
-    23505: `${inventoryData.label}已存在`,
-  });
-
-  return data;
-}
-
-// 新增食材
-export async function createInventoryApi(newIngredients) {
+// 新增 or 更新食材數據
+export async function upsertInventoryApi(inventoryData) {
   const { data, error } = await supabase
     .from("inventory")
-    .insert(newIngredients)
+    .upsert(inventoryData)
     .select();
 
   handleSupabaseApiError(error, {
-    23505: `${newIngredients.label}已存在`,
+    23505: `${inventoryData.name} 已存在`,
   });
 
   return data;

@@ -30,8 +30,13 @@ function Menu() {
   const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
 
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
-  const { inventory, inventoryIsLoading, inventoryIsError, inventoryError } =
-    useGetInventory();
+  const {
+    inventory,
+    inventoryObj,
+    inventoryIsLoading,
+    inventoryIsError,
+    inventoryError,
+  } = useGetInventory();
 
   useEffect(
     function () {
@@ -39,10 +44,10 @@ function Menu() {
 
       dispatch({
         type: "inventory/setAll",
-        payload: inventory,
+        payload: inventoryObj,
       });
     },
-    [dispatch, inventory],
+    [dispatch, inventory, inventoryObj],
   );
 
   const pageQueryStatus = {
@@ -66,7 +71,7 @@ function Menu() {
       >
         <MenuContainer>
           <CategoryBar menus={menus} />
-          <MenuList menus={menus} />
+          <MenuList menus={menus} inventoryObj={inventoryObj} />
           <ShoppingCart />
         </MenuContainer>
       </QueryStatusFallback>

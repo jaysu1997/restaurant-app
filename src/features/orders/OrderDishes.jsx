@@ -112,7 +112,9 @@ function OrderDishes({ items, isEdit }) {
         <OrderDishRow key={item.uniqueId}>
           <span className="itemName">{item.name}</span>
           <ItemMeta>
-            {item.customize.length !== 0 && <p>{summarizeMealChoices(item)}</p>}
+            {item.customizations.length !== 0 && (
+              <p>{summarizeMealChoices(item)}</p>
+            )}
             {item.note && <p className="itemNote">{`" ${item.note} "`}</p>}
           </ItemMeta>
 

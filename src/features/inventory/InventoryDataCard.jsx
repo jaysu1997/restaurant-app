@@ -5,24 +5,22 @@ import InventoryForm from "./InventoryForm";
 import useDeleteInventory from "../../hooks/data/inventory/useDeleteInventory";
 import MenuForm from "../menu-manage/MenuForm";
 
-function InventoryDataCard({ inventory }) {
+function InventoryDataCard({ item, inventoryObj }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const deleteMutation = useDeleteInventory();
-  const { label, remainingQuantity } = inventory;
+  const { name, remainingQuantity } = item;
 
   const inventoryDataFormat = [
-    { head: "名稱", body: label, twoColumns: true },
-    { head: "數量", body: `${remainingQuantity || 0} 份`, twoColumns: true },
+    { head: "名稱", body: name },
+    { head: "數量", body: `${remainingQuantity || 0} 份` },
   ];
 
   return (
     <>
       <DataDisplayCard
-        handleEditButton={() =>
-          setIsOpenModal({ type: "edit", data: inventory })
-        }
+        handleEditButton={() => setIsOpenModal({ type: "edit", data: item })}
         handleDeleteButton={() =>
-          setIsOpenModal({ type: "delete", data: inventory })
+          setIsOpenModal({ type: "delete", data: item })
         }
         dataFormat={inventoryDataFormat}
       />
@@ -55,10 +53,9 @@ function InventoryDataCard({ inventory }) {
 
       {isOpenModal.type === "menuForm" && (
         <MenuForm
-          onCloseModal={() =>
-            setIsOpenModal({ type: "delete", data: inventory })
-          }
+          onCloseModal={() => setIsOpenModal({ type: "delete", data: item })}
           menu={isOpenModal.data}
+          inventoryObj={inventoryObj}
         />
       )}
     </>

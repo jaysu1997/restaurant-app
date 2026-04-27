@@ -41,7 +41,7 @@ function useGetPaginatedOrders() {
     fallback: searchParams.get("pickupNumber") !== null ? -1 : null,
   });
 
-  const createdTime = getCreatedTime(searchParams);
+  const createdAt = getCreatedTime(searchParams);
 
   const {
     data: { ordersData = [], curPage = 1, maxPage = 1 } = {},
@@ -50,22 +50,22 @@ function useGetPaginatedOrders() {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["orders", page, createdTime, pickupNumber],
-    queryFn: () => getPaginatedOrdersApi(page, createdTime, pickupNumber),
+    queryKey: ["orders", page, createdAt, pickupNumber],
+    queryFn: () => getPaginatedOrdersApi(page, createdAt, pickupNumber),
     placeholderData: keepPreviousData,
   });
 
   // 預先獲取前後頁的數據
   if (curPage < maxPage) {
     queryClient.prefetchQuery({
-      queryKey: ["orders", page + 1, createdTime, pickupNumber],
-      queryFn: () => getPaginatedOrdersApi(page + 1, createdTime, pickupNumber),
+      queryKey: ["orders", page + 1, createdAt, pickupNumber],
+      queryFn: () => getPaginatedOrdersApi(page + 1, createdAt, pickupNumber),
     });
   }
   if (curPage > 1) {
     queryClient.prefetchQuery({
-      queryKey: ["orders", page - 1, createdTime, pickupNumber],
-      queryFn: () => getPaginatedOrdersApi(page - 1, createdTime, pickupNumber),
+      queryKey: ["orders", page - 1, createdAt, pickupNumber],
+      queryFn: () => getPaginatedOrdersApi(page - 1, createdAt, pickupNumber),
     });
   }
 
@@ -76,7 +76,7 @@ function useGetPaginatedOrders() {
     isPending,
     isError,
     error: withFallbackRetry(error, refetch),
-    createdTime,
+    createdAt,
     pickupNumber,
   };
 }

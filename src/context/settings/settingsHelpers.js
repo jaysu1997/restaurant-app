@@ -34,7 +34,7 @@ export function generateTableNumbers(zoneName, tableCount) {
 
 // 生成所有內用桌號選項
 export function generateDineInTableOptions(settingsData) {
-  const { dineInTableConfig } = settingsData;
+  const dineInTableConfig = settingsData?.dineInTableConfig ?? [];
 
   const options = dineInTableConfig
     .flatMap((zone) => {

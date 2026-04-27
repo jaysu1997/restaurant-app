@@ -5,7 +5,7 @@ import Price from "./Price";
 
 const StyledDishCard = styled.li`
   width: 100%;
-  height: fit-content;
+  height: 9.4rem;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -43,13 +43,13 @@ const DishIngredients = styled(Row)`
   font-weight: 400;
 `;
 
-function DishCard({ dish, onSelect }) {
+function DishCard({ dish, onSelect, inventoryObj }) {
   // 使用食材清單
   const ingredientsList = dish.ingredients
-    .map((ing) => ing.ingredient.label)
+    .map((item) => inventoryObj[item.ingredient]?.name ?? "未知")
     .join(", ");
 
-  const finalPrice = `$ ${dish.price - dish.discount}`;
+  const finalPrice = `$ ${dish.basePrice - dish.discount}`;
 
   return (
     <StyledDishCard onClick={() => onSelect(dish)}>

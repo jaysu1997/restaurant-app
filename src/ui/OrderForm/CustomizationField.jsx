@@ -71,8 +71,8 @@ const OptionsArea = styled.div`
 
 // 根據欄位要求和填寫狀態控制樣式
 function getFieldStatus(customization) {
-  const isRequiredField = customization?.isRequired === "required";
-  const isFilled = customization?.selectOptions.length > 0;
+  const isRequiredField = customization.isRequired;
+  const isFilled = customization.selectedOptions.length > 0;
 
   const fieldStatus = !isRequiredField
     ? "optional"
@@ -86,13 +86,12 @@ function getFieldStatus(customization) {
 // 自訂選項區塊
 function CustomizationField({ customization }) {
   const { dispatch } = useOrderDraft();
-
-  const { choiceType, customizeId, title, options } = customization;
+  const { type, customizationId, name, options } = customization;
 
   // 填寫狀態(控制樣式)
   const fieldStatus = getFieldStatus(customization);
   // 已選選項
-  const selectedOptions = customization?.selectOptions ?? [];
+  const selectedOptions = customization.selectedOptions ?? [];
 
   function handleOptionChange(e, optionData) {
     let actionType;
@@ -100,7 +99,7 @@ function CustomizationField({ customization }) {
     if (!e.target.checked) {
       // 移除選項
       actionType = "customization/removeOption";
-    } else if (choiceType === "multiple") {
+    } else if (type === "multiple") {
       // 多選新增
       actionType = "customization/addOption";
     } else {
@@ -110,7 +109,7 @@ function CustomizationField({ customization }) {
 
     dispatch({
       type: actionType,
-      payload: { customizeId, ...optionData },
+      payload: { customizationId, ...optionData },
     });
   }
 
@@ -119,14 +118,12 @@ function CustomizationField({ customization }) {
       $bgColorStyle={fieldUIConfig.backgroundColor[fieldStatus]}
     >
       <Heading>
-        <Title>{title}</Title>
+        <Title>{name}</Title>
         <RequiredLabel $labelStyle={fieldUIConfig.color[fieldStatus]}>
           {fieldUIConfig.label[fieldStatus]}
         </RequiredLabel>
       </Heading>
-      <ChoiceHint>
-        {choiceType === "single" ? "只能單選" : "可以多選"}
-      </ChoiceHint>
+      <ChoiceHint>{type === "single" ? "只能單選" : "可以多選"}</ChoiceHint>
       <OptionsArea>
         {options.map((optionData) => (
           <Option

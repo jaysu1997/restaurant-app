@@ -4,8 +4,9 @@ import { useState } from "react";
 import Modal from "../../ui/Modal";
 import useGetMenus from "../../hooks/data/menus/useGetMenus";
 import QueryStatusFallback from "../../ui/QueryStatusFallback";
-import CategorySection from "./CategorySection";
 import OrderForm from "../../ui/OrderForm/OrderForm";
+import useGetInventory from "../../hooks/data/inventory/useGetInventory";
+import DishCard from "../../components/DishCard";
 
 const StyledMiniMenu = styled.div`
   display: flex;
@@ -14,6 +15,27 @@ const StyledMiniMenu = styled.div`
   padding: 2rem;
   background-color: #f9fafb;
   width: min(36rem, 95dvw);
+`;
+
+const StyledCategorySection = styled.li`
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+`;
+
+const CategoryName = styled.h3`
+  background-color: #262626;
+  color: #fafafa;
+  font-size: 1.8rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 400;
+`;
+
+const DishList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
 `;
 
 // 將餐點按照分類整理
@@ -37,6 +59,7 @@ function groupDishesByCategory(dishes) {
 function MiniMenu({ onClose }) {
   const [selectedDish, setSelectedDish] = useState(null);
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
+  const { inventoryObj } = useGetInventory();
   const isMenu = !selectedDish;
 
   return (
@@ -61,12 +84,19 @@ function MiniMenu({ onClose }) {
         {isMenu ? (
           <StyledMiniMenu>
             {groupDishesByCategory(menus)?.map((menu) => (
-              <CategorySection
-                category={menu.category}
-                dishes={menu.dishes}
-                onSelect={setSelectedDish}
-                key={menu.category}
-              />
+              <StyledCategorySection key={menu.category}>
+                <CategoryName>{menu.category}</CategoryName>
+                <DishList>
+                  {menu.dishes.map((dish) => (
+                    <DishCard
+                      dish={dish}
+                      onSelect={setSelectedDish}
+                      inventoryObj={inventoryObj}
+                      key={dish.id}
+                    />
+                  ))}
+                </DishList>
+              </StyledCategorySection>
             ))}
           </StyledMiniMenu>
         ) : (

@@ -22,10 +22,13 @@ const AccordionTitle = styled.button`
   padding: 0.8rem 1.2rem;
   gap: 0.4rem;
   background-color: #f9fafb;
-  transition: background-color 0.3s;
   font-size: 1.4rem;
-  border-bottom: ${({ $isExpanded }) =>
-    $isExpanded ? "1px solid #ddd" : "none"};
+  border-bottom: 1px solid
+    ${({ $isExpanded }) => ($isExpanded ? "#ddd" : "transparent")};
+
+  transition:
+    background-color 0.3s,
+    border-color 0.3s ease;
 
   svg {
     width: 1.3rem;

@@ -3,7 +3,7 @@ import SectionContainer from "../../ui/SectionContainer";
 import { UsersRound } from "lucide-react";
 import UserAvatar from "../../ui/UserAvatar";
 import { UserRoundX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
 import Button from "../../ui/Button";
@@ -72,11 +72,9 @@ const Profile = styled.div`
 `;
 
 function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
-  const rolesById = useMemo(() => {
-    return Object.fromEntries(
-      staffList.map((item) => [item.id, item.user_metadata.role]),
-    );
-  }, [staffList]);
+  const rolesById = Object.fromEntries(
+    staffList.map((item) => [item.id, item.user_metadata.role]),
+  );
 
   const [updating, setUpdating] = useState({});
 

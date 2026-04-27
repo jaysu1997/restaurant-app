@@ -39,7 +39,6 @@ function Order() {
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
   const { order, orderIsLoading, orderIsError, orderError } = useGetOrder();
-
   const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
 
   const pageQueryStatus = {

@@ -24,7 +24,7 @@ const filtersConfig = [
   {
     title: "訂單建立時間",
     type: "datePicker",
-    queryKey: "createdTime",
+    queryKey: "createdAt",
   },
 ];
 
@@ -36,12 +36,12 @@ function Orders() {
     isPending,
     isError,
     error,
-    createdTime,
+    createdAt,
     pickupNumber,
   } = useGetPaginatedOrders();
 
   // 有使用篩選條件
-  const hasFilters = createdTime || pickupNumber;
+  const hasFilters = createdAt || pickupNumber;
   // 數據庫完全沒有任何訂單數據
   const isEmpty = !hasFilters && !isPending && ordersData?.length === 0;
 

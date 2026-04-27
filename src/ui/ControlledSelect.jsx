@@ -12,6 +12,9 @@ function ControlledSelect({
   const { control } = useFormContext();
   const { field } = useController({ name, control, rules });
 
+  // 這有用嗎?
+  // console.log(disabled);
+
   return (
     <StyledSelect
       {...field}
@@ -19,6 +22,9 @@ function ControlledSelect({
       options={options}
       isDisabled={disabled}
       placeholder={placeholder}
+      filterOption={(option, inputValue) =>
+        option.label.toLowerCase().includes(inputValue.toLowerCase())
+      }
       components={{
         IndicatorSeparator: () => null,
         DropdownIndicator: () => null,
