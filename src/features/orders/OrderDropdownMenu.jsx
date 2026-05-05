@@ -32,7 +32,7 @@ const ToggleButton = styled.button`
 
 function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const deleteMutation = useDeleteOrder();
 
   const { id, pickupNumber, createdAt, status } = orderData;
@@ -54,7 +54,7 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
     {
       name: "刪除訂單",
       icon: Trash2,
-      handleClick: () => setIsOpen(true),
+      handleClick: () => setIsDeleteModalOpen(true),
       hidden: isFinished,
     },
   ];
@@ -76,12 +76,11 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
         </ToggleButton>
       </DropdownMenu>
 
-      {isOpen && (
+      {isDeleteModalOpen && (
         <ConfirmDelete
-          setIsOpenModal={setIsOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
           deleteMutation={deleteMutation}
           data={orderData}
-          showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除

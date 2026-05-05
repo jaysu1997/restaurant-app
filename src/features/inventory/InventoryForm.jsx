@@ -23,7 +23,7 @@ const Footer = styled.footer`
   gap: 2.4rem;
 `;
 
-function InventoryForm({ inventory, onCloseModal }) {
+function InventoryForm({ inventory, onClose }) {
   const isEdit = inventory ? true : false;
   const methods = useForm({
     defaultValues: inventory || {},
@@ -47,7 +47,7 @@ function InventoryForm({ inventory, onCloseModal }) {
           title: `庫存食材設定${isEdit ? "更新" : "新增"}成功`,
         });
 
-        onCloseModal?.();
+        onClose?.();
         searchParams.delete("quantity");
         searchParams.delete("name");
         setSearchParams(searchParams);
@@ -60,7 +60,7 @@ function InventoryForm({ inventory, onCloseModal }) {
   }
 
   return (
-    <Modal modalHeader="食材設定表單" onClose={onCloseModal}>
+    <Modal modalHeader="食材設定表單" onClose={onClose}>
       <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
         {/* 這裡的isDisabled沒用 */}
         <FormProvider {...methods}>
@@ -110,10 +110,7 @@ function InventoryForm({ inventory, onCloseModal }) {
               disabled={isSubmittingInventory}
               isProcessing={isSubmittingInventory}
             />
-            <ButtonCancel
-              disabled={isSubmittingInventory}
-              onClick={onCloseModal}
-            />
+            <ButtonCancel disabled={isSubmittingInventory} onClick={onClose} />
           </Footer>
         </FormProvider>
       </StyledForm>

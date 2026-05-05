@@ -15,12 +15,13 @@ const StyledItemActions = styled.div`
 
 function OrderItemActions({ item }) {
   const { dispatch } = useOrderDraft();
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [editingItem, setEditingItem] = useState(null);
+  const onClose = () => setEditingItem(null);
 
   return (
     <>
       <StyledItemActions>
-        <Button $variant="ghost" onClick={() => setSelectedItem(item)}>
+        <Button $variant="ghost" onClick={() => setEditingItem(item)}>
           <SquarePen />
         </Button>
 
@@ -37,17 +38,13 @@ function OrderItemActions({ item }) {
         </Button>
       </StyledItemActions>
 
-      {selectedItem && (
+      {editingItem && (
         <Modal
-          onClose={() => setSelectedItem(null)}
-          modalHeader={selectedItem.name}
+          onClose={onClose}
+          modalHeader={editingItem.name}
           scrollBar={false}
         >
-          <OrderForm
-            orderDish={selectedItem}
-            onClose={() => setSelectedItem(null)}
-            isEdit={true}
-          />
+          <OrderForm orderDish={editingItem} onClose={onClose} isEdit={true} />
         </Modal>
       )}
     </>

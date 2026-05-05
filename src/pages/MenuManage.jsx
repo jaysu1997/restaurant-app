@@ -8,10 +8,12 @@ import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 import Filter from "../ui/Filter/Filter.jsx";
 import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
 import styled from "styled-components";
-import MenusDataCard from "../features/menu-manage/MenusDataCard.jsx";
 import { FilePlus } from "lucide-react";
 import PageContainer from "../ui/PageContainer.jsx";
 import useGetInventory from "../hooks/data/inventory/useGetInventory.js";
+import DataDisplayCard from "../ui/DataDisplayCard.jsx";
+import useDeleteMenu from "../hooks/data/menus/useDeleteMenu.js";
+import ConfirmDelete from "../ui/ConfirmDelete.jsx";
 
 const Container = styled.ul`
   display: grid;
@@ -20,6 +22,7 @@ const Container = styled.ul`
   gap: 2.8rem;
 `;
 
+// 這個或許可以移動到filter helper中
 function filterData(menusData, nameSearchParams, categorySearchParams) {
   if (!menusData) return menusData;
 
@@ -42,8 +45,9 @@ function filterData(menusData, nameSearchParams, categorySearchParams) {
 }
 
 function MenuManage() {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modal, setModal] = useState({ type: null, data: null });
   const [searchParams] = useSearchParams();
+  const deleteMutation = useDeleteMenu();
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
   const { inventoryObj, inventoryIsLoading, inventoryIsError, inventoryError } =
     useGetInventory();
@@ -87,7 +91,10 @@ function MenuManage() {
     <PageContainer>
       <PageHeader title="菜單設定">
         <div>
-          <Button $iconSize="1.8rem" onClick={() => setIsOpenModal(true)}>
+          <Button
+            $iconSize="1.8rem"
+            onClick={() => setModal({ type: "menuForm", data: null })}
+          >
             <FilePlus />
             <span>新增餐點</span>
           </Button>
@@ -108,21 +115,44 @@ function MenuManage() {
       >
         <Container>
           {displayMenusData?.map((menu) => (
-            <MenusDataCard
-              menu={menu}
-              inventoryObj={inventoryObj}
+            <DataDisplayCard
+              handleEditButton={() =>
+                setModal({ type: "menuForm", data: menu })
+              }
+              handleDeleteButton={() =>
+                setModal({ type: "confirmDelete", data: menu })
+              }
+              dataFormat={[
+                { head: "名稱", body: menu.name },
+                { head: "分類", body: menu.category },
+                { head: "售價", body: menu.basePrice },
+              ]}
               key={menu.id}
             />
           ))}
         </Container>
-      </QueryStatusFallback>
 
-      {isOpenModal && (
-        <MenuForm
-          inventoryObj={inventoryObj}
-          onCloseModal={() => setIsOpenModal(false)}
-        />
-      )}
+        {modal.type === "menuForm" && (
+          <MenuForm
+            inventoryObj={inventoryObj}
+            menu={modal.data}
+            onClose={() => setModal({ type: null, data: null })}
+          />
+        )}
+
+        {modal.type === "confirmDelete" && (
+          <ConfirmDelete
+            onClose={() => setModal({ type: null, data: null })}
+            deleteMutation={deleteMutation}
+            data={modal.data}
+            render={() => (
+              <p>
+                請確認是否要刪除<strong> {modal.data.name} </strong>?
+              </p>
+            )}
+          />
+        )}
+      </QueryStatusFallback>
     </PageContainer>
   );
 }

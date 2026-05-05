@@ -47,7 +47,7 @@ function useOpenStatus(todayOpenInfo) {
     tooltip: "暫時無法取得營業狀態",
   });
 
-  const [today, setToday] = useState(new Date());
+  const [dayTick, setDayTick] = useState(new Date());
 
   // 🟡 營業狀態 timer（遞迴）
   useEffect(() => {
@@ -77,16 +77,15 @@ function useOpenStatus(todayOpenInfo) {
 
   // 🔵 跨日 timer（單次）
   useEffect(() => {
-    const now = new Date();
     const next = startOfTomorrow();
 
     const timer = setTimeout(() => {
-      setToday(new Date());
+      setDayTick(new Date());
       console.log("又是新的一天", new Date());
-    }, next.getTime() - now.getTime());
+    }, next.getTime() - dayTick.getTime());
 
     return () => clearTimeout(timer);
-  }, [today]);
+  }, [dayTick]);
 
   return openStatus;
 }

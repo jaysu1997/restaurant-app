@@ -7,8 +7,6 @@ import { useState } from "react";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
 import Button from "../../ui/Button";
-import ConfirmDelete from "../../ui/ConfirmDelete";
-import useDeleteStaff from "../../hooks/data/staff/useDeleteStaff";
 import { AVATAR_URL } from "../../utils/constants";
 import StyledSelect from "../../ui/StyledSelect";
 
@@ -71,16 +69,13 @@ const Profile = styled.div`
   }
 `;
 
-function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
+function StaffList({ staffList, onRequestDelete }) {
   const rolesById = Object.fromEntries(
     staffList.map((item) => [item.id, item.user_metadata.role]),
   );
-
-  const [updating, setUpdating] = useState({});
-
+  const [updatingById, setUpdatingById] = useState({});
   const { updateStaff } = useUpdateStaff();
   const { user } = useUser();
-  const deleteMutation = useDeleteStaff();
 
   const sortedList = staffList.toSorted((a, b) => {
     const priority = (item) => {
@@ -94,13 +89,13 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
 
   function handleChange(id, currentRole, optionValue) {
     if (currentRole === optionValue) return;
-    setUpdating((updating) => ({ ...updating, [id]: true }));
+    setUpdatingById((updating) => ({ ...updating, [id]: true }));
 
     updateStaff(
       { userId: id, role: optionValue },
       {
         onSettled: () => {
-          setUpdating((updating) => ({ ...updating, [id]: false }));
+          setUpdatingById((updating) => ({ ...updating, [id]: false }));
         },
       },
     );
@@ -113,7 +108,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
           {sortedList.map((item) => {
             const { avatarFile, name, role } = item.user_metadata;
             return (
-              <Item key={item.id} $isUpdating={!!updating[item.id]}>
+              <Item key={item.id} $isUpdating={!!updatingById[item.id]}>
                 <UserAvatar
                   avatarUrl={`${AVATAR_URL}${avatarFile}`}
                   lazyLoading={true}
@@ -125,7 +120,7 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
                 </Profile>
 
                 <StyledSelect
-                  isDisabled={item.id === user.id || updating[item.id]}
+                  isDisabled={item.id === user.id || updatingById[item.id]}
                   options={[
                     { label: "店長", value: "店長" },
                     { label: "員工", value: "員工" },
@@ -141,8 +136,8 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
 
                 <Button
                   $variant="plain"
-                  disabled={item.id === user.id || updating[item.id]}
-                  onClick={() => setIsOpenModal({ type: "delete", data: item })}
+                  disabled={item.id === user.id || updatingById[item.id]}
+                  onClick={() => onRequestDelete(item)}
                 >
                   <UserRoundX strokeWidth={2.2} />
                 </Button>
@@ -151,26 +146,6 @@ function StaffList({ staffList, isOpenModal, setIsOpenModal }) {
           })}
         </List>
       </SectionContainer>
-
-      {isOpenModal.type === "delete" && (
-        <ConfirmDelete
-          setIsOpenModal={setIsOpenModal}
-          deleteMutation={deleteMutation}
-          data={isOpenModal.data}
-          showRelatedData={false}
-          render={() => (
-            <p>
-              請確認是否要刪除
-              <strong>
-                {" "}
-                {isOpenModal.data.user_metadata.name} ({isOpenModal.data.email}
-                ){" "}
-              </strong>
-              ?
-            </p>
-          )}
-        />
-      )}
     </>
   );
 }

@@ -23,7 +23,7 @@ const Overlay = styled(StyledOverlay)`
 
   @media (max-width: 30em) {
     display: block;
-    opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+    opacity: ${({ $isFilterOpen }) => ($isFilterOpen ? 1 : 0)};
     transition: opacity 0.25s ease-out;
   }
 `;
@@ -34,7 +34,7 @@ const FilterContainer = styled.div`
   right: 0;
   z-index: 10;
   width: 34rem;
-  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+  display: ${({ $isFilterOpen }) => ($isFilterOpen ? "flex" : "none")};
   flex-direction: column;
   background-color: #fff;
   padding: 2rem;
@@ -53,8 +53,8 @@ const FilterContainer = styled.div`
     overflow: auto;
     border-radius: 0;
     border: none;
-    transform: ${({ $isOpen }) =>
-      $isOpen ? "translateY(0)" : "translateY(100%)"};
+    transform: ${({ $isFilterOpen }) =>
+      $isFilterOpen ? "translateY(0)" : "translateY(100%)"};
     transition: transform 0.25s ease-out;
   }
 
@@ -95,19 +95,17 @@ const FILTER_COMPONENTS = {
 function Filter({ filtersConfig }) {
   const containerRef = useRef(null);
   const { pathname } = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-
   // 已套用的 filters (來自 URL)
   const appliedFilters = parseFilterQuery(searchParams, filtersConfig);
-
   // 使用者正在編輯的 filters
   const [draftFilters, setDraftFilters] = useState(appliedFilters);
 
-  const onClose = () => setIsOpen(false);
+  const onClose = () => setIsFilterOpen(false);
   const isMatched = useMediaQuery(30, onClose);
-  useClickOutside(containerRef, isOpen, onClose);
-  useScrollLock(isMatched && isOpen);
+  useClickOutside(containerRef, isFilterOpen, onClose);
+  useScrollLock(isMatched && isFilterOpen);
 
   // 是否有套用 filter (用 URL 判斷)
   const hasActiveFilters = Object.values(appliedFilters).some(
@@ -120,7 +118,7 @@ function Filter({ filtersConfig }) {
   );
 
   function handleToggle() {
-    setIsOpen((prev) => {
+    setIsFilterOpen((prev) => {
       if (!prev) {
         setDraftFilters(appliedFilters);
       }
@@ -153,7 +151,7 @@ function Filter({ filtersConfig }) {
     }
 
     setSearchParams(newParams);
-    setIsOpen(false);
+    onClose();
   }
 
   return (
@@ -163,9 +161,9 @@ function Filter({ filtersConfig }) {
         <span>篩選數據</span>
       </Button>
 
-      <Overlay $isOpen={isOpen} inert={!isOpen} />
+      <Overlay $isFilterOpen={isFilterOpen} inert={!isFilterOpen} />
 
-      <FilterContainer $isOpen={isOpen} inert={!isOpen}>
+      <FilterContainer $isFilterOpen={isFilterOpen} inert={!isFilterOpen}>
         <FilterHeader>
           <h3>篩選數據</h3>
           <Button $variant="ghost" onClick={onClose}>
@@ -173,7 +171,7 @@ function Filter({ filtersConfig }) {
           </Button>
         </FilterHeader>
 
-        {isOpen &&
+        {isFilterOpen &&
           filtersConfig.map((filter) => {
             const FilterComponent = FILTER_COMPONENTS[filter.type];
 

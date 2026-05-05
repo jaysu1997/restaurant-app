@@ -85,18 +85,18 @@ const getCroppedImg = (imageSrc, pixelCrop) => {
 // 頭像預覽裁切元件
 function AvatarCropper({ userData, imgUrl, onClose }) {
   const [zoom, setZoom] = useState(1);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [cropPosition, setCropPosition] = useState({ x: 0, y: 0 });
+  const [croppedArea, setCroppedArea] = useState(null);
   const { updateUserAvatar, isUpdatingUserAvatar } = useUpdateUserAvatar();
 
-  const onCropComplete = (croppedArea, croppedAreaPixels) => {
-    setCroppedAreaPixels(croppedAreaPixels);
+  const onCropComplete = (_, croppedAreaPixels) => {
+    setCroppedArea(croppedAreaPixels);
   };
 
   async function handleSave() {
     try {
-      if (!croppedAreaPixels) return;
-      const blob = await getCroppedImg(imgUrl, croppedAreaPixels);
+      if (!croppedArea) return;
+      const blob = await getCroppedImg(imgUrl, croppedArea);
 
       // 更新需要用到的數據(新檔名、舊檔名、新圖檔)
       const updateAvatarPayload = {
@@ -127,12 +127,12 @@ function AvatarCropper({ userData, imgUrl, onClose }) {
           <CropperWrapper>
             <Cropper
               image={imgUrl}
-              crop={crop}
+              crop={cropPosition}
               zoom={zoom}
               aspect={1}
               cropShape="round"
               showGrid={false}
-              onCropChange={setCrop}
+              onCropChange={setCropPosition}
               onCropComplete={onCropComplete}
               onZoomChange={setZoom}
               zoomWithScroll={false}

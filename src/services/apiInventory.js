@@ -15,7 +15,7 @@ export async function getInventoryApi() {
 }
 
 // 根據指定的食材，找出所有有使用此食材當作備料或項目選項的餐點
-export async function getIngredientRelatedMenusApi(id) {
+export async function getIngredientMenusApi(id) {
   const { data, error } = await supabase.rpc("get_menus_using_ingredient", {
     inventory_id: id,
   });

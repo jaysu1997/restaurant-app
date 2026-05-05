@@ -60,13 +60,14 @@ function MiniMenu({ onClose }) {
   const [selectedDish, setSelectedDish] = useState(null);
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
   const { inventoryObj } = useGetInventory();
-  const isMenu = !selectedDish;
+  // 是菜單內容ui
+  const isMenuView = !selectedDish;
 
   return (
     <Modal
       onClose={onClose}
-      modalHeader={isMenu ? "菜單" : selectedDish.name}
-      scrollBar={isMenu}
+      modalHeader={isMenuView ? "菜單" : selectedDish.name}
+      scrollBar={isMenuView}
     >
       <QueryStatusFallback
         status={{
@@ -81,7 +82,7 @@ function MiniMenu({ onClose }) {
           redirectTo: "/menu-manage",
         }}
       >
-        {isMenu ? (
+        {isMenuView ? (
           <StyledMiniMenu>
             {groupDishesByCategory(menus)?.map((menu) => (
               <StyledCategorySection key={menu.category}>

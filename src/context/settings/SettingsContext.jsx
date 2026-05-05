@@ -5,6 +5,7 @@ import {
   getOpenHoursInfo,
 } from "./settingsHelpers";
 import useOpenStatus from "./useOpenStatus";
+import useStatus from "./useStatus";
 
 const SettingsContext = createContext();
 
@@ -24,6 +25,8 @@ function SettingsProvider({ children }) {
 
   // 當前營業狀態
   const openStatus = useOpenStatus(todayOpenInfo);
+
+  const status = useStatus();
 
   return (
     <SettingsContext.Provider

@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 import useSettings from "../../../context/settings/useSettings";
 
@@ -69,7 +70,6 @@ const statusBadge = {
 function StoreStatusBadge() {
   const { openStatus } = useSettings();
   const { status, tooltip } = openStatus;
-
   const isOpen = status === "open";
 
   return (

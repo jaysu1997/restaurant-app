@@ -34,7 +34,7 @@ const Footer = styled.footer`
   gap: 2.4rem;
 `;
 
-function MenuForm({ onCloseModal, menu, inventoryObj }) {
+function MenuForm({ onClose, menu, inventoryObj }) {
   const { submitMenuForm, isSubmittingMenuForm } = useSubmitMenuForm();
 
   const formatMenu = toMenuForm(menu, inventoryObj);
@@ -61,7 +61,7 @@ function MenuForm({ onCloseModal, menu, inventoryObj }) {
     // 執行表單數據上傳
     submitMenuForm(
       { menuData, newIngredients },
-      { onSuccess: () => onCloseModal?.() },
+      { onSuccess: () => onClose?.() },
     );
   }
 
@@ -114,7 +114,7 @@ function MenuForm({ onCloseModal, menu, inventoryObj }) {
     <Modal
       modalHeader="餐點設定表單"
       maxWidth={56}
-      onClose={onCloseModal}
+      onClose={onClose}
       scrollBar={false}
     >
       <FormProvider {...methods}>
@@ -148,7 +148,7 @@ function MenuForm({ onCloseModal, menu, inventoryObj }) {
               disabled={isSubmittingMenuForm || isSubmitting}
             />
             <ButtonCancel
-              onClick={onCloseModal}
+              onClick={onClose}
               disabled={isSubmittingMenuForm || isSubmitting}
             />
           </Footer>

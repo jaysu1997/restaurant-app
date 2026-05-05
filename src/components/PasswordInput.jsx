@@ -4,15 +4,15 @@ import { Eye, EyeClosed } from "lucide-react";
 
 // 密碼input ui元件
 function PasswordInput({ id, ...rest }) {
-  const [isHidden, setIsHidden] = useState(true);
-  const type = isHidden ? "password" : "text";
+  const [showPassword, setShowPassword] = useState(false);
+  const type = showPassword ? "text" : "password";
 
   return (
     <FormInput
       id={id}
       button={{
-        icon: isHidden ? <EyeClosed /> : <Eye />,
-        action: () => setIsHidden((prev) => !prev),
+        icon: showPassword ? <Eye /> : <EyeClosed />,
+        action: () => setShowPassword((prev) => !prev),
       }}
       type={type}
       {...rest}

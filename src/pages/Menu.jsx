@@ -28,7 +28,6 @@ function Menu() {
   const { dispatch } = useOrderDraft();
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
   const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
-
   // 執行此custom hook的目的是取得庫存數據並更新orderReducer
   const {
     inventory,

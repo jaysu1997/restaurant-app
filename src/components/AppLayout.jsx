@@ -37,12 +37,12 @@ const Main = styled.main`
 `;
 
 function AppLayout() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
     <StyledAppLayout>
-      <Header onOpenNav={() => setIsOpen(true)} />
-      <Navbar isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <Header onOpenNav={() => setIsNavOpen(true)} />
+      <Navbar isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
       <Body>
         <Main>
           <Outlet />

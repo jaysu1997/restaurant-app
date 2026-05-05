@@ -69,7 +69,7 @@ const UserRole = styled.span`
 function User() {
   const navigate = useNavigate();
   const { logout } = useLogout();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const { user } = useUser();
   const userName = user?.user_metadata?.name;
@@ -94,13 +94,13 @@ function User() {
     <StyledUser>
       <DropdownMenu
         items={actions}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={isUserMenuOpen}
+        onClose={() => setIsUserMenuOpen(false)}
       >
         <UserButton
-          $isOpen={isOpen}
+          $isOpen={isUserMenuOpen}
           onClick={() => {
-            setIsOpen((isOpenMenu) => !isOpenMenu);
+            setIsUserMenuOpen((isOpenMenu) => !isOpenMenu);
           }}
         >
           <UserAvatar avatarUrl={avatarUrl} />

@@ -29,7 +29,7 @@ const StyleHeader = styled.header`
   }
 `;
 
-const ToggleButton = styled.button`
+const MenuButton = styled.button`
   justify-self: flex-start;
   display: none;
 
@@ -47,9 +47,9 @@ const ToggleButton = styled.button`
 function Header({ onOpenNav }) {
   return (
     <StyleHeader>
-      <ToggleButton onClick={onOpenNav}>
+      <MenuButton onClick={onOpenNav}>
         <Menu />
-      </ToggleButton>
+      </MenuButton>
       <Logo />
       <User />
     </StyleHeader>

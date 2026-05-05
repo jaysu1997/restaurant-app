@@ -32,7 +32,7 @@ function OrderOperation({
   const { status } = orderData;
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const deleteMutation = useDeleteOrder();
 
   return (
@@ -68,7 +68,10 @@ function OrderOperation({
 
         {!isEdit && status !== "已完成" && (
           <div>
-            <Button $variant="danger" onClick={() => setIsOpenModal(true)}>
+            <Button
+              $variant="danger"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
               <Trash2 />
               刪除
             </Button>
@@ -76,12 +79,11 @@ function OrderOperation({
         )}
       </Footer>
 
-      {isOpenModal && (
+      {isDeleteModalOpen && (
         <ConfirmDelete
-          setIsOpenModal={setIsOpenModal}
+          onClose={() => setIsDeleteModalOpen(false)}
           deleteMutation={deleteMutation}
           data={orderData}
-          showRelatedData={false}
           render={() => (
             <p>
               請確認是否要刪除

@@ -97,50 +97,53 @@ const ItemMeta = styled.div`
 `;
 
 function OrderDishes({ items, isEdit }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMiniMenuOpen, setIsMiniMenuOpen] = useState(false);
   const { totalServings, totalPrice } = calculateOrderSummary(items);
 
   return (
-    <OrderDishesList>
-      <OrderDishRow>
-        <span>訂購餐點</span>
-        <span>金額</span>
-        <span>數量</span>
-      </OrderDishRow>
-
-      {items.map((item) => (
-        <OrderDishRow key={item.uniqueId}>
-          <span className="itemName">{item.name}</span>
-          <ItemMeta>
-            {item.customizations.length !== 0 && (
-              <p>{summarizeMealChoices(item)}</p>
-            )}
-            {item.note && <p className="itemNote">{`" ${item.note} "`}</p>}
-          </ItemMeta>
-
-          <Price className="itemPrice">
-            $ {item.unitPrice * item.servings}
-          </Price>
-          <span className="itemServings">{item.servings} 份</span>
-          {isEdit && <OrderItemActions item={item} />}
+    <>
+      <OrderDishesList>
+        <OrderDishRow>
+          <span>訂購餐點</span>
+          <span>金額</span>
+          <span>數量</span>
         </OrderDishRow>
-      ))}
 
-      <OrderSummary>
-        {isEdit && (
-          <Button $variant="text" onClick={() => setIsOpen(true)}>
-            <Plus />
-            新增餐點
-          </Button>
-        )}
-        {isOpen && <MiniMenu onClose={() => setIsOpen(false)} />}
-        <div>
-          <span>總計：</span>
-          <span>共 {totalServings} 份</span>
-          <Price>$ {totalPrice}</Price>
-        </div>
-      </OrderSummary>
-    </OrderDishesList>
+        {items.map((item) => (
+          <OrderDishRow key={item.uniqueId}>
+            <span className="itemName">{item.name}</span>
+            <ItemMeta>
+              {item.customizations.length !== 0 && (
+                <p>{summarizeMealChoices(item)}</p>
+              )}
+              {item.note && <p className="itemNote">{`" ${item.note} "`}</p>}
+            </ItemMeta>
+
+            <Price className="itemPrice">
+              $ {item.unitPrice * item.servings}
+            </Price>
+            <span className="itemServings">{item.servings} 份</span>
+            {isEdit && <OrderItemActions item={item} />}
+          </OrderDishRow>
+        ))}
+
+        <OrderSummary>
+          {isEdit && (
+            <Button $variant="text" onClick={() => setIsMiniMenuOpen(true)}>
+              <Plus />
+              新增餐點
+            </Button>
+          )}
+          <div>
+            <span>總計：</span>
+            <span>共 {totalServings} 份</span>
+            <Price>$ {totalPrice}</Price>
+          </div>
+        </OrderSummary>
+      </OrderDishesList>
+
+      {isMiniMenuOpen && <MiniMenu onClose={() => setIsMiniMenuOpen(false)} />}
+    </>
   );
 }
 

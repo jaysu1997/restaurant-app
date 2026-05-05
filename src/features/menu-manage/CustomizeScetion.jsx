@@ -19,7 +19,7 @@ function CustomizeScetion({ ingredientOptions }) {
       isFullWidth={true}
       heading={{ text: "餐點自訂項目", as: "h3", required: false }}
       descriptions={[
-        " 此欄位用來自訂本餐點可供客人調整的各種餐點項目。(例如：餐點份量、附餐選擇、餐點加料等等)。",
+        "此欄位用來自訂本餐點可供客人調整的各種餐點項目。(例如：餐點份量、附餐選擇、餐點加料等等)。",
         "此欄位的項目和選項都可根據需求進行新增/刪除，但不能留下沒輸入任何內容的空白輸入框。",
       ]}
     >

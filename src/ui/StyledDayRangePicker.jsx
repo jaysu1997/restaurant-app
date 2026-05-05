@@ -54,8 +54,10 @@ const StyledDayPicker = styled(DayPicker)`
 
   /* 隨著容器寬度調整日期的尺寸 */
   [class^="rdp-day"] {
-    width: ${({ $cellSize }) => ($cellSize ? `${$cellSize}px` : "3.8rem")};
-    height: ${({ $cellSize }) => ($cellSize ? `${$cellSize}px` : "3.8rem")};
+    width: ${({ $dayCellSize }) =>
+      $dayCellSize ? `${$dayCellSize}px` : "3.8rem"};
+    height: ${({ $dayCellSize }) =>
+      $dayCellSize ? `${$dayCellSize}px` : "3.8rem"};
   }
 `;
 

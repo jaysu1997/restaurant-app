@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
 
 const StyledSlider = styled.div`
@@ -57,7 +57,7 @@ const Thumb = styled.span`
 // 縮放圖片拖曳條
 function Slider({ min = 1, max = 3, zoom, setZoom }) {
   const sliderRef = useRef(null);
-  const [dragging, setDragging] = useState(false);
+  const isDraggingRef = useRef(false);
 
   // 將當前放大值映射成百分比(刻度)
   const percent = ((zoom - min) / (max - min)) * 100;
@@ -76,7 +76,7 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
   function handlePointerDown(e) {
     if (!sliderRef.current) return;
     setZoom(percentToZoom(e.clientX));
-    setDragging(true);
+    isDraggingRef.current = true;
     // 此api可監聽完整pointer事件(從down到move到up)
     sliderRef.current.setPointerCapture(e.pointerId);
   }
@@ -84,16 +84,18 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
   // pointer移動
   function handlePointerMove(e) {
     // 避免沒有pointerDown但是觸發pointerMove
-    if (!dragging) return;
+    if (!isDraggingRef.current) return;
 
     setZoom(percentToZoom(e.clientX));
   }
 
   // pointer鬆開
   function handlePointerUp(e) {
-    setDragging(false);
+    isDraggingRef.current = false;
     // 清除監聽
-    sliderRef.current.releasePointerCapture(e.pointerId);
+    if (sliderRef.current?.hasPointerCapture(e.pointerId)) {
+      sliderRef.current.releasePointerCapture(e.pointerId);
+    }
   }
 
   // 使用point事件會更通用且適當

@@ -21,8 +21,10 @@ const DateField = styled.div`
   gap: 0.2rem;
   padding: 0.2rem 0.8rem;
   width: 100%;
-  border: 1px solid ${({ $isOpen }) => ($isOpen ? "#2684ff" : "#ddd")};
-  box-shadow: ${({ $isOpen }) => ($isOpen ? "0 0 0 1px #2684ff" : "none")};
+  border: 1px solid
+    ${({ $isPickerOpen }) => ($isPickerOpen ? "#2684ff" : "#ddd")};
+  box-shadow: ${({ $isPickerOpen }) =>
+    $isPickerOpen ? "0 0 0 1px #2684ff" : "none"};
   border-radius: 4px;
   background-color: #fff;
   cursor: pointer;
@@ -40,7 +42,8 @@ const DateField = styled.div`
   }
 
   &:hover {
-    border-color: ${({ $isOpen }) => ($isOpen ? "#2684ff" : "#b3b3b3")};
+    border-color: ${({ $isPickerOpen }) =>
+      $isPickerOpen ? "#2684ff" : "#b3b3b3"};
   }
 `;
 
@@ -48,8 +51,8 @@ const Panel = styled.div`
   overflow: hidden;
   border-radius: 8px;
 
-  max-height: ${({ $isOpen }) => ($isOpen ? "100rem" : "0px")};
-  opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
+  max-height: ${({ $isPickerOpen }) => ($isPickerOpen ? "100rem" : "0px")};
+  opacity: ${({ $isPickerOpen }) => ($isPickerOpen ? "1" : "0")};
 
   transition:
     max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -100,14 +103,14 @@ function DateRangePicker({
   disabledDate,
   display = "inline",
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [cellSize, setCellSize] = useState(0);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [dayCellSize, setDayCellSize] = useState(null);
   const wrapperRef = useRef(null);
 
-  const onClose = () => setIsOpen(false);
+  const onClose = () => setIsPickerOpen(false);
   const isPopover = display === "popover";
 
-  useClickOutside(wrapperRef, isOpen && isPopover, onClose);
+  useClickOutside(wrapperRef, isPickerOpen && isPopover, onClose);
 
   function formatRangeDate(selectedDate) {
     return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
@@ -117,17 +120,17 @@ function DateRangePicker({
   }
 
   function handleClick() {
-    if (!isOpen) {
+    if (!isPickerOpen) {
       const rect = wrapperRef.current?.getBoundingClientRect();
-      setCellSize(rect.width / 7);
+      setDayCellSize(rect.width / 7);
     }
 
-    setIsOpen((open) => !open);
+    setIsPickerOpen((open) => !open);
   }
 
   return (
     <StyledDateRangePicker ref={wrapperRef}>
-      <DateField $isOpen={isOpen} onClick={handleClick}>
+      <DateField $isPickerOpen={isPickerOpen} onClick={handleClick}>
         <input
           name="dateRange"
           value={selected ? formatRangeDate(selected) : ""}
@@ -137,10 +140,14 @@ function DateRangePicker({
         <CalendarRange />
       </DateField>
 
-      <Panel $isOpen={isOpen} inert={!isOpen} $popover={isPopover}>
+      <Panel
+        $isPickerOpen={isPickerOpen}
+        inert={!isPickerOpen}
+        $popover={isPopover}
+      >
         <Content $popover={isPopover}>
           <StyledDayRangePicker
-            $cellSize={cellSize}
+            $dayCellSize={dayCellSize}
             defaultMonth={defaultMonth || new Date()}
             startMonth={startMonth}
             endMonth={endMonth}

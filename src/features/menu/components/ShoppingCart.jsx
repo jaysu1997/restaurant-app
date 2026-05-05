@@ -37,7 +37,7 @@ const StyledShoppingCart = styled.aside`
 
   @media (max-width: 50em) {
     inset: 0;
-    display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+    display: ${({ $isCartOpen }) => ($isCartOpen ? "flex" : "none")};
     height: 100%;
     width: 100%;
     border: none;
@@ -105,12 +105,12 @@ const SummaryDetails = styled.div`
 `;
 
 function ShoppingCart() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { createOrder, isCreatingOrder } = useCreateOrder();
-  const onClose = () => setIsOpen(false);
+  const onClose = () => setIsCartOpen(false);
   const isMatched = useMediaQuery(50, onClose);
   // 自動鎖定 scrollbar
-  useScrollLock(isMatched && isOpen);
+  useScrollLock(isMatched && isCartOpen);
 
   const {
     state: { items },
@@ -140,7 +140,7 @@ function ShoppingCart() {
       onSuccess: () => {
         dispatch({ type: "draft/reset" });
         reset();
-        setIsOpen(false);
+        setIsCartOpen(false);
       },
     });
   }
@@ -151,7 +151,7 @@ function ShoppingCart() {
 
   return (
     <FormProvider {...methods}>
-      <StyledShoppingCart $isOpen={isOpen}>
+      <StyledShoppingCart $isCartOpen={isCartOpen}>
         <Header>
           <h3>購物車</h3>
           <ModalCloseButton onClose={onClose} />
@@ -196,7 +196,7 @@ function ShoppingCart() {
         <CartOpenButton
           totalServings={totalServings}
           totalPrice={totalPrice}
-          onOpen={() => setIsOpen(true)}
+          onOpen={() => setIsCartOpen(true)}
         />
       )}
     </FormProvider>

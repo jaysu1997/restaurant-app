@@ -21,7 +21,7 @@ const StyledUpdateUserAvatar = styled.div`
 `;
 
 function UpdateUserAvatar({ userData }) {
-  const [imgUrl, setImgUrl] = useState(undefined);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   // 頭像圖檔來源
   const avatarFile = userData?.user_metadata?.avatarFile;
   const avatarUrl = `${AVATAR_URL}${avatarFile}`;
@@ -31,14 +31,14 @@ function UpdateUserAvatar({ userData }) {
     const fileLength = e.target.files.length;
 
     // 如果記憶體中有舊的臨時url先清除(釋放空間)
-    if (imgUrl) {
-      URL.revokeObjectURL(imgUrl);
+    if (selectedImageUrl) {
+      URL.revokeObjectURL(selectedImageUrl);
     }
 
     // 為剛剛上傳的圖檔建立一個臨時網址，用來預覽
     if (fileLength) {
       const url = URL.createObjectURL(e.target.files[0]);
-      setImgUrl(url);
+      setSelectedImageUrl(url);
     }
 
     // 避免同檔案無法再觸發 onChange
@@ -46,8 +46,11 @@ function UpdateUserAvatar({ userData }) {
   }
 
   function handleCloseModal() {
-    URL.revokeObjectURL(imgUrl);
-    setImgUrl(undefined);
+    // 釋放空間
+    if (selectedImageUrl) {
+      URL.revokeObjectURL(selectedImageUrl);
+    }
+    setSelectedImageUrl(undefined);
   }
 
   return (
@@ -72,10 +75,10 @@ function UpdateUserAvatar({ userData }) {
         />
       </SectionContainer>
 
-      {imgUrl && (
+      {selectedImageUrl && (
         <AvatarCropper
           userData={userData}
-          imgUrl={imgUrl}
+          imgUrl={selectedImageUrl}
           onClose={handleCloseModal}
         />
       )}

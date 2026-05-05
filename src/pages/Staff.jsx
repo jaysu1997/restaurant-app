@@ -9,6 +9,8 @@ import Button from "../ui/Button";
 import { useState } from "react";
 import Modal from "../ui/Modal";
 import PageContainer from "../ui/PageContainer";
+import ConfirmDelete from "../ui/ConfirmDelete";
+import useDeleteStaff from "../hooks/data/staff/useDeleteStaff";
 
 const StaffLayout = styled.div`
   display: flex;
@@ -19,45 +21,59 @@ const StaffLayout = styled.div`
 `;
 
 function Staff() {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [staffToDelete, setStaffToDelete] = useState(null);
   const { staff, staffIsLoading, staffIsError, staffError } = useGetStaff();
+  const deleteMutation = useDeleteStaff();
+  const onClose = () => setIsSignupOpen(false);
 
   return (
-    <PageContainer $maxWidth="60rem">
-      <PageHeader title="員工管理">
-        <Button
-          $iconSize="1.8rem"
-          onClick={() => setIsOpenModal({ type: "create" })}
-        >
-          <UserRoundPlus />
-          <span>註冊</span>
-        </Button>
-      </PageHeader>
+    <>
+      <PageContainer $maxWidth="60rem">
+        <PageHeader title="員工管理">
+          <Button $iconSize="1.8rem" onClick={() => setIsSignupOpen(true)}>
+            <UserRoundPlus />
+            <span>註冊</span>
+          </Button>
+        </PageHeader>
 
-      <StaffLayout>
-        <QueryStatusFallback
-          status={{
-            isLoading: staffIsLoading,
-            isError: staffIsError,
-          }}
-          errorFallback={staffError}
-        >
-          {isOpenModal.type === "create" && (
-            <Modal
-              modalHeader="註冊新帳號"
-              onClose={() => setIsOpenModal(false)}
-            >
-              <Signup setIsOpenModal={setIsOpenModal} />
-            </Modal>
+        <StaffLayout>
+          <QueryStatusFallback
+            status={{
+              isLoading: staffIsLoading,
+              isError: staffIsError,
+            }}
+            errorFallback={staffError}
+          >
+            <StaffList staffList={staff} onRequestDelete={setStaffToDelete} />
+          </QueryStatusFallback>
+        </StaffLayout>
+      </PageContainer>
+
+      {isSignupOpen && (
+        <Modal modalHeader="建立員工帳號" onClose={onClose} maxWidth={56}>
+          <Signup onClose={onClose} />
+        </Modal>
+      )}
+
+      {staffToDelete && (
+        <ConfirmDelete
+          onClose={() => setStaffToDelete(false)}
+          deleteMutation={deleteMutation}
+          data={staffToDelete}
+          render={() => (
+            <p>
+              請確認是否要刪除
+              <strong>
+                {" "}
+                {staffToDelete.user_metadata.name} ({staffToDelete.email}){" "}
+              </strong>
+              ?
+            </p>
           )}
-          <StaffList
-            staffList={staff}
-            isOpenModal={isOpenModal}
-            setIsOpenModal={setIsOpenModal}
-          />
-        </QueryStatusFallback>
-      </StaffLayout>
-    </PageContainer>
+        />
+      )}
+    </>
   );
 }
 
