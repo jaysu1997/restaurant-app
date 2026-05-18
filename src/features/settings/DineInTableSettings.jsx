@@ -191,9 +191,13 @@ function DineInTableSettings({ settings }) {
                 <label>桌號預覽</label>
                 <div>
                   <p>
+                    {/* 因為空間有限，預覽最多到25桌就好 */}
                     {generateTableNumbers(
                       watch(`dineInTableConfig.${index}.zoneName`),
-                      watch(`dineInTableConfig.${index}.tableCount`),
+                      Math.min(
+                        25,
+                        watch(`dineInTableConfig.${index}.tableCount`),
+                      ),
                     ).join(" , ")}
                   </p>
                 </div>

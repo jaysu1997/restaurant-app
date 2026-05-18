@@ -10,8 +10,8 @@ function DateRangeFilter({ filterValue, handleValueChange, ...filters }) {
       endMonth={new Date()}
       selected={filterValue}
       onSelect={(range) => handleValueChange(queryKey, range ? range : "")}
-      handleValueReset={() => handleValueChange(queryKey, "")}
-      disabledDate={{ after: new Date() }}
+      onClear={() => handleValueChange(queryKey, "")}
+      disabled={{ after: new Date() }}
       display="inline"
     />
   );

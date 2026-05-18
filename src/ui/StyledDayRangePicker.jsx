@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { DayPicker } from "react-day-picker";
 import { zhTW } from "react-day-picker/locale";
+import { isDate, isValid, parseISO } from "date-fns";
 
 const StyledDayPicker = styled(DayPicker)`
   --rdp-accent-color: #6366f1;
@@ -61,7 +62,26 @@ const StyledDayPicker = styled(DayPicker)`
   }
 `;
 
-function StyledDayRangePicker({ ...rest }) {
+function normalizeDate(value) {
+  const fallback = new Date();
+  // 空值
+  if (!value) return fallback;
+
+  // 已經是 Date
+  if (isDate(value)) {
+    return isValid(value) ? value : fallback;
+  }
+
+  // 字串
+  if (typeof value === "string") {
+    const parsed = parseISO(value);
+    return isValid(parsed) ? parsed : fallback;
+  }
+
+  return fallback;
+}
+
+function StyledDayRangePicker({ defaultMonth, selected, ...rest }) {
   return (
     <StyledDayPicker
       animate
@@ -70,6 +90,15 @@ function StyledDayRangePicker({ ...rest }) {
       mode="range"
       weekStartsOn={0}
       locale={zhTW}
+      defaultMonth={normalizeDate(defaultMonth)}
+      selected={
+        selected
+          ? {
+              from: normalizeDate(selected.from),
+              to: normalizeDate(selected.to),
+            }
+          : ""
+      }
       {...rest}
     />
   );

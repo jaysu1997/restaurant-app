@@ -1,5 +1,5 @@
 import { parseDateRange } from "../../utils/orderHelpers";
-import { formatISO } from "date-fns";
+import { format } from "date-fns";
 
 // 從url取得searchParams值
 function parseFilterQuery(searchParams, filtersConfig) {
@@ -45,7 +45,7 @@ function buildSearchParams(filters, searchParams) {
     }
 
     if (obj.type === "datePicker" && obj.value?.from && obj.value?.to) {
-      value = `${formatISO(obj.value.from)}_${formatISO(obj.value.to)}`;
+      value = `${format(obj.value.from, "yyyy-MM-dd")}_${format(obj.value.to, "yyyy-MM-dd")}`;
     }
 
     // 有篩選的項目新增，沒篩選的刪除

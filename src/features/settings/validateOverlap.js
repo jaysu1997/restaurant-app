@@ -1,81 +1,63 @@
-// 驗證設定頁面的日期和時段欄位
-import { compareAsc, isAfter, isEqual } from "date-fns";
+// 驗證特殊日期區間
+import { compareAsc, isEqual } from "date-fns";
 
-export function validateValues({
-  normalizeData,
-  path,
-  setError,
-  clearErrors,
-  dataType = "time",
-}) {
+export function validateDateRangeField(days = []) {
+  // 保持 index 對齊
+  const errors = Array(days.length).fill(null);
+
+  // 拿來做 Sweep Line 比較的有效資料
   const validSlots = [];
 
-  normalizeData.forEach((curSlot, curIndex) => {
-    const { start, end } = curSlot;
+  days.forEach((day, index) => {
+    const range = day?.dateRange;
 
-    if (!start || !end) {
-      setError(`${path}.${curIndex}.errorFallback`, {
-        type: "validate",
-        message: "此欄位必須填寫",
-      });
+    // 空值（交給 Controller validate 顯示必填）
+    if (!range) return;
 
-      return;
-    }
+    const { from, to } = range || {};
 
-    if (dataType === "time" && !isAfter(new Date(end), new Date(start))) {
-      setError(`${path}.${curIndex}.errorFallback`, {
-        type: "validate",
-        message: "結束時間必須晚於開始時間",
-      });
+    // 日期未完整選擇
+    if (!from || !to) return;
 
-      return;
-    }
+    const start = new Date(from);
+    const end = new Date(to);
 
+    // 通過才加入 Sweep Line
     validSlots.push(
-      { value: start, type: "start", index: curIndex },
-      { value: end, type: "end", index: curIndex }
+      { value: start, type: "start", index },
+      { value: end, type: "end", index },
     );
-    clearErrors(`${path}.${curIndex}.errorFallback`);
-    return;
   });
 
-  return validSlots;
-}
-
-export function checkOverlapConflicts({ validSlots, path, setError }) {
   validSlots.sort((a, b) => {
     if (!isEqual(a.value, b.value)) {
       return compareAsc(a.value, b.value);
     }
 
-    // 把 start 的順序排在 end 之前，這樣才能掃出剛休息就馬上開始營業的時段設定(算是重疊)
+    // 同一天：
+    // start 排前面 = 當天接續也算重疊
     if (a.type === "start" && b.type === "end") return -1;
     if (a.type === "end" && b.type === "start") return 1;
 
     return 0;
   });
 
-  let activeSlots = 0;
-  const isOverlapped = new Set();
+  let activeCount = 0;
 
-  validSlots.forEach((slot, curIndex) => {
-    const { type, index } = slot;
+  for (let i = 0; i < validSlots.length; i++) {
+    const current = validSlots[i];
 
-    if (type === "start") {
-      if (activeSlots > 0) {
-        isOverlapped.add(index);
-        isOverlapped.add(validSlots[curIndex - 1].index);
+    if (current.type === "start") {
+      // 只標記後出現的那筆
+      if (activeCount > 0 && !errors[current.index]) {
+        errors[current.index] = "與上方已設定的日期重疊";
       }
-      activeSlots++;
-    } else {
-      activeSlots--;
-    }
-  });
 
-  isOverlapped.forEach((value) =>
-    setError(`${path}.${value}.errorFallback`, {
-      type: "validate",
-      message: "與其他時段發生重疊",
-    })
-  );
+      activeCount++;
+    } else {
+      activeCount--;
+    }
+  }
+
+  return errors;
 }

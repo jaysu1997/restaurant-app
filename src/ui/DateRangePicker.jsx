@@ -93,16 +93,7 @@ const ActionButton = styled.button`
   font-weight: 500;
 `;
 
-function DateRangePicker({
-  defaultMonth,
-  startMonth,
-  endMonth,
-  selected,
-  onSelect,
-  handleValueReset,
-  disabledDate,
-  display = "inline",
-}) {
+function DateRangePicker({ display = "inline", onClear, ...rest }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [dayCellSize, setDayCellSize] = useState(null);
   const wrapperRef = useRef(null);
@@ -133,7 +124,7 @@ function DateRangePicker({
       <DateField $isPickerOpen={isPickerOpen} onClick={handleClick}>
         <input
           name="dateRange"
-          value={selected ? formatRangeDate(selected) : ""}
+          value={rest.selected ? formatRangeDate(rest.selected) : ""}
           placeholder="選擇日期範圍"
           readOnly
         />
@@ -146,21 +137,13 @@ function DateRangePicker({
         $popover={isPopover}
       >
         <Content $popover={isPopover}>
-          <StyledDayRangePicker
-            $dayCellSize={dayCellSize}
-            defaultMonth={defaultMonth || new Date()}
-            startMonth={startMonth}
-            endMonth={endMonth}
-            selected={selected}
-            onSelect={onSelect}
-            disabled={disabledDate}
-          />
+          <StyledDayRangePicker $dayCellSize={dayCellSize} {...rest} />
           {isPopover && (
             <Footer>
               <ActionButton
                 type="button"
-                onClick={handleValueReset}
-                disabled={!selected}
+                onClick={onClear}
+                disabled={!rest.selected}
               >
                 清除
               </ActionButton>

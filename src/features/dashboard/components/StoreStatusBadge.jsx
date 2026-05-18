@@ -62,7 +62,9 @@ const Tooltip = styled.div`
 
 const statusBadge = {
   open: "營業中",
-  closed: "休息中",
+  break: "休息中",
+  closed: "已打烊",
+  holiday: "公休日",
   unknown: "未取得",
 };
 

@@ -1,11 +1,11 @@
-import { createContext, useMemo } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
+import { format } from "date-fns";
 import useGetSettings from "../../hooks/data/settings/useGetSettings";
 import {
   generateDineInTableOptions,
   getOpenHoursInfo,
+  getOpenStatus,
 } from "./settingsHelpers";
-import useOpenStatus from "./useOpenStatus";
-import useStatus from "./useStatus";
 
 const SettingsContext = createContext();
 
@@ -13,20 +13,36 @@ function SettingsProvider({ children }) {
   const { settings, settingsIsLoading, settingsIsError, settingsError } =
     useGetSettings();
 
-  // 生成內用桌號選項
-  const dineInTableOptions = generateDineInTableOptions(settings);
+  // 目前時間（用來觸發重新計算）
+  const [now, setNow] = useState(new Date());
+  const dateKey = format(now, "yyyy-MM-dd");
 
-  // 取得當天營業設定(是否有營業以及營業時段)
-  const todayOpenInfo = useMemo(() => {
-    if (!settings) return;
-
-    return getOpenHoursInfo(settings);
+  // 內用桌號選項
+  const dineInTableOptions = useMemo(() => {
+    return generateDineInTableOptions(settings);
   }, [settings]);
 
-  // 當前營業狀態
-  const openStatus = useOpenStatus(todayOpenInfo);
+  // 今日營業資訊
+  const todayOpenInfo = useMemo(() => {
+    if (!settings) return null;
 
-  const status = useStatus();
+    return getOpenHoursInfo(settings, dateKey);
+  }, [settings, dateKey]);
+
+  const openStatus = getOpenStatus(todayOpenInfo);
+
+  // 自動切換狀態 / 換天重算
+  useEffect(() => {
+    if (!openStatus?.nextUpdateMs) return;
+
+    const delay = Math.max(openStatus.nextUpdateMs, 1000);
+
+    const timer = setTimeout(() => {
+      setNow(new Date());
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [openStatus]);
 
   return (
     <SettingsContext.Provider

@@ -6,7 +6,7 @@ import OrderOperation from "./OrderOperation";
 import { formatCreatedTime } from "../../utils/orderHelpers";
 import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
-import { formatToHourMinute } from "../../context/settings/settingsHelpers";
+import { formatPickupStr } from "../../context/settings/settingsHelpers";
 
 function OrderSummaryView({ orderData }) {
   const {
@@ -50,7 +50,7 @@ function OrderSummaryView({ orderData }) {
             <label>
               {diningMethod === "內用" ? "內用桌號：" : "取餐時間："}
             </label>
-            <span>{tableNumber || formatToHourMinute(pickupTime)}</span>
+            <span>{tableNumber || formatPickupStr(pickupTime)}</span>
           </div>
 
           <div>

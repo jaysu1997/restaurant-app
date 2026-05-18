@@ -8,7 +8,7 @@ function useGetOrder() {
   const { orderId } = useParams();
 
   const { data, isPending, error, isError, refetch } = useQuery({
-    queryKey: ["order", orderId],
+    queryKey: ["orders", orderId],
     queryFn: () => getOrderApi(orderId),
   });
 

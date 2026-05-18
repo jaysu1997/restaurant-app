@@ -1,6 +1,6 @@
 // 訂單詳情(編輯)
 import OrderDishes from "./OrderDishes";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import DiningMethodSegmented from "../../ui/DiningMethodSegmented";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { useEffect } from "react";
@@ -16,17 +16,15 @@ import OrderCard from "./OrderCard";
 import ContentContainer from "../../ui/ContentContainer";
 import FormFieldLayout from "../../ui/FormFieldLayout";
 import { Navigate } from "react-router";
-import {
-  formatToHourMinute,
-  generatePickupTimeOptions,
-} from "../../context/settings/settingsHelpers";
+import { formatPickupStr } from "../../context/settings/settingsHelpers";
 import useOrderDraft from "../../context/orders/useOrderDraft";
 import useSettings from "../../context/settings/useSettings";
+import DiningField from "./components/DiningField ";
 
 // 這裡的樣式需要修正(整體布局都需要)
 function OrderSummaryEdit({ orderData }) {
   const { updateOrder, isUpdatingOrder } = useUpdateOrder();
-  const { todayOpenInfo, dineInTableOptions } = useSettings();
+  const { openStatus } = useSettings();
 
   const {
     state: { items },
@@ -73,11 +71,17 @@ function OrderSummaryEdit({ orderData }) {
   const { tableNumber, pickupTime, status, paid, createdAt, orderUUID } =
     orderData;
 
+  const selectedPickupTime = pickupTime
+    ? {
+        label: formatPickupStr(new Date(pickupTime)),
+        value: new Date(pickupTime).toISOString(),
+      }
+    : null;
+
   // 感覺toOption用處不大，或許可以刪除之類的，或是直接把函式放到這個檔案中就好，因為好像用到的地方很少
   const {
     register,
     control,
-    watch,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -85,18 +89,26 @@ function OrderSummaryEdit({ orderData }) {
     defaultValues: {
       ...orderData,
       tableNumber: toOption(tableNumber),
-      pickupTime: toOption(pickupTime, formatToHourMinute(pickupTime)),
+      pickupTime: selectedPickupTime,
       status: toOption(status),
       paid: toOption(paid),
     },
   });
 
-  const takeOut = watch("diningMethod") === "外帶";
+  const isPaid = useWatch({
+    control,
+    name: "paid",
+  });
 
-  const pickupTimeOptions = generatePickupTimeOptions(todayOpenInfo);
+  const diningMethod = useWatch({
+    control,
+    name: "diningMethod",
+  });
 
-  const isOrderingAvailable =
-    !todayOpenInfo.isBusinessDay || pickupTimeOptions.length === 0;
+  const takeOut = diningMethod === "外帶";
+
+  // 是否可以點餐
+  const isClosed = ["closed", "holiday"].includes(openStatus.status);
 
   function onSubmit(data) {
     const orderData = buildOrderData(items, data, inventory);
@@ -143,7 +155,7 @@ function OrderSummaryEdit({ orderData }) {
             <div>
               <label>用餐方式：</label>
               <DiningMethodSegmented
-                isDisabled={items.length === 0 || isOrderingAvailable}
+                isDisabled={items.length === 0 || isClosed}
               />
             </div>
             <div>
@@ -151,16 +163,10 @@ function OrderSummaryEdit({ orderData }) {
               <FormFieldLayout
                 error={takeOut ? errors?.pickupTime : errors?.tableNumber}
               >
-                <ControlledSelect
-                  options={takeOut ? pickupTimeOptions : dineInTableOptions}
-                  name={takeOut ? "pickupTime" : "tableNumber"}
-                  creatable={false}
-                  placeholder={takeOut ? "選擇取餐時間" : "選擇桌號"}
-                  disabled={isOrderingAvailable}
-                  rules={{
-                    required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
-                  }}
-                  key={takeOut ? "pickupTime" : "tableNumber"}
+                <DiningField
+                  takeOut={takeOut}
+                  selectedOption={selectedPickupTime}
+                  disabled={isClosed}
                 />
               </FormFieldLayout>
             </div>
@@ -179,7 +185,6 @@ function OrderSummaryEdit({ orderData }) {
                   rules={{
                     required: "請選擇付款狀態",
                   }}
-                  disabled={isOrderingAvailable}
                   key="paid"
                 />
               </FormFieldLayout>
@@ -195,14 +200,15 @@ function OrderSummaryEdit({ orderData }) {
                   ]}
                   name="status"
                   creatable={false}
-                  disabled={isOrderingAvailable}
                   placeholder="訂單狀態"
                   rules={{
                     required: "請選擇訂單狀態",
                     validate: (value) => {
                       // 假設如果沒付款就不能選「已完成」
-                      const paid = watch("paid")?.value;
-                      if (value?.value === "已完成" && paid !== "已付款") {
+                      if (
+                        value?.value === "已完成" &&
+                        isPaid?.value !== "已付款"
+                      ) {
                         return "訂單尚未付款";
                       }
                       return true;

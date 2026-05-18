@@ -7,11 +7,12 @@ import {
   FormProvider,
   useFieldArray,
   useForm,
+  useWatch,
 } from "react-hook-form";
-import { addYears, compareAsc, endOfYear, isAfter, isToday } from "date-fns";
+import { addYears, endOfYear, isAfter, isToday } from "date-fns";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
-import { checkOverlapConflicts, validateValues } from "./validateOverlap";
-import { sortTimeSlots } from "./sortTimeSlots";
+import { validateDateRangeField } from "./validateOverlap";
+import { normalizeSpecialOpenHours } from "./sortTimeSlots";
 import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
 import Button from "../../ui/Button";
@@ -21,33 +22,19 @@ import FormFieldLayout from "../../ui/FormFieldLayout";
 const BusinessPeriodList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
 `;
 
 const BusinessPeriodItem = styled.li`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 0.6rem;
+  gap: 0.6rem;
   align-items: start;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 2.4rem 0;
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
-  }
-`;
-
-const Header = styled.div`
-  grid-column: 1 / -1;
-  margin-bottom: 2rem;
-
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-
-  h4 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #292929;
   }
 `;
 
@@ -61,35 +48,7 @@ const DateField = styled.div`
   grid-template-columns: minmax(20rem, 1fr) 2rem;
   column-gap: 0.6rem;
   row-gap: 0.3rem;
-  padding-bottom: 0.6rem;
 `;
-
-// 檢查日期是否有重疊或其他錯誤
-function validateDateRangeField({ setError, clearErrors, getValues }) {
-  const path = "specialOpenHours";
-  const slots = getValues(path);
-
-  const normalizeData = slots.map((slot) => {
-    const { from, to } = slot.dateRange || {};
-
-    return {
-      start: from ? new Date(from) : undefined,
-      end: to ? new Date(to) : undefined,
-    };
-  });
-
-  // 進行欄位檢查(不能空值或是休息時間比開始時間早)，並回傳通過檢查的時段
-  const validSlots = validateValues({
-    normalizeData,
-    path,
-    setError,
-    clearErrors,
-    dataType: "date",
-  });
-
-  // 驗證時段之間是否有重疊
-  checkOverlapConflicts({ validSlots, path, setError });
-}
 
 // 所有按鈕、select都要加上disabled樣式設計
 function SpecialOpenHours({ settings }) {
@@ -111,8 +70,6 @@ function SpecialOpenHours({ settings }) {
     reset,
     control,
     clearErrors,
-    setError,
-    getValues,
     formState: { isDirty, errors },
   } = methods;
 
@@ -125,17 +82,18 @@ function SpecialOpenHours({ settings }) {
     name: "specialOpenHours",
   });
 
+  const days = useWatch({
+    control,
+    name: "specialOpenHours",
+  });
+
+  const overlap = validateDateRangeField(days);
+
   function onSubmit(data) {
-    console.log("成功", data);
-
-    // 我發現，如果我先新增大量時段，然後切換成公休，再提交，之後會留下大量沒有value的欄位，應該要想辦法刪除
-
-    const sortedData = data.specialOpenHours.toSorted((a, b) =>
-      compareAsc(a.dateRange.from, b.dateRange.from),
-    );
+    const normalizedData = normalizeSpecialOpenHours(data.specialOpenHours);
 
     submitSettings(
-      { specialOpenHours: sortTimeSlots(sortedData) },
+      { specialOpenHours: normalizedData },
       {
         onSuccess: (newData) =>
           reset({ specialOpenHours: newData.specialOpenHours }),
@@ -165,8 +123,13 @@ function SpecialOpenHours({ settings }) {
           actionFn: () => {
             append({
               dateRange: "",
-              isBusinessDay: false,
-              timeSlots: [{ openTime: "", closeTime: "" }],
+              isBusinessDay: true,
+              timeSlots: [
+                {
+                  openTime: { label: "09:00", value: 540 },
+                  closeTime: { label: "17:00", value: 1020 },
+                },
+              ],
             });
           },
         }}
@@ -178,27 +141,11 @@ function SpecialOpenHours({ settings }) {
             )}
 
             {dayFields.map((day, dayIndex) => (
-              <BusinessPeriodItem
-                key={day.id}
-                id={`specialOpenHours.${dayIndex}`}
-              >
-                <Header>
-                  <h4>例外日期 {dayIndex + 1}</h4>
-                  <ControlledSwitch
-                    options={{
-                      name: `specialOpenHours.${dayIndex}.isBusinessDay`,
-                      option1: { label: "公休", value: false },
-                      option2: { label: "營業", value: true },
-                    }}
-                    handleChange={() =>
-                      clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
-                    }
-                  />
-                </Header>
-
+              <BusinessPeriodItem key={day.id}>
                 <DateField>
                   <FormFieldLayout
-                    error={errors?.specialOpenHours?.[dayIndex]?.errorFallback}
+                    hint="可設定單日或連續日期區間"
+                    error={errors?.specialOpenHours?.[dayIndex]?.dateRange}
                   >
                     <Controller
                       name={`specialOpenHours.${dayIndex}.dateRange`}
@@ -212,19 +159,16 @@ function SpecialOpenHours({ settings }) {
                           onSelect={(range) =>
                             field.onChange(range ? range : "")
                           }
-                          handleValueReset={() => field.onChange("")}
-                          disabledDate={{ before: new Date() }}
+                          onClear={() => field.onChange("")}
+                          disabled={{ before: new Date() }}
                           display="popover"
                         />
                       )}
                       rules={{
-                        validate: () =>
-                          validateDateRangeField({
-                            dayIndex,
-                            setError,
-                            clearErrors,
-                            getValues,
-                          }),
+                        validate: (value) => {
+                          if (!value) return "此欄位必須填寫";
+                          return overlap[dayIndex] || true;
+                        },
                       }}
                     />
                   </FormFieldLayout>
@@ -232,6 +176,17 @@ function SpecialOpenHours({ settings }) {
                   <Button $variant="plain" onClick={() => remove(dayIndex)}>
                     <Trash2 />
                   </Button>
+
+                  <ControlledSwitch
+                    options={{
+                      name: `specialOpenHours.${dayIndex}.isBusinessDay`,
+                      option1: { label: "公休", value: false },
+                      option2: { label: "營業", value: true },
+                    }}
+                    handleChange={() =>
+                      clearErrors(`specialOpenHours.${dayIndex}.timeSlots`)
+                    }
+                  />
                 </DateField>
 
                 <ControlledTimeRange

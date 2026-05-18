@@ -1,5 +1,5 @@
 // 這裡可能有不少函式之後可能要移到別的資料夾，因為這些函式並非全域通用
-import { format, isValid, parseISO } from "date-fns";
+import { addDays, format, isValid, parseISO, set } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
 // 將訂單建立時間格式化
@@ -47,7 +47,7 @@ export function calculateOrderSummary(items) {
 // 整合要上傳的訂單數據
 // 這也是換個位置
 export function buildOrderData(items, data) {
-  // 計算餐點總分數與總
+  // 計算餐點總數與總價
   const { totalServings, totalPrice } = calculateOrderSummary(items);
 
   const orderData = {

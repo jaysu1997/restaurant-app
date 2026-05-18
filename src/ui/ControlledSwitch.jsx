@@ -7,6 +7,7 @@ const StyledSwitch = styled.label`
   align-items: center;
   gap: 0.4rem;
   cursor: pointer;
+  width: fit-content;
 
   @media (max-width: 288px) {
     justify-content: start;
