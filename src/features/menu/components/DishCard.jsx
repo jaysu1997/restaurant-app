@@ -1,7 +1,7 @@
 // ok
 // 餐點品項卡片
 import styled from "styled-components";
-import Price from "./Price";
+import Price from "../../../components/Price";
 
 const StyledDishCard = styled.li`
   width: 100%;
@@ -44,16 +44,17 @@ const DishIngredients = styled(Row)`
 `;
 
 function DishCard({ dish, onSelect, inventoryObj }) {
+  const { name, ingredients, basePrice, discount } = dish;
   // 使用食材清單
-  const ingredientsList = dish.ingredients
+  const ingredientsList = ingredients
     .map((item) => inventoryObj[item.ingredient]?.name ?? "未知")
     .join(", ");
 
-  const finalPrice = `$ ${dish.basePrice - dish.discount}`;
+  const finalPrice = `$ ${basePrice - discount}`;
 
   return (
     <StyledDishCard onClick={() => onSelect(dish)}>
-      <DishName>{dish.name}</DishName>
+      <DishName>{name}</DishName>
       <Price>{finalPrice}</Price>
       <DishIngredients>{ingredientsList}</DishIngredients>
     </StyledDishCard>

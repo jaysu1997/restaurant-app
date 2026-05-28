@@ -3,7 +3,7 @@ import FormFieldLayout from "../../ui/FormFieldLayout";
 import FormInput from "../../ui/FormInput";
 import useCreateStaff from "../../hooks/data/staff/useCreateStaff";
 import PasswordInput from "../../components/PasswordInput";
-import Button from "../../ui/Button";
+import Button from "../../components/button/Button";
 import ButtonSpinner from "../../ui/ButtonSpinner";
 import styled from "styled-components";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
@@ -153,7 +153,7 @@ export default Signup;
 // import FormInput from "../../ui/FormInput";
 // import ControlledSelect from "../../ui/ControlledSelect";
 // import PasswordInput from "../../components/PasswordInput";
-// import Button from "../../ui/Button";
+// import Button from "../../components/button/Button";
 // import ButtonSpinner from "../../ui/ButtonSpinner";
 
 // import useCreateStaff from "../../hooks/data/staff/useCreateStaff";
@@ -372,12 +372,7 @@ export default Signup;
 
 //           {/* footer */}
 //           <Footer>
-//             <Button
-//               type="button"
-//               variation="secondary"
-//               onClick={onClose}
-//               disabled={isCreatingStaff}
-//             >
+//             <Button type="button" onClick={onClose} disabled={isCreatingStaff}>
 //               取消
 //             </Button>
 

@@ -1,8 +1,8 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
-import Button from "../../ui/Button";
 import { parsePositiveInt } from "../../utils/helpers";
+import TextButton from "../../components/button/TextButton";
 
 function IngredientScetion({ ingredientOptions }) {
   const {
@@ -58,8 +58,7 @@ function IngredientScetion({ ingredientOptions }) {
         />
       ))}
 
-      <Button
-        $variant="text"
+      <TextButton
         onClick={() => {
           append({
             ingredient: "",
@@ -69,7 +68,7 @@ function IngredientScetion({ ingredientOptions }) {
       >
         <Plus />
         新增備料
-      </Button>
+      </TextButton>
     </FormSection>
   );
 }

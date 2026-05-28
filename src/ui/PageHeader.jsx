@@ -3,8 +3,8 @@ import styled from "styled-components";
 const StyledPageHeader = styled.header`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
+  gap: 1rem;
 `;
 
 const PageHeading = styled.h1`
@@ -12,6 +12,7 @@ const PageHeading = styled.h1`
 `;
 
 const PageActions = styled.div`
+  margin-left: auto;
   display: flex;
   gap: 1rem;
 

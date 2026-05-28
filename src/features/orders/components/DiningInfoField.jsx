@@ -1,3 +1,4 @@
+import { useFormContext } from "react-hook-form";
 import { generatePickupTimeOptions } from "../../../context/settings/settingsHelpers";
 import useSettings from "../../../context/settings/useSettings";
 import ControlledSelect from "../../../ui/ControlledSelect";
@@ -12,27 +13,29 @@ function ensureOptionExists(options, option = null) {
   return [option, ...options];
 }
 
-function DiningField({ takeOut, selectedOption, disabled }) {
+function DiningInfoField({ isTakeout, disabled }) {
   const { todayOpenInfo, dineInTableOptions } = useSettings();
+  const { getValues } = useFormContext();
+  const selectedPickupTime = getValues("pickupTime");
 
   const pickupTimeOptions = ensureOptionExists(
     generatePickupTimeOptions(todayOpenInfo),
-    selectedOption,
+    selectedPickupTime,
   );
 
   return (
     <ControlledSelect
-      options={takeOut ? pickupTimeOptions : dineInTableOptions}
-      name={takeOut ? "pickupTime" : "tableNumber"}
+      options={isTakeout ? pickupTimeOptions : dineInTableOptions}
+      name={isTakeout ? "pickupTime" : "tableNumber"}
       creatable={false}
-      placeholder={takeOut ? "選擇取餐時間" : "選擇桌號"}
+      placeholder={isTakeout ? "選擇取餐時間" : "選擇桌號"}
       disabled={disabled}
       rules={{
-        required: takeOut ? "請選擇取餐時間" : "請選擇內用桌號",
+        required: isTakeout ? "請選擇取餐時間" : "請選擇內用桌號",
       }}
-      key={takeOut ? "pickupTime" : "tableNumber"}
+      key={isTakeout ? "pickupTime" : "tableNumber"}
     />
   );
 }
 
-export default DiningField;
+export default DiningInfoField;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { Trash2, Plus, Minus } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
-import Button from "../../ui/Button";
+import IconButton from "../../components/button/IconButton";
 
 const StyledTimeRange = styled.ul`
   display: flex;
@@ -14,9 +14,15 @@ const StyledTimeRange = styled.ul`
   li {
     display: grid;
     grid-template-columns: minmax(7.8rem, 1fr) 1.4rem minmax(7.8rem, 1fr) 2rem;
-    /* grid-template-rows: 3.8rem auto; */
+    /* grid-template-rows: 3.8rem; */
     align-items: center;
     column-gap: 0.6rem;
+  }
+`;
+
+const AppendButton = styled(IconButton)`
+  &:not(:disabled):hover {
+    color: #2563eb;
   }
 `;
 
@@ -78,9 +84,8 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
           />
 
           {slotIndex === 0 && (
-            <Button
+            <AppendButton
               $variant="plain"
-              $hoverColor="#2563eb"
               onClick={() =>
                 append({
                   openTime: { label: "09:00", value: 540 },
@@ -89,18 +94,18 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
               }
             >
               <Plus strokeWidth={2.4} />
-            </Button>
+            </AppendButton>
           )}
 
           {slotIndex !== 0 && (
-            <Button
+            <IconButton
               $variant="plain"
               title="清除這個時段的時間"
               disabled={fields.length === 1}
               onClick={() => remove(slotIndex)}
             >
               <Trash2 />
-            </Button>
+            </IconButton>
           )}
         </li>
       ))}

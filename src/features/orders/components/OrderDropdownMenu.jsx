@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import ConfirmDelete from "../../ui/ConfirmDelete";
+import ConfirmDelete from "../../../ui/ConfirmDelete";
 import {
   formatCreatedTime,
   formatPickupNumber,
-} from "../../utils/orderHelpers";
-import useDeleteOrder from "../../hooks/data/orders/useDeleteOrder";
-import DropdownMenu from "../../ui/DropdownMenu";
+} from "../../../utils/orderHelpers";
+import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
+import DropdownMenu from "../../../ui/DropdownMenu";
 import { Ellipsis, Trash2, SquarePen, Eye } from "lucide-react";
 
 const ToggleButton = styled.button`
@@ -42,13 +42,13 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
     {
       name: "檢視訂單",
       icon: Eye,
-      handleClick: () => navigate(`/order/${id}`),
+      handleClick: () => navigate(`/orders/${id}`),
       hidden: false,
     },
     {
       name: "編輯訂單",
       icon: SquarePen,
-      handleClick: () => navigate(`/order/${id}/edit`),
+      handleClick: () => navigate(`/orders/${id}/edit`),
       hidden: isFinished,
     },
     {

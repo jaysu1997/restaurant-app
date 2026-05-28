@@ -3,10 +3,10 @@ import { Trash2 } from "lucide-react";
 import FormFieldLayout from "../ui/FormFieldLayout";
 import ControlledSelect from "../ui/ControlledSelect";
 import ControlledSwitch from "../ui/ControlledSwitch";
-import Button from "../ui/Button";
 import { useFormContext } from "react-hook-form";
 import FormInput from "../ui/FormInput";
 import ReqiuredMark from "../ui/RequiredMark";
+import IconButton from "./button/IconButton";
 
 // 測試看看(應該要改個名稱，例如UpsertFormSection之類的)
 const Section = styled.div`
@@ -90,9 +90,9 @@ function FormSection({
           {heading.text}
           {heading.required && <ReqiuredMark />}
           {heading.action && (
-            <Button $variant="ghost" onClick={heading.action}>
+            <IconButton $variant="ghost" onClick={heading.action}>
               <Trash2 />
-            </Button>
+            </IconButton>
           )}
         </Heading>
       )}

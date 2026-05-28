@@ -1,12 +1,12 @@
 // 購物車中下方的訂購訊息欄位
 import styled from "styled-components";
-import ControlledSelect from "../../../ui/ControlledSelect";
-import Note from "../../../ui/Note";
+import Note from "../../../components/Note";
 import DiningMethodSegmented from "../../../ui/DiningMethodSegmented";
 import { useFormContext, useWatch } from "react-hook-form";
 import ReqiuredMark from "../../../ui/RequiredMark";
 import useSettings from "../../../context/settings/useSettings";
-import DiningField from "../../orders/components/DiningField ";
+import DiningInfoField from "../../orders/components/DiningInfoField";
+import PaymentStatusField from "../../orders/components/PaymentStatusField";
 
 const StyledOrderInfoField = styled.div`
   padding: 1.2rem 0;
@@ -29,18 +29,17 @@ const Row = styled.div`
 `;
 
 function OrderInfoField({ hasItems }) {
-  const { register, control } = useFormContext();
+  // 是否可以點餐
   const { openStatus } = useSettings();
+  const isClosed = ["closed", "holiday"].includes(openStatus.status);
 
+  const { control } = useFormContext();
   const diningMethod = useWatch({
     control,
     name: "diningMethod",
   });
 
-  const takeOut = diningMethod === "外帶";
-
-  // 是否可以點餐
-  const isClosed = ["closed", "holiday"].includes(openStatus.status);
+  const isTakeout = diningMethod === "外帶";
 
   return (
     <StyledOrderInfoField>
@@ -51,15 +50,11 @@ function OrderInfoField({ hasItems }) {
 
       <Row>
         <label>
-          {takeOut ? "取餐時間" : "內用桌號"}
+          {isTakeout ? "取餐時間" : "內用桌號"}
           <ReqiuredMark />
         </label>
 
-        <DiningField
-          takeOut={takeOut}
-          selectedOption={null}
-          disabled={isClosed}
-        />
+        <DiningInfoField isTakeout={isTakeout} disabled={isClosed} />
       </Row>
 
       <Row>
@@ -68,24 +63,12 @@ function OrderInfoField({ hasItems }) {
           <ReqiuredMark />
         </label>
 
-        <ControlledSelect
-          options={[
-            { label: "已付款", value: "已付款" },
-            { label: "未付款", value: "未付款" },
-          ]}
-          name="paid"
-          creatable={false}
-          placeholder={isClosed ? "非營業時間" : "請選擇付款狀態"}
-          disabled={isClosed}
-          rules={{ required: true }}
-          key="paid"
-        />
+        <PaymentStatusField isClosed={isClosed} />
       </Row>
 
       <Row>
-        <Note register={register}>
-          <label>訂單備註</label>
-        </Note>
+        <label>訂單備註</label>
+        <Note />
       </Row>
     </StyledOrderInfoField>
   );

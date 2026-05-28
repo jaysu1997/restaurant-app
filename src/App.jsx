@@ -35,7 +35,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// 重構2.0 state
+// 好像Modal的表單有修改建議，
 
 // 列表類的ui，如果有border設計問題，建議都改成& + &解決
 
@@ -77,16 +77,18 @@ export default function App() {
                 </OrderProvider>
               }
             />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/order/:orderId" element={<Order />} />
-            <Route
-              path="/order/:orderId/edit"
-              element={
-                <OrderProvider key="edit">
-                  <Order />
-                </OrderProvider>
-              }
-            />
+            <Route path="/orders">
+              <Route index element={<Orders />} />
+              <Route path=":orderId" element={<Order />} />
+              <Route
+                path=":orderId/edit"
+                element={
+                  <OrderProvider key="edit">
+                    <Order />
+                  </OrderProvider>
+                }
+              />
+            </Route>
             <Route path="/menu-manage" element={<MenuManage />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/settings" element={<Settings />} />

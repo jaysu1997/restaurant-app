@@ -2,8 +2,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import ButtonSpinner from "../ui/ButtonSpinner";
 import QueryStatusFallback from "./QueryStatusFallback";
-import Button from "../ui/Button";
-import ButtonCancel from "../ui/ButtonCancel";
+import Button from "../components/button/Button";
 import RelatedMenus from "../features/inventory/RelatedMenus";
 
 const StyledConfirmDelete = styled.div`
@@ -45,7 +44,9 @@ function ConfirmDelete({ data, render, deleteMutation, onClose }) {
         <Content>{render()}</Content>
 
         <ButtonRow>
-          <ButtonCancel onClick={onClose} $isFullWidth={true} />
+          <Button $variant="outline" onClick={onClose} $isFullWidth={true}>
+            取消
+          </Button>
 
           <Button
             $variant="danger"

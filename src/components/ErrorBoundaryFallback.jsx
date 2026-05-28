@@ -1,6 +1,6 @@
 // ok
 import warningIcon from "../assets/warning.svg";
-import Button from "../ui/Button";
+import Button from "../components/button/Button";
 import FeedbackState from "./FeedbackState";
 
 function ErrorBoundaryFallback({ error, resetErrorBoundary }) {

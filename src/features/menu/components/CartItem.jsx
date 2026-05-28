@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ServingsControl from "../../../ui/ServingsControl";
+import ServingsControl from "../../orders/components/ServingsControl";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import { summarizeMealChoices } from "../../../utils/orderHelpers";
 import OrderItemActions from "../../../ui/OrderItemActions";

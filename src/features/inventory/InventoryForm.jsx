@@ -3,11 +3,11 @@ import { useSearchParams } from "react-router";
 import StyledHotToast from "../../ui/StyledHotToast";
 import Modal from "../../ui/Modal";
 import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
-import ButtonSubmit from "../../ui/ButtonSubmit";
-import ButtonCancel from "../../ui/ButtonCancel";
+import SubmitButton from "../../components/button/SubmitButton";
 import styled from "styled-components";
 import FormSection from "../../components/FormSection";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
+import Button from "../../components/button/Button";
 
 const StyledForm = styled.form`
   display: flex;
@@ -106,11 +106,17 @@ function InventoryForm({ inventory, onClose }) {
           </FormSection>
 
           <Footer>
-            <ButtonSubmit
+            <SubmitButton
               disabled={isSubmittingInventory}
               isProcessing={isSubmittingInventory}
             />
-            <ButtonCancel disabled={isSubmittingInventory} onClick={onClose} />
+            <Button
+              $variant="outline"
+              disabled={isSubmittingInventory}
+              onClick={onClose}
+            >
+              取消
+            </Button>
           </Footer>
         </FormProvider>
       </StyledForm>

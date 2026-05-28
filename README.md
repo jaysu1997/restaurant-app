@@ -7,6 +7,7 @@ restaurant-app
 ├─ package.json
 ├─ public
 │  └─ logo.webp
+├─ README.md
 ├─ src
 │  ├─ App.jsx
 │  ├─ assets
@@ -17,14 +18,36 @@ restaurant-app
 │  │  ├─ page-not-found.svg
 │  │  └─ warning.svg
 │  ├─ components
+│  │  ├─ AppLayout.jsx
+│  │  ├─ button
+│  │  │  ├─ Button.jsx
+│  │  │  ├─ IconButton.jsx
+│  │  │  ├─ SubmitButton.jsx
+│  │  │  └─ TextButton.jsx
+│  │  ├─ ErrorBoundaryFallback.jsx
+│  │  ├─ FeedbackState.jsx
 │  │  ├─ FormSection.jsx
+│  │  ├─ Header.jsx
+│  │  ├─ Logo.jsx
+│  │  ├─ ModalCloseButton.jsx
+│  │  ├─ Navbar.jsx
+│  │  ├─ NavItem.jsx
+│  │  ├─ Note.jsx
 │  │  ├─ PasswordInput.jsx
-│  │  └─ ScrollToTop.jsx
+│  │  ├─ Price.jsx
+│  │  ├─ ProtectedRoute.jsx
+│  │  ├─ ScrollToTop.jsx
+│  │  ├─ StyledOverlay.jsx
+│  │  └─ User.jsx
 │  ├─ context
-│  │  ├─ order
-│  │  │  ├─ orderReducer.js
-│  │  │  └─ useOrder.js
+│  │  ├─ orders
+│  │  │  ├─ OrderContext.jsx
+│  │  │  ├─ orderDraftReducer.js
+│  │  │  └─ useOrderDraft.js
 │  │  └─ settings
+│  │     ├─ SettingsContext.jsx
+│  │     ├─ settingsHelpers.js
+│  │     └─ useSettings.js
 │  ├─ features
 │  │  ├─ account
 │  │  │  ├─ AvatarCropper.jsx
@@ -32,15 +55,6 @@ restaurant-app
 │  │  │  ├─ UpdatePassword.jsx
 │  │  │  ├─ UpdateUserAvatar.jsx
 │  │  │  └─ UserProfileSetting.jsx
-│  │  ├─ auth
-│  │  │  ├─ api
-│  │  │  │  ├─ getCurrentUser.js
-│  │  │  │  ├─ login.js
-│  │  │  │  └─ logout.js
-│  │  │  └─ hooks
-│  │  │     ├─ useLogin.js
-│  │  │     ├─ useLogout.js
-│  │  │     └─ useUser.js
 │  │  ├─ dashboard
 │  │  │  ├─ components
 │  │  │  │  ├─ EmptyState.jsx
@@ -55,67 +69,69 @@ restaurant-app
 │  │  │  └─ utils
 │  │  │     └─ getDashboardStats.js
 │  │  ├─ inventory
-│  │  │  ├─ InventoryDataCard.jsx
 │  │  │  ├─ InventoryForm.jsx
 │  │  │  └─ RelatedMenus.jsx
 │  │  ├─ menu
-│  │  │  ├─ CartItem.jsx
-│  │  │  ├─ CartOpenButton.jsx
-│  │  │  ├─ EmptyShoppingCart.jsx
-│  │  │  ├─ MenuList.jsx
-│  │  │  ├─ OrderInfoField.jsx
-│  │  │  ├─ ShoppingCart.jsx
-│  │  │  └─ SwiperBar.jsx
+│  │  │  ├─ components
+│  │  │  │  ├─ CartItem.jsx
+│  │  │  │  ├─ CartOpenButton.jsx
+│  │  │  │  ├─ CategoryBar.jsx
+│  │  │  │  ├─ CategoryButton.jsx
+│  │  │  │  ├─ DishCard.jsx
+│  │  │  │  ├─ EmptyShoppingCart.jsx
+│  │  │  │  ├─ MenuList.jsx
+│  │  │  │  ├─ OrderInfoField.jsx
+│  │  │  │  ├─ ScrollNavButton.jsx
+│  │  │  │  └─ ShoppingCart.jsx
+│  │  │  └─ utils
+│  │  │     └─ menuHelpers.js
 │  │  ├─ menu-manage
 │  │  │  ├─ CustomizeScetion.jsx
 │  │  │  ├─ IngredientScetion.jsx
 │  │  │  ├─ MenuForm.jsx
-│  │  │  ├─ MenusDataCard.jsx
-│  │  │  ├─ menuSubmitNormalizer.js
-│  │  │  └─ OptionSection.jsx
+│  │  │  ├─ OptionSection.jsx
+│  │  │  └─ utils
+│  │  │     └─ menuTransform.js
 │  │  ├─ orders
-│  │  │  ├─ api
-│  │  │  │  └─ getRecentOrders.js
-│  │  │  ├─ CategoryGroup.jsx
-│  │  │  ├─ context
-│  │  │  │  └─ OrderContext.jsx
-│  │  │  ├─ hooks
-│  │  │  │  └─ useRecentOrders.js
-│  │  │  ├─ MiniMenu.jsx
-│  │  │  ├─ OrderCard.jsx
-│  │  │  ├─ OrderDishes.jsx
-│  │  │  ├─ OrderDropdownMenu.jsx
-│  │  │  ├─ OrderOperation.jsx
-│  │  │  ├─ OrdersTable.jsx
-│  │  │  ├─ OrderSummaryEdit.jsx
-│  │  │  └─ OrderSummaryView.jsx
+│  │  │  ├─ components
+│  │  │  │  ├─ DiningField .jsx
+│  │  │  │  ├─ MiniMenu.jsx
+│  │  │  │  ├─ OrderDetailPage.jsx
+│  │  │  │  ├─ OrderDishes.jsx
+│  │  │  │  ├─ OrderDropdownMenu.jsx
+│  │  │  │  ├─ OrderEditPage.jsx
+│  │  │  │  ├─ OrderForm
+│  │  │  │  │  ├─ CustomizationField.jsx
+│  │  │  │  │  ├─ Option.jsx
+│  │  │  │  │  └─ OrderForm.jsx
+│  │  │  │  ├─ OrderNote.jsx
+│  │  │  │  ├─ OrderOperation.jsx
+│  │  │  │  ├─ OrderOverview.jsx
+│  │  │  │  ├─ OrderSection.jsx
+│  │  │  │  ├─ OrdersTable.jsx
+│  │  │  │  └─ ServingsControl.jsx
+│  │  │  └─ hooks
+│  │  │     └─ useOrderInventory.js
 │  │  ├─ settings
-│  │  │  ├─ api
-│  │  │  │  └─ getSettings.js
-│  │  │  ├─ context
-│  │  │  │  └─ SettingsContext.jsx
 │  │  │  ├─ ControlledTimeRange.jsx
 │  │  │  ├─ DineInTableSettings.jsx
-│  │  │  ├─ hooks
-│  │  │  │  ├─ useGetSettings.js
-│  │  │  │  ├─ useOpenStatus.js
-│  │  │  │  └─ useSettings.js
 │  │  │  ├─ RegularOpenHours.jsx
 │  │  │  ├─ sortTimeSlots.js
 │  │  │  ├─ SpecialOpenHours.jsx
 │  │  │  ├─ StoreInfo.jsx
-│  │  │  ├─ utils
-│  │  │  │  └─ settingsHelpers.js
 │  │  │  └─ validateOverlap.js
 │  │  └─ staff
-│  │     ├─ Signup.jsx
+│  │     ├─ SignUp.jsx
 │  │     └─ StaffList.jsx
 │  ├─ hooks
 │  │  ├─ data
 │  │  │  ├─ auth
+│  │  │  │  ├─ useLogin.js
+│  │  │  │  ├─ useLogout.js
 │  │  │  │  ├─ useUpdateUserAvatar.js
 │  │  │  │  ├─ useUpdateUserPassword.js
-│  │  │  │  └─ useUpdateUserProfile.js
+│  │  │  │  ├─ useUpdateUserProfile.js
+│  │  │  │  └─ useUser.js
 │  │  │  ├─ inventory
 │  │  │  │  ├─ useDeleteInventory.js
 │  │  │  │  ├─ useGetInventory.js
@@ -123,31 +139,27 @@ restaurant-app
 │  │  │  ├─ menus
 │  │  │  │  ├─ useDeleteMenu.js
 │  │  │  │  ├─ useGetMenus.js
-│  │  │  │  ├─ useIngredientRelatedMenus.js
+│  │  │  │  ├─ useIngredientMenus.js
 │  │  │  │  └─ useSubmitMenuForm.js
 │  │  │  ├─ orders
 │  │  │  │  ├─ useCreateOrder.js
 │  │  │  │  ├─ useDeleteOrder.js
 │  │  │  │  ├─ useGetOrder.js
 │  │  │  │  ├─ useGetPaginatedOrders.js
+│  │  │  │  ├─ useRecentOrders.js
 │  │  │  │  └─ useUpdateOrder.js
 │  │  │  ├─ settings
+│  │  │  │  ├─ useGetSettings.js
 │  │  │  │  └─ useSubmitSettings.js
 │  │  │  └─ staff
 │  │  │     ├─ useCreateStaff.js
 │  │  │     ├─ useDeleteStaff.js
 │  │  │     ├─ useGetStaff.js
 │  │  │     └─ useUpdateStaff.js
-│  │  ├─ useClickOutside.js
-│  │  ├─ useMediaQuery.js
-│  │  └─ useScrollLock.js
-│  ├─ layout
-│  │  ├─ AppLayout.jsx
-│  │  ├─ Header.jsx
-│  │  ├─ Navbar.jsx
-│  │  ├─ NavItem.jsx
-│  │  ├─ ProtectedRoute.jsx
-│  │  └─ User.jsx
+│  │  └─ ui
+│  │     ├─ useClickOutside.js
+│  │     ├─ useMediaQuery.js
+│  │     └─ useScrollLock.js
 │  ├─ main.jsx
 │  ├─ pages
 │  │  ├─ Account.jsx
@@ -165,7 +177,7 @@ restaurant-app
 │  │  ├─ apiAuth.js
 │  │  ├─ apiInventory.js
 │  │  ├─ apiMenus.js
-│  │  ├─ apiOrder.js
+│  │  ├─ apiOrders.js
 │  │  ├─ apiSettings.js
 │  │  ├─ apiStaff.js
 │  │  ├─ handleEdgeFunctionError.js
@@ -174,11 +186,7 @@ restaurant-app
 │  ├─ style
 │  │  └─ GlobalStyles.js
 │  ├─ ui
-│  │  ├─ Button.jsx
-│  │  ├─ ButtonCancel.jsx
 │  │  ├─ ButtonSpinner.jsx
-│  │  ├─ ButtonSubmit.jsx
-│  │  ├─ CloseButton.jsx
 │  │  ├─ ConfirmDelete.jsx
 │  │  ├─ ContentContainer.jsx
 │  │  ├─ ControlledSelect.jsx
@@ -187,10 +195,8 @@ restaurant-app
 │  │  ├─ DateRangePicker.jsx
 │  │  ├─ Description.jsx
 │  │  ├─ DiningMethodSegmented.jsx
-│  │  ├─ DishCard.jsx
 │  │  ├─ Dot.jsx
 │  │  ├─ DropdownMenu.jsx
-│  │  ├─ ErrorBoundaryFallback.jsx
 │  │  ├─ Filter
 │  │  │  ├─ DateRangeFilter.jsx
 │  │  │  ├─ Filter.jsx
@@ -201,26 +207,16 @@ restaurant-app
 │  │  ├─ FormFieldLayout.jsx
 │  │  ├─ FormInput.jsx
 │  │  ├─ LoadingBars.jsx
-│  │  ├─ Logo.jsx
 │  │  ├─ Modal.jsx
-│  │  ├─ Note.jsx
-│  │  ├─ OrderForm
-│  │  │  ├─ CustomizationField.jsx
-│  │  │  ├─ Option.jsx
-│  │  │  └─ OrderForm.jsx
 │  │  ├─ OrderItemActions.jsx
 │  │  ├─ PageContainer.jsx
 │  │  ├─ PageHeader.jsx
 │  │  ├─ Pagination.jsx
-│  │  ├─ Price.jsx
 │  │  ├─ QueryStatusFallback.jsx
 │  │  ├─ RequiredMark.jsx
 │  │  ├─ SectionContainer.jsx
-│  │  ├─ ServingsControl.jsx
-│  │  ├─ StatusView.jsx
 │  │  ├─ StyledDayRangePicker.jsx
 │  │  ├─ StyledHotToast.jsx
-│  │  ├─ StyledOverlay.jsx
 │  │  ├─ StyledSelect.jsx
 │  │  ├─ Tag.jsx
 │  │  └─ UserAvatar.jsx

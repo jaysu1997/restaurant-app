@@ -1,8 +1,8 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
-import Button from "../../ui/Button";
 import OptionSection from "./OptionSection";
+import TextButton from "../../components/button/TextButton";
 
 function CustomizeScetion({ ingredientOptions }) {
   const {
@@ -57,8 +57,7 @@ function CustomizeScetion({ ingredientOptions }) {
         </FormSection>
       ))}
 
-      <Button
-        $variant="text"
+      <TextButton
         onClick={() => {
           append({
             customizationId: `c_${crypto.randomUUID().slice(0, 8)}`,
@@ -79,7 +78,7 @@ function CustomizeScetion({ ingredientOptions }) {
       >
         <Plus />
         新增自訂項目
-      </Button>
+      </TextButton>
     </FormSection>
   );
 }

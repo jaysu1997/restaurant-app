@@ -1,28 +1,36 @@
+// ok
 import styled from "styled-components";
-import useOrderDraft from "../../context/orders/useOrderDraft";
+import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import Option from "./Option";
 
-// 不同選項要求和狀態的樣式設定
+// 不同填寫要求和狀態的樣式設定
 const fieldUIConfig = {
-  backgroundColor: {
-    optional: "#fafaf9",
-    requiredEmpty: "#fff1f2",
-    requiredFilled: "#f0f9ff",
+  optional: {
+    backgroundColor: "#fafaf9",
+    label: {
+      text: "選填",
+      background: "#e7e5e4",
+      font: "#000",
+    },
+    optionHover: "#e7e5e4",
   },
-  color: {
-    optional: { background: "#e7e5e4", font: "#000" },
-    requiredEmpty: { background: "#f43f5e", font: "#fff" },
-    requiredFilled: { background: "#3b82f6", font: "#fff" },
+  requiredEmpty: {
+    backgroundColor: "#fff1f2",
+    label: {
+      text: "必填",
+      background: "#f43f5e",
+      font: "#fff",
+    },
+    optionHover: "#fecdd3",
   },
-  label: {
-    optional: "選填",
-    requiredEmpty: "必填",
-    requiredFilled: "完成",
-  },
-  optionHover: {
-    optional: "#e7e5e4",
-    requiredEmpty: "#fecdd3",
-    requiredFilled: "#bae6fd",
+  requiredFilled: {
+    backgroundColor: "#f0f9ff",
+    label: {
+      text: "完成",
+      background: "#3b82f6",
+      font: "#fff",
+    },
+    optionHover: "#bae6fd",
   },
 };
 
@@ -32,10 +40,10 @@ const StyledCustomizationField = styled.section`
   border: 1px solid #cacaca;
   padding: 1.2rem;
   border-radius: 6px;
-  background-color: ${(props) => props.$bgColorStyle};
+  background-color: ${({ $bgColor }) => $bgColor};
 `;
 
-const Heading = styled.div`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,9 +60,13 @@ const RequiredLabel = styled.span`
   font-weight: 400;
   font-size: 1.2rem;
   border-radius: 999px;
-  padding: 0.4rem 1rem;
-  background-color: ${(props) => props.$labelStyle.background};
-  color: ${(props) => props.$labelStyle.font};
+  height: 100%;
+  width: 4.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ $labelStyle }) => $labelStyle.background};
+  color: ${({ $labelStyle }) => $labelStyle.font};
 `;
 
 const ChoiceHint = styled.p`
@@ -74,13 +86,10 @@ function getFieldStatus(customization) {
   const isRequiredField = customization.isRequired;
   const isFilled = customization.selectedOptions.length > 0;
 
-  const fieldStatus = !isRequiredField
-    ? "optional"
-    : isFilled
-      ? "requiredFilled"
-      : "requiredEmpty";
+  // 選填
+  if (!isRequiredField) return "optional";
 
-  return fieldStatus;
+  return isFilled ? "requiredFilled" : "requiredEmpty";
 }
 
 // 自訂選項區塊
@@ -90,6 +99,7 @@ function CustomizationField({ customization }) {
 
   // 填寫狀態(控制樣式)
   const fieldStatus = getFieldStatus(customization);
+  const uiType = fieldUIConfig[fieldStatus];
   // 已選選項
   const selectedOptions = customization.selectedOptions ?? [];
 
@@ -114,24 +124,21 @@ function CustomizationField({ customization }) {
   }
 
   return (
-    <StyledCustomizationField
-      $bgColorStyle={fieldUIConfig.backgroundColor[fieldStatus]}
-    >
-      <Heading>
+    <StyledCustomizationField $bgColor={uiType.backgroundColor}>
+      <Header>
         <Title>{name}</Title>
-        <RequiredLabel $labelStyle={fieldUIConfig.color[fieldStatus]}>
-          {fieldUIConfig.label[fieldStatus]}
+        <RequiredLabel $labelStyle={uiType.label}>
+          {uiType.label.text}
         </RequiredLabel>
-      </Heading>
+      </Header>
+
       <ChoiceHint>{type === "single" ? "只能單選" : "可以多選"}</ChoiceHint>
       <OptionsArea>
         {options.map((optionData) => (
           <Option
-            optionHover={fieldUIConfig.optionHover[fieldStatus]}
+            hoverBgColor={uiType.optionHover}
             optionData={optionData}
-            onToggle={(e) => {
-              handleOptionChange(e, optionData);
-            }}
+            onToggle={(e) => handleOptionChange(e, optionData)}
             selectedOptions={selectedOptions}
             key={optionData.optionId}
           />

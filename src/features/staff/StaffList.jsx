@@ -6,9 +6,9 @@ import { UserRoundX } from "lucide-react";
 import { useState } from "react";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
-import Button from "../../ui/Button";
 import { AVATAR_URL } from "../../utils/constants";
 import StyledSelect from "../../ui/StyledSelect";
+import IconButton from "../../components/button/IconButton";
 
 const List = styled.ul`
   display: flex;
@@ -134,13 +134,13 @@ function StaffList({ staffList, onRequestDelete }) {
                   }
                 />
 
-                <Button
+                <IconButton
                   $variant="plain"
                   disabled={item.id === user.id || updatingById[item.id]}
                   onClick={() => onRequestDelete(item)}
                 >
                   <UserRoundX strokeWidth={2.2} />
-                </Button>
+                </IconButton>
               </Item>
             );
           })}

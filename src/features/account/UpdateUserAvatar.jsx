@@ -3,7 +3,7 @@ import styled from "styled-components";
 import AvatarCropper from "./AvatarCropper";
 import UserAvatar from "../../ui/UserAvatar";
 import SectionContainer from "../../ui/SectionContainer";
-import Button from "../../ui/Button";
+import Button from "../../components/button/Button";
 import { Upload } from "lucide-react";
 import { AVATAR_URL } from "../../utils/constants";
 
@@ -58,7 +58,7 @@ function UpdateUserAvatar({ userData }) {
       <SectionContainer>
         <StyledUpdateUserAvatar>
           <UserAvatar avatarUrl={avatarUrl} />
-          <Button $variant="tertiary" as="label" htmlFor="upload-avatar">
+          <Button $variant="secondary" as="label" htmlFor="upload-avatar">
             <Upload />
             選擇新頭像
           </Button>

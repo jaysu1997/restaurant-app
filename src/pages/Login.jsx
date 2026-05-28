@@ -9,7 +9,7 @@ import PasswordInput from "../components/PasswordInput";
 import FormInput from "../ui/FormInput";
 import FormFieldLayout from "../ui/FormFieldLayout";
 import { isValidEmail } from "../utils/validation";
-import ButtonSubmit from "../ui/ButtonSubmit";
+import SubmitButton from "../components/button/SubmitButton";
 
 const PageLayout = styled.div`
   width: 100%;
@@ -144,7 +144,7 @@ function Login() {
             />
           </FormFieldLayout>
 
-          <ButtonSubmit
+          <SubmitButton
             label="登入"
             fullWidth={true}
             isProcessing={isProcessing}

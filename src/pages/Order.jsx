@@ -1,19 +1,50 @@
-import { useLocation } from "react-router";
-import OrderSummaryView from "../features/orders/OrderSummaryView";
-import OrderSummaryEdit from "../features/orders/OrderSummaryEdit";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 import PageHeader from "../ui/PageHeader";
-import { formatPickupNumber } from "../utils/orderHelpers";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
 import PageContainer from "../ui/PageContainer";
 import useSettings from "../context/settings/useSettings";
+import { ChevronLeft } from "lucide-react";
+import OrderDetailPage from "../features/orders/components/OrderDetailPage";
+import OrderEditPage from "../features/orders/components/OrderEditPage";
 
-const StyledOrderSummary = styled.div`
+const OrderLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const BackButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: fit-content;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.8rem;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 1.4rem;
+  font-weight: 500;
+
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  svg {
+    flex-shrink: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+`;
+
+const OrderDetail = styled.div`
   display: grid;
   grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
-  /* column-gap: 2.4rem;
-  row-gap: 3.6rem; */
   gap: 2.8rem;
   padding: 0 0 3.6rem;
   font-weight: 500;
@@ -24,17 +55,8 @@ const StyledOrderSummary = styled.div`
   }
 `;
 
-const OrderHeader = styled.header`
-  background-color: #6366f1;
-  color: #fff;
-  padding: 2rem 2.4rem;
-  font-size: 2.4rem;
-  grid-column: 1 / -1;
-  border-radius: 6px;
-  font-weight: 600;
-`;
-
 function Order() {
+  const navigate = useNavigate();
   // 根據pathname判別當前是否為編輯狀態
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
@@ -53,17 +75,19 @@ function Order() {
         status={pageQueryStatus}
         errorFallback={orderError || settingsError}
       >
-        <StyledOrderSummary>
-          <OrderHeader>{`取餐號碼 ${formatPickupNumber(
-            order?.pickupNumber,
-          )}`}</OrderHeader>
-
-          {isEditPage ? (
-            <OrderSummaryEdit orderData={order} />
-          ) : (
-            <OrderSummaryView orderData={order} />
-          )}
-        </StyledOrderSummary>
+        <OrderLayout>
+          <BackButton onClick={() => navigate(-1)}>
+            <ChevronLeft />
+            返回
+          </BackButton>
+          <OrderDetail>
+            {isEditPage ? (
+              <OrderEditPage orderData={order} />
+            ) : (
+              <OrderDetailPage orderData={order} />
+            )}
+          </OrderDetail>
+        </OrderLayout>
       </QueryStatusFallback>
     </PageContainer>
   );

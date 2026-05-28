@@ -2,7 +2,7 @@
 import { useSearchParams } from "react-router";
 import { useState } from "react";
 import MenuForm from "../features/menu-manage/MenuForm.jsx";
-import Button from "../ui/Button";
+import Button from "../components/button/Button";
 import PageHeader from "../ui/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 import Filter from "../ui/Filter/Filter.jsx";

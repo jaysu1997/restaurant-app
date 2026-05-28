@@ -2,14 +2,14 @@
 import {
   summarizeMealChoices,
   calculateOrderSummary,
-} from "../../utils/orderHelpers";
+} from "../../../utils/orderHelpers";
 import styled from "styled-components";
-import MiniMenu from "./MiniMenu";
-import OrderItemActions from "../../ui/OrderItemActions";
-import Button from "../../ui/Button";
+import OrderItemActions from "../../../ui/OrderItemActions";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import Price from "../../components/Price";
+import Price from "../../../components/Price";
+import TextButton from "../../../components/button/TextButton";
+import MiniMenu from "./MiniMenu";
 
 const OrderDishesList = styled.ul`
   display: flex;
@@ -98,7 +98,7 @@ const ItemMeta = styled.div`
 
 function OrderDishes({ items, isEdit }) {
   const [isMiniMenuOpen, setIsMiniMenuOpen] = useState(false);
-  const { totalServings, totalPrice } = calculateOrderSummary(items);
+  const { totalPrice } = calculateOrderSummary(items);
 
   return (
     <>
@@ -129,14 +129,13 @@ function OrderDishes({ items, isEdit }) {
 
         <OrderSummary>
           {isEdit && (
-            <Button $variant="text" onClick={() => setIsMiniMenuOpen(true)}>
+            <TextButton onClick={() => setIsMiniMenuOpen(true)}>
               <Plus />
               新增餐點
-            </Button>
+            </TextButton>
           )}
           <div>
             <span>總計：</span>
-            <span>共 {totalServings} 份</span>
             <Price>$ {totalPrice}</Price>
           </div>
         </OrderSummary>

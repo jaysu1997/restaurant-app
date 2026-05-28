@@ -1,8 +1,8 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import FormSection from "../../components/FormSection";
 import { Plus } from "lucide-react";
-import Button from "../../ui/Button";
 import { parsePositiveInt } from "../../utils/helpers";
+import TextButton from "../../components/button/TextButton";
 
 function OptionSection({ nestedIndex, ingredientOptions }) {
   const {
@@ -73,10 +73,10 @@ function OptionSection({ nestedIndex, ingredientOptions }) {
               },
             },
           ]}
-        ></FormSection>
+        />
       ))}
-      <Button
-        $variant="text"
+
+      <TextButton
         onClick={() => {
           append({
             optionId: `o_${crypto.randomUUID().slice(0, 8)}`,
@@ -89,7 +89,7 @@ function OptionSection({ nestedIndex, ingredientOptions }) {
       >
         <Plus />
         新增選項
-      </Button>
+      </TextButton>
     </>
   );
 }

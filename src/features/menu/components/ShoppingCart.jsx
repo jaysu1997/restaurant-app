@@ -6,7 +6,7 @@ import useCreateOrder from "../../../hooks/data/orders/useCreateOrder";
 import { useState } from "react";
 import useScrollLock from "../../../hooks/ui/useScrollLock";
 import CartOpenButton from "./CartOpenButton";
-import ButtonSubmit from "../../../ui/ButtonSubmit";
+import SubmitButton from "../../../components/button/SubmitButton";
 import CartItem from "./CartItem";
 import useMediaQuery from "../../../hooks/ui/useMediaQuery";
 import Price from "../../../components/Price";
@@ -96,12 +96,7 @@ const OrderSummary = styled.div`
   row-gap: 1rem;
   column-gap: 0px;
   font-weight: 500;
-  margin-bottom: 1.6rem;
-`;
-
-const SummaryDetails = styled.div`
-  display: flex;
-  gap: 1rem;
+  padding: 0.8rem 0 2.4rem 0;
 `;
 
 function ShoppingCart() {
@@ -175,13 +170,10 @@ function ShoppingCart() {
           <Footer>
             <OrderSummary>
               <span>總計：</span>
-              <SummaryDetails>
-                <span>{`共 ${totalServings} 份`}</span>
-                <Price>{`$ ${totalPrice}`}</Price>
-              </SummaryDetails>
+              <Price>{`$ ${totalPrice}`}</Price>
             </OrderSummary>
 
-            <ButtonSubmit
+            <SubmitButton
               label="提交"
               fullWidth={true}
               isProcessing={isProcessing}

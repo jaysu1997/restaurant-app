@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 import { Check, Square } from "lucide-react";
 
@@ -24,6 +25,8 @@ const StyledOption = styled.label`
   svg:first-of-type {
     color: ${({ $checked }) => ($checked ? "#007bff" : "currentColor")};
     fill: ${({ $checked }) => ($checked ? "#007bff" : "transparent")};
+    width: 2rem;
+    height: 2rem;
   }
 
   svg:last-of-type {
@@ -31,6 +34,8 @@ const StyledOption = styled.label`
     left: 0.8rem;
     color: #fff;
     opacity: ${({ $checked }) => ($checked ? "1" : "0")};
+    width: 1.6rem;
+    height: 1.6rem;
   }
 `;
 
@@ -40,8 +45,7 @@ const OptionName = styled.span`
   overflow: hidden;
 `;
 
-// 單一選項ui
-function Option({ optionHover, optionData, onToggle, selectedOptions }) {
+function Option({ hoverBgColor, optionData, onToggle, selectedOptions }) {
   const { optionId, name, extraPrice } = optionData;
 
   // 當前選項是否是被選中的選項
@@ -51,7 +55,7 @@ function Option({ optionHover, optionData, onToggle, selectedOptions }) {
 
   return (
     <StyledOption
-      $hoverBgColor={optionHover}
+      $hoverBgColor={hoverBgColor}
       htmlFor={optionId}
       $checked={isChecked}
     >
@@ -64,8 +68,8 @@ function Option({ optionHover, optionData, onToggle, selectedOptions }) {
         onChange={(e) => onToggle(e)}
       />
 
-      <Square className="icon-lg" />
-      <Check className="icon-md" strokeWidth={3} />
+      <Square />
+      <Check strokeWidth={3} />
 
       <OptionName>{name}</OptionName>
       <span>{extraPrice === 0 ? "免費" : `+ $ ${extraPrice}`}</span>

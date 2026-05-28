@@ -7,7 +7,7 @@ import PageHeader from "../ui/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import Filter from "../ui/Filter/Filter";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import Button from "../ui/Button";
+import Button from "../components/button/Button";
 import { FilePlus } from "lucide-react";
 import PageContainer from "../ui/PageContainer";
 import DataDisplayCard from "../ui/DataDisplayCard";

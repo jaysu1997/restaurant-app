@@ -5,8 +5,8 @@ import styled from "styled-components";
 import Slider from "./Slider";
 import useUpdateUserAvatar from "../../hooks/data/auth/useUpdateUserAvatar";
 import StyledHotToast from "../../ui/StyledHotToast";
-import ButtonSubmit from "../../ui/ButtonSubmit";
-import ButtonCancel from "../../ui/ButtonCancel";
+import Button from "../../components/button/Button";
+import SubmitButton from "../../components/button/SubmitButton";
 
 const StyledAvatarCropper = styled.section`
   width: min(56rem, 95dvw);
@@ -143,12 +143,18 @@ function AvatarCropper({ userData, imgUrl, onClose }) {
         <CropperFooter>
           <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
           <ButtonGroup>
-            <ButtonSubmit
+            <SubmitButton
               isProcessing={isUpdatingUserAvatar}
               disabled={isUpdatingUserAvatar}
               onClick={handleSave}
             />
-            <ButtonCancel onClick={onClose} disabled={isUpdatingUserAvatar} />
+            <Button
+              $variant="outline"
+              onClick={onClose}
+              disabled={isUpdatingUserAvatar}
+            >
+              取消
+            </Button>
           </ButtonGroup>
         </CropperFooter>
       </StyledAvatarCropper>

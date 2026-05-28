@@ -1,7 +1,7 @@
-import ButtonSpinner from "./ButtonSpinner";
+import ButtonSpinner from "../../ui/ButtonSpinner";
 import Button from "./Button";
 
-function ButtonSubmit({
+function SubmitButton({
   label = "儲存",
   isProcessing = false,
   fullWidth = false,
@@ -20,4 +20,4 @@ function ButtonSubmit({
   );
 }
 
-export default ButtonSubmit;
+export default SubmitButton;

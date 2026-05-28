@@ -10,16 +10,6 @@ const variant = {
     }
   `,
   secondary: css`
-    color: #3b82f6 !important;
-    background-color: #fff;
-    border-color: #3b82f6;
-
-    &:not(:disabled):hover {
-      background-color: #3b82f6;
-      color: #fff !important ;
-    }
-  `,
-  tertiary: css`
     color: #3b82f6;
     background-color: #eff6ff;
 
@@ -44,52 +34,17 @@ const variant = {
       background-color: #b91c1c;
     }
   `,
-  text: css`
-    color: #2563eb;
-    padding: 0.6rem 0.8rem;
-    border-radius: 4px;
-    background-color: #fff;
-    height: 3.6rem;
-
-    & svg {
-      width: 1.8rem;
-      height: 1.8rem;
-    }
-
-    &:not(:disabled):hover {
-      background-color: #eff6ff;
-    }
-  `,
   ghost: css`
     color: #4b5563;
-    padding: 0.6rem;
     border: none;
-    height: 2.6rem;
-
-    & svg {
-      width: 1.4rem;
-      height: 1.4rem;
-    }
 
     &:not(:disabled):hover {
       background-color: #f3f4f6;
     }
   `,
   plain: css`
-    width: 2rem;
-    height: 3.8rem;
-    padding: 0;
-    border: none;
     color: #6b7280;
-
-    & svg {
-      width: 2rem;
-      height: 2rem;
-    }
-
-    &:not(:disabled):hover {
-      color: ${({ $hoverColor }) => ($hoverColor ? $hoverColor : "#dc2626")};
-    }
+    border: none;
   `,
 };
 
@@ -108,11 +63,13 @@ const Button = styled.button.attrs((props) => ({
   border: 1px solid transparent;
   padding: 0.8rem 2rem;
 
-  transition: background-color 0.2s;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
   height: 4rem;
   width: ${({ $isFullWidth }) => ($isFullWidth ? "100%" : "max-content")};
+  border-radius: ${({ $isFullWidth }) => ($isFullWidth ? "6px" : "999px")};
   min-width: max-content;
-  border-radius: 999px;
 
   &:disabled {
     cursor: not-allowed;
@@ -129,7 +86,7 @@ const Button = styled.button.attrs((props) => ({
       $isProcessing ? "hidden" : "visible"};
   }
 
-  ${({ $variant = "primary" }) => variant[$variant]}
+  ${({ $variant }) => variant[$variant || "primary"]}
 `;
 
 export default Button;

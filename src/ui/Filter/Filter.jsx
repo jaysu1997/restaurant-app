@@ -8,11 +8,12 @@ import useClickOutside from "../../hooks/ui/useClickOutside";
 import useScrollLock from "../../hooks/ui/useScrollLock";
 import useMediaQuery from "../../hooks/ui/useMediaQuery";
 import { buildSearchParams, parseFilterQuery } from "./filterHelpers";
-import Button from "../../ui/Button";
+import Button from "../../components/button/Button";
 import FilterIcon from "../../ui/FilterIcon";
 import FormFieldLayout from "../FormFieldLayout";
 import StyledOverlay from "../../components/StyledOverlay";
 import { X } from "lucide-react";
+import IconButton from "../../components/button/IconButton";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -166,9 +167,9 @@ function Filter({ filtersConfig }) {
       <FilterContainer $isFilterOpen={isFilterOpen} inert={!isFilterOpen}>
         <FilterHeader>
           <h3>篩選數據</h3>
-          <Button $variant="ghost" onClick={onClose}>
+          <IconButton $variant="ghost" onClick={onClose}>
             <X />
-          </Button>
+          </IconButton>
         </FilterHeader>
 
         {isFilterOpen &&

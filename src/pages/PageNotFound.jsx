@@ -1,6 +1,6 @@
 // ok
 import { useNavigate } from "react-router";
-import Button from "../ui/Button";
+import Button from "../components/button/Button";
 import FeedbackState from "../components/FeedbackState";
 import pageNotFoundIcon from "../assets/page-not-found.svg";
 

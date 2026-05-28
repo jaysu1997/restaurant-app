@@ -15,9 +15,9 @@ import { validateDateRangeField } from "./validateOverlap";
 import { normalizeSpecialOpenHours } from "./sortTimeSlots";
 import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../ui/SectionContainer";
-import Button from "../../ui/Button";
 import { Trash2, CalendarClock } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
+import IconButton from "../../components/button/IconButton";
 
 const BusinessPeriodList = styled.ul`
   display: flex;
@@ -173,9 +173,9 @@ function SpecialOpenHours({ settings }) {
                     />
                   </FormFieldLayout>
 
-                  <Button $variant="plain" onClick={() => remove(dayIndex)}>
+                  <IconButton $variant="plain" onClick={() => remove(dayIndex)}>
                     <Trash2 />
-                  </Button>
+                  </IconButton>
 
                   <ControlledSwitch
                     options={{

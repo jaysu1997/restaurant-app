@@ -1,5 +1,5 @@
 // 這裡可能有不少函式之後可能要移到別的資料夾，因為這些函式並非全域通用
-import { addDays, format, isValid, parseISO, set } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
 // 將訂單建立時間格式化
@@ -96,6 +96,7 @@ export function parseDateRange(searchParams) {
 }
 
 // 根據uniqueId尋找餐點在items中的索引值
+// 這裡的功能應該不算全域helpers
 export function findItemIndexById(items, uniqueId) {
   return items.findIndex((item) => item.uniqueId === uniqueId);
 }
@@ -142,7 +143,7 @@ export function prepareOrderItem({
   };
 }
 
-// 計算當前1份的食材消耗以及預計會對庫存造成的變化
+// 計算餐點所需的食材消耗以及預計會對庫存造成的變化
 function buildUsage({
   orderDish,
   activeCustomizations,

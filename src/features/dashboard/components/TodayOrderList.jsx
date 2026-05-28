@@ -91,7 +91,9 @@ function TodayOrderList({ data }) {
 
             <OrderDetailsLink
               onClick={() =>
-                navigate(`/order/${order.id}`, { state: { from: "dashboard" } })
+                navigate(`/orders/${order.id}`, {
+                  state: { from: "dashboard" },
+                })
               }
             >
               <span>檢視</span>

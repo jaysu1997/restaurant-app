@@ -2,8 +2,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { useSearchParams } from "react-router";
-import OrderForm from "../../../ui/OrderForm/OrderForm";
-import DishCard from "../../../components/DishCard";
+import OrderForm from "../../orders/components/OrderForm/OrderForm";
+import DishCard from "./DishCard";
 import Modal from "../../../ui/Modal";
 import { getCategories, getSelectedCategory } from "../utils/menuHelpers";
 

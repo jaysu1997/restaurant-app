@@ -3,13 +3,13 @@ import { useForm, FormProvider } from "react-hook-form";
 import Modal from "../../ui/Modal";
 import { toMenuPayload, toMenuForm } from "./utils/menuTransform";
 import useSubmitMenuForm from "../../hooks/data/menus/useSubmitMenuForm";
-import ButtonCancel from "../../ui/ButtonCancel";
-import ButtonSubmit from "../../ui/ButtonSubmit";
+import SubmitButton from "../../components/button/SubmitButton";
 import styled from "styled-components";
 import FormSection from "../../components/FormSection";
 import IngredientScetion from "./IngredientScetion";
 import CustomizeScetion from "./CustomizeScetion";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
+import Button from "../../components/button/Button";
 
 const StyledForm = styled.form`
   display: grid;
@@ -143,14 +143,17 @@ function MenuForm({ onClose, menu, inventoryObj }) {
           />
 
           <Footer>
-            <ButtonSubmit
+            <SubmitButton
               isProcessing={isSubmittingMenuForm || isSubmitting}
               disabled={isSubmittingMenuForm || isSubmitting}
             />
-            <ButtonCancel
+            <Button
+              $variant="outline"
               onClick={onClose}
               disabled={isSubmittingMenuForm || isSubmitting}
-            />
+            >
+              取消
+            </Button>
           </Footer>
         </StyledForm>
       </FormProvider>

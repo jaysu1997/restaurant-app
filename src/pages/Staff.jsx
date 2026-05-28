@@ -5,7 +5,7 @@ import QueryStatusFallback from "../ui/QueryStatusFallback";
 import Signup from "../features/staff/SignUp";
 import StaffList from "../features/staff/StaffList";
 import { UserRoundPlus } from "lucide-react";
-import Button from "../ui/Button";
+import Button from "../components/button/Button";
 import { useState } from "react";
 import Modal from "../ui/Modal";
 import PageContainer from "../ui/PageContainer";

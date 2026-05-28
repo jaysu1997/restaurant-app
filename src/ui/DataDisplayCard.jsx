@@ -49,7 +49,7 @@ const Footer = styled.div`
 
 const EditButton = styled.button`
   flex-grow: 1;
-  color: #0f766e;
+  color: #15803d;
   padding: 0.6rem 1.2rem;
   display: flex;
   align-items: center;
@@ -57,13 +57,13 @@ const EditButton = styled.button`
   gap: 0.8rem;
   background-color: #f8fafc;
 
-  & svg {
+  & > svg {
     width: 1.5rem;
     height: 1.5rem;
   }
 
   &:hover {
-    background-color: #f0fdfa;
+    background-color: #f0fdf4;
   }
 `;
 
@@ -78,6 +78,7 @@ const DeleteButton = styled(EditButton)`
 const Divider = styled.div`
   background-color: #d1d5db;
   width: 1px;
+  height: 100%;
 `;
 
 function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {

@@ -1,11 +1,11 @@
 // 餐點的新增/刪除按鈕
 import styled from "styled-components";
-import Button from "./Button";
 import { SquarePen, Trash2 } from "lucide-react";
 import { useState } from "react";
 import useOrderDraft from "../context/orders/useOrderDraft";
-import OrderForm from "./OrderForm/OrderForm";
 import Modal from "./Modal";
+import OrderForm from "../features/orders/components/OrderForm/OrderForm";
+import IconButton from "../components/button/IconButton";
 
 const StyledItemActions = styled.div`
   display: flex;
@@ -21,11 +21,11 @@ function OrderItemActions({ item }) {
   return (
     <>
       <StyledItemActions>
-        <Button $variant="ghost" onClick={() => setEditingItem(item)}>
+        <IconButton $variant="ghost" onClick={() => setEditingItem(item)}>
           <SquarePen />
-        </Button>
+        </IconButton>
 
-        <Button
+        <IconButton
           $variant="ghost"
           onClick={() =>
             dispatch({
@@ -35,7 +35,7 @@ function OrderItemActions({ item }) {
           }
         >
           <Trash2 />
-        </Button>
+        </IconButton>
       </StyledItemActions>
 
       {editingItem && (

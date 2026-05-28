@@ -1,21 +1,22 @@
 // 點餐功能表單
 import styled from "styled-components";
-import useOrderDraft from "../../context/orders/useOrderDraft";
+import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { prepareOrderItem } from "../../utils/orderHelpers";
-import StyledHotToast from "../StyledHotToast";
-import Note from "../Note";
+import { FormProvider, useForm } from "react-hook-form";
+import { prepareOrderItem } from "../../../../utils/orderHelpers";
+import StyledHotToast from "../../../../ui/StyledHotToast";
+import Note from "../../../../components/Note";
 import CustomizationField from "./CustomizationField";
 import ServingsControl from "../ServingsControl";
 import { ShoppingBag } from "lucide-react";
-import Button from "../../ui/Button";
+import Button from "../../../../components/button/Button";
+import Price from "../../../../components/Price";
 
 const Form = styled.form`
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) 7.2rem;
   max-height: calc(90dvh - 5.6rem);
   width: min(36rem, 95dvw);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 7.2rem;
 `;
 
 const Container = styled.div`
@@ -26,12 +27,13 @@ const Container = styled.div`
   overflow-y: auto;
 `;
 
-const Price = styled.span`
-  color: #dc2626;
-  font-weight: 500;
+const NoteLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 `;
 
-const Title = styled.h5`
+const NoteLabel = styled.label`
   font-size: 1.8rem;
   font-weight: 600;
   letter-spacing: 0.1rem;
@@ -51,7 +53,6 @@ const Footer = styled.footer`
 `;
 
 function OrderForm({ orderDish, onClose, isEdit = false }) {
-  // 餐點編輯的相關功能
   const {
     state: { activeCustomizations, inventoryObj },
     dispatch,
@@ -81,9 +82,11 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
       !isRequired || selectedOptions.length > 0,
   );
 
-  const { handleSubmit, register } = useForm({
+  const methods = useForm({
     defaultValues: orderDish,
   });
+
+  const { handleSubmit } = methods;
 
   function onSubmit(data) {
     const result = prepareOrderItem({
@@ -94,6 +97,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
       isEdit,
     });
 
+    // 庫存食材不足
     if (!result.isAvailable) {
       StyledHotToast({
         type: "error",
@@ -104,6 +108,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
       return;
     }
 
+    // 新增or編輯餐點
     dispatch({
       type: isEdit ? "items/update" : "items/add",
       payload: {
@@ -121,35 +126,38 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
-      <Container>
-        <Price>$ {orderDish.basePrice - orderDish.discount}</Price>
+    <FormProvider {...methods}>
+      <Form onSubmit={handleSubmit(onSubmit, onError)}>
+        <Container>
+          <Price>$ {orderDish.basePrice - orderDish.discount}</Price>
 
-        {activeCustomizations.map((customization) => (
-          <CustomizationField
-            customization={customization}
-            key={customization.customizationId}
+          {activeCustomizations.map((customization) => (
+            <CustomizationField
+              customization={customization}
+              key={customization.customizationId}
+            />
+          ))}
+
+          <NoteLayout>
+            <NoteLabel>餐點備註</NoteLabel>
+            <Note maxLength={25} />
+          </NoteLayout>
+        </Container>
+
+        <Footer>
+          <ServingsControl
+            servings={servings}
+            onChange={setServings}
+            canIncrease={true}
           />
-        ))}
 
-        <Note register={register} maxLength={20}>
-          <Title>餐點備註</Title>
-        </Note>
-      </Container>
-
-      <Footer>
-        <ServingsControl
-          servings={servings}
-          onChange={setServings}
-          canIncrease={true}
-        />
-
-        <Button type="submit" $isFullWidth={true} disabled={!isFormComplete}>
-          <ShoppingBag />
-          加入購物車
-        </Button>
-      </Footer>
-    </Form>
+          <Button type="submit" $isFullWidth={true} disabled={!isFormComplete}>
+            <ShoppingBag />
+            加入購物車
+          </Button>
+        </Footer>
+      </Form>
+    </FormProvider>
   );
 }
 

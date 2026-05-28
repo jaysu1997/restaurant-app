@@ -4,8 +4,8 @@ import OrderDropdownMenu from "./OrderDropdownMenu";
 import {
   formatCreatedTime,
   formatPickupNumber,
-} from "../../utils/orderHelpers";
-import Tag from "../../ui/Tag";
+} from "../../../utils/orderHelpers";
+import Tag from "../../../ui/Tag";
 
 const StyledOrdersTable = styled.div`
   width: 100%;

@@ -4,7 +4,7 @@ import errorSvg from "../assets/error.svg";
 import emptyStateSvg from "../assets/empty-state.svg";
 import { useNavigate } from "react-router";
 import FeedbackState from "../components/FeedbackState";
-import Button from "../ui/Button";
+import Button from "../components/button/Button";
 
 // 根據數據獲取狀態和結果回傳不同的ui
 function QueryStatusFallback({

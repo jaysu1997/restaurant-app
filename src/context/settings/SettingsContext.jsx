@@ -48,6 +48,7 @@ function SettingsProvider({ children }) {
     <SettingsContext.Provider
       value={{
         settings,
+        dateKey,
         dineInTableOptions,
         todayOpenInfo,
         openStatus,

@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import OrdersTable from "../features/orders/OrdersTable";
 import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
 import Filter from "../ui/Filter/Filter";
 import PageHeader from "../ui/PageHeader";
 import PageContainer from "../ui/PageContainer";
 import Pagination from "../ui/Pagination";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
+import OrdersTable from "../features/orders/components/OrdersTable";
 
 const OrdersContainer = styled.div`
   width: 100%;

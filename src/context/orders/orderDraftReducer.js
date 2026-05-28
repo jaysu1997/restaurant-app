@@ -118,7 +118,7 @@ export function reducer(state, action) {
         inventoryObj: updateInventory(state.inventoryObj, delta),
       };
     }
-    // 更新餐點份數
+    // 更新指定餐點份數
     case "items/updateServings": {
       const { uniqueId, servings } = action.payload;
       const index = findItemIndexById(state.items, uniqueId);
@@ -146,11 +146,11 @@ export function reducer(state, action) {
         inventoryObj: updateInventory(state.inventoryObj, delta),
       };
     }
-    // 清空整個order數據
+    // 重置useReducer
     case "draft/reset": {
       return initialState;
     }
-    // 編輯已建立訂單，需要先轉換數據格式以及紀錄訂單已消耗的食材
+    // 編輯已建立訂單，先把已訂購餐點數據輸入
     case "draft/loadFromOrder": {
       return {
         ...state,

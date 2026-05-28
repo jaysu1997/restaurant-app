@@ -1,12 +1,12 @@
 // 訂單編輯頁面的迷你菜單
 import styled from "styled-components";
 import { useState } from "react";
-import Modal from "../../ui/Modal";
-import useGetMenus from "../../hooks/data/menus/useGetMenus";
-import QueryStatusFallback from "../../ui/QueryStatusFallback";
-import OrderForm from "../../ui/OrderForm/OrderForm";
-import useGetInventory from "../../hooks/data/inventory/useGetInventory";
-import DishCard from "../../components/DishCard";
+import Modal from "../../../ui/Modal";
+import useGetInventory from "../../../hooks/data/inventory/useGetInventory";
+import useGetMenus from "../../../hooks/data/menus/useGetMenus";
+import QueryStatusFallback from "../../../ui/QueryStatusFallback";
+import DishCard from "../../menu/components/DishCard";
+import OrderForm from "./OrderForm/OrderForm";
 
 const StyledMiniMenu = styled.div`
   display: flex;

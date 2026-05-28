@@ -1,15 +1,13 @@
-import { useEffect } from "react";
 import styled from "styled-components";
 import PageHeader from "../ui/PageHeader";
 import QueryStatusFallback from "../ui/QueryStatusFallback";
-import useGetInventory from "../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
-import useOrderDraft from "../context/orders/useOrderDraft";
 import PageContainer from "../ui/PageContainer";
 import useSettings from "../context/settings/useSettings";
 import MenuList from "../features/menu/components/MenuList";
 import ShoppingCart from "../features/menu/components/ShoppingCart";
 import CategoryBar from "../features/menu/components/CategoryBar";
+import useOrderInventory from "../features/orders/hooks/useOrderInventory";
 
 const MenuContainer = styled.div`
   display: grid;
@@ -25,29 +23,11 @@ const MenuContainer = styled.div`
 `;
 
 function Menu() {
-  const { dispatch } = useOrderDraft();
   const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
   const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
-  // 執行此custom hook的目的是取得庫存數據並更新orderReducer
-  const {
-    inventory,
-    inventoryObj,
-    inventoryIsLoading,
-    inventoryIsError,
-    inventoryError,
-  } = useGetInventory();
-
-  useEffect(
-    function () {
-      if (!inventory) return;
-
-      dispatch({
-        type: "inventory/setAll",
-        payload: inventoryObj,
-      });
-    },
-    [dispatch, inventory, inventoryObj],
-  );
+  // 取得庫存數據並更新orderReducer
+  const { inventoryIsLoading, inventoryIsError, inventoryError, inventoryObj } =
+    useOrderInventory();
 
   const pageQueryStatus = {
     isLoading: menusIsLoading || inventoryIsLoading || settingsIsLoading,

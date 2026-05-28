@@ -5,10 +5,10 @@ import StyledHotToast from "../../ui/StyledHotToast";
 import { generateTableNumbers } from "../../context/settings/settingsHelpers";
 import SectionContainer from "../../ui/SectionContainer";
 import FormInput from "../../ui/FormInput";
-import Button from "../../ui/Button";
 import { Plus, Trash2, Utensils } from "lucide-react";
 import FormFieldLayout from "../../ui/FormFieldLayout";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
+import IconButton from "../../components/button/IconButton";
 
 const Content = styled.ul`
   display: flex;
@@ -179,13 +179,13 @@ function DineInTableSettings({ settings }) {
                 />
               </FormFieldLayout>
 
-              <Button
+              <IconButton
                 $variant="plain"
                 type="button"
                 onClick={() => remove(index)}
               >
                 <Trash2 />
-              </Button>
+              </IconButton>
 
               <Preview>
                 <label>桌號預覽</label>

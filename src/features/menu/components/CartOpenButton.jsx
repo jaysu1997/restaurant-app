@@ -51,7 +51,7 @@ const StyledCartOpenButton = styled.button`
 function CartOpenButton({ totalServings, totalPrice, onOpen }) {
   return (
     <StyledCartOpenButton onClick={onOpen}>
-      <span>{`共 ${totalServings} 份`}</span>
+      <span>{`共 ${totalServings} 份餐點`}</span>
       <Dot $size={0.8} />
       <span>{`$ ${totalPrice}`}</span>
     </StyledCartOpenButton>

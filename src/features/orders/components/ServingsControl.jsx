@@ -1,3 +1,4 @@
+// ok
 // 控制和設定餐點份數的元件
 import styled from "styled-components";
 import { Minus, Plus } from "lucide-react";
@@ -51,7 +52,7 @@ function ServingsControl({ servings, onChange, canIncrease = true }) {
     <Container>
       <AdjustButton
         type="button"
-        disabled={Number(servings) <= 1}
+        disabled={servings <= 1}
         onClick={() => onChange(servings - 1)}
       >
         <Minus />
