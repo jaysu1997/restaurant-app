@@ -175,8 +175,8 @@ function buildUsage({
       return {
         isAvailable: false,
         error: {
-          title: "餐點內容已更新",
-          message: "部分食材已變更，請重新選擇此餐點",
+          title: "餐點資料異常",
+          message: "餐點使用的部分食材不存在，請重新選購餐點。",
         },
         data: null,
       };

@@ -28,11 +28,7 @@ const Row = styled.div`
   }
 `;
 
-function OrderInfoField({ hasItems }) {
-  // 是否可以點餐
-  const { openStatus } = useSettings();
-  const isClosed = ["closed", "holiday"].includes(openStatus.status);
-
+function OrderInfoField({ canPlaceOrder }) {
   const { control } = useFormContext();
   const diningMethod = useWatch({
     control,
@@ -45,7 +41,7 @@ function OrderInfoField({ hasItems }) {
     <StyledOrderInfoField>
       <Row>
         <label>用餐方式</label>
-        <DiningMethodSegmented isDisabled={!hasItems || isClosed} />
+        <DiningMethodSegmented disabled={!canPlaceOrder} />
       </Row>
 
       <Row>
@@ -53,8 +49,7 @@ function OrderInfoField({ hasItems }) {
           {isTakeout ? "取餐時間" : "內用桌號"}
           <ReqiuredMark />
         </label>
-
-        <DiningInfoField isTakeout={isTakeout} disabled={isClosed} />
+        <DiningInfoField isTakeout={isTakeout} disabled={!canPlaceOrder} />
       </Row>
 
       <Row>
@@ -62,8 +57,7 @@ function OrderInfoField({ hasItems }) {
           付款狀態
           <ReqiuredMark />
         </label>
-
-        <PaymentStatusField isClosed={isClosed} />
+        <PaymentStatusField />
       </Row>
 
       <Row>

@@ -1,6 +1,7 @@
 // ok
 import Description from "../ui/Description";
 import styled, { keyframes } from "styled-components";
+import Button from "./button/Button";
 
 const fadeIn = keyframes`
   from {
@@ -41,14 +42,16 @@ function FeedbackState({
   illustration,
   heading,
   description,
-  children,
+  action,
 }) {
   return (
     <StyledFeedbackState $minHeight={minHeight}>
       <Illustration>{illustration}</Illustration>
       <h2>{heading}</h2>
       <Description>{description}</Description>
-      {children}
+      {action?.label && (
+        <Button onClick={action.onClick}>{action.label}</Button>
+      )}
     </StyledFeedbackState>
   );
 }

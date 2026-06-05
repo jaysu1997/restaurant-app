@@ -15,6 +15,9 @@ import OrderMeta from "./OrderMeta";
 import styled from "styled-components";
 import SubmitButton from "../../../components/button/SubmitButton";
 import Button from "../../../components/button/Button";
+import StoreClosedNotice from "./StoreClosedNotice";
+import useSettings from "../../../context/settings/useSettings";
+import { canCreateOrder } from "../../../context/settings/settingsHelpers";
 
 const Footer = styled.footer`
   grid-column: 1;
@@ -31,15 +34,16 @@ const Footer = styled.footer`
 function OrderEditPage({ orderData }) {
   const navigate = useNavigate();
   const { updateOrder, isUpdatingOrder } = useUpdateOrder();
+  const { todayOpenInfo } = useSettings();
+  const canPlaceOrder = canCreateOrder(todayOpenInfo);
 
   const {
     state: { items },
   } = useOrderDraft();
 
-  const { inventoryIsLoading, inventoryIsError, inventoryError } =
-    useOrderInventory();
+  const inventoryQuery = useOrderInventory();
 
-  const { methods } = useOrderEdit(orderData);
+  const methods = useOrderEdit(orderData);
 
   const { handleSubmit } = methods;
 
@@ -60,19 +64,23 @@ function OrderEditPage({ orderData }) {
   }
 
   return (
-    <QueryStatusFallback
-      status={{
-        isLoading: inventoryIsLoading,
-        isError: inventoryIsError,
-      }}
-      errorFallback={inventoryError}
-    >
+    <QueryStatusFallback queries={[inventoryQuery]}>
+      {!canPlaceOrder && (
+        <StoreClosedNotice>
+          目前為非營業時段，無法修改餐點與用餐資訊， 但仍可更新付款與訂單狀態。
+        </StoreClosedNotice>
+      )}
+
       <FormProvider {...methods}>
         <OrderOverview orderData={orderData} isEdit={true}>
-          <OrderDishes items={items} isEdit={true} />
+          <OrderDishes
+            items={items}
+            isEdit={true}
+            canModifyItems={canPlaceOrder}
+          />
         </OrderOverview>
 
-        <OrderMeta orderData={orderData} />
+        <OrderMeta canPlaceOrder={canPlaceOrder} />
 
         <OrderNote isEdit={true} note={orderData.note} />
 

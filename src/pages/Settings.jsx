@@ -17,25 +17,18 @@ const SettingsLayout = styled.div`
 `;
 
 function Settings() {
-  const { settings, settingsError, settingsIsLoading, settingsIsError } =
-    useSettings();
+  const { settingsQuery } = useSettings();
 
   return (
     <PageContainer $maxWidth="60rem">
       <PageHeader title="店鋪設定" />
 
       <SettingsLayout>
-        <QueryStatusFallback
-          status={{
-            isLoading: settingsIsLoading,
-            isError: settingsIsError,
-          }}
-          errorFallback={settingsError}
-        >
-          <RegularOpenHours settings={settings} />
-          <SpecialOpenHours settings={settings} />
-          <DineInTableSettings settings={settings} />
-          <StoreInfo settings={settings} />
+        <QueryStatusFallback queries={[settingsQuery]}>
+          <RegularOpenHours settings={settingsQuery?.data} />
+          <SpecialOpenHours settings={settingsQuery?.data} />
+          <DineInTableSettings settings={settingsQuery?.data} />
+          <StoreInfo settings={settingsQuery?.data} />
         </QueryStatusFallback>
       </SettingsLayout>
     </PageContainer>

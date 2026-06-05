@@ -17,12 +17,8 @@ const DashboardContainer = styled.div`
 `;
 
 function Dashboard() {
-  const {
-    recentOrders,
-    recentOrdersIsLoading,
-    recentOrdersIsError,
-    recentOrdersError,
-  } = useRecentOrders();
+  const recentOrdersQuery = useRecentOrders();
+  const { data: recentOrders } = recentOrdersQuery;
 
   // 取得數據後進行分析
   const analyzedData = getDashboardStats(recentOrders);
@@ -33,13 +29,7 @@ function Dashboard() {
         <StoreStatusBadge />
       </PageHeader>
 
-      <QueryStatusFallback
-        status={{
-          isLoading: recentOrdersIsLoading,
-          isError: recentOrdersIsError,
-        }}
-        errorFallback={recentOrdersError}
-      >
+      <QueryStatusFallback queries={[recentOrdersQuery]}>
         <DashboardContainer>
           <StatsCards analyzedData={analyzedData} />
           <StatsCharts analyzedData={analyzedData} />

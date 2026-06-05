@@ -27,7 +27,7 @@ const StyledShoppingCart = styled.aside`
   flex-direction: column;
   border-radius: 6px;
   height: min(64.8rem, calc(100dvh - 18rem));
-  width: 24rem;
+  width: 26rem;
   overflow: hidden;
   z-index: 100;
 
@@ -99,7 +99,7 @@ const OrderSummary = styled.div`
   padding: 0.8rem 0 2.4rem 0;
 `;
 
-function ShoppingCart() {
+function ShoppingCart({ canPlaceOrder }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { createOrder, isCreatingOrder } = useCreateOrder();
   const onClose = () => setIsCartOpen(false);
@@ -160,7 +160,7 @@ function ShoppingCart() {
               ))}
             </CartList>
 
-            <OrderInfoField hasItems={hasItems} />
+            <OrderInfoField canPlaceOrder={canPlaceOrder} />
           </CartContent>
         ) : (
           <EmptyShoppingCart />

@@ -64,7 +64,7 @@ function getTopDishesFromStats(itemSalesStats) {
 }
 
 // 分析訂單數據的函式
-export function getDashboardStats(orders = []) {
+export function getDashboardStats(orders) {
   if (!orders) return;
 
   const now = new Date();

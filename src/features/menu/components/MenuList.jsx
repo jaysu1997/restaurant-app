@@ -8,13 +8,13 @@ import Modal from "../../../ui/Modal";
 import { getCategories, getSelectedCategory } from "../utils/menuHelpers";
 
 const StyledMenuList = styled.ul`
-  grid-row: 2;
+  grid-column: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
   gap: 2.4rem;
 `;
 
-function MenuList({ menus, inventoryObj }) {
+function MenuList({ menus, inventoryObj, canPlaceOrder }) {
   const [searchParams] = useSearchParams();
   const [selectedDish, setSelectedDish] = useState(null);
 
@@ -41,6 +41,7 @@ function MenuList({ menus, inventoryObj }) {
             dish={dish}
             onSelect={setSelectedDish}
             inventoryObj={inventoryObj}
+            disabled={!canPlaceOrder}
             key={dish.id}
           />
         ))}

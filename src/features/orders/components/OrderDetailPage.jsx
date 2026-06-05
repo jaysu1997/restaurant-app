@@ -15,7 +15,7 @@ function OrderDetailPage({ orderData }) {
   return (
     <>
       <OrderOverview orderData={orderData} isEdit={false}>
-        <OrderDishes items={items} isEdit={false} />
+        <OrderDishes items={items} isEdit={false} canModifyItems={false} />
       </OrderOverview>
 
       <OrderSection>

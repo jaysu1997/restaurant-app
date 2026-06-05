@@ -38,7 +38,7 @@ const Item = styled.li`
     $isUpdating &&
     css`
       background-color: #e5e7eb;
-      opacity: 0.6;
+      opacity: 0.5;
       user-select: none;
       cursor: progress;
     `}

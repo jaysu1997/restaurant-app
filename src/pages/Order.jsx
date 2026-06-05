@@ -47,7 +47,6 @@ const OrderDetail = styled.div`
   grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
   gap: 2.8rem;
   padding: 0 0 3.6rem;
-  font-weight: 500;
   width: 100%;
 
   @media (max-width: 50em) {
@@ -60,31 +59,24 @@ function Order() {
   // 根據pathname判別當前是否為編輯狀態
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
-  const { order, orderIsLoading, orderIsError, orderError } = useGetOrder();
-  const { settingsIsLoading, settingsIsError, settingsError } = useSettings();
-
-  const pageQueryStatus = {
-    isLoading: orderIsLoading || settingsIsLoading,
-    isError: orderIsError || settingsIsError,
-  };
+  const orderQuery = useGetOrder();
+  const { settingsQuery } = useSettings();
 
   return (
     <PageContainer>
       <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
-      <QueryStatusFallback
-        status={pageQueryStatus}
-        errorFallback={orderError || settingsError}
-      >
+      <QueryStatusFallback queries={[orderQuery, settingsQuery]}>
         <OrderLayout>
           <BackButton onClick={() => navigate(-1)}>
             <ChevronLeft />
             返回
           </BackButton>
+
           <OrderDetail>
             {isEditPage ? (
-              <OrderEditPage orderData={order} />
+              <OrderEditPage orderData={orderQuery.data} />
             ) : (
-              <OrderDetailPage orderData={order} />
+              <OrderDetailPage orderData={orderQuery.data} />
             )}
           </OrderDetail>
         </OrderLayout>

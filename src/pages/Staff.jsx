@@ -23,7 +23,7 @@ const StaffLayout = styled.div`
 function Staff() {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [staffToDelete, setStaffToDelete] = useState(null);
-  const { staff, staffIsLoading, staffIsError, staffError } = useGetStaff();
+  const staffQuery = useGetStaff();
   const deleteMutation = useDeleteStaff();
   const onClose = () => setIsSignupOpen(false);
 
@@ -38,14 +38,11 @@ function Staff() {
         </PageHeader>
 
         <StaffLayout>
-          <QueryStatusFallback
-            status={{
-              isLoading: staffIsLoading,
-              isError: staffIsError,
-            }}
-            errorFallback={staffError}
-          >
-            <StaffList staffList={staff} onRequestDelete={setStaffToDelete} />
+          <QueryStatusFallback queries={[staffQuery]}>
+            <StaffList
+              staffList={staffQuery?.data?.users}
+              onRequestDelete={setStaffToDelete}
+            />
           </QueryStatusFallback>
         </StaffLayout>
       </PageContainer>

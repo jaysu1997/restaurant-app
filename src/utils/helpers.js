@@ -42,14 +42,3 @@ export function validatePhoneNumber(value) {
 
   return true;
 }
-
-// custom hook的默認error fallback生成
-export function withFallbackRetry(error, refetch) {
-  if (!error) return null;
-
-  return {
-    ...error,
-    action: error?.action ?? refetch,
-    actionLabel: error?.actionLabel ?? "重新嘗試",
-  };
-}

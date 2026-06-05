@@ -13,7 +13,7 @@ const StyledItemActions = styled.div`
   gap: 0.2rem;
 `;
 
-function OrderItemActions({ item }) {
+function OrderItemActions({ item, canModifyItems }) {
   const { dispatch } = useOrderDraft();
   const [editingItem, setEditingItem] = useState(null);
   const onClose = () => setEditingItem(null);
@@ -21,12 +21,17 @@ function OrderItemActions({ item }) {
   return (
     <>
       <StyledItemActions>
-        <IconButton $variant="ghost" onClick={() => setEditingItem(item)}>
+        <IconButton
+          $variant="ghost"
+          disabled={!canModifyItems}
+          onClick={() => setEditingItem(item)}
+        >
           <SquarePen />
         </IconButton>
 
         <IconButton
           $variant="ghost"
+          disabled={!canModifyItems}
           onClick={() =>
             dispatch({
               type: "items/remove",

@@ -28,7 +28,7 @@ export async function upsertMenuApi(upsertData) {
 
     handleSupabaseApiError(inventoryError, {
       default:
-        "新食材數據自動建立失敗，可以嘗試嘗試再次交表單，或前往庫存管理頁面手動建立。",
+        "新食材數據自動建立失敗，可以嘗試再次交表單，或前往庫存管理頁面手動建立。",
     });
   }
 

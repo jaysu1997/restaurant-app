@@ -6,29 +6,20 @@ import useOrderDraft from "../../../context/orders/useOrderDraft";
 function useOrderInventory() {
   const { dispatch } = useOrderDraft();
 
-  const {
-    inventory,
-    inventoryObj,
-    inventoryIsLoading,
-    inventoryIsError,
-    inventoryError,
-  } = useGetInventory();
+  const inventoryQuery = useGetInventory();
+
+  const { data, inventoryObj } = inventoryQuery;
 
   useEffect(() => {
-    if (!inventory) return;
+    if (!data) return;
 
     dispatch({
       type: "inventory/setAll",
       payload: inventoryObj,
     });
-  }, [dispatch, inventory, inventoryObj]);
+  }, [dispatch, data, inventoryObj]);
 
-  return {
-    inventoryIsLoading,
-    inventoryIsError,
-    inventoryError,
-    inventoryObj,
-  };
+  return { ...inventoryQuery, inventoryObj };
 }
 
 export default useOrderInventory;

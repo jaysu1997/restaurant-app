@@ -11,6 +11,10 @@ import { useState } from "react";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
 import ConfirmDelete from "../../../ui/ConfirmDelete";
 
+const StyledOrderOverview = styled(OrderSection)`
+  grid-column: 1;
+`;
+
 const Header = styled.header`
   display: flex;
   align-items: center;
@@ -81,7 +85,7 @@ function OrderOverview({ orderData, isEdit, children }) {
 
   return (
     <>
-      <OrderSection>
+      <StyledOrderOverview>
         <Header>
           <PickupNumber>{formatPickupNumber(pickupNumber)}</PickupNumber>
 
@@ -111,7 +115,7 @@ function OrderOverview({ orderData, isEdit, children }) {
         </div>
 
         {children}
-      </OrderSection>
+      </StyledOrderOverview>
 
       {isDeleteModalOpen && (
         <ConfirmDelete

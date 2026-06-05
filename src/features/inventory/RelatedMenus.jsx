@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ChevronRight, AlertCircle } from "lucide-react";
 import useIngredientMenus from "../../hooks/data/menus/useIngredientMenus";
 
@@ -117,21 +117,34 @@ const EmptyContent = styled.span`
   color: #9ca3af;
 `;
 
-function RelatedMenus({ setModal, ingredientId }) {
+function RelatedMenus({ setModal, ingredientId, setIsDeleteDisabled }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { relatedMenus, relatedMenusIsLoading, relatedMenusIsError } =
-    useIngredientMenus(ingredientId);
+  const {
+    data: relatedMenus,
+    isPending,
+    isError,
+  } = useIngredientMenus(ingredientId);
+
+  // 有被餐點使用的食材不能刪除
+  useEffect(() => {
+    if (isPending || isError || !relatedMenus) {
+      setIsDeleteDisabled(true);
+      return;
+    }
+
+    setIsDeleteDisabled(relatedMenus.length > 0);
+  }, [isPending, isError, relatedMenus, setIsDeleteDisabled]);
 
   return (
-    <Accordion $isExpanded={isExpanded} $isError={relatedMenusIsError}>
-      {relatedMenusIsLoading && (
+    <Accordion $isExpanded={isExpanded} $isError={isError}>
+      {isPending && (
         <LoadingTitle>
           <Spinner />
           <span>正在取得相關餐點...</span>
         </LoadingTitle>
       )}
 
-      {relatedMenusIsError && (
+      {isError && (
         <ErrorTitle>
           <AlertCircle />
           <span>無法取得相關餐點</span>

@@ -29,21 +29,21 @@ const filtersConfig = [
 ];
 
 function Orders() {
+  const ordersQuery = useGetPaginatedOrders();
+
   const {
-    ordersData,
-    curPage,
-    maxPage,
     isPending,
-    isError,
-    error,
+    data: { ordersData = [], curPage = 1, maxPage = 1 } = {},
     createdAt,
     pickupNumber,
-  } = useGetPaginatedOrders();
+  } = ordersQuery;
 
   // 有使用篩選條件
   const hasFilters = createdAt || pickupNumber;
+  // 沒有符合篩選條件的數據
+  const hasNoData = ordersData.length === 0;
   // 數據庫完全沒有任何訂單數據
-  const isEmpty = !hasFilters && !isPending && ordersData?.length === 0;
+  const hasNoOrders = !hasFilters && !isPending && hasNoData;
 
   const emptyStateMessage = hasFilters
     ? "查無符合當前篩選條件的訂單數據。"
@@ -52,16 +52,12 @@ function Orders() {
   return (
     <PageContainer>
       <PageHeader title="訂單管理">
-        {!isEmpty && <Filter filtersConfig={filtersConfig} />}
+        {!hasNoOrders && <Filter filtersConfig={filtersConfig} />}
       </PageHeader>
 
       <QueryStatusFallback
-        status={{
-          isLoading: isPending,
-          isError,
-          hasNoData: ordersData?.length === 0,
-        }}
-        errorFallback={error}
+        queries={[ordersQuery]}
+        hasNoData={hasNoData}
         noDataFallback={{
           message: emptyStateMessage,
           actionLabel: hasFilters ? "" : "建立訂單",

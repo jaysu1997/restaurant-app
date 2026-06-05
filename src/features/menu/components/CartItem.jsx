@@ -57,7 +57,7 @@ function CartItem({ item }) {
     <StyledCartItem>
       <Row>
         <OrderName>{item.name}</OrderName>
-        <OrderItemActions item={item} />
+        <OrderItemActions item={item} canModifyItems={true} />
       </Row>
 
       {customizeChoices && (

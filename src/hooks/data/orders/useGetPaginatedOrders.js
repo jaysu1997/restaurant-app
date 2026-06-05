@@ -1,14 +1,11 @@
 // 分頁功能custom hook
-import {
-  keepPreviousData,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { getPaginatedOrdersApi } from "../../../services/apiOrders";
 import { parseDateRange } from "../../../utils/orderHelpers";
 import { addDays } from "date-fns";
-import { parsePositiveInt, withFallbackRetry } from "../../../utils/helpers";
+import { parsePositiveInt } from "../../../utils/helpers";
+import { useEffect } from "react";
 
 // 將日期篩選條件轉換成supabase時間欄位的要求格式
 function getCreatedTime(searchParams) {
@@ -28,7 +25,7 @@ function getCreatedTime(searchParams) {
 
 function useGetPaginatedOrders() {
   const queryClient = useQueryClient();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   // 篩選條件(參數)
   const page = parsePositiveInt(searchParams.get("page"), {
     min: 1,
@@ -43,39 +40,52 @@ function useGetPaginatedOrders() {
 
   const createdAt = getCreatedTime(searchParams);
 
-  const {
-    data: { ordersData = [], curPage = 1, maxPage = 1 } = {},
-    isPending,
-    error,
-    isError,
-    refetch,
-  } = useQuery({
+  const ordersQuery = useQuery({
     queryKey: ["orders", page, createdAt, pickupNumber],
     queryFn: () => getPaginatedOrdersApi(page, createdAt, pickupNumber),
-    placeholderData: keepPreviousData,
   });
 
-  // 預先獲取前後頁的數據
-  if (curPage < maxPage) {
-    queryClient.prefetchQuery({
-      queryKey: ["orders", page + 1, createdAt, pickupNumber],
-      queryFn: () => getPaginatedOrdersApi(page + 1, createdAt, pickupNumber),
-    });
-  }
-  if (curPage > 1) {
-    queryClient.prefetchQuery({
-      queryKey: ["orders", page - 1, createdAt, pickupNumber],
-      queryFn: () => getPaginatedOrdersApi(page - 1, createdAt, pickupNumber),
-    });
-  }
+  const { isPending } = ordersQuery;
+  const maxPage = ordersQuery.data?.maxPage ?? 1;
+
+  // 當page > maxPage，自動校正回最後一個分頁
+  useEffect(() => {
+    if (isPending || page <= maxPage) return;
+
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+
+        params.set("page", String(maxPage));
+
+        return params;
+      },
+      { replace: true },
+    );
+  }, [isPending, page, maxPage, setSearchParams]);
+
+  useEffect(() => {
+    if (isPending) return;
+
+    // 預先獲取前後頁的數據
+    if (page < maxPage) {
+      queryClient.prefetchQuery({
+        queryKey: ["orders", page + 1, createdAt, pickupNumber],
+        queryFn: () => getPaginatedOrdersApi(page + 1, createdAt, pickupNumber),
+      });
+    }
+
+    if (page > 1) {
+      queryClient.prefetchQuery({
+        queryKey: ["orders", page - 1, createdAt, pickupNumber],
+        queryFn: () => getPaginatedOrdersApi(page - 1, createdAt, pickupNumber),
+      });
+    }
+  }, [isPending, page, maxPage, createdAt, pickupNumber, queryClient]);
 
   return {
-    ordersData,
-    curPage,
-    maxPage,
-    isPending,
-    isError,
-    error: withFallbackRetry(error, refetch),
+    ...ordersQuery,
+    page,
     createdAt,
     pickupNumber,
   };

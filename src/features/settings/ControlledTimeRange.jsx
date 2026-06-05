@@ -30,7 +30,7 @@ const AppendButton = styled(IconButton)`
 function generateTimeOptions() {
   const options = [];
 
-  for (let time = 0; time <= 1440; time += 1) {
+  for (let time = 0; time <= 1440; time += 5) {
     const hour = Math.floor(time / 60);
     const minute = time % 60;
 

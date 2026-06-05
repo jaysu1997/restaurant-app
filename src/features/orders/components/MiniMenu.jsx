@@ -58,7 +58,8 @@ function groupDishesByCategory(dishes) {
 
 function MiniMenu({ onClose }) {
   const [selectedDish, setSelectedDish] = useState(null);
-  const { menus, menusIsLoading, menusIsError, menusError } = useGetMenus();
+  const menusQuery = useGetMenus();
+  const { data: menus = [] } = menusQuery;
   const { inventoryObj } = useGetInventory();
   // 是菜單內容ui
   const isMenuView = !selectedDish;
@@ -70,12 +71,8 @@ function MiniMenu({ onClose }) {
       scrollBar={isMenuView}
     >
       <QueryStatusFallback
-        status={{
-          isLoading: menusIsLoading,
-          isError: menusIsError,
-          hasNoData: menus?.length === 0,
-        }}
-        errorFallback={menusError}
+        queries={[menusQuery]}
+        hasNoData={menus.length === 0}
         noDataFallback={{
           message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
           actionLabel: "新增餐點",

@@ -32,7 +32,7 @@ const SegmentedButton = styled.button`
   }
 `;
 
-function DiningMethodSegmented({ isDisabled }) {
+function DiningMethodSegmented({ disabled }) {
   const { control, setValue } = useFormContext();
 
   return (
@@ -41,13 +41,13 @@ function DiningMethodSegmented({ isDisabled }) {
       control={control}
       render={({ field }) => (
         <StyledSegmented
-          $isDisabled={isDisabled}
-          title={isDisabled ? "非營業時段" : undefined}
+          $isDisabled={disabled}
+          title={disabled ? "非營業時段" : undefined}
         >
           <SegmentedButton
             type="button"
             $isActive={field.value === "內用"}
-            disabled={isDisabled}
+            disabled={disabled}
             onClick={() => {
               field.onChange("內用");
               setValue("pickupTime", null);
@@ -59,7 +59,7 @@ function DiningMethodSegmented({ isDisabled }) {
           <SegmentedButton
             type="button"
             $isActive={field.value === "外帶"}
-            disabled={isDisabled}
+            disabled={disabled}
             onClick={() => {
               field.onChange("外帶");
               setValue("tableNumber", null);

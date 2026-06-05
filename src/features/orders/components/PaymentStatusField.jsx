@@ -1,6 +1,6 @@
 import ControlledSelect from "../../../ui/ControlledSelect";
 
-function PaymentStatusField({ isClosed }) {
+function PaymentStatusField() {
   return (
     <ControlledSelect
       options={[
@@ -9,8 +9,7 @@ function PaymentStatusField({ isClosed }) {
       ]}
       name="paid"
       creatable={false}
-      placeholder={isClosed ? "非營業時間" : "請選擇付款狀態"}
-      disabled={isClosed}
+      placeholder="請選擇付款狀態"
       rules={{ required: true }}
       key="paid"
     />

@@ -1,6 +1,5 @@
 // ok
 import warningIcon from "../assets/warning.svg";
-import Button from "../components/button/Button";
 import FeedbackState from "./FeedbackState";
 
 function ErrorBoundaryFallback({ error, resetErrorBoundary }) {
@@ -12,9 +11,11 @@ function ErrorBoundaryFallback({ error, resetErrorBoundary }) {
       illustration={<img src={warningIcon} alt="程式錯誤警告圖示" />}
       heading="發生錯誤"
       description={error.message}
-    >
-      <Button onClick={() => resetErrorBoundary()}>返回首頁</Button>
-    </FeedbackState>
+      action={{
+        label: "返回首頁",
+        onClick: () => resetErrorBoundary(),
+      }}
+    />
   );
 }
 

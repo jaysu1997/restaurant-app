@@ -59,14 +59,20 @@ export async function getPaginatedOrdersApi(page, createdAt, pickupNumber) {
     page * itemsPerPage - 1,
   );
 
+  const maxPage = Math.ceil(count / itemsPerPage) || 1;
+  // page > maxPage會拿不到數據，不算error，採取自動跳至最後一頁
+  if (page > maxPage) {
+    return {
+      ordersData: [],
+      page,
+      maxPage,
+    };
+  }
+
   handleSupabaseApiError(error);
 
   // 回傳訂單數據、當前分頁、最大分頁數
-  return {
-    ordersData: data,
-    curPage: page,
-    maxPage: Math.ceil(count / itemsPerPage) || 1,
-  };
+  return { ordersData: data, page, maxPage };
 }
 
 // 獲取指定單筆訂單數據

@@ -184,14 +184,8 @@ export function generatePickupTimeOptions(todayOpenInfo) {
 
   const now = new Date();
 
-  // 對齊到下一個 5 分鐘
-  const pickupBaseTime = addMinutes(now, 15);
-
-  const earliestPickupTime = set(pickupBaseTime, {
-    minutes: Math.ceil(pickupBaseTime.getMinutes() / 5) * 5,
-    seconds: 0,
-    milliseconds: 0,
-  });
+  // 最快可選的取餐時間
+  const earliestPickupTime = getEarliestPickupTime(now);
 
   const pickupTimeOptions = [];
 
@@ -217,4 +211,26 @@ export function generatePickupTimeOptions(todayOpenInfo) {
   }
 
   return pickupTimeOptions;
+}
+
+// 是否可以建立訂單(打烊的15分鐘之前都可以)
+export function canCreateOrder(todayOpenInfo, now = new Date()) {
+  const earliestPickupTime = getEarliestPickupTime(now);
+
+  if (!todayOpenInfo || !todayOpenInfo?.isBusinessDay) return false;
+
+  return todayOpenInfo.timeSlots.some(
+    (slot) => earliestPickupTime <= slot.closeTime.value,
+  );
+}
+
+// 找出最快的取餐時間(準備時間至少15分鐘)
+function getEarliestPickupTime(now = new Date()) {
+  const pickupBaseTime = addMinutes(now, 15);
+
+  return set(pickupBaseTime, {
+    minutes: Math.ceil(pickupBaseTime.getMinutes() / 5) * 5,
+    seconds: 0,
+    milliseconds: 0,
+  });
 }

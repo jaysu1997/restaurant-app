@@ -8,6 +8,7 @@ import CategoryButton from "./CategoryButton";
 import ScrollNavButton from "./ScrollNavButton";
 
 const StyledCategoryBar = styled.div`
+  grid-column: 1;
   width: 100%;
   min-width: 0;
   padding: 1rem;

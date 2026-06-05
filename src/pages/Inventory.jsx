@@ -45,8 +45,6 @@ const filtersConfig = [
 ];
 
 function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
-  if (!inventoryData) return inventoryData;
-
   let displayData = inventoryData;
 
   if (nameSearchParams && nameSearchParams !== "") {
@@ -72,13 +70,8 @@ function Inventory() {
   });
   const deleteMutation = useDeleteInventory();
   const [searchParams] = useSearchParams();
-  const {
-    inventory,
-    inventoryObj,
-    inventoryIsLoading,
-    inventoryIsError,
-    inventoryError,
-  } = useGetInventory();
+  const inventoryQuery = useGetInventory();
+  const { data: inventory = [], inventoryObj } = inventoryQuery;
 
   const nameSearchParams = searchParams.get("name");
   const quantitySearchParams = searchParams.get("quantity");
@@ -98,96 +91,99 @@ function Inventory() {
   const onClose = () => setModal({ type: null, inventory: null, menu: null });
 
   return (
-    <PageContainer>
-      <PageHeader title="庫存管理">
-        <div>
-          <Button
-            $iconSize="1.8rem"
-            onClick={() =>
-              setModal({ type: "inventoryForm", inventory: null, menu: null })
-            }
-          >
-            <FilePlus />
-            <span>新增食材</span>
-          </Button>
-        </div>
-        {!inventoryIsLoading && inventory?.length > 0 && (
-          <Filter filtersConfig={filtersConfig} />
-        )}
-      </PageHeader>
-
-      <QueryStatusFallback
-        status={{
-          isLoading: inventoryIsLoading,
-          isError: inventoryIsError,
-          hasNoData: displayInventoryData?.length === 0,
-        }}
-        errorFallback={inventoryError}
-        noDataFallback={{
-          message: emptyStateMessage,
-        }}
-      >
-        <Container>
-          {displayInventoryData?.map((item) => (
-            <DataDisplayCard
-              handleEditButton={() =>
-                setModal({ type: "inventoryForm", inventory: item, menu: null })
+    <>
+      <PageContainer>
+        <PageHeader title="庫存管理">
+          <div>
+            <Button
+              $iconSize="1.8rem"
+              onClick={() =>
+                setModal({ type: "inventoryForm", inventory: null, menu: null })
               }
-              handleDeleteButton={() =>
-                setModal({ type: "confirmDelete", inventory: item, menu: null })
-              }
-              dataFormat={[
-                { head: "名稱", body: item.name },
-                { head: "數量", body: `${item.remainingQuantity || 0} 份` },
-              ]}
-              key={item.id}
-            />
-          ))}
-        </Container>
+            >
+              <FilePlus />
+              <span>新增食材</span>
+            </Button>
+          </div>
+          {inventory.length > 0 && <Filter filtersConfig={filtersConfig} />}
+        </PageHeader>
 
-        {modal.type === "inventoryForm" && (
-          <InventoryForm inventory={modal.inventory} onClose={onClose} />
-        )}
+        <QueryStatusFallback
+          queries={[inventoryQuery]}
+          hasNoData={displayInventoryData.length === 0}
+          noDataFallback={{
+            message: emptyStateMessage,
+          }}
+        >
+          <Container>
+            {displayInventoryData.map((item) => (
+              <DataDisplayCard
+                handleEditButton={() =>
+                  setModal({
+                    type: "inventoryForm",
+                    inventory: item,
+                    menu: null,
+                  })
+                }
+                handleDeleteButton={() =>
+                  setModal({
+                    type: "confirmDelete",
+                    inventory: item,
+                    menu: null,
+                  })
+                }
+                dataFormat={[
+                  { head: "名稱", body: item.name },
+                  { head: "數量", body: `${item.remainingQuantity || 0} 份` },
+                ]}
+                key={item.id}
+              />
+            ))}
+          </Container>
+        </QueryStatusFallback>
+      </PageContainer>
 
-        {modal.type === "confirmDelete" && (
-          <ConfirmDelete
-            onClose={onClose}
-            deleteMutation={deleteMutation}
-            data={modal.inventory}
-            render={() => (
-              <>
-                <p>
-                  請確認是否要刪除
-                  <strong> {modal.inventory.name} </strong>?
-                </p>
-                <p>
-                  各餐點中使用此食材的備料與選項也會同步刪除，此操作無法復原。
-                </p>
+      {modal.type === "inventoryForm" && (
+        <InventoryForm inventory={modal.inventory} onClose={onClose} />
+      )}
 
-                <RelatedMenus
-                  ingredientId={modal.inventory.id}
-                  setModal={setModal}
-                />
-              </>
-            )}
-          />
-        )}
+      {modal.type === "confirmDelete" && (
+        <ConfirmDelete
+          onClose={onClose}
+          deleteMutation={deleteMutation}
+          data={modal.inventory}
+          render={({ setIsDeleteDisabled }) => (
+            <>
+              <p>
+                請確認是否要刪除
+                <strong> {modal.inventory.name} </strong>?
+              </p>
+              <p>此食材若被餐點使用，需先移除相關設定才能刪除。</p>
 
-        {modal.type === "menuForm" && (
-          <MenuForm
-            onClose={() =>
-              setModal((prev) => ({
-                ...prev,
-                type: "confirmDelete",
-                menu: null,
-              }))
-            }
-            menu={modal.menu}
-            inventoryObj={inventoryObj}
-          />
-        )}
-      </QueryStatusFallback>
-    </PageContainer>
+              <RelatedMenus
+                ingredientId={modal.inventory.id}
+                setModal={setModal}
+                setIsDeleteDisabled={setIsDeleteDisabled}
+              />
+            </>
+          )}
+        />
+      )}
+
+      {modal.type === "menuForm" && (
+        <MenuForm
+          onClose={() =>
+            setModal((prev) => ({
+              ...prev,
+              type: "confirmDelete",
+              menu: null,
+            }))
+          }
+          menu={modal.menu}
+          inventoryObj={inventoryObj}
+        />
+      )}
+    </>
   );
 }
 

@@ -3,31 +3,37 @@
 import styled from "styled-components";
 import Price from "../../../components/Price";
 
-const StyledDishCard = styled.li`
+const StyledDishCard = styled.button`
   width: 100%;
   height: 9.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  text-align: left;
   padding: 0.8rem 1.2rem;
   background-color: #fff;
-  border-radius: 6px;
   border: 1px solid #e5e7eb;
-  cursor: pointer;
+  border-radius: 6px;
 
   transition:
     background-color 0.2s,
     box-shadow 0.2s,
     transform 0.2s;
 
-  &:hover {
+  &:not(:disabled):hover {
     background-color: #eff6ff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const Row = styled.div`
+  width: 100%;
+  min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -43,7 +49,7 @@ const DishIngredients = styled(Row)`
   font-weight: 400;
 `;
 
-function DishCard({ dish, onSelect, inventoryObj }) {
+function DishCard({ dish, onSelect, inventoryObj, disabled }) {
   const { name, ingredients, basePrice, discount } = dish;
   // 使用食材清單
   const ingredientsList = ingredients
@@ -53,11 +59,13 @@ function DishCard({ dish, onSelect, inventoryObj }) {
   const finalPrice = `$ ${basePrice - discount}`;
 
   return (
-    <StyledDishCard onClick={() => onSelect(dish)}>
-      <DishName>{name}</DishName>
-      <Price>{finalPrice}</Price>
-      <DishIngredients>{ingredientsList}</DishIngredients>
-    </StyledDishCard>
+    <li>
+      <StyledDishCard onClick={() => onSelect(dish)} disabled={disabled}>
+        <DishName>{name}</DishName>
+        <Price>{finalPrice}</Price>
+        <DishIngredients>{ingredientsList}</DishIngredients>
+      </StyledDishCard>
+    </li>
   );
 }
 

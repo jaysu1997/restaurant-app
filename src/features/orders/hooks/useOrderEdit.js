@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import { formatPickupStr } from "../../../context/settings/settingsHelpers";
 import { useForm } from "react-hook-form";
-import useSettings from "../../../context/settings/useSettings";
 
 function toSelectOption(value, label = value) {
   return value != null ? { label, value } : null;
@@ -37,12 +36,8 @@ function createDraftItems(items) {
 
 // 訂單編輯所需邏輯
 function useOrderEdit(orderData) {
-  const { openStatus } = useSettings();
   const { dispatch } = useOrderDraft();
   const { tableNumber, pickupTime, status, paid, items } = orderData;
-
-  // 是否可以點餐
-  const isClosed = ["closed", "holiday"].includes(openStatus.status);
 
   useEffect(() => {
     // 把訂單數據輸入到useReducer中
@@ -62,7 +57,7 @@ function useOrderEdit(orderData) {
     },
   });
 
-  return { methods, isClosed };
+  return methods;
 }
 
 export default useOrderEdit;

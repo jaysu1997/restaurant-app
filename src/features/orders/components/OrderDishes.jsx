@@ -96,7 +96,7 @@ const ItemMeta = styled.div`
   }
 `;
 
-function OrderDishes({ items, isEdit }) {
+function OrderDishes({ items, isEdit, canModifyItems }) {
   const [isMiniMenuOpen, setIsMiniMenuOpen] = useState(false);
   const { totalPrice } = calculateOrderSummary(items);
 
@@ -123,13 +123,18 @@ function OrderDishes({ items, isEdit }) {
               $ {item.unitPrice * item.servings}
             </Price>
             <span className="itemServings">{item.servings} 份</span>
-            {isEdit && <OrderItemActions item={item} />}
+            {isEdit && (
+              <OrderItemActions item={item} canModifyItems={canModifyItems} />
+            )}
           </OrderDishRow>
         ))}
 
         <OrderSummary>
           {isEdit && (
-            <TextButton onClick={() => setIsMiniMenuOpen(true)}>
+            <TextButton
+              onClick={() => setIsMiniMenuOpen(true)}
+              disabled={!canModifyItems}
+            >
               <Plus />
               新增餐點
             </TextButton>

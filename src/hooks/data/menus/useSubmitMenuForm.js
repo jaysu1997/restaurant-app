@@ -10,7 +10,7 @@ function useSubmitMenuForm() {
     mutationFn: upsertMenuApi,
     onSuccess: () => {
       // 這種用法好像並沒有在文檔中看到，但可以同時將多個queryKey無效
-      queryClient.invalidateQueries(["filterMenuData", "menus"]);
+      queryClient.invalidateQueries(["relatedMenus", "menus"]);
       StyledHotToast({
         type: "success",
         title: "餐點設定成功",
