@@ -1,30 +1,32 @@
+// ok
 import { useRef } from "react";
 import styled from "styled-components";
 import useClickOutside from "../hooks/ui/useClickOutside";
 
 const Wrapper = styled.div`
   position: relative;
+  margin-left: auto;
 `;
 
 const MenuContainer = styled.ul`
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  background: #fff;
+  background-color: #fff;
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid #e3e5e7;
   border-radius: 6px;
   padding: 0.8rem 0;
   display: flex;
   flex-direction: column;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const MenuItem = styled.li`
   width: 16rem;
 
   &:hover {
-    background: #f0f0f0;
+    background-color: #f3f4f6;
   }
 
   button {
@@ -62,7 +64,7 @@ function DropdownMenu({ items, onClose, isOpen, children }) {
                 <MenuItem key={name}>
                   <button
                     onClick={() => {
-                      handleClick?.();
+                      handleClick();
                       onClose();
                     }}
                   >

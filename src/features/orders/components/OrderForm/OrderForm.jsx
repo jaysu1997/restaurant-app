@@ -27,16 +27,12 @@ const Container = styled.div`
   overflow-y: auto;
 `;
 
-const NoteLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-`;
-
-const NoteLabel = styled.label`
-  font-size: 1.8rem;
-  font-weight: 600;
-  letter-spacing: 0.1rem;
+const OrderFormNote = styled(Note)`
+  label {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+  }
 `;
 
 const Footer = styled.footer`
@@ -47,7 +43,7 @@ const Footer = styled.footer`
   align-items: center;
   gap: 2rem;
   box-shadow: inset 0px 1px #e5e7eb;
-  padding: 1.6rem;
+  padding: 2rem;
   background-color: #fff;
   z-index: 2;
 `;
@@ -97,7 +93,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
       isEdit,
     });
 
-    // 庫存食材不足
+    // 庫存食材不足或不存在
     if (!result.isAvailable) {
       StyledHotToast({
         type: "error",
@@ -138,10 +134,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
             />
           ))}
 
-          <NoteLayout>
-            <NoteLabel>餐點備註</NoteLabel>
-            <Note maxLength={25} />
-          </NoteLayout>
+          <OrderFormNote label="餐點備註" maxLength={25} />
         </Container>
 
         <Footer>
@@ -153,7 +146,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
 
           <Button type="submit" $isFullWidth={true} disabled={!isFormComplete}>
             <ShoppingBag />
-            加入購物車
+            {isEdit ? "更新購物車" : "加入購物車"}
           </Button>
         </Footer>
       </Form>

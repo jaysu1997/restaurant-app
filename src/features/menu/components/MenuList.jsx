@@ -5,7 +5,8 @@ import { useSearchParams } from "react-router";
 import OrderForm from "../../orders/components/OrderForm/OrderForm";
 import DishCard from "./DishCard";
 import Modal from "../../../ui/Modal";
-import { getCategories, getSelectedCategory } from "../utils/menuHelpers";
+import { getCategories } from "../utils/menuHelpers";
+import { getValidParam } from "../../../utils/filterHelpers";
 
 const StyledMenuList = styled.ul`
   grid-column: 1;
@@ -23,9 +24,10 @@ function MenuList({ menus, inventoryObj, canPlaceOrder }) {
   // 所有分類
   const categories = getCategories(menus);
   // 篩選要呈現的餐點類別
-  const selectedCategory = getSelectedCategory(
+  const selectedCategory = getValidParam(
     searchParams.get("category"),
     categories,
+    "all",
   );
   // 要呈現的餐點
   const filteredDishes =

@@ -2,10 +2,10 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { getPaginatedOrdersApi } from "../../../services/apiOrders";
-import { parseDateRange } from "../../../utils/orderHelpers";
 import { addDays } from "date-fns";
 import { parsePositiveInt } from "../../../utils/helpers";
 import { useEffect } from "react";
+import { parseDateRange } from "../../../utils/filterHelpers";
 
 // 將日期篩選條件轉換成supabase時間欄位的要求格式
 function getCreatedTime(searchParams) {
@@ -83,12 +83,7 @@ function useGetPaginatedOrders() {
     }
   }, [isPending, page, maxPage, createdAt, pickupNumber, queryClient]);
 
-  return {
-    ...ordersQuery,
-    page,
-    createdAt,
-    pickupNumber,
-  };
+  return ordersQuery;
 }
 
 export default useGetPaginatedOrders;

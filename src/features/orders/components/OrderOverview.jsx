@@ -6,13 +6,16 @@ import {
 import { SquarePen, Trash2 } from "lucide-react";
 import Button from "../../../components/button/Button";
 import { useNavigate } from "react-router";
-import OrderSection from "./OrderSection";
 import { useState } from "react";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
 import ConfirmDelete from "../../../ui/ConfirmDelete";
+import ContentContainer from "../../../ui/ContentContainer";
 
-const StyledOrderOverview = styled(OrderSection)`
-  grid-column: 1;
+const StyledOrderOverview = styled(ContentContainer)`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-weight: 600;
 `;
 
 const Header = styled.header`
@@ -20,7 +23,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  margin-bottom: 3.2rem;
+  margin-bottom: 3.6rem;
 `;
 
 const PickupNumber = styled.div`
@@ -80,7 +83,8 @@ function OrderOverview({ orderData, isEdit, children }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const deleteMutation = useDeleteOrder();
   const navigate = useNavigate();
-  const { createdAt, orderUUID, pickupNumber, status } = orderData;
+  const { pickupNumber, status } = orderData;
+
   const isCompleted = status === "已完成";
 
   return (
@@ -103,16 +107,6 @@ function OrderOverview({ orderData, isEdit, children }) {
             </HeaderActions>
           )}
         </Header>
-
-        <div>
-          <label>建立時間：</label>
-          <span>{formatCreatedTime(createdAt)}</span>
-        </div>
-
-        <div>
-          <label>訂單編號：</label>
-          <span>{orderUUID}</span>
-        </div>
 
         {children}
       </StyledOrderOverview>

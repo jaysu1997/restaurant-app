@@ -1,10 +1,10 @@
 // ok
 import StatsCards from "../features/dashboard/components/StatsCards";
 import StatsCharts from "../features/dashboard/components/StatsCharts";
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../components/PageHeader";
 import styled from "styled-components";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
-import PageContainer from "../ui/PageContainer";
+import QueryStatusFallback from "../components/QueryStatusFallback";
+import PageContainer from "../components/PageContainer";
 import { getDashboardStats } from "../features/dashboard/utils/getDashboardStats";
 import useRecentOrders from "../hooks/data/orders/useRecentOrders";
 import StoreStatusBadge from "../features/dashboard/components/StoreStatusBadge";

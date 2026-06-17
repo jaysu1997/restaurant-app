@@ -32,7 +32,6 @@ const ButtonRow = styled.div`
   margin-top: 2rem;
 `;
 
-// 執行食材獲取的功能或許需要優化，目前這看起來有點醜，未來應該要分割
 function ConfirmDelete({ data, render, deleteMutation, onClose }) {
   const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
   // 刪除功能

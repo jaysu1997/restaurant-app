@@ -2,18 +2,20 @@
 import { useSearchParams } from "react-router";
 import { useState } from "react";
 import MenuForm from "../features/menu-manage/MenuForm.jsx";
-import Button from "../components/button/Button";
-import PageHeader from "../ui/PageHeader.jsx";
+import PageHeader from "../components/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
-import Filter from "../ui/Filter/Filter.jsx";
-import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
+import Filter from "../components/Filter/Filter.jsx";
+import QueryStatusFallback from "../components/QueryStatusFallback.jsx";
 import styled from "styled-components";
 import { FilePlus } from "lucide-react";
-import PageContainer from "../ui/PageContainer.jsx";
+import PageContainer from "../components/PageContainer.jsx";
 import useGetInventory from "../hooks/data/inventory/useGetInventory.js";
 import DataDisplayCard from "../ui/DataDisplayCard.jsx";
 import useDeleteMenu from "../hooks/data/menus/useDeleteMenu.js";
 import ConfirmDelete from "../ui/ConfirmDelete.jsx";
+import HeaderActionButton from "../components/button/HeaderActionButton.jsx";
+import { getCategories } from "../features/menu/utils/menuHelpers.js";
+import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers.js";
 
 const Container = styled.ul`
   display: grid;
@@ -23,17 +25,20 @@ const Container = styled.ul`
 `;
 
 // 這個或許可以移動到filter helper中
-function filterData(menusData, nameSearchParams, categorySearchParams) {
+function filterData(menusData, filterState) {
   let displayData = menusData;
 
+  const nameSearchParams = filterState.name.value;
+  const categorySearchParams = filterState.category.value;
+
   // 關鍵字篩選
-  if (nameSearchParams && nameSearchParams !== "") {
-    displayData = menusData.filter((menu) =>
+  if (nameSearchParams) {
+    displayData = displayData.filter((menu) =>
       menu.name.includes(nameSearchParams),
     );
   }
   // 餐點分類篩選
-  if (categorySearchParams && categorySearchParams !== "all") {
+  if (categorySearchParams) {
     displayData = displayData.filter(
       (menu) => menu.category === categorySearchParams,
     );
@@ -49,22 +54,12 @@ function MenuManage() {
   const menusQuery = useGetMenus();
   const inventoryQuery = useGetInventory();
 
-  const nameSearchParams = searchParams.get("name");
-  const categorySearchParams = searchParams.get("category");
-
   const { data: menus = [] } = menusQuery;
-
-  // 要展示的數據
-  const displayMenusData = filterData(
-    menus,
-    nameSearchParams,
-    categorySearchParams,
-  );
-
-  const emptyStateMessage =
-    nameSearchParams || categorySearchParams
-      ? "查無符合當前篩選條件的餐點數據"
-      : "目前沒有任何餐點數據，請點擊新增餐點開始新建餐點數據。";
+  // 所有分類選項
+  const categoriesOptions = getCategories(menus).map((category) => ({
+    label: category,
+    value: category,
+  }));
 
   const filtersConfig = [
     {
@@ -77,32 +72,36 @@ function MenuManage() {
       title: "餐點分類",
       type: "select",
       queryKey: "category",
-      placeholder: "選擇餐點分類",
-      options: [
-        ...Array.from(new Set(menus?.map((menu) => menu.category))).map(
-          (category) => ({ label: category, value: category }),
-        ),
-      ],
+      options: categoriesOptions,
     },
   ];
+
+  // 從url取得filter並做部分檢查
+  const filterState = parseFilterQuery(searchParams, filtersConfig);
+  // 要展示的數據
+  const displayMenusData = filterData(menus, filterState);
+  // 是否有套用中的篩選條件
+  const hasAppliedFilters = hasActiveFilters(filterState);
+  const emptyStateMessage = hasAppliedFilters
+    ? "查無符合當前篩選條件的餐點數據"
+    : "目前沒有任何餐點數據，請點擊新增餐點開始新建餐點數據。";
 
   return (
     <>
       <PageContainer>
         <PageHeader title="菜單設定">
-          <div>
-            <Button
-              $iconSize="1.8rem"
-              onClick={() => {
-                setModal({ type: "menuForm", data: null });
-                console.log("click");
-              }}
-            >
-              <FilePlus />
-              <span>新增餐點</span>
-            </Button>
-          </div>
-          {menus.length > 0 && <Filter filtersConfig={filtersConfig} />}
+          <HeaderActionButton
+            onClick={() => {
+              setModal({ type: "menuForm", data: null });
+            }}
+          >
+            <FilePlus />
+            <span>新增</span>
+          </HeaderActionButton>
+
+          {menus.length > 0 && (
+            <Filter filtersConfig={filtersConfig} filterState={filterState} />
+          )}
         </PageHeader>
 
         <QueryStatusFallback

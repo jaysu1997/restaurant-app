@@ -1,9 +1,9 @@
 import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../components/PageHeader";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
-import PageContainer from "../ui/PageContainer";
+import QueryStatusFallback from "../components/QueryStatusFallback";
+import PageContainer from "../components/PageContainer";
 import useSettings from "../context/settings/useSettings";
 import { ChevronLeft } from "lucide-react";
 import OrderDetailPage from "../features/orders/components/OrderDetailPage";
@@ -19,39 +19,28 @@ const BackButton = styled.button`
   align-items: center;
   gap: 0.6rem;
   width: fit-content;
-  padding: 0.4rem 0.6rem;
-  margin-bottom: 0.8rem;
-  border-radius: 6px;
-  color: #475569;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  color: #64748b;
   font-size: 1.4rem;
   font-weight: 500;
-
-  transition:
-    background-color 0.2s,
-    color 0.2s;
+  transition: color 0.2s ease;
 
   svg {
-    flex-shrink: 0;
     width: 1.8rem;
     height: 1.8rem;
   }
 
   &:hover {
-    background-color: #f8fafc;
-    color: #0f172a;
+    color: #2563eb;
   }
 `;
 
 const OrderDetail = styled.div`
-  display: grid;
-  grid-template-columns: minmax(0px, 1fr) minmax(0px, 26rem);
+  display: flex;
+  flex-direction: column;
   gap: 2.8rem;
-  padding: 0 0 3.6rem;
   width: 100%;
-
-  @media (max-width: 50em) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 function Order() {

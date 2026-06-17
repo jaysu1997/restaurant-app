@@ -1,11 +1,11 @@
-import PageHeader from "../ui/PageHeader.jsx";
+import PageHeader from "../components/PageHeader.jsx";
 import styled from "styled-components";
 import RegularOpenHours from "../features/settings/RegularOpenHours.jsx";
 import SpecialOpenHours from "../features/settings/SpecialOpenHours.jsx";
 import DineInTableSettings from "../features/settings/DineInTableSettings.jsx";
 import StoreInfo from "../features/settings/StoreInfo.jsx";
-import QueryStatusFallback from "../ui/QueryStatusFallback.jsx";
-import PageContainer from "../ui/PageContainer.jsx";
+import QueryStatusFallback from "../components/QueryStatusFallback.jsx";
+import PageContainer from "../components/PageContainer.jsx";
 import useSettings from "../context/settings/useSettings.js";
 
 const SettingsLayout = styled.div`

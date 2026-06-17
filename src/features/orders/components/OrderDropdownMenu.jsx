@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -7,7 +8,7 @@ import {
   formatPickupNumber,
 } from "../../../utils/orderHelpers";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
-import DropdownMenu from "../../../ui/DropdownMenu";
+import DropdownMenu from "../../../components/DropdownMenu";
 import { Ellipsis, Trash2, SquarePen, Eye } from "lucide-react";
 
 const ToggleButton = styled.button`
@@ -15,12 +16,12 @@ const ToggleButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  height: 2.8rem;
-  width: 2.8rem;
+  height: 3rem;
+  width: 3rem;
   background-color: ${({ $isActive }) =>
     $isActive ? "#e5e7eb" : "transparent"};
 
-  & svg {
+  svg {
     width: 2rem;
     height: 2rem;
   }
@@ -84,7 +85,10 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
           render={() => (
             <p>
               請確認是否要刪除
-              <strong> {`取餐號碼${formatPickupNumber(pickupNumber)}`} </strong>
+              <strong>
+                {" "}
+                {`取餐號碼 ${formatPickupNumber(pickupNumber)}`}{" "}
+              </strong>
               ({formatCreatedTime(createdAt)})?
             </p>
           )}

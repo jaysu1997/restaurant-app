@@ -2,7 +2,7 @@
 import { FormProvider } from "react-hook-form";
 import { buildOrderData } from "../../../utils/orderHelpers";
 import useUpdateOrder from "../../../hooks/data/orders/useUpdateOrder";
-import QueryStatusFallback from "../../../ui/QueryStatusFallback";
+import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import StyledHotToast from "../../../ui/StyledHotToast";
 import { Navigate, useNavigate } from "react-router";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
@@ -11,13 +11,13 @@ import OrderOverview from "./OrderOverview";
 import OrderNote from "./OrderNote";
 import OrderDishes from "./OrderDishes";
 import useOrderEdit from "../hooks/useOrderEdit";
-import OrderMeta from "./OrderMeta";
 import styled from "styled-components";
 import SubmitButton from "../../../components/button/SubmitButton";
 import Button from "../../../components/button/Button";
 import StoreClosedNotice from "./StoreClosedNotice";
 import useSettings from "../../../context/settings/useSettings";
 import { canCreateOrder } from "../../../context/settings/settingsHelpers";
+import OrderInfo from "./OrderInfo";
 
 const Footer = styled.footer`
   grid-column: 1;
@@ -73,14 +73,17 @@ function OrderEditPage({ orderData }) {
 
       <FormProvider {...methods}>
         <OrderOverview orderData={orderData} isEdit={true}>
+          <OrderInfo
+            orderData={orderData}
+            isEdit={true}
+            canModifyItems={canPlaceOrder}
+          />
           <OrderDishes
             items={items}
             isEdit={true}
             canModifyItems={canPlaceOrder}
           />
         </OrderOverview>
-
-        <OrderMeta canPlaceOrder={canPlaceOrder} />
 
         <OrderNote isEdit={true} note={orderData.note} />
 

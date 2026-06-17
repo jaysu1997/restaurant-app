@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../components/PageHeader";
 import UserProfileSetting from "../features/account/UserProfileSetting";
 import UpdatePassword from "../features/account/UpdatePassword";
 import useUser from "../hooks/data/auth/useUser";
 import UpdateUserAvatar from "../features/account/UpdateUserAvatar";
-import PageContainer from "../ui/PageContainer";
+import PageContainer from "../components/PageContainer";
 
 const AccountContainer = styled.div`
   display: flex;

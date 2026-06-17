@@ -1,7 +1,7 @@
+// ok
 import styled from "styled-components";
 import { FormProvider, useForm } from "react-hook-form";
-import OrderInfoField from "./OrderInfoField";
-import EmptyShoppingCart from "./EmptyShoppingCart";
+import EmptyCart from "./EmptyCart";
 import useCreateOrder from "../../../hooks/data/orders/useCreateOrder";
 import { useState } from "react";
 import useScrollLock from "../../../hooks/ui/useScrollLock";
@@ -16,6 +16,10 @@ import {
   calculateOrderSummary,
 } from "../../../utils/orderHelpers";
 import ModalCloseButton from "../../../components/ModalCloseButton";
+import DiningMethodSegmented from "../../../ui/DiningMethodSegmented";
+import DiningInfoField from "../../orders/components/DiningInfoField";
+import PaymentStatusField from "../../orders/components/PaymentStatusField";
+import Note from "../../../components/Note";
 
 const StyledShoppingCart = styled.aside`
   position: fixed;
@@ -81,6 +85,19 @@ const CartList = styled.ul`
   flex-direction: column;
 `;
 
+const OrderInfoField = styled.div`
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 1.4rem;
+    display: flex;
+    gap: 0.2rem;
+    font-weight: 600;
+  }
+`;
+
 const Footer = styled.footer`
   border-top: 1px solid #dcdcdc;
   background-color: #fff;
@@ -92,9 +109,8 @@ const Footer = styled.footer`
 const OrderSummary = styled.div`
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
-  row-gap: 1rem;
-  column-gap: 0px;
+  align-items: center;
+  gap: 1rem;
   font-weight: 500;
   padding: 0.8rem 0 2.4rem 0;
 `;
@@ -152,35 +168,40 @@ function ShoppingCart({ canPlaceOrder }) {
           <ModalCloseButton onClose={onClose} />
         </Header>
 
-        {hasItems ? (
-          <CartContent>
-            <CartList>
-              {items.map((item) => (
-                <CartItem item={item} key={item.uniqueId} />
-              ))}
-            </CartList>
-
-            <OrderInfoField canPlaceOrder={canPlaceOrder} />
-          </CartContent>
+        {!hasItems ? (
+          <EmptyCart />
         ) : (
-          <EmptyShoppingCart />
-        )}
+          <>
+            <CartContent>
+              <CartList>
+                {items.map((item) => (
+                  <CartItem item={item} key={item.uniqueId} />
+                ))}
+              </CartList>
 
-        {hasItems && (
-          <Footer>
-            <OrderSummary>
-              <span>總計：</span>
-              <Price>{`$ ${totalPrice}`}</Price>
-            </OrderSummary>
+              <OrderInfoField>
+                <DiningMethodSegmented disabled={!canPlaceOrder} />
+                <DiningInfoField disabled={!canPlaceOrder} />
+                <PaymentStatusField />
+                <Note label="訂單備註" />
+              </OrderInfoField>
+            </CartContent>
 
-            <SubmitButton
-              label="提交"
-              fullWidth={true}
-              isProcessing={isProcessing}
-              disabled={!hasItems || isProcessing || !isValid}
-              onClick={handleSubmit(onSubmit, onError)}
-            />
-          </Footer>
+            <Footer>
+              <OrderSummary>
+                <span>總計：</span>
+                <Price>{`$ ${totalPrice}`}</Price>
+              </OrderSummary>
+
+              <SubmitButton
+                label="提交"
+                fullWidth={true}
+                isProcessing={isProcessing}
+                disabled={!hasItems || isProcessing || !isValid}
+                onClick={handleSubmit(onSubmit, onError)}
+              />
+            </Footer>
+          </>
         )}
       </StyledShoppingCart>
 

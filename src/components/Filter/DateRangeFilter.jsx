@@ -1,7 +1,7 @@
-import DateRangePicker from "../DateRangePicker";
+import DateRangePicker from "../../ui/DateRangePicker";
 
-function DateRangeFilter({ filterValue, handleValueChange, ...filters }) {
-  const { queryKey } = filters;
+function DateRangeFilter({ filterValue, handleValueChange, filter }) {
+  const { queryKey } = filter;
 
   return (
     <DateRangePicker

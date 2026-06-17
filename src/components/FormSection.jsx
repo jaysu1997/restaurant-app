@@ -5,7 +5,7 @@ import ControlledSelect from "../ui/ControlledSelect";
 import ControlledSwitch from "../ui/ControlledSwitch";
 import { useFormContext } from "react-hook-form";
 import FormInput from "../ui/FormInput";
-import ReqiuredMark from "../ui/RequiredMark";
+import RequiredMark from "./RequiredMark";
 import IconButton from "./button/IconButton";
 
 // 測試看看(應該要改個名稱，例如UpsertFormSection之類的)
@@ -88,7 +88,7 @@ function FormSection({
       {heading && (
         <Heading as={heading.as}>
           {heading.text}
-          {heading.required && <ReqiuredMark />}
+          {heading.required && <RequiredMark />}
           {heading.action && (
             <IconButton $variant="ghost" onClick={heading.action}>
               <Trash2 />

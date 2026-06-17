@@ -1,3 +1,4 @@
+// ok
 // 表格的狀態標籤ui
 import styled, { css } from "styled-components";
 
@@ -27,7 +28,7 @@ const Tag = styled.span`
   padding: 0.4rem 1.2rem;
   font-size: 1.4rem;
   font-weight: 700;
-  border-radius: 6px;
+  border-radius: 999px;
   width: 6.6rem;
   height: 3rem;
 

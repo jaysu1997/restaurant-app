@@ -1,8 +1,9 @@
+// ok
 import styled from "styled-components";
-import PageHeader from "../ui/PageHeader";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import PageHeader from "../components/PageHeader";
+import QueryStatusFallback from "../components/QueryStatusFallback";
 import useGetMenus from "../hooks/data/menus/useGetMenus";
-import PageContainer from "../ui/PageContainer";
+import PageContainer from "../components/PageContainer";
 import useSettings from "../context/settings/useSettings";
 import MenuList from "../features/menu/components/MenuList";
 import ShoppingCart from "../features/menu/components/ShoppingCart";
@@ -25,13 +26,12 @@ const MenuContainer = styled.div`
 
 function Menu() {
   const menusQuery = useGetMenus();
-  const { data: menus } = menusQuery;
-
-  const { todayOpenInfo, settingsQuery } = useSettings();
-  const canPlaceOrder = canCreateOrder(todayOpenInfo);
-
+  const { data: menus = [] } = menusQuery;
   // 取得庫存數據
   const inventoryQuery = useOrderInventory();
+  // 當前是否可以建立訂單
+  const { todayOpenInfo, settingsQuery } = useSettings();
+  const canPlaceOrder = canCreateOrder(todayOpenInfo);
 
   return (
     <PageContainer>
@@ -39,7 +39,7 @@ function Menu() {
 
       <QueryStatusFallback
         queries={[menusQuery, settingsQuery, inventoryQuery]}
-        hasNoData={menus?.length === 0}
+        hasNoData={menus.length === 0}
         noDataFallback={{
           message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點",
           actionLabel: "新增餐點",

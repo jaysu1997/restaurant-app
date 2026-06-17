@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { AlertTriangle } from "lucide-react";
 
 const StyledNotice = styled.div`
-  height: fit-content;
+  height: 4.5rem;
   display: flex;
-  align-items: flex-start;
-  gap: 1.2rem;
+  align-items: center;
+  gap: 1rem;
   padding: 1.2rem 1.4rem;
   border-radius: 6px;
   border-left: 6px solid #f59e0b;
@@ -14,21 +14,18 @@ const StyledNotice = styled.div`
   font-size: 1.4rem;
   font-weight: 500;
   margin-bottom: -0.8rem;
-`;
 
-const IconWrapper = styled.div`
-  flex-shrink: 0;
-  margin-top: 0.2rem;
+  svg {
+    height: 1.8rem;
+    width: 1.8rem;
+  }
 `;
 
 function StoreClosedNotice({ children }) {
   return (
     <StyledNotice>
-      <IconWrapper>
-        <AlertTriangle size={18} />
-      </IconWrapper>
-
-      <div>{children}</div>
+      <AlertTriangle />
+      {children}
     </StyledNotice>
   );
 }

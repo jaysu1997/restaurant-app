@@ -1,19 +1,17 @@
 import styled from "styled-components";
 import { useLocation, useSearchParams } from "react-router";
 import { useRef, useState } from "react";
-import OptionFilter from "./OptionFilter";
-import SearchFilter from "./SearchFilter";
-import DateRangeFilter from "./DateRangeFilter";
 import useClickOutside from "../../hooks/ui/useClickOutside";
 import useScrollLock from "../../hooks/ui/useScrollLock";
 import useMediaQuery from "../../hooks/ui/useMediaQuery";
-import { buildSearchParams, parseFilterQuery } from "./filterHelpers";
-import Button from "../../components/button/Button";
+import Button from "../button/Button";
 import FilterIcon from "../../ui/FilterIcon";
-import FormFieldLayout from "../FormFieldLayout";
-import StyledOverlay from "../../components/StyledOverlay";
+import StyledOverlay from "../StyledOverlay";
 import { X } from "lucide-react";
-import IconButton from "../../components/button/IconButton";
+import IconButton from "../button/IconButton";
+import HeaderActionButton from "../button/HeaderActionButton";
+import { buildSearchParams, hasActiveFilters } from "../../utils/filterHelpers";
+import FilterRenderer from "./FilterRenderer";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -38,7 +36,6 @@ const FilterContainer = styled.div`
   display: ${({ $isFilterOpen }) => ($isFilterOpen ? "flex" : "none")};
   flex-direction: column;
   background-color: #fff;
-  padding: 2rem;
   font-size: 1.4rem;
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -47,11 +44,10 @@ const FilterContainer = styled.div`
   @media (max-width: 30em) {
     display: flex;
     position: fixed;
-    top: 0;
+    top: 25%;
     z-index: 150;
     width: 100%;
-    height: 100%;
-    overflow: auto;
+    height: 75%;
     border-radius: 0;
     border: none;
     transform: ${({ $isFilterOpen }) =>
@@ -69,59 +65,51 @@ const FilterHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  padding: 2rem;
 
   h3 {
     font-weight: 600;
   }
 `;
 
-const ActionButtonGroup = styled.footer`
+const Content = styled.div`
   display: flex;
-  gap: 2rem;
-  margin-top: 1rem;
-
-  @media (max-width: 30em) {
-    margin-top: auto;
-  }
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 1rem 2rem;
+  flex: 1;
 `;
 
-const FILTER_COMPONENTS = {
-  select: OptionFilter,
-  datePicker: DateRangeFilter,
-  textInput: SearchFilter,
-  numberInput: SearchFilter,
-};
+const Footer = styled.footer`
+  display: flex;
+  gap: 2rem;
+  border-top: 1px solid #f3f4f6;
+  padding: 2rem;
+  background-color: #fff;
+`;
 
-function Filter({ filtersConfig }) {
+function Filter({ filtersConfig, filterState }) {
   const containerRef = useRef(null);
   const { pathname } = useLocation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  // 已套用的 filters (來自 URL)
-  const appliedFilters = parseFilterQuery(searchParams, filtersConfig);
   // 使用者正在編輯的 filters
-  const [draftFilters, setDraftFilters] = useState(appliedFilters);
+  const [draftFilters, setDraftFilters] = useState(filterState);
 
   const onClose = () => setIsFilterOpen(false);
   const isMatched = useMediaQuery(30, onClose);
   useClickOutside(containerRef, isFilterOpen, onClose);
   useScrollLock(isMatched && isFilterOpen);
 
-  // 是否有套用 filter (用 URL 判斷)
-  const hasActiveFilters = Object.values(appliedFilters).some(
-    (filter) => !!filter.value,
-  );
-
-  // clear button disabled
-  const isClearDisabled = !Object.values(draftFilters).some(
-    (filter) => !!filter.value,
-  );
+  // 是否有套用filter
+  const activeFilters = hasActiveFilters(filterState);
+  // 是否禁用clear button
+  const isClearDisabled = !hasActiveFilters(draftFilters);
 
   function handleToggle() {
     setIsFilterOpen((prev) => {
       if (!prev) {
-        setDraftFilters(appliedFilters);
+        setDraftFilters(filterState);
       }
 
       return !prev;
@@ -157,37 +145,42 @@ function Filter({ filtersConfig }) {
 
   return (
     <StyledFilter ref={containerRef}>
-      <Button $variant="outline" $iconSize="1.8rem" onClick={handleToggle}>
-        <FilterIcon checked={hasActiveFilters} />
-        <span>篩選數據</span>
-      </Button>
+      <HeaderActionButton $variant="outline" onClick={handleToggle}>
+        <FilterIcon checked={activeFilters} />
+        <span>篩選</span>
+      </HeaderActionButton>
 
-      <Overlay $isFilterOpen={isFilterOpen} inert={!isFilterOpen} />
+      <Overlay
+        $isFilterOpen={isFilterOpen}
+        inert={!isFilterOpen}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        }}
+      />
 
       <FilterContainer $isFilterOpen={isFilterOpen} inert={!isFilterOpen}>
         <FilterHeader>
-          <h3>篩選數據</h3>
+          <h3>篩選</h3>
+
           <IconButton $variant="ghost" onClick={onClose}>
             <X />
           </IconButton>
         </FilterHeader>
 
-        {isFilterOpen &&
-          filtersConfig.map((filter) => {
-            const FilterComponent = FILTER_COMPONENTS[filter.type];
+        <Content>
+          {filtersConfig.map((filter) => (
+            <FilterRenderer
+              filter={filter}
+              filterValue={draftFilters[filter.queryKey].value}
+              handleValueChange={handleValueChange}
+              key={filter.queryKey}
+            />
+          ))}
+        </Content>
 
-            return (
-              <FormFieldLayout label={filter.title} key={filter.queryKey}>
-                <FilterComponent
-                  {...filter}
-                  filterValue={draftFilters[filter.queryKey].value}
-                  handleValueChange={handleValueChange}
-                />
-              </FormFieldLayout>
-            );
-          })}
-
-        <ActionButtonGroup>
+        <Footer>
           <Button
             $variant="outline"
             $isFullWidth
@@ -200,7 +193,7 @@ function Filter({ filtersConfig }) {
           <Button $isFullWidth onClick={confirmFilters}>
             確認
           </Button>
-        </ActionButtonGroup>
+        </Footer>
       </FilterContainer>
     </StyledFilter>
   );

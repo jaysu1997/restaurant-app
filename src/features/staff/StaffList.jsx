@@ -31,7 +31,7 @@ const Item = styled.li`
 
   &:hover {
     background-color: ${({ $isUpdating }) =>
-      $isUpdating ? "transparent" : "#f0f9ff"};
+      $isUpdating ? "#e5e7eb" : "#f9fafb"};
   }
 
   ${({ $isUpdating }) =>

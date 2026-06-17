@@ -4,7 +4,7 @@ import { useState } from "react";
 import Modal from "../../../ui/Modal";
 import useGetInventory from "../../../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../../../hooks/data/menus/useGetMenus";
-import QueryStatusFallback from "../../../ui/QueryStatusFallback";
+import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import DishCard from "../../menu/components/DishCard";
 import OrderForm from "./OrderForm/OrderForm";
 
@@ -101,7 +101,7 @@ function MiniMenu({ onClose }) {
           <OrderForm
             orderDish={selectedDish}
             isEdit={false}
-            onClose={() => setSelectedDish(null)}
+            onClose={onClose}
           />
         )}
       </QueryStatusFallback>

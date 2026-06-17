@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { useSearchParams } from "react-router";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getCategories, getSelectedCategory } from "../utils/menuHelpers";
+import { getCategories } from "../utils/menuHelpers";
 import CategoryButton from "./CategoryButton";
 import ScrollNavButton from "./ScrollNavButton";
+import { getValidParam } from "../../../utils/filterHelpers";
 
 const StyledCategoryBar = styled.div`
   grid-column: 1;
@@ -44,9 +45,10 @@ function CategoryBar({ menus }) {
   // 所有分類
   const categories = getCategories(menus);
   // 篩選要呈現的餐點類別
-  const selectedCategory = getSelectedCategory(
+  const selectedCategory = getValidParam(
     searchParams.get("category"),
     categories,
+    "all",
   );
 
   function handleFilter(type) {
@@ -80,10 +82,13 @@ function CategoryBar({ menus }) {
       setShowPrev(!isAtStart);
       setShowNext(!isAtEnd);
     }
+
     update();
+
     const observer = new ResizeObserver(update);
     observer.observe(el);
     el.addEventListener("scroll", update);
+
     return () => {
       observer.disconnect();
       el.removeEventListener("scroll", update);

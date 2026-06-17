@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import useLogout from "../hooks/data/auth/useLogout";
 import useUser from "../hooks/data/auth/useUser";
-import DropdownMenu from "../ui/DropdownMenu";
+import DropdownMenu from "../components/DropdownMenu";
 import UserAvatar from "../ui/UserAvatar";
 import { UserRound, LogOut, ChevronRight } from "lucide-react";
 import { AVATAR_URL } from "../utils/constants";
@@ -82,11 +82,13 @@ function User() {
       name: "用戶設定",
       icon: UserRound,
       handleClick: () => navigate("/account"),
+      hidden: false,
     },
     {
       name: "登出",
       icon: LogOut,
       handleClick: () => logout(),
+      hidden: false,
     },
   ];
 

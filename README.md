@@ -7,7 +7,6 @@ restaurant-app
 ├─ package.json
 ├─ public
 │  └─ logo.webp
-├─ README.md
 ├─ src
 │  ├─ App.jsx
 │  ├─ assets
@@ -21,6 +20,7 @@ restaurant-app
 │  │  ├─ AppLayout.jsx
 │  │  ├─ button
 │  │  │  ├─ Button.jsx
+│  │  │  ├─ HeaderActionButton.jsx
 │  │  │  ├─ IconButton.jsx
 │  │  │  ├─ SubmitButton.jsx
 │  │  │  └─ TextButton.jsx
@@ -33,9 +33,12 @@ restaurant-app
 │  │  ├─ Navbar.jsx
 │  │  ├─ NavItem.jsx
 │  │  ├─ Note.jsx
+│  │  ├─ PageContainer.jsx
+│  │  ├─ PageHeader.jsx
 │  │  ├─ PasswordInput.jsx
 │  │  ├─ Price.jsx
 │  │  ├─ ProtectedRoute.jsx
+│  │  ├─ QueryStatusFallback.jsx
 │  │  ├─ ScrollToTop.jsx
 │  │  ├─ StyledOverlay.jsx
 │  │  └─ User.jsx
@@ -69,6 +72,7 @@ restaurant-app
 │  │  │  └─ utils
 │  │  │     └─ getDashboardStats.js
 │  │  ├─ inventory
+│  │  │  ├─ components
 │  │  │  ├─ InventoryForm.jsx
 │  │  │  └─ RelatedMenus.jsx
 │  │  ├─ menu
@@ -78,7 +82,7 @@ restaurant-app
 │  │  │  │  ├─ CategoryBar.jsx
 │  │  │  │  ├─ CategoryButton.jsx
 │  │  │  │  ├─ DishCard.jsx
-│  │  │  │  ├─ EmptyShoppingCart.jsx
+│  │  │  │  ├─ EmptyCart.jsx
 │  │  │  │  ├─ MenuList.jsx
 │  │  │  │  ├─ OrderInfoField.jsx
 │  │  │  │  ├─ ScrollNavButton.jsx
@@ -94,7 +98,7 @@ restaurant-app
 │  │  │     └─ menuTransform.js
 │  │  ├─ orders
 │  │  │  ├─ components
-│  │  │  │  ├─ DiningField .jsx
+│  │  │  │  ├─ DiningInfoField.jsx
 │  │  │  │  ├─ MiniMenu.jsx
 │  │  │  │  ├─ OrderDetailPage.jsx
 │  │  │  │  ├─ OrderDishes.jsx
@@ -104,13 +108,17 @@ restaurant-app
 │  │  │  │  │  ├─ CustomizationField.jsx
 │  │  │  │  │  ├─ Option.jsx
 │  │  │  │  │  └─ OrderForm.jsx
+│  │  │  │  ├─ OrderMeta.jsx
 │  │  │  │  ├─ OrderNote.jsx
-│  │  │  │  ├─ OrderOperation.jsx
 │  │  │  │  ├─ OrderOverview.jsx
 │  │  │  │  ├─ OrderSection.jsx
 │  │  │  │  ├─ OrdersTable.jsx
-│  │  │  │  └─ ServingsControl.jsx
+│  │  │  │  ├─ OrderStatusField.jsx
+│  │  │  │  ├─ PaymentStatusField.jsx
+│  │  │  │  ├─ ServingsControl.jsx
+│  │  │  │  └─ StoreClosedNotice.jsx
 │  │  │  └─ hooks
+│  │  │     ├─ useOrderEdit.js
 │  │  │     └─ useOrderInventory.js
 │  │  ├─ settings
 │  │  │  ├─ ControlledTimeRange.jsx
@@ -209,10 +217,7 @@ restaurant-app
 │  │  ├─ LoadingBars.jsx
 │  │  ├─ Modal.jsx
 │  │  ├─ OrderItemActions.jsx
-│  │  ├─ PageContainer.jsx
-│  │  ├─ PageHeader.jsx
 │  │  ├─ Pagination.jsx
-│  │  ├─ QueryStatusFallback.jsx
 │  │  ├─ RequiredMark.jsx
 │  │  ├─ SectionContainer.jsx
 │  │  ├─ StyledDayRangePicker.jsx

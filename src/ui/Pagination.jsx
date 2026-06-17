@@ -1,3 +1,4 @@
+// ok
 import styled from "styled-components";
 import { useSearchParams } from "react-router";
 import { useRef } from "react";
@@ -10,7 +11,7 @@ const StyledPagination = styled.footer`
   justify-content: center;
   align-items: center;
   gap: 1.6rem;
-  padding: 3.6rem 0.5rem;
+  padding: 3.6rem 0;
   font-size: 1.4rem;
 `;
 
@@ -30,21 +31,15 @@ const PaginationControls = styled.div`
   }
 
   button {
-    display: inline-flex;
     color: #333;
 
     &:not(:disabled):hover {
       color: #e63946;
     }
-
-    &:disabled {
-      color: inherit;
-      opacity: 0.5;
-    }
   }
 `;
 
-const JumpSection = styled.div`
+const JumpToPage = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -77,12 +72,12 @@ const JumpSection = styled.div`
   }
 `;
 
-// 時間篩選有問題
 function Pagination({ curPage, maxPage }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef(null);
 
-  function handlePagination(value) {
+  // 轉跳分頁功能
+  function goToPage(value) {
     searchParams.set("page", value);
     setSearchParams(searchParams);
   }
@@ -90,9 +85,18 @@ function Pagination({ curPage, maxPage }) {
   function handleSubmit() {
     const inputValue = parsePositiveInt(inputRef?.current?.value, {
       min: 1,
-      fallback: 1,
+      max: maxPage,
+      fallback: null,
     });
-    handlePagination(Math.min(inputValue, maxPage));
+
+    // 輸入值非正整數
+    if (inputValue === null) return;
+    // 輸入值為當前分頁
+    inputRef.current.value = "";
+    if (inputValue === curPage) return;
+
+    // 輸入值合格
+    goToPage(inputValue);
     inputRef.current.value = "";
     inputRef.current?.blur();
   }
@@ -109,7 +113,7 @@ function Pagination({ curPage, maxPage }) {
       <PaginationControls>
         <button
           type="button"
-          onClick={() => handlePagination(curPage - 1)}
+          onClick={() => goToPage(curPage - 1)}
           disabled={curPage === 1}
         >
           <ChevronLeft strokeWidth={3} />
@@ -119,21 +123,24 @@ function Pagination({ curPage, maxPage }) {
         <span>共 {maxPage} 頁</span>
         <button
           type="button"
-          onClick={() => handlePagination(curPage + 1)}
+          onClick={() => goToPage(curPage + 1)}
           disabled={curPage === maxPage}
         >
           <ChevronRight strokeWidth={3} />
         </button>
       </PaginationControls>
 
-      <JumpSection>
+      <JumpToPage>
         <span>前往</span>
-        <input type="text" ref={inputRef} onKeyDown={handleKeyDown} />
+        <input
+          type="text"
+          ref={inputRef}
+          onKeyDown={handleKeyDown}
+          inputMode="numeric"
+        />
         <span>頁</span>
-        <button onClick={handleSubmit} role="submit">
-          GO
-        </button>
-      </JumpSection>
+        <button onClick={handleSubmit}>GO</button>
+      </JumpToPage>
     </StyledPagination>
   );
 }

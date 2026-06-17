@@ -1,6 +1,6 @@
 // ok
 import styled from "styled-components";
-import Tag from "../../../ui/Tag";
+import Tag from "../../../components/Tag";
 import { formatPickupNumber } from "../../../utils/orderHelpers";
 import { useNavigate } from "react-router";
 import { ArrowRight } from "lucide-react";
@@ -26,7 +26,7 @@ const Order = styled.li`
   font-weight: 500;
 
   &:hover {
-    background-color: #f0f9ff;
+    background-color: #f9fafb;
   }
 
   &:last-child {

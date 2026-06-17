@@ -4,7 +4,7 @@ import {
   calculateOrderSummary,
 } from "../../../utils/orderHelpers";
 import styled from "styled-components";
-import OrderItemActions from "../../../ui/OrderItemActions";
+import OrderItemActions from "./OrderItemActions";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import Price from "../../../components/Price";
@@ -22,7 +22,7 @@ const OrderDishRow = styled.li`
   gap: 1.2rem;
   padding: 1rem;
 
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   border-bottom: 1px solid #dcdcdc;
   min-height: 8rem;
 

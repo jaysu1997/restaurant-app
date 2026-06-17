@@ -3,18 +3,19 @@ import styled from "styled-components";
 import { useState } from "react";
 import InventoryForm from "../features/inventory/InventoryForm";
 import { useSearchParams } from "react-router";
-import PageHeader from "../ui/PageHeader";
+import PageHeader from "../components/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
-import Filter from "../ui/Filter/Filter";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
-import Button from "../components/button/Button";
+import Filter from "../components/Filter/Filter";
+import QueryStatusFallback from "../components/QueryStatusFallback";
 import { FilePlus } from "lucide-react";
-import PageContainer from "../ui/PageContainer";
+import PageContainer from "../components/PageContainer";
 import DataDisplayCard from "../ui/DataDisplayCard";
 import RelatedMenus from "../features/inventory/RelatedMenus";
 import useDeleteInventory from "../hooks/data/inventory/useDeleteInventory";
 import ConfirmDelete from "../ui/ConfirmDelete";
 import MenuForm from "../features/menu-manage/MenuForm";
+import HeaderActionButton from "../components/button/HeaderActionButton";
+import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers";
 
 const Container = styled.ul`
   display: grid;
@@ -23,39 +24,22 @@ const Container = styled.ul`
   gap: 2.8rem;
 `;
 
-const filtersConfig = [
-  {
-    title: "食材名稱",
-    type: "textInput",
-    queryKey: "name",
-    placeholder: "搜尋食材名稱",
-  },
-  {
-    title: "庫存數量",
-    type: "select",
-    queryKey: "quantity",
-    placeholder: "選擇庫存剩餘量",
-    options: [
-      { label: "已耗盡", value: "0" },
-      { label: "10 以下", value: "10" },
-      { label: "50 以下", value: "50" },
-      { label: "100 以下", value: "100" },
-    ],
-  },
-];
-
-function filterData(inventoryData, nameSearchParams, quantityKeyWord) {
+function filterData(inventoryData, filterState) {
   let displayData = inventoryData;
 
-  if (nameSearchParams && nameSearchParams !== "") {
+  const nameSearchParams = filterState.name.value;
+  const quantitySearchParams = filterState.quantity.value;
+
+  if (nameSearchParams) {
     displayData = inventoryData.filter((inventory) =>
       inventory.name.includes(nameSearchParams),
     );
   }
 
-  if (quantityKeyWord && quantityKeyWord !== "all") {
+  if (quantitySearchParams) {
     displayData = displayData.filter(
-      (inventory) => inventory.remainingQuantity <= Number(quantityKeyWord),
+      (inventory) =>
+        inventory.remainingQuantity <= Number(quantitySearchParams),
     );
   }
 
@@ -73,20 +57,36 @@ function Inventory() {
   const inventoryQuery = useGetInventory();
   const { data: inventory = [], inventoryObj } = inventoryQuery;
 
-  const nameSearchParams = searchParams.get("name");
-  const quantitySearchParams = searchParams.get("quantity");
+  const filtersConfig = [
+    {
+      title: "食材名稱",
+      type: "textInput",
+      queryKey: "name",
+      placeholder: "搜尋食材名稱",
+    },
+    {
+      title: "庫存數量",
+      type: "select",
+      queryKey: "quantity",
+      options: [
+        { label: "已耗盡", value: "0" },
+        { label: "10 以下", value: "10" },
+        { label: "50 以下", value: "50" },
+        { label: "100 以下", value: "100" },
+      ],
+    },
+  ];
+
+  const filterState = parseFilterQuery(searchParams, filtersConfig);
 
   // 要展示的數據
-  const displayInventoryData = filterData(
-    inventory,
-    nameSearchParams,
-    quantitySearchParams,
-  );
+  const displayInventoryData = filterData(inventory, filterState);
 
-  const emptyStateMessage =
-    nameSearchParams || quantitySearchParams
-      ? "查無符合當前篩選條件的食材數據"
-      : "目前沒有任何食材數據，請點擊新增食材開始新建食材數據。";
+  const hasAppliedFilters = hasActiveFilters(filterState);
+
+  const emptyStateMessage = hasAppliedFilters
+    ? "查無符合當前篩選條件的食材數據"
+    : "目前沒有任何食材數據，請點擊新增食材開始新建食材數據。";
 
   const onClose = () => setModal({ type: null, inventory: null, menu: null });
 
@@ -94,18 +94,18 @@ function Inventory() {
     <>
       <PageContainer>
         <PageHeader title="庫存管理">
-          <div>
-            <Button
-              $iconSize="1.8rem"
-              onClick={() =>
-                setModal({ type: "inventoryForm", inventory: null, menu: null })
-              }
-            >
-              <FilePlus />
-              <span>新增食材</span>
-            </Button>
-          </div>
-          {inventory.length > 0 && <Filter filtersConfig={filtersConfig} />}
+          <HeaderActionButton
+            onClick={() =>
+              setModal({ type: "inventoryForm", inventory: null, menu: null })
+            }
+          >
+            <FilePlus />
+            <span>新增</span>
+          </HeaderActionButton>
+
+          {inventory.length > 0 && (
+            <Filter filtersConfig={filtersConfig} filterState={filterState} />
+          )}
         </PageHeader>
 
         <QueryStatusFallback

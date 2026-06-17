@@ -70,31 +70,6 @@ export function buildOrderData(items, data) {
   return orderData;
 }
 
-// 解析日期篩選條件(searchParams)
-// 這個應該要換位置
-export function parseDateRange(searchParams) {
-  const createdTimeParams = searchParams.get("createdAt");
-
-  // 預防無value和錯誤的searchParams url
-  if (!createdTimeParams) return null;
-
-  const parts = createdTimeParams.split("_");
-
-  if (parts.length !== 2) return null;
-
-  const [fromStr, toStr] = parts;
-  const fromDate = parseISO(fromStr);
-  const toDate = parseISO(toStr);
-
-  if (!isValid(fromDate) || !isValid(toDate)) return null;
-
-  // 回傳日期物件
-  return {
-    from: fromDate,
-    to: toDate,
-  };
-}
-
 // 根據uniqueId尋找餐點在items中的索引值
 // 這裡的功能應該不算全域helpers
 export function findItemIndexById(items, uniqueId) {
@@ -170,7 +145,7 @@ function buildUsage({
     if (ingredient === null) continue;
 
     const exist = Object.hasOwn(inventoryObj, ingredient);
-
+    // 食材不存在(在編輯歷史訂單的時候，正在被編輯的餐點使用的是過時數據，若是該餐點使用的食材數據後來被修改過，可能會出現此error。這時候解法就是開啟minimenu重新訂購餐點)
     if (!exist) {
       return {
         isAvailable: false,

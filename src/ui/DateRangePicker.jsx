@@ -11,6 +11,7 @@ const StyledDateRangePicker = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1.2rem;
 `;
 
 const DateField = styled.div`
@@ -21,13 +22,14 @@ const DateField = styled.div`
   gap: 0.2rem;
   padding: 0.2rem 0.8rem;
   width: 100%;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+
   border: 1px solid
     ${({ $isPickerOpen }) => ($isPickerOpen ? "#2684ff" : "#ddd")};
   box-shadow: ${({ $isPickerOpen }) =>
     $isPickerOpen ? "0 0 0 1px #2684ff" : "none"};
-  border-radius: 4px;
-  background-color: #fff;
-  cursor: pointer;
 
   input {
     font-size: 1.4rem;
@@ -48,35 +50,22 @@ const DateField = styled.div`
 `;
 
 const Panel = styled.div`
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #fafafa;
   border-radius: 8px;
-
-  max-height: ${({ $isPickerOpen }) => ($isPickerOpen ? "100rem" : "0px")};
-  opacity: ${({ $isPickerOpen }) => ($isPickerOpen ? "1" : "0")};
-
-  transition:
-    max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease;
+  padding: ${({ $popover }) => ($popover ? "1.6rem" : "1rem 0")};
 
   ${({ $popover }) =>
     $popover &&
     css`
       position: absolute;
-      top: 5rem;
+      top: 4.5rem;
       z-index: 10;
-      margin: 0;
       box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
       border: 1px solid #e3e5e7;
     `}
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  background-color: #fafafa;
-  margin-top: ${({ $popover }) => ($popover ? "0" : "1.2rem")};
-  padding: ${({ $popover }) => ($popover ? "1.6rem" : "1rem 0")};
 `;
 
 const Footer = styled.footer`
@@ -93,6 +82,13 @@ const ActionButton = styled.button`
   font-weight: 500;
 `;
 
+function formatRangeDate(selectedDate) {
+  return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
+    selectedDate.to,
+    "yyyy/MM/dd",
+  )}`;
+}
+
 function DateRangePicker({ display = "inline", onClear, ...rest }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [dayCellSize, setDayCellSize] = useState(null);
@@ -102,13 +98,6 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
   const isPopover = display === "popover";
 
   useClickOutside(wrapperRef, isPickerOpen && isPopover, onClose);
-
-  function formatRangeDate(selectedDate) {
-    return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
-      selectedDate.to,
-      "yyyy/MM/dd",
-    )}`;
-  }
 
   function handleClick() {
     if (!isPickerOpen) {
@@ -131,12 +120,12 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
         <CalendarRange />
       </DateField>
 
-      <Panel
-        $isPickerOpen={isPickerOpen}
-        inert={!isPickerOpen}
-        $popover={isPopover}
-      >
-        <Content $popover={isPopover}>
+      {isPickerOpen && (
+        <Panel
+          $isPickerOpen={isPickerOpen}
+          inert={!isPickerOpen}
+          $popover={isPopover}
+        >
           <StyledDayRangePicker $dayCellSize={dayCellSize} {...rest} />
           {isPopover && (
             <Footer>
@@ -153,8 +142,8 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
               </ActionButton>
             </Footer>
           )}
-        </Content>
-      </Panel>
+        </Panel>
+      )}
     </StyledDateRangePicker>
   );
 }

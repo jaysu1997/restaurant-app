@@ -31,8 +31,8 @@ const OptionButton = styled.button`
   }
 `;
 
-function OptionFilter({ filterValue, handleValueChange, ...filters }) {
-  const { queryKey, options } = filters;
+function OptionFilter({ filterValue, handleValueChange, filter }) {
+  const { queryKey, options } = filter;
 
   return (
     <Container>

@@ -1,8 +1,9 @@
+// ok
 import styled from "styled-components";
 import ServingsControl from "../../orders/components/ServingsControl";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import { summarizeMealChoices } from "../../../utils/orderHelpers";
-import OrderItemActions from "../../../ui/OrderItemActions";
+import OrderItemActions from "../../orders/components/OrderItemActions";
 import Price from "../../../components/Price";
 
 const StyledCartItem = styled.li`
@@ -12,12 +13,13 @@ const StyledCartItem = styled.li`
   justify-content: space-between;
   gap: 1rem;
   padding: 1.2rem 0;
-  font-size: 1.4rem;
   min-height: 12rem;
   width: 100%;
+  font-size: 1.4rem;
 `;
 
-const OrderName = styled.h4`
+const OrderName = styled.h5`
+  font-size: 1.4rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -29,7 +31,7 @@ const SelectedOptions = styled.p`
 `;
 
 const DishNote = styled(SelectedOptions)`
-  color: #707070;
+  color: #4b5563;
 `;
 
 const Row = styled.div`
@@ -64,7 +66,7 @@ function CartItem({ item }) {
         <SelectedOptions>{customizeChoices}</SelectedOptions>
       )}
 
-      {item.note && <DishNote>&quot;{item.note}&quot;</DishNote>}
+      {item.note && <DishNote>&quot; {item.note} &quot;</DishNote>}
 
       <Row>
         <Price>$ {itemTotalPrice}</Price>

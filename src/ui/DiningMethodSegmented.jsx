@@ -1,5 +1,6 @@
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
+import FormFieldLayout from "./FormFieldLayout";
 
 const StyledSegmented = styled.div`
   height: 3.8rem;
@@ -40,34 +41,36 @@ function DiningMethodSegmented({ disabled }) {
       name="diningMethod"
       control={control}
       render={({ field }) => (
-        <StyledSegmented
-          $isDisabled={disabled}
-          title={disabled ? "非營業時段" : undefined}
-        >
-          <SegmentedButton
-            type="button"
-            $isActive={field.value === "內用"}
-            disabled={disabled}
-            onClick={() => {
-              field.onChange("內用");
-              setValue("pickupTime", null);
-            }}
+        <FormFieldLayout label="用餐方式">
+          <StyledSegmented
+            $isDisabled={disabled}
+            title={disabled ? "非營業時段" : undefined}
           >
-            內用
-          </SegmentedButton>
+            <SegmentedButton
+              type="button"
+              $isActive={field.value === "內用"}
+              disabled={disabled}
+              onClick={() => {
+                field.onChange("內用");
+                setValue("pickupTime", null);
+              }}
+            >
+              內用
+            </SegmentedButton>
 
-          <SegmentedButton
-            type="button"
-            $isActive={field.value === "外帶"}
-            disabled={disabled}
-            onClick={() => {
-              field.onChange("外帶");
-              setValue("tableNumber", null);
-            }}
-          >
-            外帶
-          </SegmentedButton>
-        </StyledSegmented>
+            <SegmentedButton
+              type="button"
+              $isActive={field.value === "外帶"}
+              disabled={disabled}
+              onClick={() => {
+                field.onChange("外帶");
+                setValue("tableNumber", null);
+              }}
+            >
+              外帶
+            </SegmentedButton>
+          </StyledSegmented>
+        </FormFieldLayout>
       )}
     />
   );

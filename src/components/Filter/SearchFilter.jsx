@@ -1,7 +1,7 @@
 import FormInput from "../../ui/FormInput";
 
-function SearchFilter({ filterValue, handleValueChange, ...filters }) {
-  const { queryKey, placeholder } = filters;
+function SearchFilter({ filterValue, handleValueChange, filter }) {
+  const { queryKey, placeholder } = filter;
 
   return (
     <FormInput

@@ -1,4 +1,4 @@
-// 用來處理點擊外部關閉Modal或popup的功能
+// 用來處理點擊外部關閉popup的功能
 import { useEffect } from "react";
 
 function useClickOutside(ref, isOpen, onClose) {

@@ -1,9 +1,9 @@
 // ok
-import LoadingBars from "./LoadingBars";
+import LoadingBars from "../ui/LoadingBars";
 import errorSvg from "../assets/error.svg";
 import emptyStateSvg from "../assets/empty-state.svg";
 import { useNavigate } from "react-router";
-import FeedbackState from "../components/FeedbackState";
+import FeedbackState from "./FeedbackState";
 
 // 根據數據獲取狀態和結果回傳不同的ui
 function QueryStatusFallback({ queries, hasNoData, noDataFallback, children }) {

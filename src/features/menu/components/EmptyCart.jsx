@@ -1,11 +1,11 @@
+// ok
 // 空購物車ui
 import styled from "styled-components";
 import emptyCartSvg from "../../../assets/empty-cart.svg";
 
-const StyledEmptyShoppingCart = styled.div`
-  max-height: 58.7rem;
+const StyledEmptyCart = styled.div`
   display: flex;
-  flex: 1 0;
+  flex: 1 1 auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -15,17 +15,16 @@ const StyledEmptyShoppingCart = styled.div`
   img {
     height: 12.6rem;
     width: auto;
-    display: block;
   }
 `;
 
-function EmptyShoppingCart() {
+function EmptyCart() {
   return (
-    <StyledEmptyShoppingCart>
+    <StyledEmptyCart>
       <img src={emptyCartSvg} alt="購物車是空的" />
       <p>開始選擇美味的餐點吧！</p>
-    </StyledEmptyShoppingCart>
+    </StyledEmptyCart>
   );
 }
 
-export default EmptyShoppingCart;
+export default EmptyCart;

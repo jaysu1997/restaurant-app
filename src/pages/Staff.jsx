@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import useGetStaff from "../hooks/data/staff/useGetStaff";
-import PageHeader from "../ui/PageHeader";
-import QueryStatusFallback from "../ui/QueryStatusFallback";
+import PageHeader from "../components/PageHeader";
+import QueryStatusFallback from "../components/QueryStatusFallback";
 import Signup from "../features/staff/SignUp";
 import StaffList from "../features/staff/StaffList";
 import { UserRoundPlus } from "lucide-react";
-import Button from "../components/button/Button";
 import { useState } from "react";
 import Modal from "../ui/Modal";
-import PageContainer from "../ui/PageContainer";
+import PageContainer from "../components/PageContainer";
 import ConfirmDelete from "../ui/ConfirmDelete";
 import useDeleteStaff from "../hooks/data/staff/useDeleteStaff";
+import HeaderActionButton from "../components/button/HeaderActionButton";
 
 const StaffLayout = styled.div`
   display: flex;
@@ -31,10 +31,10 @@ function Staff() {
     <>
       <PageContainer $maxWidth="60rem">
         <PageHeader title="員工管理">
-          <Button $iconSize="1.8rem" onClick={() => setIsSignupOpen(true)}>
+          <HeaderActionButton onClick={() => setIsSignupOpen(true)}>
             <UserRoundPlus />
             <span>註冊</span>
-          </Button>
+          </HeaderActionButton>
         </PageHeader>
 
         <StaffLayout>
