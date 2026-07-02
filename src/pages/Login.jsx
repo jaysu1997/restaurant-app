@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 import useLogin from "../hooks/data/auth/useLogin";
 import useUser from "../hooks/data/auth/useUser";
 import PasswordInput from "../components/PasswordInput";
-import FormInput from "../ui/FormInput";
-import FormFieldLayout from "../ui/FormFieldLayout";
+import FormInput from "../components/FormInput";
+import FormFieldLayout from "../components/FormFieldLayout";
 import { isValidEmail } from "../utils/validation";
 import SubmitButton from "../components/button/SubmitButton";
 
@@ -77,15 +77,13 @@ function Login() {
     register,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: "admin@test.com",
       password: "admin@test.com",
     },
   });
-
-  const isProcessing = isLoggingIn || isSubmitting;
 
   // 如果已經有登入帳號就自動轉跳到首頁
   useEffect(() => {
@@ -147,8 +145,8 @@ function Login() {
           <SubmitButton
             label="登入"
             fullWidth={true}
-            isProcessing={isProcessing}
-            disabled={isProcessing}
+            isProcessing={isLoggingIn}
+            disabled={isLoggingIn}
           />
         </LoginForm>
       </StyledLogin>

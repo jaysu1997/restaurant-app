@@ -1,4 +1,4 @@
-import FormFieldLayout from "../../ui/FormFieldLayout";
+import FormFieldLayout from "../FormFieldLayout";
 import DateRangeFilter from "./DateRangeFilter";
 import OptionFilter from "./OptionFilter";
 import SearchFilter from "./SearchFilter";

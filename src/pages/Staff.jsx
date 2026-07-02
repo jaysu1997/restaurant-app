@@ -6,9 +6,9 @@ import Signup from "../features/staff/SignUp";
 import StaffList from "../features/staff/StaffList";
 import { UserRoundPlus } from "lucide-react";
 import { useState } from "react";
-import Modal from "../ui/Modal";
+import Modal from "../components/modal/Modal";
 import PageContainer from "../components/PageContainer";
-import ConfirmDelete from "../ui/ConfirmDelete";
+import ConfirmDelete from "../components/ConfirmDelete";
 import useDeleteStaff from "../hooks/data/staff/useDeleteStaff";
 import HeaderActionButton from "../components/button/HeaderActionButton";
 
@@ -48,7 +48,7 @@ function Staff() {
       </PageContainer>
 
       {isSignupOpen && (
-        <Modal modalHeader="建立員工帳號" onClose={onClose} maxWidth={56}>
+        <Modal title="建立員工帳號" onClose={onClose} maxWidth={36}>
           <Signup onClose={onClose} />
         </Modal>
       )}

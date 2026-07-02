@@ -6,15 +6,16 @@ const StyledCategoryItem = styled.button`
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  scroll-snap-align: start;
   white-space: nowrap;
+  overflow: hidden;
   width: calc((100% - 4rem) / 4.5);
   height: 3.6rem;
   border-radius: 6px;
   font-weight: 500;
+  scroll-snap-align: start;
+
   color: ${({ $isActive }) => ($isActive ? "#262626" : "#e5e5e5")};
   background-color: ${({ $isActive }) => ($isActive ? "#fff" : "#525252")};
-
   transition:
     background-color 0.2s,
     color 0.2s;

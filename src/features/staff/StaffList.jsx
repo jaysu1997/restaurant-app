@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import SectionContainer from "../../ui/SectionContainer";
+import SectionContainer from "../../components/SectionContainer";
 import { UsersRound } from "lucide-react";
 import UserAvatar from "../../ui/UserAvatar";
 import { UserRoundX } from "lucide-react";
@@ -13,6 +13,7 @@ import IconButton from "../../components/button/IconButton";
 const List = styled.ul`
   display: flex;
   flex-direction: column;
+  font-size: 1.4rem;
 `;
 
 const Item = styled.li`
@@ -103,7 +104,7 @@ function StaffList({ staffList, onRequestDelete }) {
 
   return (
     <>
-      <SectionContainer title="人員列表" icon={<UsersRound />}>
+      <SectionContainer header={{ title: "人員列表", icon: <UsersRound /> }}>
         <List>
           {sortedList.map((item) => {
             const { avatarFile, name, role } = item.user_metadata;

@@ -9,7 +9,7 @@ import {
   Text,
   CartesianGrid,
 } from "recharts";
-import SectionContainer from "../../../ui/SectionContainer";
+import SectionContainer from "../../../components/SectionContainer";
 import EmptyState from "./EmptyState";
 
 // 設定Y軸刻度文字的寬度和換行
@@ -34,13 +34,13 @@ function CustomYAxisTick({ x, y, payload }) {
 function TopDishesChart({ data }) {
   if (data.length === 0)
     return (
-      <SectionContainer title="今日熱銷排名">
+      <SectionContainer header={{ title: "今日熱銷排名" }}>
         <EmptyState />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer title="今日熱銷排名">
+    <SectionContainer header={{ title: "今日熱銷排名" }}>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart
           layout="vertical"

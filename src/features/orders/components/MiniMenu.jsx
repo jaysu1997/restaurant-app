@@ -1,20 +1,20 @@
 // 訂單編輯頁面的迷你菜單
 import styled from "styled-components";
 import { useState } from "react";
-import Modal from "../../../ui/Modal";
+import Modal from "../../../components/modal/Modal";
 import useGetInventory from "../../../hooks/data/inventory/useGetInventory";
 import useGetMenus from "../../../hooks/data/menus/useGetMenus";
 import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import DishCard from "../../menu/components/DishCard";
 import OrderForm from "./OrderForm/OrderForm";
+import {
+  ModalContainer,
+  ModalContent,
+} from "../../../components/modal/ModalBody";
 
-const StyledMiniMenu = styled.div`
-  display: flex;
-  flex-direction: column;
+const StyledMiniMenu = styled(ModalContent)`
   gap: 3.2rem;
-  padding: 2rem;
   background-color: #f9fafb;
-  width: min(36rem, 95dvw);
 `;
 
 const StyledCategorySection = styled.li`
@@ -24,6 +24,10 @@ const StyledCategorySection = styled.li`
 `;
 
 const CategoryName = styled.h3`
+  height: 4rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   background-color: #262626;
   color: #fafafa;
   font-size: 1.8rem;
@@ -65,11 +69,7 @@ function MiniMenu({ onClose }) {
   const isMenuView = !selectedDish;
 
   return (
-    <Modal
-      onClose={onClose}
-      modalHeader={isMenuView ? "菜單" : selectedDish.name}
-      scrollBar={isMenuView}
-    >
+    <Modal onClose={onClose} title={isMenuView ? "菜單" : selectedDish.name}>
       <QueryStatusFallback
         queries={[menusQuery]}
         hasNoData={menus.length === 0}
@@ -80,23 +80,25 @@ function MiniMenu({ onClose }) {
         }}
       >
         {isMenuView ? (
-          <StyledMiniMenu>
-            {groupDishesByCategory(menus)?.map((menu) => (
-              <StyledCategorySection key={menu.category}>
-                <CategoryName>{menu.category}</CategoryName>
-                <DishList>
-                  {menu.dishes.map((dish) => (
-                    <DishCard
-                      dish={dish}
-                      onSelect={setSelectedDish}
-                      inventoryObj={inventoryObj}
-                      key={dish.id}
-                    />
-                  ))}
-                </DishList>
-              </StyledCategorySection>
-            ))}
-          </StyledMiniMenu>
+          <ModalContainer>
+            <StyledMiniMenu>
+              {groupDishesByCategory(menus)?.map((menu) => (
+                <StyledCategorySection key={menu.category}>
+                  <CategoryName>{menu.category}</CategoryName>
+                  <DishList>
+                    {menu.dishes.map((dish) => (
+                      <DishCard
+                        dish={dish}
+                        onSelect={setSelectedDish}
+                        inventoryObj={inventoryObj}
+                        key={dish.id}
+                      />
+                    ))}
+                  </DishList>
+                </StyledCategorySection>
+              ))}
+            </StyledMiniMenu>
+          </ModalContainer>
         ) : (
           <OrderForm
             orderDish={selectedDish}

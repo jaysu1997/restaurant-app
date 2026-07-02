@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import ContentContainer from "../../../ui/ContentContainer";
 import Note from "../../../components/Note";
+import SectionContainer from "../../../components/SectionContainer";
 
-const StyledOrderNote = styled(ContentContainer)`
+const StyledOrderNote = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -22,10 +22,12 @@ const StyledOrderNote = styled(ContentContainer)`
 
 function OrderNote({ note, isEdit }) {
   return (
-    <StyledOrderNote>
-      <label>訂單備註</label>
-      {!isEdit ? <span>{note || "無"}</span> : <Note />}
-    </StyledOrderNote>
+    <SectionContainer>
+      <StyledOrderNote>
+        <label>訂單備註</label>
+        {!isEdit ? <span>{note || "無"}</span> : <Note />}
+      </StyledOrderNote>
+    </SectionContainer>
   );
 }
 

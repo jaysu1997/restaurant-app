@@ -8,12 +8,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import SectionContainer from "../../../ui/SectionContainer";
+import SectionContainer from "../../../components/SectionContainer";
 
 // 近期營收趨勢圖表
 function RevenueTrendChart({ data }) {
   return (
-    <SectionContainer title="一週營收變化">
+    <SectionContainer header={{ title: "一週營收變化" }}>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
           data={data}

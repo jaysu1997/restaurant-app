@@ -16,84 +16,101 @@ const OrderDishesList = styled.ul`
   flex-direction: column;
 `;
 
+const DishHeader = styled.div`
+  display: grid;
+  grid-template-columns: 1.2fr repeat(2, minmax(5.4rem, 0.4fr)) 5.6rem;
+  gap: 0.6rem;
+  padding: 1rem;
+  background-color: #e7e5e4;
+  border-radius: 6px;
+  font-weight: 500;
+
+  @media (max-width: 35em) {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    span:not(:first-child) {
+      display: none;
+    }
+  }
+`;
+
 const OrderDishRow = styled.li`
   display: grid;
   grid-template-columns: 1.2fr repeat(2, minmax(5.4rem, 0.4fr)) 5.6rem;
-  gap: 1.2rem;
-  padding: 1rem;
+  grid-template-areas:
+    "name price servings actions"
+    "meta price servings actions";
 
+  gap: 0.6rem;
+  padding: 1rem;
+  font-weight: 600;
   overflow-wrap: anywhere;
   border-bottom: 1px solid #dcdcdc;
-  min-height: 8rem;
-
-  &:first-child {
-    background-color: #e7e5e4;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 1.4rem;
-    border: none;
-    min-height: 0;
-  }
-
-  .itemName {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-weight: 600;
-  }
+  min-height: 10rem;
 
   @media (max-width: 35em) {
-    grid-template-columns: minmax(0px, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
 
-    &:first-child > span:not(:first-child) {
-      display: none;
-    }
-
-    .itemServings {
-      grid-row: 3;
-      justify-self: end;
-    }
-
-    .itemPrice {
-      grid-row: 3;
-      white-space: nowrap;
-    }
+    grid-template-areas:
+      "name actions"
+      "meta meta"
+      "price servings";
   }
 `;
 
-const OrderSummary = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 1.8rem;
-  font-weight: 500;
-  padding: 1rem 0;
-  gap: 1rem;
-  flex-wrap: wrap;
-
-  & > div {
-    display: inline-flex;
-    gap: 1rem;
-    align-items: center;
-    margin-left: auto;
-  }
+const ItemName = styled.span`
+  grid-area: name;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
-const ItemMeta = styled.div`
-  grid-row: 2;
+const ItemDetails = styled.div`
+  grid-area: meta;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  font-weight: 400;
   font-size: 1.4rem;
+  font-weight: 400;
 
   .itemNote {
     color: #6b7280;
   }
+`;
+
+const ItemPrice = styled(Price)`
+  grid-area: price;
+  font-weight: 600;
+`;
+
+const ItemServings = styled.span`
+  grid-area: servings;
 
   @media (max-width: 35em) {
-    grid-column: 1 / -1;
+    justify-self: end;
   }
+`;
+
+const ItemActions = styled.div`
+  grid-area: actions;
+`;
+
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 1.8rem;
+  padding: 1rem 0;
+`;
+
+const Summary = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 600;
+  margin-left: auto;
 `;
 
 function OrderDishes({ items, isEdit, canModifyItems }) {
@@ -102,34 +119,38 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
 
   return (
     <>
-      <OrderDishesList>
-        <OrderDishRow>
-          <span>訂購餐點</span>
-          <span>金額</span>
-          <span>數量</span>
-        </OrderDishRow>
+      <DishHeader>
+        <span>訂購餐點</span>
+        <span>金額</span>
+        <span>數量</span>
+      </DishHeader>
 
+      <OrderDishesList>
         {items.map((item) => (
           <OrderDishRow key={item.uniqueId}>
-            <span className="itemName">{item.name}</span>
-            <ItemMeta>
+            <ItemName>{item.name}</ItemName>
+
+            <ItemDetails>
               {item.customizations.length !== 0 && (
                 <p>{summarizeMealChoices(item)}</p>
               )}
-              {item.note && <p className="itemNote">{`" ${item.note} "`}</p>}
-            </ItemMeta>
 
-            <Price className="itemPrice">
-              $ {item.unitPrice * item.servings}
-            </Price>
-            <span className="itemServings">{item.servings} 份</span>
+              {item.note && <p className="itemNote">{`"${item.note}"`}</p>}
+            </ItemDetails>
+
+            <ItemPrice>$ {item.unitPrice * item.servings}</ItemPrice>
+
+            <ItemServings>{item.servings} 份</ItemServings>
+
             {isEdit && (
-              <OrderItemActions item={item} canModifyItems={canModifyItems} />
+              <ItemActions>
+                <OrderItemActions item={item} canModifyItems={canModifyItems} />
+              </ItemActions>
             )}
           </OrderDishRow>
         ))}
 
-        <OrderSummary>
+        <Footer>
           {isEdit && (
             <TextButton
               onClick={() => setIsMiniMenuOpen(true)}
@@ -139,11 +160,12 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
               新增餐點
             </TextButton>
           )}
-          <div>
+
+          <Summary>
             <span>總計：</span>
             <Price>$ {totalPrice}</Price>
-          </div>
-        </OrderSummary>
+          </Summary>
+        </Footer>
       </OrderDishesList>
 
       {isMiniMenuOpen && <MiniMenu onClose={() => setIsMiniMenuOpen(false)} />}

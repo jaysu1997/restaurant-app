@@ -2,13 +2,13 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import StyledHotToast from "../../ui/StyledHotToast";
-import SectionContainer from "../../ui/SectionContainer";
-import FormInput from "../../ui/FormInput";
+import SectionContainer from "../../components/SectionContainer";
+import FormInput from "../../components/FormInput";
 import { Store } from "lucide-react";
-import FormFieldLayout from "../../ui/FormFieldLayout";
+import FormFieldLayout from "../../components/FormFieldLayout";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
-const Form = styled.form`
+const Fields = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -49,17 +49,17 @@ function StoreInfo({ settings }) {
 
   return (
     <SectionContainer
-      title="店鋪資訊設定"
-      icon={<Store />}
-      description="設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。"
-      form={{
-        formId: "storeInfo",
-        handleReset: () => reset(),
-        isDirty,
-        isProcessing: isSubmittingSettings,
+      header={{
+        title: "店鋪資訊設定",
+        icon: <Store />,
+        description: "設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。",
       }}
+      onSubmit={handleSubmit(onSubmit, onError)}
+      onReset={() => reset()}
+      isDirty={isDirty}
+      isProcessing={isSubmittingSettings}
     >
-      <Form id="storeInfo" onSubmit={handleSubmit(onSubmit, onError)}>
+      <Fields>
         <FormFieldLayout
           id="phone"
           label="連絡電話"
@@ -109,7 +109,7 @@ function StoreInfo({ settings }) {
             })}
           />
         </FormFieldLayout>
-      </Form>
+      </Fields>
     </SectionContainer>
   );
 }

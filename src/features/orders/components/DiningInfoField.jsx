@@ -2,7 +2,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { generatePickupTimeOptions } from "../../../context/settings/settingsHelpers";
 import useSettings from "../../../context/settings/useSettings";
 import ControlledSelect from "../../../ui/ControlledSelect";
-import FormFieldLayout from "../../../ui/FormFieldLayout";
+import FormFieldLayout from "../../../components/FormFieldLayout";
 
 function ensureOptionExists(options, option = null) {
   if (!option) return options;
@@ -37,10 +37,12 @@ function DiningInfoField({ disabled }) {
   return (
     <FormFieldLayout
       label={isTakeout ? "取餐時間" : "內用桌號"}
+      id={isTakeout ? "pickupTime" : "tableNumber"}
       isRequired={true}
       error={isTakeout ? errors?.pickupTime : errors?.tableNumber}
     >
       <ControlledSelect
+        inputId={isTakeout ? "pickupTime" : "tableNumber"}
         options={isTakeout ? pickupTimeOptions : dineInTableOptions}
         name={isTakeout ? "pickupTime" : "tableNumber"}
         creatable={false}

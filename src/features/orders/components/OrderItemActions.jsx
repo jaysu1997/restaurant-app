@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { SquarePen, Trash2 } from "lucide-react";
 import { useState } from "react";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
-import Modal from "../../../ui/Modal";
+import Modal from "../../../components/modal/Modal";
 import OrderForm from "./OrderForm/OrderForm";
 import IconButton from "../../../components/button/IconButton";
 
@@ -45,11 +45,7 @@ function OrderItemActions({ item, canModifyItems }) {
       </StyledItemActions>
 
       {editingItem && (
-        <Modal
-          onClose={onClose}
-          modalHeader={editingItem.name}
-          scrollBar={false}
-        >
+        <Modal onClose={onClose} title={editingItem.name}>
           <OrderForm orderDish={editingItem} onClose={onClose} isEdit={true} />
         </Modal>
       )}

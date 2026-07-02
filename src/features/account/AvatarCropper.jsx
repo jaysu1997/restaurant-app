@@ -1,42 +1,20 @@
 import { useState } from "react";
-import Modal from "../../ui/Modal";
+import Modal from "../../components/modal/Modal";
 import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
 import useUpdateUserAvatar from "../../hooks/data/auth/useUpdateUserAvatar";
 import StyledHotToast from "../../ui/StyledHotToast";
-import Button from "../../components/button/Button";
-import SubmitButton from "../../components/button/SubmitButton";
+import FormActions from "../../components/FormActions";
+import { ModalContainer, ModalFooter } from "../../components/modal/ModalBody";
 
-const StyledAvatarCropper = styled.section`
-  width: min(56rem, 95dvw);
-  max-height: calc(90dvh - 5.6rem);
-  display: flex;
-  flex-direction: column;
-`;
-
-const CropperContainer = styled.div`
-  width: 100%;
-  height: 28rem;
+const StyledAvatarCropper = styled(ModalContainer)`
+  height: 36rem;
 `;
 
 const CropperWrapper = styled.div`
   position: relative;
-  height: 100%;
-`;
-
-const CropperFooter = styled.footer`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.6rem;
-  padding: 2rem;
-  height: 7.9rem;
-`;
-
-const ButtonGroup = styled.div`
-  display: inline-flex;
-  gap: 1.2rem;
+  flex: 1;
 `;
 
 // 使用canvas將裁切區域轉成Blob Url
@@ -116,47 +94,33 @@ function AvatarCropper({ userData, imgUrl, onClose }) {
   }
 
   return (
-    <Modal
-      modalHeader="選擇頭像範圍"
-      onClose={onClose}
-      scrollBar={false}
-      maxWidth={56}
-    >
+    <Modal title="選擇頭像範圍" onClose={onClose} maxWidth={56}>
       <StyledAvatarCropper>
-        <CropperContainer>
-          <CropperWrapper>
-            <Cropper
-              image={imgUrl}
-              crop={cropPosition}
-              zoom={zoom}
-              aspect={1}
-              cropShape="round"
-              showGrid={false}
-              onCropChange={setCropPosition}
-              onCropComplete={onCropComplete}
-              onZoomChange={setZoom}
-              zoomWithScroll={false}
-            />
-          </CropperWrapper>
-        </CropperContainer>
+        <CropperWrapper>
+          <Cropper
+            image={imgUrl}
+            crop={cropPosition}
+            zoom={zoom}
+            aspect={1}
+            cropShape="round"
+            showGrid={false}
+            onCropChange={setCropPosition}
+            onCropComplete={onCropComplete}
+            onZoomChange={setZoom}
+            zoomWithScroll={false}
+          />
+        </CropperWrapper>
 
-        <CropperFooter>
+        <ModalFooter>
           <Slider min={1} max={3} zoom={zoom} setZoom={setZoom} />
-          <ButtonGroup>
-            <SubmitButton
-              isProcessing={isUpdatingUserAvatar}
-              disabled={isUpdatingUserAvatar}
-              onClick={handleSave}
-            />
-            <Button
-              $variant="outline"
-              onClick={onClose}
-              disabled={isUpdatingUserAvatar}
-            >
-              取消
-            </Button>
-          </ButtonGroup>
-        </CropperFooter>
+
+          <FormActions
+            onSubmit={handleSave}
+            onCancel={onClose}
+            isProcessing={isUpdatingUserAvatar}
+            gap="1.2rem"
+          />
+        </ModalFooter>
       </StyledAvatarCropper>
     </Modal>
   );

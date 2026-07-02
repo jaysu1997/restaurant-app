@@ -8,12 +8,12 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import SectionContainer from "../../../ui/SectionContainer";
+import SectionContainer from "../../../components/SectionContainer";
 
 // 今日熱門時段圖表
 function PeakHoursChart({ data }) {
   return (
-    <SectionContainer title="今日熱門時段">
+    <SectionContainer header={{ title: "今日熱門時段" }}>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart
           data={data}

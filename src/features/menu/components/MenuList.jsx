@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import OrderForm from "../../orders/components/OrderForm/OrderForm";
 import DishCard from "./DishCard";
-import Modal from "../../../ui/Modal";
+import Modal from "../../../components/modal/Modal";
 import { getCategories } from "../utils/menuHelpers";
 import { getValidParam } from "../../../utils/filterHelpers";
 
@@ -50,11 +50,7 @@ function MenuList({ menus, inventoryObj, canPlaceOrder }) {
       </StyledMenuList>
 
       {selectedDish && (
-        <Modal
-          onClose={onClose}
-          modalHeader={selectedDish.name}
-          scrollBar={false}
-        >
+        <Modal onClose={onClose} title={selectedDish.name}>
           <OrderForm
             orderDish={selectedDish}
             isEdit={false}

@@ -1,20 +1,11 @@
 import styled from "styled-components";
-import Modal from "./Modal";
+import Modal from "./modal/Modal";
 import ButtonSpinner from "../ui/ButtonSpinner";
-import Button from "../components/button/Button";
+import Button from "./button/Button";
 import { useState } from "react";
+import { ModalContent } from "./modal/ModalBody";
 
-const StyledConfirmDelete = styled.div`
-  width: 36rem;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  gap: 2.4rem;
-  font-size: 1.6rem;
-`;
-
-const Content = styled.div`
+const Main = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -26,7 +17,7 @@ const Content = styled.div`
   }
 `;
 
-const ButtonRow = styled.div`
+const Actions = styled.div`
   display: flex;
   gap: 1.6rem;
   margin-top: 2rem;
@@ -38,11 +29,11 @@ function ConfirmDelete({ data, render, deleteMutation, onClose }) {
   const { mutate: handleDelete, isPending: isDeleting } = deleteMutation;
 
   return (
-    <Modal modalHeader="確認刪除" headerColor="#991b1b" onClose={onClose}>
-      <StyledConfirmDelete>
-        <Content>{render({ setIsDeleteDisabled })}</Content>
+    <Modal title="確認刪除" titleColor="#991b1b" onClose={onClose}>
+      <ModalContent>
+        <Main>{render({ setIsDeleteDisabled })}</Main>
 
-        <ButtonRow>
+        <Actions>
           <Button $variant="outline" onClick={onClose} $isFullWidth={true}>
             取消
           </Button>
@@ -61,8 +52,8 @@ function ConfirmDelete({ data, render, deleteMutation, onClose }) {
             <span>刪除</span>
             {isDeleting && <ButtonSpinner />}
           </Button>
-        </ButtonRow>
-      </StyledConfirmDelete>
+        </Actions>
+      </ModalContent>
     </Modal>
   );
 }

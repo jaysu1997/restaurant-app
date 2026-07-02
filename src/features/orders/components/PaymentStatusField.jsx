@@ -1,10 +1,11 @@
 import ControlledSelect from "../../../ui/ControlledSelect";
-import FormFieldLayout from "../../../ui/FormFieldLayout";
+import FormFieldLayout from "../../../components/FormFieldLayout";
 
 function PaymentStatusField() {
   return (
-    <FormFieldLayout label="付款狀態" isRequired={true}>
+    <FormFieldLayout label="付款狀態" id="paid" isRequired={true}>
       <ControlledSelect
+        inputId="paid"
         options={[
           { label: "已付款", value: "已付款" },
           { label: "未付款", value: "未付款" },

@@ -1,4 +1,4 @@
-import FormInput from "../../ui/FormInput";
+import FormInput from "../../components/FormInput";
 
 function SearchFilter({ filterValue, handleValueChange, filter }) {
   const { queryKey, placeholder } = filter;

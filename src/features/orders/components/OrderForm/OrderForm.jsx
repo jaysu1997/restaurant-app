@@ -11,21 +11,11 @@ import ServingsControl from "../ServingsControl";
 import { ShoppingBag } from "lucide-react";
 import Button from "../../../../components/button/Button";
 import Price from "../../../../components/Price";
-
-const Form = styled.form`
-  max-height: calc(90dvh - 5.6rem);
-  width: min(36rem, 95dvw);
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) 7.2rem;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  gap: 2.4rem;
-  overflow-y: auto;
-`;
+import {
+  ModalContainer,
+  ModalContent,
+  ModalFooter,
+} from "../../../../components/modal/ModalBody";
 
 const OrderFormNote = styled(Note)`
   label {
@@ -33,19 +23,6 @@ const OrderFormNote = styled(Note)`
     font-weight: 600;
     letter-spacing: 0.1rem;
   }
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  min-height: 7.2rem;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-  box-shadow: inset 0px 1px #e5e7eb;
-  padding: 2rem;
-  background-color: #fff;
-  z-index: 2;
 `;
 
 function OrderForm({ orderDish, onClose, isEdit = false }) {
@@ -123,8 +100,8 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
 
   return (
     <FormProvider {...methods}>
-      <Form onSubmit={handleSubmit(onSubmit, onError)}>
-        <Container>
+      <ModalContainer as="form" onSubmit={handleSubmit(onSubmit, onError)}>
+        <ModalContent>
           <Price>$ {orderDish.basePrice - orderDish.discount}</Price>
 
           {activeCustomizations.map((customization) => (
@@ -135,9 +112,9 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
           ))}
 
           <OrderFormNote label="餐點備註" maxLength={25} />
-        </Container>
+        </ModalContent>
 
-        <Footer>
+        <ModalFooter>
           <ServingsControl
             servings={servings}
             onChange={setServings}
@@ -148,8 +125,8 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
             <ShoppingBag />
             {isEdit ? "更新購物車" : "加入購物車"}
           </Button>
-        </Footer>
-      </Form>
+        </ModalFooter>
+      </ModalContainer>
     </FormProvider>
   );
 }

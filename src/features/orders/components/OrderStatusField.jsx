@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import ControlledSelect from "../../../ui/ControlledSelect";
-import FormFieldLayout from "../../../ui/FormFieldLayout";
+import FormFieldLayout from "../../../components/FormFieldLayout";
 
 function OrderStatusField() {
   const {
@@ -14,8 +14,9 @@ function OrderStatusField() {
   });
 
   return (
-    <FormFieldLayout label="訂單狀態" error={errors?.status}>
+    <FormFieldLayout label="訂單狀態" id="status" error={errors?.status}>
       <ControlledSelect
+        inputId="status"
         options={[
           { label: "準備中", value: "準備中" },
           { label: "已完成", value: "已完成" },

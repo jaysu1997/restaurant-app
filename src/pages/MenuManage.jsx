@@ -10,9 +10,9 @@ import styled from "styled-components";
 import { FilePlus } from "lucide-react";
 import PageContainer from "../components/PageContainer.jsx";
 import useGetInventory from "../hooks/data/inventory/useGetInventory.js";
-import DataDisplayCard from "../ui/DataDisplayCard.jsx";
+import DataDisplayCard from "../components/DataDisplayCard.jsx";
 import useDeleteMenu from "../hooks/data/menus/useDeleteMenu.js";
-import ConfirmDelete from "../ui/ConfirmDelete.jsx";
+import ConfirmDelete from "../components/ConfirmDelete.jsx";
 import HeaderActionButton from "../components/button/HeaderActionButton.jsx";
 import { getCategories } from "../features/menu/utils/menuHelpers.js";
 import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers.js";
@@ -82,6 +82,7 @@ function MenuManage() {
   const displayMenusData = filterData(menus, filterState);
   // 是否有套用中的篩選條件
   const hasAppliedFilters = hasActiveFilters(filterState);
+
   const emptyStateMessage = hasAppliedFilters
     ? "查無符合當前篩選條件的餐點數據"
     : "目前沒有任何餐點數據，請點擊新增餐點開始新建餐點數據。";
@@ -119,9 +120,9 @@ function MenuManage() {
                   setModal({ type: "confirmDelete", data: menu })
                 }
                 dataFormat={[
-                  { head: "名稱", body: menu.name },
-                  { head: "分類", body: menu.category },
-                  { head: "售價", body: menu.basePrice },
+                  { label: "名稱", value: menu.name },
+                  { label: "分類", value: menu.category },
+                  { label: "售價", value: menu.basePrice - menu.discount },
                 ]}
                 key={menu.id}
               />

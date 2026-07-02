@@ -2,13 +2,13 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
 import StyledHotToast from "../../ui/StyledHotToast";
-import SectionContainer from "../../ui/SectionContainer";
-import FormInput from "../../ui/FormInput";
+import SectionContainer from "../../components/SectionContainer";
+import FormInput from "../../components/FormInput";
 import { UserRoundPen } from "lucide-react";
-import FormFieldLayout from "../../ui/FormFieldLayout";
+import FormFieldLayout from "../../components/FormFieldLayout";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
-const Form = styled.form`
+const Fields = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -25,7 +25,7 @@ function UserProfileSetting({ userData }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting },
+    formState: { errors, isDirty },
     reset,
   } = useForm({
     defaultValues: {
@@ -33,8 +33,6 @@ function UserProfileSetting({ userData }) {
       personalPhone: userData?.user_metadata?.personalPhone,
     },
   });
-
-  const isProcessing = isSubmitting || isUpdatingUserProfile;
 
   function onSubmit(data) {
     updateUserProfile(data, {
@@ -55,16 +53,13 @@ function UserProfileSetting({ userData }) {
 
   return (
     <SectionContainer
-      title="個人資料"
-      icon={<UserRoundPen />}
-      form={{
-        formId: "userProfile",
-        handleReset: () => reset(),
-        isDirty: isDirty,
-        isProcessing: isProcessing,
-      }}
+      header={{ title: "個人資料", icon: <UserRoundPen /> }}
+      onSubmit={handleSubmit(onSubmit, onError)}
+      onReset={() => reset()}
+      isDirty={isDirty}
+      isProcessing={isUpdatingUserProfile}
     >
-      <Form onSubmit={handleSubmit(onSubmit, onError)} id="userProfile">
+      <Fields>
         <FormFieldLayout id="name" label="用戶名稱" error={errors?.name}>
           <FormInput
             id="name"
@@ -93,7 +88,7 @@ function UserProfileSetting({ userData }) {
             })}
           />
         </FormFieldLayout>
-      </Form>
+      </Fields>
     </SectionContainer>
   );
 }

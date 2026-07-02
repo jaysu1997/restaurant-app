@@ -1,38 +1,20 @@
 // 用來新增或更新單筆menu數據的表單
 import { useForm, FormProvider } from "react-hook-form";
-import Modal from "../../ui/Modal";
+import Modal from "../../components/modal/Modal";
 import { toMenuPayload, toMenuForm } from "./utils/menuTransform";
 import useSubmitMenuForm from "../../hooks/data/menus/useSubmitMenuForm";
-import SubmitButton from "../../components/button/SubmitButton";
-import styled from "styled-components";
-import FormSection from "../../components/FormSection";
-import IngredientScetion from "./IngredientScetion";
-import CustomizeScetion from "./CustomizeScetion";
+import IngredientSection from "./IngredientSection";
+import CustomizeSection from "./CustomizeSection";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
-import Button from "../../components/button/Button";
-
-const StyledForm = styled.form`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  max-width: 100%;
-  width: 56rem;
-  gap: 2.4rem;
-  padding: 2rem;
-  height: calc(90dvh - 5.6rem);
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-
-  @media (max-width: 48em) {
-    grid-template-columns: 1fr;
-    width: 36rem;
-  }
-`;
-
-const Footer = styled.footer`
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 2.4rem;
-`;
+import FormActions from "../../components/FormActions";
+import FormInput from "../../components/FormInput";
+import FormFieldLayout from "../../components/FormFieldLayout";
+import {
+  ModalContainer,
+  ModalContent,
+  ModalFooter,
+} from "../../components/modal/ModalBody";
+import ModalFormSection from "../../components/modal/ModalFormSection";
 
 function MenuForm({ onClose, menu, inventoryObj }) {
   const { submitMenuForm, isSubmittingMenuForm } = useSubmitMenuForm();
@@ -50,7 +32,8 @@ function MenuForm({ onClose, menu, inventoryObj }) {
   const {
     getValues,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    register,
+    formState: { errors },
   } = methods;
 
   function onSubmit(data) {
@@ -71,31 +54,32 @@ function MenuForm({ onClose, menu, inventoryObj }) {
 
   const fieldsConfig = [
     {
-      heading: "名稱",
+      label: "名稱",
       name: "name",
-      rules: {
-        setValueAs: trimString,
-      },
+      rules: { setValueAs: trimString },
+      placeholder: "例如：牛肉漢堡",
     },
     {
-      heading: "分類",
+      label: "分類",
       name: "category",
-      rules: {
-        setValueAs: trimString,
-      },
+      rules: { setValueAs: trimString },
+      placeholder: "例如：漢堡",
     },
     {
-      heading: "定價",
+      label: "定價",
       name: "basePrice",
+      placeholder: "例如：120",
       rules: {
+        deps: ["discount"],
         setValueAs: (value) =>
           parsePositiveInt(value, { min: 0, fallback: value }),
         validate: (value) => typeof value === "number" || "請輸入 0 以上的整數",
       },
     },
     {
-      heading: "折扣",
+      label: "折扣",
       name: "discount",
+      placeholder: "例如：10",
       rules: {
         setValueAs: (value) =>
           parsePositiveInt(value, { min: 0, fallback: value }),
@@ -111,51 +95,47 @@ function MenuForm({ onClose, menu, inventoryObj }) {
   ];
 
   return (
-    <Modal
-      modalHeader="餐點設定表單"
-      maxWidth={56}
-      onClose={onClose}
-      scrollBar={false}
-    >
+    <Modal title="餐點設定表單" maxWidth={56} onClose={onClose}>
       <FormProvider {...methods}>
-        <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
-          {fieldsConfig.map((field) => (
-            <FormSection
-              key={field.name}
-              heading={{ text: field.heading, as: "h3", required: true }}
-              fields={[
-                {
-                  type: "input",
-                  name: field.name,
-                  errors: errors?.[field.name],
-                  rules: field.rules,
-                },
+        <ModalContainer as="form" onSubmit={handleSubmit(onSubmit, onError)}>
+          <ModalContent>
+            <ModalFormSection columns={2} title="基本資料" required={true}>
+              {fieldsConfig.map((field) => (
+                <FormFieldLayout
+                  key={field.name}
+                  id={field.name}
+                  label={field.label}
+                  error={errors?.[field.name]}
+                >
+                  <FormInput
+                    id={field.name}
+                    placeholder={field.placeholder}
+                    {...register(field.name, {
+                      required: "此欄位必須填寫",
+                      ...(field.rules || {}),
+                    })}
+                  />
+                </FormFieldLayout>
+              ))}
+            </ModalFormSection>
+
+            <IngredientSection ingredientOptions={ingredientOptions} />
+
+            <CustomizeSection
+              ingredientOptions={[
+                { label: "無", value: "", uuid: null },
+                ...ingredientOptions,
               ]}
             />
-          ))}
+          </ModalContent>
 
-          <IngredientScetion ingredientOptions={ingredientOptions} />
-          <CustomizeScetion
-            ingredientOptions={[
-              { label: "無", value: "", uuid: null },
-              ...ingredientOptions,
-            ]}
-          />
-
-          <Footer>
-            <SubmitButton
-              isProcessing={isSubmittingMenuForm || isSubmitting}
-              disabled={isSubmittingMenuForm || isSubmitting}
+          <ModalFooter>
+            <FormActions
+              onCancel={onClose}
+              isProcessing={isSubmittingMenuForm}
             />
-            <Button
-              $variant="outline"
-              onClick={onClose}
-              disabled={isSubmittingMenuForm || isSubmitting}
-            >
-              取消
-            </Button>
-          </Footer>
-        </StyledForm>
+          </ModalFooter>
+        </ModalContainer>
       </FormProvider>
     </Modal>
   );

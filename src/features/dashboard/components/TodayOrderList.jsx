@@ -4,7 +4,7 @@ import Tag from "../../../components/Tag";
 import { formatPickupNumber } from "../../../utils/orderHelpers";
 import { useNavigate } from "react-router";
 import { ArrowRight } from "lucide-react";
-import SectionContainer from "../../../ui/SectionContainer";
+import SectionContainer from "../../../components/SectionContainer";
 import EmptyState from "./EmptyState";
 import Price from "../../../components/Price";
 
@@ -75,13 +75,13 @@ function TodayOrderList({ data }) {
 
   if (data.length === 0)
     return (
-      <SectionContainer title="今日訂單列表">
+      <SectionContainer header={{ title: "今日訂單列表" }}>
         <EmptyState />
       </SectionContainer>
     );
 
   return (
-    <SectionContainer title="今日訂單列表">
+    <SectionContainer header={{ title: "今日訂單列表" }}>
       <OrderList>
         {data.map((order) => (
           <Order key={order.id}>

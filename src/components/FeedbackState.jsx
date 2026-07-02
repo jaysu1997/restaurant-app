@@ -1,7 +1,7 @@
 // ok
-import Description from "../ui/Description";
 import styled, { keyframes } from "styled-components";
 import Button from "./button/Button";
+import Description from "./Description";
 
 const fadeIn = keyframes`
   from {

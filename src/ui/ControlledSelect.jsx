@@ -2,6 +2,7 @@ import { useController, useFormContext } from "react-hook-form";
 import StyledSelect from "../ui/StyledSelect";
 
 function ControlledSelect({
+  inputId,
   name,
   rules,
   options,
@@ -18,6 +19,7 @@ function ControlledSelect({
   return (
     <StyledSelect
       {...field}
+      inputId={inputId}
       creatable={creatable}
       options={options}
       isDisabled={disabled}

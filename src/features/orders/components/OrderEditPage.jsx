@@ -9,32 +9,17 @@ import useOrderDraft from "../../../context/orders/useOrderDraft";
 import useOrderInventory from "../hooks/useOrderInventory";
 import OrderOverview from "./OrderOverview";
 import OrderNote from "./OrderNote";
-import OrderDishes from "./OrderDishes";
 import useOrderEdit from "../hooks/useOrderEdit";
-import styled from "styled-components";
-import SubmitButton from "../../../components/button/SubmitButton";
-import Button from "../../../components/button/Button";
 import StoreClosedNotice from "./StoreClosedNotice";
 import useSettings from "../../../context/settings/useSettings";
 import { canCreateOrder } from "../../../context/settings/settingsHelpers";
-import OrderInfo from "./OrderInfo";
+import FormActions from "../../../components/FormActions";
 
-const Footer = styled.footer`
-  grid-column: 1;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-
-  & > div {
-    margin-left: auto;
-  }
-`;
-
-// 這裡的樣式需要修正(整體布局都需要)
 function OrderEditPage({ orderData }) {
   const navigate = useNavigate();
   const { updateOrder, isUpdatingOrder } = useUpdateOrder();
   const { todayOpenInfo } = useSettings();
+  // 當前屬於可以建立訂單的時段
   const canPlaceOrder = canCreateOrder(todayOpenInfo);
 
   const {
@@ -44,7 +29,6 @@ function OrderEditPage({ orderData }) {
   const inventoryQuery = useOrderInventory();
 
   const methods = useOrderEdit(orderData);
-
   const { handleSubmit } = methods;
 
   function onSubmit(data) {
@@ -72,36 +56,21 @@ function OrderEditPage({ orderData }) {
       )}
 
       <FormProvider {...methods}>
-        <OrderOverview orderData={orderData} isEdit={true}>
-          <OrderInfo
-            orderData={orderData}
-            isEdit={true}
-            canModifyItems={canPlaceOrder}
-          />
-          <OrderDishes
-            items={items}
-            isEdit={true}
-            canModifyItems={canPlaceOrder}
-          />
-        </OrderOverview>
+        <OrderOverview
+          orderData={orderData}
+          items={items}
+          isEdit={true}
+          canModifyItems={canPlaceOrder}
+        />
 
         <OrderNote isEdit={true} note={orderData.note} />
 
-        <Footer>
-          <SubmitButton
-            isProcessing={isUpdatingOrder}
-            disabled={items.length === 0 || isUpdatingOrder}
-            onClick={handleSubmit(onSubmit, onError)}
-          />
-
-          <Button
-            $variant="outline"
-            onClick={() => navigate(-1)}
-            disabled={isUpdatingOrder}
-          >
-            取消
-          </Button>
-        </Footer>
+        <FormActions
+          onSubmit={handleSubmit(onSubmit, onError)}
+          onCancel={() => navigate(-1)}
+          isProcessing={isUpdatingOrder}
+          submitDisabled={items.length === 0 || isUpdatingOrder}
+        />
       </FormProvider>
     </QueryStatusFallback>
   );

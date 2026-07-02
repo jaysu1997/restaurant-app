@@ -17,10 +17,6 @@ const HeaderActionButton = styled(Button)`
     span {
       display: none;
     }
-
-    &:active:not(:disabled) {
-      transform: scale(0.96);
-    }
   }
 `;
 

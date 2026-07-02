@@ -134,7 +134,7 @@ function Filter({ filtersConfig, filterState }) {
 
   function confirmFilters() {
     const newParams = buildSearchParams(draftFilters, searchParams);
-
+    // 訂單列表套用新條件都要回到第一分頁
     if (pathname === "/orders") {
       newParams.set("page", "1");
     }

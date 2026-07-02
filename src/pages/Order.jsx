@@ -12,6 +12,7 @@ import OrderEditPage from "../features/orders/components/OrderEditPage";
 const OrderLayout = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 `;
 
 const BackButton = styled.button`
@@ -19,7 +20,6 @@ const BackButton = styled.button`
   align-items: center;
   gap: 0.6rem;
   width: fit-content;
-  margin-bottom: 1rem;
   border-radius: 8px;
   color: #64748b;
   font-size: 1.4rem;
@@ -36,7 +36,7 @@ const BackButton = styled.button`
   }
 `;
 
-const OrderDetail = styled.div`
+const OrderContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.8rem;
@@ -61,13 +61,13 @@ function Order() {
             返回
           </BackButton>
 
-          <OrderDetail>
+          <OrderContent>
             {isEditPage ? (
               <OrderEditPage orderData={orderQuery.data} />
             ) : (
               <OrderDetailPage orderData={orderQuery.data} />
             )}
-          </OrderDetail>
+          </OrderContent>
         </OrderLayout>
       </QueryStatusFallback>
     </PageContainer>

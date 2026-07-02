@@ -2,7 +2,7 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import styled from "styled-components";
 import ControlledSelect from "../../ui/ControlledSelect";
 import { Trash2, Plus, Minus } from "lucide-react";
-import FormFieldLayout from "../../ui/FormFieldLayout";
+import FormFieldLayout from "../../components/FormFieldLayout";
 import IconButton from "../../components/button/IconButton";
 
 const StyledTimeRange = styled.ul`

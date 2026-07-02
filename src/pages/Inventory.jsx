@@ -9,13 +9,13 @@ import Filter from "../components/Filter/Filter";
 import QueryStatusFallback from "../components/QueryStatusFallback";
 import { FilePlus } from "lucide-react";
 import PageContainer from "../components/PageContainer";
-import DataDisplayCard from "../ui/DataDisplayCard";
 import RelatedMenus from "../features/inventory/RelatedMenus";
 import useDeleteInventory from "../hooks/data/inventory/useDeleteInventory";
-import ConfirmDelete from "../ui/ConfirmDelete";
+import ConfirmDelete from "../components/ConfirmDelete";
 import MenuForm from "../features/menu-manage/MenuForm";
 import HeaderActionButton from "../components/button/HeaderActionButton";
 import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers";
+import DataDisplayCard from "../components/DataDisplayCard";
 
 const Container = styled.ul`
   display: grid;
@@ -133,8 +133,8 @@ function Inventory() {
                   })
                 }
                 dataFormat={[
-                  { head: "名稱", body: item.name },
-                  { head: "數量", body: `${item.remainingQuantity || 0} 份` },
+                  { label: "名稱", value: item.name },
+                  { label: "數量", value: `${item.remainingQuantity} 份` },
                 ]}
                 key={item.id}
               />
@@ -158,7 +158,7 @@ function Inventory() {
                 請確認是否要刪除
                 <strong> {modal.inventory.name} </strong>?
               </p>
-              <p>此食材若被餐點使用，需先移除相關設定才能刪除。</p>
+              <p>此食材若被餐點使用，需先進入餐點中移除相關設定後才能刪除。</p>
 
               <RelatedMenus
                 ingredientId={modal.inventory.id}

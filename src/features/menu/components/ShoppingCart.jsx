@@ -135,10 +135,8 @@ function ShoppingCart({ canPlaceOrder }) {
   const {
     handleSubmit,
     reset,
-    formState: { isValid, isSubmitting },
+    formState: { isValid },
   } = methods;
-
-  const isProcessing = isCreatingOrder || isSubmitting;
 
   const hasItems = items.length > 0;
 
@@ -154,10 +152,6 @@ function ShoppingCart({ canPlaceOrder }) {
         setIsCartOpen(false);
       },
     });
-  }
-
-  function onError(error) {
-    console.log(error);
   }
 
   return (
@@ -196,9 +190,9 @@ function ShoppingCart({ canPlaceOrder }) {
               <SubmitButton
                 label="提交"
                 fullWidth={true}
-                isProcessing={isProcessing}
-                disabled={!hasItems || isProcessing || !isValid}
-                onClick={handleSubmit(onSubmit, onError)}
+                isProcessing={isCreatingOrder}
+                disabled={!hasItems || isCreatingOrder || !isValid}
+                onClick={handleSubmit(onSubmit)}
               />
             </Footer>
           </>

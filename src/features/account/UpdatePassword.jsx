@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import StyledHotToast from "../../ui/StyledHotToast";
 import PasswordInput from "../../components/PasswordInput";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
-import SectionContainer from "../../ui/SectionContainer";
+import SectionContainer from "../../components/SectionContainer";
 import { KeyRound } from "lucide-react";
-import FormFieldLayout from "../../ui/FormFieldLayout";
+import FormFieldLayout from "../../components/FormFieldLayout";
 
-const Form = styled.form`
+const Fields = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -26,9 +26,9 @@ function UpdatePassword({ userData }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isSubmitting },
+    formState: { errors, isDirty },
     reset,
-    trigger,
+    clearErrors,
     setError,
     getValues,
   } = useForm({
@@ -38,8 +38,6 @@ function UpdatePassword({ userData }) {
       confirmPassword: "",
     },
   });
-
-  const isProcessing = isSubmitting || isUpdatingUserPassword;
 
   function onSubmit(data) {
     const { currentPassword, newPassword } = data;
@@ -74,16 +72,13 @@ function UpdatePassword({ userData }) {
 
   return (
     <SectionContainer
-      title="變更密碼"
-      icon={<KeyRound />}
-      form={{
-        formId: "updatePassword",
-        handleReset: () => reset(),
-        isDirty: isDirty,
-        isProcessing: isProcessing,
-      }}
+      header={{ title: "變更密碼", icon: <KeyRound /> }}
+      onSubmit={handleSubmit(onSubmit, onError)}
+      onReset={() => reset()}
+      isDirty={isDirty}
+      isProcessing={isUpdatingUserPassword}
     >
-      <Form onSubmit={handleSubmit(onSubmit, onError)} id="updatePassword">
+      <Fields>
         <FormFieldLayout
           label="現有密碼"
           id="password"
@@ -93,6 +88,8 @@ function UpdatePassword({ userData }) {
             id="password"
             autoComplete="current-password"
             {...register("currentPassword", {
+              onChange: () => clearErrors("currentPassword"),
+              deps: ["newPassword"],
               required: "密碼必須填寫",
               minLength: { value: 8, message: "密碼至少要有8碼" },
             })}
@@ -108,13 +105,12 @@ function UpdatePassword({ userData }) {
             id="newPassword"
             autoComplete="new-password"
             {...register("newPassword", {
+              deps: ["confirmPassword"],
               required: "請輸入新的密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
-              validate: (value) => {
-                const currentPassword = getValues("currentPassword");
-                trigger("confirmPassword");
-                return value !== currentPassword || "新密碼不能與舊密碼相同";
-              },
+              validate: (value) =>
+                value !== getValues("currentPassword") ||
+                "新密碼不能與舊密碼相同",
             })}
           />
         </FormFieldLayout>
@@ -130,14 +126,12 @@ function UpdatePassword({ userData }) {
             {...register("confirmPassword", {
               required: "請再次輸入新密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
-              validate: (value) => {
-                const newPassword = getValues("newPassword");
-                return value === newPassword || "兩次輸入的新密碼不一致";
-              },
+              validate: (value) =>
+                value === getValues("newPassword") || "兩次輸入的新密碼不一致",
             })}
           />
         </FormFieldLayout>
-      </Form>
+      </Fields>
     </SectionContainer>
   );
 }

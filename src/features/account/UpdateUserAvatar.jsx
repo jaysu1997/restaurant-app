@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import AvatarCropper from "./AvatarCropper";
 import UserAvatar from "../../ui/UserAvatar";
-import SectionContainer from "../../ui/SectionContainer";
+import SectionContainer from "../../components/SectionContainer";
 import Button from "../../components/button/Button";
 import { Upload } from "lucide-react";
 import { AVATAR_URL } from "../../utils/constants";
@@ -14,6 +14,7 @@ const StyledUpdateUserAvatar = styled.div`
   column-gap: 1.6rem;
   row-gap: 0.8rem;
   height: 9.6rem;
+  font-size: 1.4rem;
 
   & label {
     align-self: end;

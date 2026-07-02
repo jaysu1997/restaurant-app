@@ -1,36 +1,28 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import StyledHotToast from "../../ui/StyledHotToast";
-import Modal from "../../ui/Modal";
+import Modal from "../../components/modal/Modal";
 import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
-import SubmitButton from "../../components/button/SubmitButton";
-import styled from "styled-components";
-import FormSection from "../../components/FormSection";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
-import Button from "../../components/button/Button";
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  max-width: 100%;
-  width: 36rem;
-  gap: 2.4rem;
-  padding: 2rem;
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  gap: 2.4rem;
-`;
+import FormActions from "../../components/FormActions";
+import FormFieldLayout from "../../components/FormFieldLayout";
+import FormInput from "../../components/FormInput";
+import {
+  ModalContainer,
+  ModalContent,
+  ModalFooter,
+} from "../../components/modal/ModalBody";
+import ModalFormSection from "../../components/modal/ModalFormSection";
 
 function InventoryForm({ inventory, onClose }) {
-  const isEdit = inventory ? true : false;
+  const isEdit = !!inventory;
   const methods = useForm({
     defaultValues: inventory || {},
   });
 
   const {
     handleSubmit,
+    register,
     formState: { errors },
   } = methods;
 
@@ -55,71 +47,58 @@ function InventoryForm({ inventory, onClose }) {
     });
   }
 
-  function onError(error) {
-    console.log(error);
-  }
-
   return (
-    <Modal modalHeader="食材設定表單" onClose={onClose}>
-      <StyledForm onSubmit={handleSubmit(onSubmit, onError)}>
-        {/* 這裡的isDisabled沒用 */}
-        <FormProvider {...methods}>
-          <FormSection
-            descriptions={
-              isEdit
-                ? [
-                    "食材名稱變更後，各餐點中使用此食材的備料與選項也會同步更新為新名稱。",
-                  ]
-                : null
-            }
-          >
-            <FormSection
-              heading={{ text: "食材名稱", required: true }}
-              fields={[
-                {
-                  type: "input",
-                  name: "name",
-                  errors: errors?.name,
-                  rules: {
-                    setValueAs: trimString,
-                  },
-                },
-              ]}
-            />
+    <Modal title="食材設定表單" onClose={onClose}>
+      <FormProvider {...methods}>
+        <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            {isEdit && (
+              <ModalFormSection
+                columns={1}
+                descriptions={[
+                  "食材名稱變更後，各餐點中使用此食材的備料與選項也會同步更新為新名稱。",
+                ]}
+              />
+            )}
 
-            <FormSection
-              heading={{ text: "庫存數量", required: true }}
-              fields={[
-                {
-                  type: "input",
-                  name: "remainingQuantity",
-                  errors: errors?.remainingQuantity,
-                  rules: {
+            <ModalFormSection columns={1}>
+              <FormFieldLayout label="食材名稱" error={errors?.name} id="name">
+                <FormInput
+                  id="name"
+                  {...register("name", {
+                    required: "此欄位必須填寫",
+                    setValueAs: trimString,
+                  })}
+                />
+              </FormFieldLayout>
+
+              <FormFieldLayout
+                label="庫存數量"
+                error={errors?.remainingQuantity}
+                id="remainingQuantity"
+              >
+                <FormInput
+                  id="remainingQuantity"
+                  {...register("remainingQuantity", {
+                    required: "此欄位必須填寫",
                     setValueAs: (value) =>
                       parsePositiveInt(value, { min: 0, fallback: value }),
                     validate: (value) =>
                       typeof value === "number" || "請輸入 0 以上的整數",
-                  },
-                },
-              ]}
-            />
-          </FormSection>
+                  })}
+                />
+              </FormFieldLayout>
+            </ModalFormSection>
+          </ModalContent>
 
-          <Footer>
-            <SubmitButton
-              disabled={isSubmittingInventory}
+          <ModalFooter>
+            <FormActions
+              onCancel={onClose}
               isProcessing={isSubmittingInventory}
             />
-            <Button
-              $variant="outline"
-              disabled={isSubmittingInventory}
-              onClick={onClose}
-            >
-              取消
-            </Button>
-          </Footer>
-        </FormProvider>
-      </StyledForm>
+          </ModalFooter>
+        </ModalContainer>
+      </FormProvider>
     </Modal>
   );
 }

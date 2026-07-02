@@ -1,16 +1,21 @@
 import styled from "styled-components";
-import ContentContainer from "./ContentContainer";
-import Description from "./Description";
 import { Plus } from "lucide-react";
-import SubmitButton from "../components/button/SubmitButton";
-import Button from "../components/button/Button";
-import TextButton from "../components/button/TextButton";
+import TextButton from "./button/TextButton";
+import FormActions from "./FormActions";
+import Description from "./Description";
 
 const Section = styled.section`
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 2.4rem;
+  border-radius: 6px;
+  height: fit-content;
+`;
+
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4rem;
-  font-size: 1.4rem;
 `;
 
 const SectionHeader = styled.header`
@@ -43,32 +48,33 @@ const Content = styled.div`
   gap: 2.4rem;
 `;
 
-const ButtonGroup = styled.footer`
-  display: flex;
-  gap: 2.4rem;
-`;
-
-// 設定section ui
+// 通用 section ui 元件
 function SectionContainer({
-  title,
-  icon,
-  description,
-  form = {},
+  header,
+  onSubmit,
+  onReset,
+  isDirty,
+  isProcessing,
   appendButton,
   children,
 }) {
-  const { formId, handleReset, isDirty, isProcessing } = form;
-  const disabled = !isDirty || isProcessing;
+  const { title, icon, description } = header || {};
+  // 檢查是否需要用到form還是純展示
+  const isForm = Boolean(onSubmit);
 
   return (
-    <ContentContainer>
-      <Section>
-        {title && (
+    <Section>
+      <Container
+        as={isForm ? "form" : "div"}
+        onSubmit={isForm ? onSubmit : undefined}
+      >
+        {header && (
           <SectionHeader>
             <TitleRow>
               <Title>{title}</Title>
               {icon}
             </TitleRow>
+
             {description && <Description>{description}</Description>}
           </SectionHeader>
         )}
@@ -84,25 +90,16 @@ function SectionContainer({
           )}
         </Content>
 
-        {formId && (
-          <ButtonGroup>
-            <SubmitButton
-              form={formId}
-              isProcessing={isProcessing}
-              disabled={disabled}
-            />
-
-            <Button
-              $variant="outline"
-              onClick={handleReset}
-              disabled={disabled}
-            >
-              取消
-            </Button>
-          </ButtonGroup>
+        {isForm && (
+          <FormActions
+            onCancel={onReset}
+            isProcessing={isProcessing}
+            submitDisabled={!isDirty || isProcessing}
+            cancelDisabled={!isDirty || isProcessing}
+          />
         )}
-      </Section>
-    </ContentContainer>
+      </Container>
+    </Section>
   );
 }
 

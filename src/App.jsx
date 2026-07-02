@@ -35,6 +35,10 @@ const queryClient = new QueryClient({
   },
 });
 
+// 可以考慮使用ai查看box-shadow inset和borde的使用是否都合適，應該怎麼調整?
+
+// 還有form應該可以抽成form layout、form footer、form content...
+
 // FormFieldLayout現在有提供必填props，可以全部進行調整
 
 // 好像Modal的表單有修改建議，
@@ -45,15 +49,13 @@ const queryClient = new QueryClient({
 
 // 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)，或許可以分成日期時間helper、正則helpers...
 
-// isProcessing
+// isProcessing要全面重新修正，不需要RHF提供的submitting了，其實只需要mutate提供的isPending就好。
 
 // SEO、lighthouse檢查
 
 // 可能有好幾個使用SectionContainer的元件都需要檢查一下欄位之間的距離，或許可以統一設定form的gap為0.4rem，目前好像是個別設定的
 
 // react.lazy 是否需要?
-
-// 後續可能需要把元件和函式以及檔案和資料夾都需要重構(styled元件命名需要再檢查修正，很多是臨時命名而已，還有可以統一的樣式就拆解，現在購物車的程式碼多到爆)
 
 export default function App() {
   return (

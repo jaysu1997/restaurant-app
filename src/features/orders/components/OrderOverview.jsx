@@ -8,10 +8,12 @@ import Button from "../../../components/button/Button";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
-import ConfirmDelete from "../../../ui/ConfirmDelete";
-import ContentContainer from "../../../ui/ContentContainer";
+import ConfirmDelete from "../../../components/ConfirmDelete";
+import OrderInfo from "./OrderInfo";
+import OrderDishes from "./OrderDishes";
+import SectionContainer from "../../../components/SectionContainer";
 
-const StyledOrderOverview = styled(ContentContainer)`
+const StyledOrderOverview = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -45,7 +47,6 @@ const HeaderActions = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  flex-shrink: 0;
 `;
 
 const EditButton = styled(Button).attrs({ $variant: "ghost" })`
@@ -79,7 +80,7 @@ const DeleteButton = styled(EditButton)`
   }
 `;
 
-function OrderOverview({ orderData, isEdit, children }) {
+function OrderOverview({ orderData, items, isEdit, canModifyItems }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const deleteMutation = useDeleteOrder();
   const navigate = useNavigate();
@@ -89,27 +90,39 @@ function OrderOverview({ orderData, isEdit, children }) {
 
   return (
     <>
-      <StyledOrderOverview>
-        <Header>
-          <PickupNumber>{formatPickupNumber(pickupNumber)}</PickupNumber>
+      <SectionContainer>
+        <StyledOrderOverview>
+          <Header>
+            <PickupNumber>{formatPickupNumber(pickupNumber)}</PickupNumber>
 
-          {!isEdit && !isCompleted && (
-            <HeaderActions>
-              <EditButton onClick={() => navigate("edit")}>
-                <SquarePen />
-                <span>編輯</span>
-              </EditButton>
+            {!isEdit && !isCompleted && (
+              <HeaderActions>
+                <EditButton onClick={() => navigate("edit")}>
+                  <SquarePen />
+                  <span>編輯</span>
+                </EditButton>
 
-              <DeleteButton onClick={() => setIsDeleteModalOpen(true)}>
-                <Trash2 />
-                <span>刪除</span>
-              </DeleteButton>
-            </HeaderActions>
-          )}
-        </Header>
+                <DeleteButton onClick={() => setIsDeleteModalOpen(true)}>
+                  <Trash2 />
+                  <span>刪除</span>
+                </DeleteButton>
+              </HeaderActions>
+            )}
+          </Header>
 
-        {children}
-      </StyledOrderOverview>
+          <OrderInfo
+            orderData={orderData}
+            isEdit={isEdit}
+            canModifyItems={canModifyItems}
+          />
+
+          <OrderDishes
+            items={items}
+            isEdit={isEdit}
+            canModifyItems={canModifyItems}
+          />
+        </StyledOrderOverview>
+      </SectionContainer>
 
       {isDeleteModalOpen && (
         <ConfirmDelete

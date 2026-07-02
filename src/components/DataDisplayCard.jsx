@@ -1,6 +1,7 @@
+// ok
 // 用來展示數據的卡片ui
 import styled from "styled-components";
-import { Trash2, SquarePen, Minus } from "lucide-react";
+import { Trash2, SquarePen } from "lucide-react";
 
 const Card = styled.li`
   display: flex;
@@ -10,10 +11,9 @@ const Card = styled.li`
   overflow: hidden;
   border: 1px solid #d1d5db;
   background-color: #fff;
-  transition: transform 0.2s ease;
-
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 500;
+  transition: transform 0.2s ease;
 
   &:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
@@ -21,43 +21,41 @@ const Card = styled.li`
   }
 `;
 
-const TableRow = styled.div`
+const Row = styled.div`
   display: grid;
   grid-template-columns: 4.5rem 1fr;
-  white-space: nowrap;
   border-bottom: 1px solid #d1d5db;
 `;
 
-const TableHead = styled.div`
+const Label = styled.div`
   background-color: #e2e8f0;
   padding: 0.8rem;
   color: #475569;
-  font-weight: 500;
 `;
 
-const TableBody = styled.div`
+const Value = styled.div`
   padding: 0.8rem;
-  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
 const Footer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  background-color: #f8fafc;
 `;
 
 const EditButton = styled.button`
-  flex-grow: 1;
   color: #15803d;
+  font-weight: 600;
   padding: 0.6rem 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  background-color: #f8fafc;
 
-  & > svg {
+  svg {
     width: 1.5rem;
     height: 1.5rem;
   }
@@ -84,11 +82,11 @@ const Divider = styled.div`
 function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
   return (
     <Card>
-      {dataFormat.map((data) => (
-        <TableRow key={data.head}>
-          <TableHead>{data.head}</TableHead>
-          <TableBody>{data.body ?? <Minus className="icon-md" />}</TableBody>
-        </TableRow>
+      {dataFormat.map((data, index) => (
+        <Row key={index}>
+          <Label>{data.label}</Label>
+          <Value>{data.value}</Value>
+        </Row>
       ))}
 
       <Footer>

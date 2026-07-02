@@ -1,0 +1,38 @@
+import styled from "styled-components";
+import SubmitButton from "./button/SubmitButton";
+import Button from "./button/Button";
+
+const StyledFormActions = styled.footer`
+  display: flex;
+  gap: ${({ $gap }) => $gap};
+  /* margin-left: auto; */
+`;
+
+function FormActions({
+  onSubmit,
+  onCancel,
+  isProcessing = false,
+  submitDisabled = false,
+  cancelDisabled = false,
+  gap = "2.4rem",
+}) {
+  return (
+    <StyledFormActions $gap={gap}>
+      <Button
+        $variant="outline"
+        onClick={onCancel}
+        disabled={cancelDisabled || isProcessing}
+      >
+        取消
+      </Button>
+
+      <SubmitButton
+        onClick={onSubmit}
+        isProcessing={isProcessing}
+        disabled={submitDisabled || isProcessing}
+      />
+    </StyledFormActions>
+  );
+}
+
+export default FormActions;
