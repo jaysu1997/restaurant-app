@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
-import StyledHotToast from "../../ui/StyledHotToast";
-import PasswordInput from "../../components/PasswordInput";
+import { FormProvider, useForm } from "react-hook-form";
+import showToast from "../../ui/showToast";
+import FormPasswordField from "../../components/FormPasswordField";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
 import SectionContainer from "../../components/SectionContainer";
 import { KeyRound } from "lucide-react";
-import FormFieldLayout from "../../components/FormFieldLayout";
 
 const Fields = styled.div`
   display: flex;
@@ -23,21 +22,22 @@ function UpdatePassword({ userData }) {
   const { updateUserPassword, isUpdatingUserPassword } =
     useUpdateUserPassword();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-    reset,
-    clearErrors,
-    setError,
-    getValues,
-  } = useForm({
+  const methods = useForm({
     defaultValues: {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
   });
+
+  const {
+    handleSubmit,
+    formState: { isDirty },
+    reset,
+    clearErrors,
+    setError,
+    getValues,
+  } = methods;
 
   function onSubmit(data) {
     const { currentPassword, newPassword } = data;
@@ -56,83 +56,74 @@ function UpdatePassword({ userData }) {
       onError: (error) => {
         // 現有密碼輸入錯誤
         if (error.code === "invalid_credentials") {
-          setError("currentPassword", {
-            type: "custom",
-            message: "密碼不正確",
-          });
+          setError(
+            "currentPassword",
+            { type: "server", message: error.message },
+            { shouldFocus: true },
+          );
+
+          return;
         }
+
+        showToast({
+          type: "error",
+          title: "密碼變更失敗",
+          content: error.message,
+        });
       },
     });
   }
 
-  function onError(error) {
-    console.log(error);
-    StyledHotToast({ type: "error", title: "密碼更新失敗" });
-  }
-
   return (
-    <SectionContainer
-      header={{ title: "變更密碼", icon: <KeyRound /> }}
-      onSubmit={handleSubmit(onSubmit, onError)}
-      onReset={() => reset()}
-      isDirty={isDirty}
-      isProcessing={isUpdatingUserPassword}
-    >
-      <Fields>
-        <FormFieldLayout
-          label="現有密碼"
-          id="password"
-          error={errors?.currentPassword}
-        >
-          <PasswordInput
-            id="password"
+    <FormProvider {...methods}>
+      <SectionContainer
+        header={{ title: "變更密碼", icon: <KeyRound /> }}
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={() => reset()}
+        isDirty={isDirty}
+        isProcessing={isUpdatingUserPassword}
+      >
+        <Fields>
+          <FormPasswordField
+            label="現有密碼"
+            name="currentPassword"
             autoComplete="current-password"
-            {...register("currentPassword", {
+            rules={{
               onChange: () => clearErrors("currentPassword"),
               deps: ["newPassword"],
               required: "密碼必須填寫",
               minLength: { value: 8, message: "密碼至少要有8碼" },
-            })}
+            }}
           />
-        </FormFieldLayout>
 
-        <FormFieldLayout
-          label="新的密碼"
-          id="newPassword"
-          error={errors?.newPassword}
-        >
-          <PasswordInput
-            id="newPassword"
+          <FormPasswordField
+            label="新的密碼"
+            name="newPassword"
             autoComplete="new-password"
-            {...register("newPassword", {
+            rules={{
               deps: ["confirmPassword"],
               required: "請輸入新的密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
               validate: (value) =>
                 value !== getValues("currentPassword") ||
                 "新密碼不能與舊密碼相同",
-            })}
+            }}
           />
-        </FormFieldLayout>
 
-        <FormFieldLayout
-          label="確認新密碼"
-          id="confirmPassword"
-          error={errors?.confirmPassword}
-        >
-          <PasswordInput
-            id="confirmPassword"
+          <FormPasswordField
+            label="確認新密碼"
+            name="confirmPassword"
             autoComplete="new-password"
-            {...register("confirmPassword", {
+            rules={{
               required: "請再次輸入新密碼",
               minLength: { value: 8, message: "密碼至少要有8碼" },
               validate: (value) =>
                 value === getValues("newPassword") || "兩次輸入的新密碼不一致",
-            })}
+            }}
           />
-        </FormFieldLayout>
-      </Fields>
-    </SectionContainer>
+        </Fields>
+      </SectionContainer>
+    </FormProvider>
   );
 }
 

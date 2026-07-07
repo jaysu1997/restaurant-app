@@ -1,11 +1,9 @@
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
-import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../components/SectionContainer";
-import FormInput from "../../components/FormInput";
+import FormInputField from "../../components/FormInputField";
 import { UserRoundPen } from "lucide-react";
-import FormFieldLayout from "../../components/FormFieldLayout";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
 const Fields = styled.div`
@@ -22,74 +20,66 @@ const Fields = styled.div`
 
 function UserProfileSetting({ userData }) {
   const { updateUserProfile, isUpdatingUserProfile } = useUpdateUserProfile();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-    reset,
-  } = useForm({
+
+  const methods = useForm({
     defaultValues: {
       name: userData?.user_metadata?.name,
       personalPhone: userData?.user_metadata?.personalPhone,
     },
   });
 
+  const {
+    handleSubmit,
+    formState: { isDirty },
+    reset,
+  } = methods;
+
   function onSubmit(data) {
     updateUserProfile(data, {
       onSuccess: (newData) => {
         // 消除field的focus狀態
         document.activeElement?.blur();
-
         const { name, personalPhone } = newData.user.user_metadata;
         reset({ name, personalPhone });
       },
     });
   }
 
-  function onError(error) {
-    console.log(error);
-    StyledHotToast({ type: "error", title: "個人資料更新失敗" });
-  }
-
   return (
-    <SectionContainer
-      header={{ title: "個人資料", icon: <UserRoundPen /> }}
-      onSubmit={handleSubmit(onSubmit, onError)}
-      onReset={() => reset()}
-      isDirty={isDirty}
-      isProcessing={isUpdatingUserProfile}
-    >
-      <Fields>
-        <FormFieldLayout id="name" label="用戶名稱" error={errors?.name}>
-          <FormInput
-            id="name"
-            {...register("name", {
+    <FormProvider {...methods}>
+      <SectionContainer
+        header={{ title: "個人資料", icon: <UserRoundPen /> }}
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={() => reset()}
+        isDirty={isDirty}
+        isProcessing={isUpdatingUserProfile}
+      >
+        <Fields>
+          <FormInputField
+            label="用戶名稱"
+            name="name"
+            rules={{
               setValueAs: trimString,
               required: "用戶名稱不可空白",
               maxLength: {
                 value: 20,
                 message: "名稱長度必須在20個字元以內",
               },
-            })}
+            }}
           />
-        </FormFieldLayout>
 
-        <FormFieldLayout
-          id="personalPhone"
-          label="連絡電話"
-          error={errors?.personalPhone}
-        >
-          <FormInput
-            id="personalPhone"
-            {...register("personalPhone", {
+          <FormInputField
+            label="連絡電話"
+            name="personalPhone"
+            rules={{
               setValueAs: trimString,
               required: "連絡電話不能空白",
               validate: (value) => validatePhoneNumber(value),
-            })}
+            }}
           />
-        </FormFieldLayout>
-      </Fields>
-    </SectionContainer>
+        </Fields>
+      </SectionContainer>
+    </FormProvider>
   );
 }
 

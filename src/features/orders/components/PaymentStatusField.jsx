@@ -1,22 +1,22 @@
-import ControlledSelect from "../../../ui/ControlledSelect";
-import FormFieldLayout from "../../../components/FormFieldLayout";
+import FormSelectField from "../../../components/FormSelectField";
 
-function PaymentStatusField() {
+function PaymentStatusField({ disabled }) {
   return (
-    <FormFieldLayout label="付款狀態" id="paid" isRequired={true}>
-      <ControlledSelect
-        inputId="paid"
-        options={[
-          { label: "已付款", value: "已付款" },
-          { label: "未付款", value: "未付款" },
-        ]}
-        name="paid"
-        creatable={false}
-        placeholder="請選擇付款狀態"
-        rules={{ required: "請選擇付款狀態" }}
-        key="paid"
-      />
-    </FormFieldLayout>
+    <FormSelectField
+      label="付款狀態"
+      options={[
+        { label: "已付款", value: "已付款" },
+        { label: "未付款", value: "未付款" },
+      ]}
+      name="paid"
+      disabled={disabled}
+      placeholder="請選擇付款狀態"
+      rules={{
+        deps: ["status"],
+        required: "請選擇付款狀態",
+      }}
+      key="paid"
+    />
   );
 }
 

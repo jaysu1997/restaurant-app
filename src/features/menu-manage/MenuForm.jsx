@@ -7,8 +7,7 @@ import IngredientSection from "./IngredientSection";
 import CustomizeSection from "./CustomizeSection";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
 import FormActions from "../../components/FormActions";
-import FormInput from "../../components/FormInput";
-import FormFieldLayout from "../../components/FormFieldLayout";
+import FormInputField from "../../components/FormInputField";
 import {
   ModalContainer,
   ModalContent,
@@ -28,13 +27,7 @@ function MenuForm({ onClose, menu, inventoryObj }) {
   );
 
   const methods = useForm({ defaultValues: formatMenu });
-
-  const {
-    getValues,
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = methods;
+  const { getValues, handleSubmit } = methods;
 
   function onSubmit(data) {
     // 整理好要上傳的數據格式
@@ -46,10 +39,6 @@ function MenuForm({ onClose, menu, inventoryObj }) {
       { menuData, newIngredients },
       { onSuccess: () => onClose?.() },
     );
-  }
-
-  function onError(error) {
-    console.log(error);
   }
 
   const fieldsConfig = [
@@ -97,25 +86,20 @@ function MenuForm({ onClose, menu, inventoryObj }) {
   return (
     <Modal title="餐點設定表單" maxWidth={56} onClose={onClose}>
       <FormProvider {...methods}>
-        <ModalContainer as="form" onSubmit={handleSubmit(onSubmit, onError)}>
+        <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
           <ModalContent>
             <ModalFormSection columns={2} title="基本資料" required={true}>
               {fieldsConfig.map((field) => (
-                <FormFieldLayout
-                  key={field.name}
-                  id={field.name}
+                <FormInputField
                   label={field.label}
-                  error={errors?.[field.name]}
-                >
-                  <FormInput
-                    id={field.name}
-                    placeholder={field.placeholder}
-                    {...register(field.name, {
-                      required: "此欄位必須填寫",
-                      ...(field.rules || {}),
-                    })}
-                  />
-                </FormFieldLayout>
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  rules={{
+                    required: "此欄位必須填寫",
+                    ...(field.rules || {}),
+                  }}
+                  key={field.name}
+                />
               ))}
             </ModalFormSection>
 

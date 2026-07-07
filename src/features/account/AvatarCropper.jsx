@@ -4,7 +4,7 @@ import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
 import useUpdateUserAvatar from "../../hooks/data/auth/useUpdateUserAvatar";
-import StyledHotToast from "../../ui/StyledHotToast";
+import showToast from "../../ui/showToast";
 import FormActions from "../../components/FormActions";
 import { ModalContainer, ModalFooter } from "../../components/modal/ModalBody";
 
@@ -89,7 +89,7 @@ function AvatarCropper({ userData, imgUrl, onClose }) {
       });
     } catch (err) {
       console.error("頭像裁切失敗", err);
-      StyledHotToast({ type: "error", title: "頭像裁切失敗" });
+      showToast({ type: "error", title: "頭像裁切失敗" });
     }
   }
 

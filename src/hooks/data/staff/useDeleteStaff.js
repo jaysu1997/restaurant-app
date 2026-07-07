@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteStaffApi } from "../../../services/apiStaff";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 
 function useDeleteStaff() {
   const queryClient = useQueryClient();
@@ -9,10 +9,10 @@ function useDeleteStaff() {
     mutationFn: deleteStaffApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
-      StyledHotToast({ type: "success", title: "刪除成功" });
+      showToast({ type: "success", title: "刪除成功" });
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "刪除失敗",
         content: error.message,

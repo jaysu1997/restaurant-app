@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 import { updateOrderApi } from "../../../services/apiOrders";
 import { useNavigate } from "react-router";
 
@@ -12,13 +12,13 @@ function useUpdateOrder() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       navigate("/orders");
-      StyledHotToast({
+      showToast({
         type: "success",
         title: "訂單更新成功",
       });
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "訂單更新失敗",
         content: error.message,

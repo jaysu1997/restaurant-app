@@ -81,7 +81,7 @@ function normalizeDate(value) {
   return fallback;
 }
 
-function StyledDayRangePicker({ defaultMonth, selected, ...rest }) {
+function RangeCalendar({ defaultMonth, selected, ...rest }) {
   return (
     <StyledDayPicker
       animate
@@ -104,4 +104,4 @@ function StyledDayRangePicker({ defaultMonth, selected, ...rest }) {
   );
 }
 
-export default StyledDayRangePicker;
+export default RangeCalendar;

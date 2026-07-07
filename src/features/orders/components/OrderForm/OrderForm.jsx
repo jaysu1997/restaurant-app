@@ -4,7 +4,7 @@ import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { prepareOrderItem } from "../../../../utils/orderHelpers";
-import StyledHotToast from "../../../../ui/StyledHotToast";
+import showToast from "../../../../ui/showToast";
 import Note from "../../../../components/Note";
 import CustomizationField from "./CustomizationField";
 import ServingsControl from "../ServingsControl";
@@ -72,7 +72,7 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
 
     // 庫存食材不足或不存在
     if (!result.isAvailable) {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: result.error.title,
         content: <p>{result.error.message}</p>,
@@ -94,13 +94,9 @@ function OrderForm({ orderDish, onClose, isEdit = false }) {
     onClose();
   }
 
-  function onError(error) {
-    console.log(error);
-  }
-
   return (
     <FormProvider {...methods}>
-      <ModalContainer as="form" onSubmit={handleSubmit(onSubmit, onError)}>
+      <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
         <ModalContent>
           <Price>$ {orderDish.basePrice - orderDish.discount}</Price>
 

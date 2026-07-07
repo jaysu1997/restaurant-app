@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateStaffApi } from "../../../services/apiStaff";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 
 function useUpdateStaff() {
   const queryClient = useQueryClient();
@@ -9,10 +9,10 @@ function useUpdateStaff() {
     mutationFn: updateStaffApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
-      StyledHotToast({ type: "success", title: "職位更新成功" });
+      showToast({ type: "success", title: "職位更新成功" });
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "職位更新失敗",
         content: error.message,

@@ -14,7 +14,7 @@ function FilterRenderer({ filter, filterValue, handleValueChange }) {
   const FilterComponent = FILTER_COMPONENTS[filter.type];
 
   return (
-    <FormFieldLayout label={filter.title}>
+    <FormFieldLayout id={filter.queryKey} label={filter.title}>
       <FilterComponent
         filter={filter}
         filterValue={filterValue}

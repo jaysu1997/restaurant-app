@@ -3,7 +3,6 @@ import { FormProvider } from "react-hook-form";
 import { buildOrderData } from "../../../utils/orderHelpers";
 import useUpdateOrder from "../../../hooks/data/orders/useUpdateOrder";
 import QueryStatusFallback from "../../../components/QueryStatusFallback";
-import StyledHotToast from "../../../ui/StyledHotToast";
 import { Navigate, useNavigate } from "react-router";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import useOrderInventory from "../hooks/useOrderInventory";
@@ -36,12 +35,6 @@ function OrderEditPage({ orderData }) {
     updateOrder(orderData);
   }
 
-  function onError(error) {
-    console.log(error);
-    const message = error?.status ? "訂單尚未付款，無法註記為已完成狀態" : "";
-    StyledHotToast({ type: "error", title: "訂單更新失敗", content: message });
-  }
-
   // 已完成訂單不可做編輯(自動轉到檢視頁面)
   if (orderData.status === "已完成") {
     return <Navigate to={`/orders/${orderData.id}`} replace />;
@@ -66,7 +59,7 @@ function OrderEditPage({ orderData }) {
         <OrderNote isEdit={true} note={orderData.note} />
 
         <FormActions
-          onSubmit={handleSubmit(onSubmit, onError)}
+          onSubmit={handleSubmit(onSubmit)}
           onCancel={() => navigate(-1)}
           isProcessing={isUpdatingOrder}
           submitDisabled={items.length === 0 || isUpdatingOrder}

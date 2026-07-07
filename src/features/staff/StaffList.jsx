@@ -7,7 +7,7 @@ import { useState } from "react";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
 import { AVATAR_URL } from "../../utils/constants";
-import StyledSelect from "../../ui/StyledSelect";
+import BaseSelect from "../../components/BaseSelect";
 import IconButton from "../../components/button/IconButton";
 
 const List = styled.ul`
@@ -103,51 +103,48 @@ function StaffList({ staffList, onRequestDelete }) {
   }
 
   return (
-    <>
-      <SectionContainer header={{ title: "人員列表", icon: <UsersRound /> }}>
-        <List>
-          {sortedList.map((item) => {
-            const { avatarFile, name, role } = item.user_metadata;
-            return (
-              <Item key={item.id} $isUpdating={!!updatingById[item.id]}>
-                <UserAvatar
-                  avatarUrl={`${AVATAR_URL}${avatarFile}`}
-                  lazyLoading={true}
-                />
+    <SectionContainer header={{ title: "人員列表", icon: <UsersRound /> }}>
+      <List>
+        {sortedList.map((item) => {
+          const { avatarFile, name, role } = item.user_metadata;
+          return (
+            <Item key={item.id} $isUpdating={!!updatingById[item.id]}>
+              <UserAvatar
+                avatarUrl={`${AVATAR_URL}${avatarFile}`}
+                lazyLoading={true}
+              />
 
-                <Profile>
-                  <span>{name}</span>
-                  <span>{item.email}</span>
-                </Profile>
+              <Profile>
+                <span>{name}</span>
+                <span>{item.email}</span>
+              </Profile>
 
-                <StyledSelect
-                  isDisabled={item.id === user.id || updatingById[item.id]}
-                  options={[
-                    { label: "店長", value: "店長" },
-                    { label: "員工", value: "員工" },
-                  ]}
-                  value={{
-                    label: rolesById[item.id],
-                    value: rolesById[item.id],
-                  }}
-                  onChange={(option) =>
-                    handleChange(item.id, role, option.value)
-                  }
-                />
+              <BaseSelect
+                isDisabled={item.id === user.id || updatingById[item.id]}
+                options={[
+                  { label: "店長", value: "店長" },
+                  { label: "員工", value: "員工" },
+                ]}
+                value={{
+                  label: rolesById[item.id],
+                  value: rolesById[item.id],
+                }}
+                onChange={(option) => handleChange(item.id, role, option.value)}
+                showDropdownIndicator={true}
+              />
 
-                <IconButton
-                  $variant="plain"
-                  disabled={item.id === user.id || updatingById[item.id]}
-                  onClick={() => onRequestDelete(item)}
-                >
-                  <UserRoundX strokeWidth={2.2} />
-                </IconButton>
-              </Item>
-            );
-          })}
-        </List>
-      </SectionContainer>
-    </>
+              <IconButton
+                $variant="plain"
+                disabled={item.id === user.id || updatingById[item.id]}
+                onClick={() => onRequestDelete(item)}
+              >
+                <UserRoundX strokeWidth={2.2} />
+              </IconButton>
+            </Item>
+          );
+        })}
+      </List>
+    </SectionContainer>
   );
 }
 

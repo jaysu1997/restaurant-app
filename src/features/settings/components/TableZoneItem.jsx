@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import FormFieldLayout from "../../../components/FormFieldLayout";
-import FormInput from "../../../components/FormInput";
+import FormInputField from "../../../components/FormInputField";
 import { parsePositiveInt, trimString } from "../../../utils/helpers";
 import IconButton from "../../../components/button/IconButton";
 import { Trash2 } from "lucide-react";
@@ -43,12 +42,7 @@ const Preview = styled.div`
 `;
 
 function TableZoneItem({ index, onRemove }) {
-  const {
-    control,
-    register,
-    getValues,
-    formState: { errors },
-  } = useFormContext();
+  const { control, getValues } = useFormContext();
 
   const zoneName = useWatch({
     control,
@@ -60,55 +54,45 @@ function TableZoneItem({ index, onRemove }) {
     name: `dineInTableConfig.${index}.tableCount`,
   });
 
-  const error = errors?.dineInTableConfig?.[index];
-
   return (
-    <li id={`dineInTableConfig.${index}`}>
+    <li>
       <SubTitle>內用分區 {index + 1}</SubTitle>
 
-      <FormFieldLayout
-        id={`dineInTableConfig.${index}.zoneName`}
+      <FormInputField
         label="分區名稱"
-        error={error?.zoneName}
-      >
-        <FormInput
-          id={`dineInTableConfig.${index}.zoneName`}
-          placeholder="分區名稱"
-          {...register(`dineInTableConfig.${index}.zoneName`, {
-            setValueAs: trimString,
-            validate: (value) => {
-              const zones = getValues("dineInTableConfig");
-              const duplicate = zones.some((zone, zoneIndex) => {
-                if (zoneIndex === index) return false; // ← 重點：略過自己
-                return zone.zoneName.trim() === value;
-              });
+        name={`dineInTableConfig.${index}.zoneName`}
+        placeholder="分區名稱"
+        rules={{
+          setValueAs: trimString,
+          validate: (value) => {
+            const zones = getValues("dineInTableConfig");
+            // 檢查是否存在重複的分區命名
+            const duplicate = zones.some((zone, zoneIndex) => {
+              // 略過自己
+              if (zoneIndex === index) return false;
+              return zone.zoneName.trim() === value;
+            });
 
-              return !duplicate || "此名稱已被使用";
-            },
-          })}
-        />
-      </FormFieldLayout>
+            return !duplicate || "此名稱已被使用";
+          },
+        }}
+      />
 
-      <FormFieldLayout
-        id={`dineInTableConfig.${index}.tableCount`}
+      <FormInputField
         label="分區桌數"
-        error={error?.tableCount}
-      >
-        <FormInput
-          id={`dineInTableConfig.${index}.tableCount`}
-          placeholder="分區總桌數"
-          {...register(`dineInTableConfig.${index}.tableCount`, {
-            required: "總桌數不能空白",
-            setValueAs: (value) =>
-              parsePositiveInt(value, {
-                min: 1,
-                fallback: value,
-              }),
-            validate: (value) =>
-              typeof value === "number" || "請輸入 1 以上的整數",
-          })}
-        />
-      </FormFieldLayout>
+        name={`dineInTableConfig.${index}.tableCount`}
+        placeholder="分區總桌數"
+        rules={{
+          required: "總桌數不能空白",
+          setValueAs: (value) =>
+            parsePositiveInt(value, {
+              min: 1,
+              fallback: value,
+            }),
+          validate: (value) =>
+            typeof value === "number" || "請輸入 1 以上的整數",
+        }}
+      />
 
       <IconButton $variant="plain" type="button" onClick={onRemove}>
         <Trash2 />

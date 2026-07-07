@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 import { deleteOrderApi } from "../../../services/apiOrders";
 import { useNavigate } from "react-router";
 
@@ -12,14 +12,14 @@ function useDeleteOrder() {
     onSuccess: (_, variables) => {
       queryClient.removeQueries({ queryKey: ["order", variables] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
-      StyledHotToast({
+      showToast({
         type: "success",
         title: "訂單刪除成功",
       });
       navigate("/orders");
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "訂單刪除失敗",
         content: error.message,

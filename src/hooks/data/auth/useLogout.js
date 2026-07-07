@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 import { logoutApi } from "../../../services/apiAuth";
 
 export function useLogout() {
@@ -15,7 +15,7 @@ export function useLogout() {
       navigate("/login", { replace: true });
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "登出失敗",
         content: error.message,

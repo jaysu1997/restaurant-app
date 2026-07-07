@@ -3,17 +3,13 @@ import { Plus } from "lucide-react";
 import OptionSection from "./OptionSection";
 import TextButton from "../../components/button/TextButton";
 import FormFieldLayout from "../../components/FormFieldLayout";
-import FormInput from "../../components/FormInput";
+import FormInputField from "../../components/FormInputField";
 import ControlledSwitch from "../../ui/ControlledSwitch";
 import ModalFormSection from "../../components/modal/ModalFormSection";
 import ModalFormCard from "../../components/modal/ModalFormCard";
 
 function CustomizeSection({ ingredientOptions }) {
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -38,19 +34,14 @@ function CustomizeSection({ ingredientOptions }) {
           onDelete={() => remove(index)}
           key={field.id}
         >
-          <FormFieldLayout
+          <FormInputField
             label="項目名稱"
-            error={errors?.customizations?.[index]?.name}
-            id={`customizations.${index}.name`}
-          >
-            <FormInput
-              id={`customizations.${index}.name`}
-              placeholder="例如：份量、加料"
-              {...register(`customizations.${index}.name`, {
-                required: "請完成填寫，或將此項目刪除。",
-              })}
-            />
-          </FormFieldLayout>
+            name={`customizations.${index}.name`}
+            placeholder="例如：份量、加料"
+            rules={{
+              required: "請完成填寫，或將此項目刪除。",
+            }}
+          />
 
           <ModalFormCard columns={2} compact={true}>
             <FormFieldLayout label="填寫規則">

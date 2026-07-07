@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInventoryApi } from "../../../services/apiInventory";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 
 function useDeleteInventory() {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ function useDeleteInventory() {
   const { mutate, isPending } = useMutation({
     mutationFn: deleteInventoryApi,
     onSuccess: () => {
-      StyledHotToast({
+      showToast({
         type: "success",
         title: "庫存食材刪除成功",
       });
@@ -18,7 +18,7 @@ function useDeleteInventory() {
     },
     onError: (error) => {
       console.log(error);
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "庫存食材刪除失敗",
         content: error.message,

@@ -1,11 +1,9 @@
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
-import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../components/SectionContainer";
-import FormInput from "../../components/FormInput";
+import FormInputField from "../../components/FormInputField";
 import { Store } from "lucide-react";
-import FormFieldLayout from "../../components/FormFieldLayout";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 
 const Fields = styled.div`
@@ -25,14 +23,15 @@ function StoreInfo({ settings }) {
 
   const { storeInfo } = settings;
 
-  const {
-    formState: { isDirty, errors },
-    handleSubmit,
-    reset,
-    register,
-  } = useForm({
+  const methods = useForm({
     defaultValues: { storeInfo },
   });
+
+  const {
+    formState: { isDirty },
+    handleSubmit,
+    reset,
+  } = methods;
 
   function onSubmit(data) {
     console.log("成功", data);
@@ -42,75 +41,57 @@ function StoreInfo({ settings }) {
     });
   }
 
-  function onError(error) {
-    console.log("失敗", error);
-    StyledHotToast({ type: "error", title: "設定更新失敗" });
-  }
-
   return (
-    <SectionContainer
-      header={{
-        title: "店鋪資訊設定",
-        icon: <Store />,
-        description: "設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。",
-      }}
-      onSubmit={handleSubmit(onSubmit, onError)}
-      onReset={() => reset()}
-      isDirty={isDirty}
-      isProcessing={isSubmittingSettings}
-    >
-      <Fields>
-        <FormFieldLayout
-          id="phone"
-          label="連絡電話"
-          error={errors?.storeInfo?.phone}
-        >
-          <FormInput
-            id="phone"
+    <FormProvider {...methods}>
+      <SectionContainer
+        header={{
+          title: "店鋪資訊設定",
+          icon: <Store />,
+          description: "設定店鋪的基本資訊，包含店鋪地址、聯絡方式、統一編號。",
+        }}
+        onSubmit={handleSubmit(onSubmit)}
+        onReset={() => reset()}
+        isDirty={isDirty}
+        isProcessing={isSubmittingSettings}
+      >
+        <Fields>
+          <FormInputField
+            label="連絡電話"
+            name="storeInfo.phone"
             type="tel"
             placeholder="請輸入連絡電話"
-            {...register("storeInfo.phone", {
+            rules={{
               setValueAs: trimString,
               required: "連絡電話不能空白",
               validate: (value) => validatePhoneNumber(value),
-            })}
+            }}
           />
-        </FormFieldLayout>
 
-        <FormFieldLayout
-          id="address"
-          label="店鋪地址"
-          error={errors?.storeInfo?.address}
-        >
-          <FormInput
-            id="address"
+          <FormInputField
+            label="店鋪地址"
+            name="storeInfo.address"
             placeholder="請輸入店鋪地址"
-            {...register("storeInfo.address", {
+            rules={{
               setValueAs: trimString,
               required: "店鋪地址不能空白",
-            })}
+            }}
           />
-        </FormFieldLayout>
 
-        <FormFieldLayout
-          id="taxId"
-          label="統一編號"
-          error={errors?.storeInfo?.taxId}
-        >
-          <FormInput
-            id="taxId"
+          <FormInputField
+            label="統一編號"
+            name="storeInfo.taxId"
             placeholder="請輸入統一編號"
-            {...register("storeInfo.taxId", {
+            rules={{
               setValueAs: trimString,
               required: "統一編號不能空白",
               validate: (value) => {
                 return /^\d{8}$/.test(value) || "統一編號格式錯誤";
               },
-            })}
+            }}
           />
-        </FormFieldLayout>
-      </Fields>
-    </SectionContainer>
+        </Fields>
+      </SectionContainer>
+    </FormProvider>
   );
 }
 

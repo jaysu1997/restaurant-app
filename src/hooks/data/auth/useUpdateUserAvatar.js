@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateAvatarFileApi } from "../../../services/apiAuth";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 
 // 更新用戶頭像(涵蓋新增頭像、更改user metadata頭像數據、刪除舊頭像)
 function useUpdateUserAvatar() {
@@ -10,9 +10,14 @@ function useUpdateUserAvatar() {
     mutationFn: updateAvatarFileApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      StyledHotToast({ type: "success", title: "頭像更新成功" });
+      showToast({ type: "success", title: "頭像更新成功" });
     },
-    onError: () => StyledHotToast({ type: "error", title: "頭像更新失敗" }),
+    onError: (error) =>
+      showToast({
+        type: "error",
+        title: "頭像更新失敗",
+        content: error.message,
+      }),
   });
 
   return { updateUserAvatar: mutate, isUpdatingUserAvatar: isPending };

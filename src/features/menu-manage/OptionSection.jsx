@@ -2,17 +2,12 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus } from "lucide-react";
 import { parsePositiveInt } from "../../utils/helpers";
 import TextButton from "../../components/button/TextButton";
-import FormFieldLayout from "../../components/FormFieldLayout";
-import FormInput from "../../components/FormInput";
-import ControlledSelect from "../../ui/ControlledSelect";
+import FormInputField from "../../components/FormInputField";
+import FormSelectField from "../../components/FormSelectField";
 import ModalFormCard from "../../components/modal/ModalFormCard";
 
 function OptionSection({ nestedIndex, ingredientOptions }) {
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -29,87 +24,47 @@ function OptionSection({ nestedIndex, ingredientOptions }) {
           onDelete={fields.length > 1 ? () => remove(index) : undefined}
           key={field.id}
         >
-          <FormFieldLayout
+          <FormInputField
             label="選項名稱"
-            id={`customizations.${nestedIndex}.options.${index}.name`}
-            error={
-              errors?.customizations?.[nestedIndex]?.options?.[index]?.name
-            }
-          >
-            <FormInput
-              placeholder="例如：大杯、加蛋"
-              id={`customizations.${nestedIndex}.options.${index}.name`}
-              {...register(
-                `customizations.${nestedIndex}.options.${index}.name`,
-                {
-                  required: "請完成填寫，或將此選項刪除。",
-                },
-              )}
-            />
-          </FormFieldLayout>
+            name={`customizations.${nestedIndex}.options.${index}.name`}
+            placeholder="例如：大杯、加蛋"
+            rules={{
+              required: "請完成填寫，或將此選項刪除。",
+            }}
+          />
 
-          <FormFieldLayout
+          <FormInputField
             label="選項額外加價"
-            id={`customizations.${nestedIndex}.options.${index}.extraPrice`}
-            error={
-              errors?.customizations?.[nestedIndex]?.options?.[index]
-                ?.extraPrice
-            }
-          >
-            <FormInput
-              id={`customizations.${nestedIndex}.options.${index}.extraPrice`}
-              {...register(
-                `customizations.${nestedIndex}.options.${index}.extraPrice`,
-                {
-                  required: "請完成填寫，或將此選項刪除。",
-                  setValueAs: (value) =>
-                    parsePositiveInt(value, { min: 0, fallback: value }),
-                  validate: (value) =>
-                    typeof value === "number" || "請輸入 0 以上的整數",
-                },
-              )}
-            />
-          </FormFieldLayout>
+            name={`customizations.${nestedIndex}.options.${index}.extraPrice`}
+            rules={{
+              required: "請完成填寫，或將此選項刪除。",
+              setValueAs: (value) =>
+                parsePositiveInt(value, { min: 0, fallback: value }),
+              validate: (value) =>
+                typeof value === "number" || "請輸入 0 以上的整數",
+            }}
+          />
 
-          <FormFieldLayout
+          <FormSelectField
             label="額外消耗食材"
-            id={`customizations.${nestedIndex}.options.${index}.ingredient`}
-            error={
-              errors?.customizations?.[nestedIndex]?.options?.[index]
-                ?.ingredient
-            }
-          >
-            <ControlledSelect
-              inputId={`customizations.${nestedIndex}.options.${index}.ingredient`}
-              name={`customizations.${nestedIndex}.options.${index}.ingredient`}
-              rules={{ required: "請完成填寫，或將此選項刪除。" }}
-              options={ingredientOptions}
-              placeholder="選擇現有食材或輸入新食材"
-              creatable
-            />
-          </FormFieldLayout>
+            name={`customizations.${nestedIndex}.options.${index}.ingredient`}
+            rules={{ required: "請完成填寫，或將此選項刪除。" }}
+            options={ingredientOptions}
+            placeholder="選擇現有食材或輸入新食材"
+            isCreatable
+          />
 
-          <FormFieldLayout
+          <FormInputField
             label="食材消耗數量"
-            id={`customizations.${nestedIndex}.options.${index}.quantity`}
-            error={
-              errors?.customizations?.[nestedIndex]?.options?.[index]?.quantity
-            }
-          >
-            <FormInput
-              id={`customizations.${nestedIndex}.options.${index}.quantity`}
-              {...register(
-                `customizations.${nestedIndex}.options.${index}.quantity`,
-                {
-                  required: "請完成填寫，或將此選項刪除。",
-                  setValueAs: (value) =>
-                    parsePositiveInt(value, { min: 0, fallback: value }),
-                  validate: (value) =>
-                    typeof value === "number" || "請輸入 0 以上的整數",
-                },
-              )}
-            />
-          </FormFieldLayout>
+            name={`customizations.${nestedIndex}.options.${index}.quantity`}
+            rules={{
+              required: "請完成填寫，或將此選項刪除。",
+              setValueAs: (value) =>
+                parsePositiveInt(value, { min: 0, fallback: value }),
+              validate: (value) =>
+                typeof value === "number" || "請輸入 0 以上的整數",
+            }}
+          />
         </ModalFormCard>
       ))}
 

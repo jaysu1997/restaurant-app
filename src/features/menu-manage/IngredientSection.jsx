@@ -2,18 +2,13 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus } from "lucide-react";
 import { parsePositiveInt } from "../../utils/helpers";
 import TextButton from "../../components/button/TextButton";
-import FormFieldLayout from "../../components/FormFieldLayout";
-import ControlledSelect from "../../ui/ControlledSelect";
-import FormInput from "../../components/FormInput";
+import FormSelectField from "../../components/FormSelectField";
+import FormInputField from "../../components/FormInputField";
 import ModalFormSection from "../../components/modal/ModalFormSection";
 import ModalFormCard from "../../components/modal/ModalFormCard";
 
 function IngredientSection({ ingredientOptions }) {
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -37,37 +32,26 @@ function IngredientSection({ ingredientOptions }) {
           onDelete={fields.length > 1 ? () => remove(index) : undefined}
           key={field.id}
         >
-          <FormFieldLayout
+          <FormSelectField
             label="食材名稱"
-            error={errors?.ingredients?.[index]?.ingredient}
-            id={`ingredients.${index}.ingredient`}
-          >
-            <ControlledSelect
-              inputId={`ingredients.${index}.ingredient`}
-              name={`ingredients.${index}.ingredient`}
-              rules={{ required: "食材名稱不能空白" }}
-              options={ingredientOptions}
-              placeholder="選擇現有食材或輸入新食材"
-              creatable
-            />
-          </FormFieldLayout>
+            name={`ingredients.${index}.ingredient`}
+            rules={{ required: "食材名稱不能空白" }}
+            options={ingredientOptions}
+            placeholder="選擇現有食材或輸入新食材"
+            isCreatable
+          />
 
-          <FormFieldLayout
+          <FormInputField
             label="消耗數量"
-            error={errors?.ingredients?.[index]?.quantity}
-            id={`ingredients.${index}.quantity`}
-          >
-            <FormInput
-              id={`ingredients.${index}.quantity`}
-              {...register(`ingredients.${index}.quantity`, {
-                required: "此欄位必須填寫",
-                setValueAs: (value) =>
-                  parsePositiveInt(value, { min: 0, fallback: value }),
-                validate: (value) =>
-                  typeof value === "number" || "請輸入 0 以上的整數",
-              })}
-            />
-          </FormFieldLayout>
+            name={`ingredients.${index}.quantity`}
+            rules={{
+              required: "此欄位必須填寫",
+              setValueAs: (value) =>
+                parsePositiveInt(value, { min: 0, fallback: value }),
+              validate: (value) =>
+                typeof value === "number" || "請輸入 0 以上的整數",
+            }}
+          />
         </ModalFormCard>
       ))}
 

@@ -1,10 +1,10 @@
-import FormInput from "../../components/FormInput";
+import BaseInput from "../BaseInput";
 
 function SearchFilter({ filterValue, handleValueChange, filter }) {
   const { queryKey, placeholder } = filter;
 
   return (
-    <FormInput
+    <BaseInput
       placeholder={placeholder}
       value={filterValue}
       onChange={(e) => {

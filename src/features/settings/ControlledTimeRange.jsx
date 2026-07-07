@@ -1,9 +1,13 @@
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 import styled from "styled-components";
-import ControlledSelect from "../../ui/ControlledSelect";
 import { Trash2, Plus, Minus } from "lucide-react";
-import FormFieldLayout from "../../components/FormFieldLayout";
 import IconButton from "../../components/button/IconButton";
+import BaseSelect from "../../components/BaseSelect";
 
 const StyledTimeRange = styled.ul`
   display: flex;
@@ -55,32 +59,44 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
     name: `${fieldArrayName}.${dayIndex}.timeSlots`,
   });
 
-  // 當天有營業
+  // 當天是否有營業
   const isBusinessDay = useWatch({
     control,
     name: `${fieldArrayName}.${dayIndex}.isBusinessDay`,
   });
 
+  const baseName = `${fieldArrayName}.${dayIndex}.timeSlots`;
+
   return (
     <StyledTimeRange>
       {fields.map((field, slotIndex) => (
         <li key={field.id}>
-          <ControlledSelect
-            options={times}
-            name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.openTime`}
-            creatable={false}
-            placeholder="開始時間"
-            disabled={!isBusinessDay}
+          <Controller
+            control={control}
+            name={`${baseName}.${slotIndex}.openTime`}
+            render={({ field }) => (
+              <BaseSelect
+                {...field}
+                options={times}
+                isDisabled={!isBusinessDay}
+                placeholder="開始時間"
+              />
+            )}
           />
 
           <Minus className="icon-sm" />
 
-          <ControlledSelect
-            options={times}
-            name={`${fieldArrayName}.${dayIndex}.timeSlots.${slotIndex}.closeTime`}
-            creatable={false}
-            placeholder="休息時間"
-            disabled={!isBusinessDay}
+          <Controller
+            control={control}
+            name={`${baseName}.${slotIndex}.closeTime`}
+            render={({ field }) => (
+              <BaseSelect
+                {...field}
+                options={times}
+                isDisabled={!isBusinessDay}
+                placeholder="休息時間"
+              />
+            )}
           />
 
           {slotIndex === 0 && (

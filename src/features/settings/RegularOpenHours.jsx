@@ -4,7 +4,6 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import { normalizeRegularOpenHours } from "./sortTimeSlots";
-import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../components/SectionContainer";
 import { Clock } from "lucide-react";
 
@@ -56,7 +55,6 @@ function RegularOpenHours({ settings }) {
   });
 
   const {
-    register,
     handleSubmit,
     reset,
     control,
@@ -81,11 +79,6 @@ function RegularOpenHours({ settings }) {
     );
   }
 
-  function onError(error) {
-    console.log("失敗", error);
-    StyledHotToast({ type: "error", title: "設定更新失敗" });
-  }
-
   return (
     <FormProvider {...methods}>
       <SectionContainer
@@ -95,7 +88,7 @@ function RegularOpenHours({ settings }) {
           description:
             "設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。",
         }}
-        onSubmit={handleSubmit(onSubmit, onError)}
+        onSubmit={handleSubmit(onSubmit)}
         onReset={() => reset()}
         isDirty={isDirty}
         isProcessing={isSubmittingSettings}
@@ -105,13 +98,6 @@ function RegularOpenHours({ settings }) {
             <BusinessPeriodItem key={day.id}>
               <DateField>
                 <label htmlFor={day.dayOfWeek}>{day.label}</label>
-                <input
-                  id={day.dayOfWeek}
-                  type="text"
-                  hidden
-                  {...register(`regularOpenHours.${dayIndex}.dayOfWeek`)}
-                  value={day.dayOfWeek}
-                />
 
                 <ControlledSwitch
                   options={{

@@ -2,7 +2,7 @@
 import styled, { css } from "styled-components";
 import { format } from "date-fns";
 import { useRef, useState } from "react";
-import StyledDayRangePicker from "./StyledDayRangePicker";
+import RangeCalendar from "./RangeCalendar";
 import { CalendarRange } from "lucide-react";
 import useClickOutside from "../hooks/ui/useClickOutside";
 
@@ -29,7 +29,7 @@ const DateField = styled.div`
   border: 1px solid
     ${({ $isPickerOpen }) => ($isPickerOpen ? "#2684ff" : "#ddd")};
   box-shadow: ${({ $isPickerOpen }) =>
-    $isPickerOpen ? "0 0 0 1px #2684ff" : "none"};
+    $isPickerOpen ? "0 0 0 3px rgba(38, 132, 255, 0.15)" : "none"};
 
   input {
     font-size: 1.4rem;
@@ -126,7 +126,7 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
           inert={!isPickerOpen}
           $popover={isPopover}
         >
-          <StyledDayRangePicker $dayCellSize={dayCellSize} {...rest} />
+          <RangeCalendar $dayCellSize={dayCellSize} {...rest} />
           {isPopover && (
             <Footer>
               <ActionButton

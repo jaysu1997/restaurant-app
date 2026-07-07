@@ -25,7 +25,7 @@ const MetaText = styled.p`
   ${({ $error }) =>
     $error
       ? css`
-          color: #ff3333;
+          color: #dc2626;
           font-weight: 500;
         `
       : css`

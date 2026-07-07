@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
-import StyledHotToast from "../../ui/StyledHotToast";
 import SectionContainer from "../../components/SectionContainer";
 import { Utensils } from "lucide-react";
 import TableZoneItem from "./components/TableZoneItem";
@@ -62,11 +61,6 @@ function DineInTableSettings({ settings }) {
     });
   }
 
-  function onError(error) {
-    console.log("失敗", error);
-    StyledHotToast({ type: "error", title: "設定更新失敗" });
-  }
-
   return (
     <FormProvider {...methods}>
       <SectionContainer
@@ -76,7 +70,7 @@ function DineInTableSettings({ settings }) {
           description:
             "設定內用餐桌的區域分類與桌號配置，用於點餐時標記內用桌位。",
         }}
-        onSubmit={handleSubmit(onSubmit, onError)}
+        onSubmit={handleSubmit(onSubmit)}
         onReset={() => reset()}
         isDirty={isDirty}
         isProcessing={isSubmittingSettings}

@@ -1,8 +1,7 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import { generatePickupTimeOptions } from "../../../context/settings/settingsHelpers";
 import useSettings from "../../../context/settings/useSettings";
-import ControlledSelect from "../../../ui/ControlledSelect";
-import FormFieldLayout from "../../../components/FormFieldLayout";
+import FormSelectField from "../../../components/FormSelectField";
 
 function ensureOptionExists(options, option = null) {
   if (!option) return options;
@@ -16,11 +15,7 @@ function ensureOptionExists(options, option = null) {
 
 function DiningInfoField({ disabled }) {
   const { todayOpenInfo, dineInTableOptions } = useSettings();
-  const {
-    getValues,
-    control,
-    formState: { errors },
-  } = useFormContext();
+  const { getValues, control } = useFormContext();
 
   const diningMethod = useWatch({
     control,
@@ -35,25 +30,17 @@ function DiningInfoField({ disabled }) {
   );
 
   return (
-    <FormFieldLayout
+    <FormSelectField
       label={isTakeout ? "取餐時間" : "內用桌號"}
-      id={isTakeout ? "pickupTime" : "tableNumber"}
-      isRequired={true}
-      error={isTakeout ? errors?.pickupTime : errors?.tableNumber}
-    >
-      <ControlledSelect
-        inputId={isTakeout ? "pickupTime" : "tableNumber"}
-        options={isTakeout ? pickupTimeOptions : dineInTableOptions}
-        name={isTakeout ? "pickupTime" : "tableNumber"}
-        creatable={false}
-        placeholder={isTakeout ? "選擇取餐時間" : "選擇桌號"}
-        disabled={disabled}
-        rules={{
-          required: isTakeout ? "請選擇取餐時間" : "請選擇內用桌號",
-        }}
-        key={isTakeout ? "pickupTime" : "tableNumber"}
-      />
-    </FormFieldLayout>
+      name={isTakeout ? "pickupTime" : "tableNumber"}
+      options={isTakeout ? pickupTimeOptions : dineInTableOptions}
+      placeholder={isTakeout ? "選擇取餐時間" : "選擇桌號"}
+      disabled={disabled}
+      rules={{
+        required: isTakeout ? "請選擇取餐時間" : "請選擇內用桌號",
+      }}
+      key={isTakeout ? "pickupTime" : "tableNumber"}
+    />
   );
 }
 

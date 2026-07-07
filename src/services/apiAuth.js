@@ -93,7 +93,7 @@ export async function updateUserPasswordApi(userCredentials) {
   });
 
   handleSupabaseApiError(signInError, {
-    invalid_credentials: "舊密碼錯誤，請重新嘗試。",
+    invalid_credentials: "目前密碼不正確",
   });
 
   // 確認帳號密碼都正確之後才能正式更改為新密碼

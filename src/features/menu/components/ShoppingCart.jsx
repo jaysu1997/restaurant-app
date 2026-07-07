@@ -16,10 +16,7 @@ import {
   calculateOrderSummary,
 } from "../../../utils/orderHelpers";
 import ModalCloseButton from "../../../components/ModalCloseButton";
-import DiningMethodSegmented from "../../../ui/DiningMethodSegmented";
-import DiningInfoField from "../../orders/components/DiningInfoField";
-import PaymentStatusField from "../../orders/components/PaymentStatusField";
-import Note from "../../../components/Note";
+import CartOrderInfo from "./CartOrderInfo";
 
 const StyledShoppingCart = styled.aside`
   position: fixed;
@@ -85,19 +82,6 @@ const CartList = styled.ul`
   flex-direction: column;
 `;
 
-const OrderInfoField = styled.div`
-  padding: 2rem 0;
-  display: flex;
-  flex-direction: column;
-
-  label {
-    font-size: 1.4rem;
-    display: flex;
-    gap: 0.2rem;
-    font-weight: 600;
-  }
-`;
-
 const Footer = styled.footer`
   border-top: 1px solid #dcdcdc;
   background-color: #fff;
@@ -129,7 +113,13 @@ function ShoppingCart({ canPlaceOrder }) {
   } = useOrderDraft();
 
   const methods = useForm({
-    defaultValues: { diningMethod: "內用" },
+    defaultValues: {
+      diningMethod: "內用",
+      status: {
+        label: "準備中",
+        value: "準備中",
+      },
+    },
   });
 
   const {
@@ -173,12 +163,7 @@ function ShoppingCart({ canPlaceOrder }) {
                 ))}
               </CartList>
 
-              <OrderInfoField>
-                <DiningMethodSegmented disabled={!canPlaceOrder} />
-                <DiningInfoField disabled={!canPlaceOrder} />
-                <PaymentStatusField />
-                <Note label="訂單備註" />
-              </OrderInfoField>
+              <CartOrderInfo canPlaceOrder={canPlaceOrder} />
             </CartContent>
 
             <Footer>

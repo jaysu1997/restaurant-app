@@ -13,7 +13,7 @@ import { addYears, endOfYear, isAfter, isToday } from "date-fns";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import { validateDateRangeField } from "./validateOverlap";
 import { normalizeSpecialOpenHours } from "./sortTimeSlots";
-import StyledHotToast from "../../ui/StyledHotToast";
+import showToast from "../../ui/showToast";
 import SectionContainer from "../../components/SectionContainer";
 import { Trash2, CalendarClock } from "lucide-react";
 import FormFieldLayout from "../../components/FormFieldLayout";
@@ -104,11 +104,6 @@ function SpecialOpenHours({ settings }) {
     );
   }
 
-  function onError(error) {
-    console.log("失敗", error);
-    StyledHotToast({ type: "error", title: "設定更新失敗" });
-  }
-
   return (
     <FormProvider {...methods}>
       <SectionContainer
@@ -118,7 +113,7 @@ function SpecialOpenHours({ settings }) {
           description:
             "需要臨時調整特定日期的營業時段，可在此處添加設定，設定值會覆蓋一般營業時間。",
         }}
-        onSubmit={handleSubmit(onSubmit, onError)}
+        onSubmit={handleSubmit(onSubmit)}
         onReset={() => reset()}
         isDirty={isDirty}
         isProcessing={isSubmittingSettings}

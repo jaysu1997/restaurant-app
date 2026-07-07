@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUserProfileApi } from "../../../services/apiAuth";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 
 // 更新user的資料
 function useUpdateUserProfile() {
@@ -10,10 +10,10 @@ function useUpdateUserProfile() {
     mutationFn: updateUserProfileApi,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      StyledHotToast({ type: "success", title: "個人資料更新成功" });
+      showToast({ type: "success", title: "個人資料更新成功" });
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "個人資料更新失敗",
         content: error.message,

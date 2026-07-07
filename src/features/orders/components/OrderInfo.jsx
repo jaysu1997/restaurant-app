@@ -121,7 +121,7 @@ function OrderInfo({ orderData, isEdit, canModifyItems }) {
         )}
 
         {isEdit ? (
-          <PaymentStatusField />
+          <PaymentStatusField disabled={false} />
         ) : (
           <InfoItem>
             <label>付款狀態</label>

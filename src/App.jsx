@@ -35,6 +35,11 @@ const queryClient = new QueryClient({
   },
 });
 
+// 關於連絡電話的部分，或許可以加入placeholder提示格式，且改變validate處理(主動清除-和())?
+// 取餐編號的部分或許也可以(placeholder) 也有可能全部的input都建議設計placeholder?
+
+// field error 應該要調整field的樣式(red border)
+
 // 可以考慮使用ai查看box-shadow inset和borde的使用是否都合適，應該怎麼調整?
 
 // 還有form應該可以抽成form layout、form footer、form content...
@@ -48,8 +53,6 @@ const queryClient = new QueryClient({
 // 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?或許可以一律套用class?
 
 // 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)，或許可以分成日期時間helper、正則helpers...
-
-// isProcessing要全面重新修正，不需要RHF提供的submitting了，其實只需要mutate提供的isPending就好。
 
 // SEO、lighthouse檢查
 

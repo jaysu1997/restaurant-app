@@ -1,12 +1,11 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
-import StyledHotToast from "../../ui/StyledHotToast";
+import showToast from "../../ui/showToast";
 import Modal from "../../components/modal/Modal";
 import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
 import FormActions from "../../components/FormActions";
-import FormFieldLayout from "../../components/FormFieldLayout";
-import FormInput from "../../components/FormInput";
+import FormInputField from "../../components/FormInputField";
 import {
   ModalContainer,
   ModalContent,
@@ -20,11 +19,7 @@ function InventoryForm({ inventory, onClose }) {
     defaultValues: inventory || {},
   });
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit } = methods;
 
   const { submitInventory, isSubmittingInventory } = useSubmitInventory();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,7 +29,7 @@ function InventoryForm({ inventory, onClose }) {
 
     submitInventory(data, {
       onSuccess: () => {
-        StyledHotToast({
+        showToast({
           type: "success",
           title: `庫存食材設定${isEdit ? "更新" : "新增"}成功`,
         });
@@ -62,32 +57,26 @@ function InventoryForm({ inventory, onClose }) {
             )}
 
             <ModalFormSection columns={1}>
-              <FormFieldLayout label="食材名稱" error={errors?.name} id="name">
-                <FormInput
-                  id="name"
-                  {...register("name", {
-                    required: "此欄位必須填寫",
-                    setValueAs: trimString,
-                  })}
-                />
-              </FormFieldLayout>
+              <FormInputField
+                label="食材名稱"
+                name="name"
+                rules={{
+                  required: "此欄位必須填寫",
+                  setValueAs: trimString,
+                }}
+              />
 
-              <FormFieldLayout
+              <FormInputField
                 label="庫存數量"
-                error={errors?.remainingQuantity}
-                id="remainingQuantity"
-              >
-                <FormInput
-                  id="remainingQuantity"
-                  {...register("remainingQuantity", {
-                    required: "此欄位必須填寫",
-                    setValueAs: (value) =>
-                      parsePositiveInt(value, { min: 0, fallback: value }),
-                    validate: (value) =>
-                      typeof value === "number" || "請輸入 0 以上的整數",
-                  })}
-                />
-              </FormFieldLayout>
+                name="remainingQuantity"
+                rules={{
+                  required: "此欄位必須填寫",
+                  setValueAs: (value) =>
+                    parsePositiveInt(value, { min: 0, fallback: value }),
+                  validate: (value) =>
+                    typeof value === "number" || "請輸入 0 以上的整數",
+                }}
+              />
             </ModalFormSection>
           </ModalContent>
 

@@ -5,16 +5,34 @@ import CreatableSelect from "react-select/creatable";
 const selectStyle = {
   container: (base) => ({ ...base, width: "100%" }),
   input: (base) => ({ ...base, maxWidth: "100%", overflow: "hidden" }),
-  control: (base, state) => ({
-    ...base,
-    fontSize: "1.4rem",
-    fontWeight: "400",
-    height: "3.8rem",
-    borderColor: state.isFocused ? "#2684FF" : "#ddd",
-    "&:hover": {
-      borderColor: state.isFocused ? "#2684FF" : "#bbb",
-    },
-  }),
+  control: (base, state) => {
+    const hasError = state.selectProps.error;
+
+    return {
+      ...base,
+
+      fontSize: "1.4rem",
+      fontWeight: "400",
+      height: "3.8rem",
+
+      borderColor: hasError ? "#dc2626" : state.isFocused ? "#2684ff" : "#ddd",
+
+      boxShadow:
+        hasError && state.isFocused
+          ? "0 0 0 3px rgba(220,38,38,.15)"
+          : !hasError && state.isFocused
+            ? "0 0 0 3px rgba(38,132,255,.15)"
+            : "none",
+
+      "&:hover": {
+        borderColor: hasError
+          ? "#dc2626"
+          : state.isFocused
+            ? "#2684ff"
+            : "#bbb",
+      },
+    };
+  },
   menuList: (base) => ({
     ...base,
     fontSize: "1.4rem",
@@ -25,7 +43,12 @@ const selectStyle = {
 };
 
 // 基礎 react select 樣式元件
-function StyledSelect({ creatable = false, ...rest }) {
+function BaseSelect({
+  isCreatable = false,
+  error,
+  showDropdownIndicator = false,
+  ...rest
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -49,27 +72,35 @@ function StyledSelect({ creatable = false, ...rest }) {
     };
   }, [menuOpen]);
 
-  const Component = creatable ? CreatableSelect : Select;
+  const Component = isCreatable ? CreatableSelect : Select;
 
   return (
     <Component
       // 這樣才能生成classname選取
       classNamePrefix="rs"
-      isSearchable={creatable}
-      isClearable={creatable}
+      isSearchable={isCreatable}
+      isClearable={isCreatable}
       styles={selectStyle}
+      error={error}
       formatCreateLabel={(inputValue) => `新增食材: ${inputValue}`}
       menuPosition="fixed"
       menuPlacement="bottom"
       menuIsOpen={menuOpen}
       onMenuOpen={() => setMenuOpen(true)}
       onMenuClose={() => setMenuOpen(false)}
-      components={{
-        IndicatorSeparator: () => null,
-      }}
+      components={
+        showDropdownIndicator
+          ? {
+              IndicatorSeparator: () => null,
+            }
+          : {
+              IndicatorSeparator: () => null,
+              DropdownIndicator: () => null,
+            }
+      }
       {...rest}
     />
   );
 }
 
-export default StyledSelect;
+export default BaseSelect;

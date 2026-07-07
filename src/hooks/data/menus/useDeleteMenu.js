@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteMenuApi } from "../../../services/apiMenus";
-import StyledHotToast from "../../../ui/StyledHotToast";
+import showToast from "../../../ui/showToast";
 
 function useDeleteMenu() {
   const queryClient = useQueryClient();
@@ -8,14 +8,14 @@ function useDeleteMenu() {
   const { mutate, isPending } = useMutation({
     mutationFn: (id) => deleteMenuApi(id),
     onSuccess: () => {
-      StyledHotToast({
+      showToast({
         type: "success",
         title: "數據刪除成功",
       });
       queryClient.invalidateQueries({ queryKey: ["menus"] });
     },
     onError: (error) => {
-      StyledHotToast({
+      showToast({
         type: "error",
         title: "數據刪除失敗",
         content: error.message,

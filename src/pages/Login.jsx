@@ -1,13 +1,12 @@
 // ok
 import styled from "styled-components";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import useLogin from "../hooks/data/auth/useLogin";
 import useUser from "../hooks/data/auth/useUser";
-import PasswordInput from "../components/PasswordInput";
-import FormInput from "../components/FormInput";
-import FormFieldLayout from "../components/FormFieldLayout";
+import FormPasswordField from "../components/FormPasswordField";
+import FormInputField from "../components/FormInputField";
 import { isValidEmail } from "../utils/validation";
 import SubmitButton from "../components/button/SubmitButton";
 
@@ -73,17 +72,18 @@ function Login() {
   const { login, isLoggingIn } = useLogin();
   const { user, userIsLoading } = useUser();
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm({
+  const methods = useForm({
     defaultValues: {
       email: "admin@test.com",
       password: "admin@test.com",
     },
   });
+
+  const {
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = methods;
 
   // 如果已經有登入帳號就自動轉跳到首頁
   useEffect(() => {
@@ -101,56 +101,52 @@ function Login() {
     });
   }
 
-  function onError(error) {
-    console.log(error);
-  }
-
   // 避免手動修改路由回到login時會露出登入ui
   if (userIsLoading || user) return null;
 
   return (
-    <PageLayout>
-      <StyledLogin>
-        <Logo src="/logo.webp" alt="logo" />
-        <LoginHeading>登入 Aurora Bites</LoginHeading>
+    <FormProvider {...methods}>
+      <PageLayout>
+        <StyledLogin>
+          <Logo src="/logo.webp" alt="logo" />
+          <LoginHeading>登入 Aurora Bites</LoginHeading>
 
-        {/* 登入失敗提示訊息 */}
-        {errors?.root && (
-          <LoginFailMessage>{errors?.root?.message}</LoginFailMessage>
-        )}
+          {/* 登入失敗提示訊息 */}
+          {errors?.root && (
+            <LoginFailMessage>{errors?.root?.message}</LoginFailMessage>
+          )}
 
-        <LoginForm onSubmit={handleSubmit(onSubmit, onError)}>
-          <FormFieldLayout id="email" label="信箱" error={errors?.email}>
-            <FormInput
-              id="email"
+          <LoginForm onSubmit={handleSubmit(onSubmit)}>
+            <FormInputField
+              label="信箱"
+              name="email"
               autoComplete="username"
-              {...register("email", {
+              rules={{
                 required: "信箱必須填寫",
                 validate: isValidEmail,
-              })}
+              }}
             />
-          </FormFieldLayout>
 
-          <FormFieldLayout label="密碼" id="password" error={errors?.password}>
-            <PasswordInput
-              id="password"
+            <FormPasswordField
+              label="密碼"
+              name="password"
               autoComplete="current-password"
-              {...register("password", {
+              rules={{
                 required: "密碼必須填寫",
                 minLength: { value: 8, message: "密碼至少要有8碼" },
-              })}
+              }}
             />
-          </FormFieldLayout>
 
-          <SubmitButton
-            label="登入"
-            fullWidth={true}
-            isProcessing={isLoggingIn}
-            disabled={isLoggingIn}
-          />
-        </LoginForm>
-      </StyledLogin>
-    </PageLayout>
+            <SubmitButton
+              label="登入"
+              fullWidth={true}
+              isProcessing={isLoggingIn}
+              disabled={isLoggingIn}
+            />
+          </LoginForm>
+        </StyledLogin>
+      </PageLayout>
+    </FormProvider>
   );
 }
 

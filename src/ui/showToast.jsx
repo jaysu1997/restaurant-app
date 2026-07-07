@@ -51,7 +51,7 @@ const Content = styled.div`
   word-break: break-all;
 `;
 
-function StyledHotToast({
+function showToast({
   closeButton = true,
   type = "error",
   title = "提示訊息",
@@ -79,4 +79,4 @@ function StyledHotToast({
   ));
 }
 
-export default StyledHotToast;
+export default showToast;
