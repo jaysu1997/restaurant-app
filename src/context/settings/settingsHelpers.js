@@ -130,7 +130,7 @@ export function getOpenStatus(todayOpenInfo) {
   if (!todayOpenInfo) {
     return {
       status: "unknown",
-      tooltip: "暫時無法取得營業狀態",
+      detail: "",
       nextUpdateMs: midnightUpdateMs,
     };
   }
@@ -138,8 +138,8 @@ export function getOpenStatus(todayOpenInfo) {
   // 今日公休
   if (!todayOpenInfo.isBusinessDay) {
     return {
-      status: "holiday",
-      tooltip: "今日公休",
+      status: "break",
+      detail: "今日公休",
       nextUpdateMs: midnightUpdateMs,
     };
   }
@@ -155,7 +155,7 @@ export function getOpenStatus(todayOpenInfo) {
     if (nowMs < openMs) {
       return {
         status: "break",
-        tooltip: `${slot.openTime.label} 開始營業`,
+        detail: `${slot.openTime.label} 開始`,
         nextUpdateMs: openMs - nowMs,
       };
     }
@@ -164,7 +164,7 @@ export function getOpenStatus(todayOpenInfo) {
     if (nowMs >= openMs && nowMs <= closeMs) {
       return {
         status: "open",
-        tooltip: `營業至 ${slot.closeTime.label}`,
+        detail: `至 ${slot.closeTime.label}`,
         nextUpdateMs: Math.min(closeMs - nowMs, midnightUpdateMs),
       };
     }
@@ -172,8 +172,8 @@ export function getOpenStatus(todayOpenInfo) {
 
   // 全部時段已結束
   return {
-    status: "closed",
-    tooltip: "今日已打烊",
+    status: "break",
+    detail: "今日已打烊",
     nextUpdateMs: midnightUpdateMs,
   };
 }

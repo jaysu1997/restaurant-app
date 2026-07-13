@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PageHeader from "../components/PageHeader";
 import useGetOrder from "../hooks/data/orders/useGetOrder";
 import QueryStatusFallback from "../components/QueryStatusFallback";
@@ -8,6 +8,7 @@ import useSettings from "../context/settings/useSettings";
 import { ChevronLeft } from "lucide-react";
 import OrderDetailPage from "../features/orders/components/OrderDetailPage";
 import OrderEditPage from "../features/orders/components/OrderEditPage";
+import { hoverStyles } from "../style/helpers";
 
 const OrderLayout = styled.div`
   display: flex;
@@ -31,9 +32,9 @@ const BackButton = styled.button`
     height: 1.8rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     color: #2563eb;
-  }
+  `)}
 `;
 
 const OrderContent = styled.div`

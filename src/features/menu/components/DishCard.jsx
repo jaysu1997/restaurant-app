@@ -1,7 +1,8 @@
 // ok
 // 餐點品項卡片
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Price from "../../../components/Price";
+import { hoverStyles } from "../../../style/helpers";
 
 const StyledDishCard = styled.button`
   width: 100%;
@@ -15,14 +16,19 @@ const StyledDishCard = styled.button`
   border-radius: 6px;
 
   transition:
-    background-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.2s;
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
 
-  &:not(:disabled):hover {
+  ${hoverStyles(css`
     background-color: #eff6ff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
+  `)}
+
+  &:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   }
 
   &:disabled {

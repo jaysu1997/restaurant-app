@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUserProfileApi } from "../../../services/apiAuth";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 // 更新user的資料
 function useUpdateUserProfile() {

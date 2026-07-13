@@ -1,7 +1,8 @@
 // ok
 // 控制和設定餐點份數的元件
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Minus, Plus } from "lucide-react";
+import { hoverStyles } from "../../../style/helpers";
 
 const Container = styled.div`
   flex-shrink: 0;
@@ -37,9 +38,9 @@ const AdjustButton = styled.button`
     height: 1.4rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f9fafb;
-  }
+  `)}
 
   &:disabled {
     background-color: #f4f4f5;

@@ -4,7 +4,7 @@ import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { prepareOrderItem } from "../../../../utils/orderHelpers";
-import showToast from "../../../../ui/showToast";
+import showToast from "../../../../utils/showToast";
 import Note from "../../../../components/Note";
 import CustomizationField from "./CustomizationField";
 import ServingsControl from "../ServingsControl";

@@ -4,7 +4,7 @@ import FormInputField from "../../components/FormInputField";
 import useCreateStaff from "../../hooks/data/staff/useCreateStaff";
 import FormPasswordField from "../../components/FormPasswordField";
 import Button from "../../components/button/Button";
-import ButtonSpinner from "../../ui/ButtonSpinner";
+import ButtonSpinner from "../../components/ButtonSpinner";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 import FormSelectField from "../../components/FormSelectField";
 import { isValidEmail } from "../../utils/validation";
@@ -14,7 +14,7 @@ import {
   ModalFooter,
 } from "../../components/modal/ModalBody";
 import ModalFormSection from "../../components/modal/ModalFormSection";
-import showToast from "../../ui/showToast";
+import showToast from "../../utils/showToast";
 
 function Signup({ onClose }) {
   const { createStaff, isCreatingStaff } = useCreateStaff();

@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
-import showToast from "../../ui/showToast";
+import showToast from "../../utils/showToast";
 import Modal from "../../components/modal/Modal";
 import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
 import { parsePositiveInt, trimString } from "../../utils/helpers";

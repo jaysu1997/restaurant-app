@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Modal from "./modal/Modal";
-import ButtonSpinner from "../ui/ButtonSpinner";
+import ButtonSpinner from "../components/ButtonSpinner";
 import Button from "./button/Button";
 import { useState } from "react";
 import { ModalContent } from "./modal/ModalBody";

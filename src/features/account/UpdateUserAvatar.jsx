@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import AvatarCropper from "./AvatarCropper";
-import UserAvatar from "../../ui/UserAvatar";
+import UserAvatar from "../../components/UserAvatar";
 import SectionContainer from "../../components/SectionContainer";
 import Button from "../../components/button/Button";
 import { Upload } from "lucide-react";

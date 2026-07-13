@@ -1,4 +1,4 @@
-import ButtonSpinner from "../../ui/ButtonSpinner";
+import ButtonSpinner from "../../components/ButtonSpinner";
 import Button from "./Button";
 
 function SubmitButton({

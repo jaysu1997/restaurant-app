@@ -9,10 +9,6 @@ const StyledSwitch = styled.label`
   cursor: pointer;
   width: fit-content;
 
-  @media (max-width: 288px) {
-    justify-content: start;
-  }
-
   span {
     font-size: 1.4rem;
     font-weight: 500;

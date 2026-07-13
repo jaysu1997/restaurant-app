@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertSettingsApi } from "../../../services/apiSettings";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 // 更新or新增店鋪設定
 function useSubmitSettings() {

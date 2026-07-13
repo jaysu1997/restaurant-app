@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { X } from "lucide-react";
+import { hoverStyles } from "../style/helpers";
 
 const StyledCloseButton = styled.button`
   width: 2.8rem;
@@ -25,10 +26,12 @@ const StyledCloseButton = styled.button`
     transition: all 0.3s;
   }
 
-  &:hover::before {
-    transform: scale(1.1);
-    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-  }
+  ${hoverStyles(css`
+    &::before {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+    }
+  `)}
 `;
 
 function ModalCloseButton({ onClose }) {

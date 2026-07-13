@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 import { updateOrderApi } from "../../../services/apiOrders";
 import { useNavigate } from "react-router";
 

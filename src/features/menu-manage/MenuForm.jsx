@@ -14,8 +14,9 @@ import {
   ModalFooter,
 } from "../../components/modal/ModalBody";
 import ModalFormSection from "../../components/modal/ModalFormSection";
+import FormSelectField from "../../components/FormSelectField";
 
-function MenuForm({ onClose, menu, inventoryObj }) {
+function MenuForm({ categoriesOptions, onClose, menu, inventoryObj }) {
   const { submitMenuForm, isSubmittingMenuForm } = useSubmitMenuForm();
 
   const formatMenu = toMenuForm(menu, inventoryObj);
@@ -41,66 +42,57 @@ function MenuForm({ onClose, menu, inventoryObj }) {
     );
   }
 
-  const fieldsConfig = [
-    {
-      label: "名稱",
-      name: "name",
-      rules: { setValueAs: trimString },
-      placeholder: "例如：牛肉漢堡",
-    },
-    {
-      label: "分類",
-      name: "category",
-      rules: { setValueAs: trimString },
-      placeholder: "例如：漢堡",
-    },
-    {
-      label: "定價",
-      name: "basePrice",
-      placeholder: "例如：120",
-      rules: {
-        deps: ["discount"],
-        setValueAs: (value) =>
-          parsePositiveInt(value, { min: 0, fallback: value }),
-        validate: (value) => typeof value === "number" || "請輸入 0 以上的整數",
-      },
-    },
-    {
-      label: "折扣",
-      name: "discount",
-      placeholder: "例如：10",
-      rules: {
-        setValueAs: (value) =>
-          parsePositiveInt(value, { min: 0, fallback: value }),
-        validate: (value) => {
-          if (typeof value !== "number") return "請輸入 0 以上的整數";
-          if (Number(value) > Number(getValues("basePrice")))
-            return "折扣不能超過定價";
-
-          return true;
-        },
-      },
-    },
-  ];
-
   return (
     <Modal title="餐點設定表單" maxWidth={56} onClose={onClose}>
       <FormProvider {...methods}>
         <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
           <ModalContent>
             <ModalFormSection columns={2} title="基本資料" required={true}>
-              {fieldsConfig.map((field) => (
-                <FormInputField
-                  label={field.label}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  rules={{
-                    required: "此欄位必須填寫",
-                    ...(field.rules || {}),
-                  }}
-                  key={field.name}
-                />
-              ))}
+              <FormInputField
+                label="名稱"
+                name="name"
+                placeholder="例如：牛肉漢堡"
+                rules={{ required: "此欄位必須填寫", setValueAs: trimString }}
+              />
+
+              <FormSelectField
+                label="分類"
+                name="category"
+                options={categoriesOptions}
+                rules={{ required: "此欄位必須填寫", setValueAs: trimString }}
+                placeholder="選擇或新增分類"
+                isCreatable
+              />
+
+              <FormInputField
+                label="定價"
+                name="basePrice"
+                rules={{
+                  required: "此欄位必須填寫",
+                  deps: ["discount"],
+                  setValueAs: (value) =>
+                    parsePositiveInt(value, { min: 0, fallback: value }),
+                  validate: (value) =>
+                    typeof value === "number" || "請輸入 0 以上的整數",
+                }}
+              />
+
+              <FormInputField
+                label="折扣"
+                name="discount"
+                rules={{
+                  required: "此欄位必須填寫",
+                  setValueAs: (value) =>
+                    parsePositiveInt(value, { min: 0, fallback: value }),
+                  validate: (value) => {
+                    if (typeof value !== "number") return "請輸入 0 以上的整數";
+                    if (Number(value) > Number(getValues("basePrice")))
+                      return "折扣不能超過定價";
+
+                    return true;
+                  },
+                }}
+              />
             </ModalFormSection>
 
             <IngredientSection ingredientOptions={ingredientOptions} />

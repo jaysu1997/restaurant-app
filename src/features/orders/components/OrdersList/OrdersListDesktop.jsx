@@ -1,5 +1,5 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useState } from "react";
 import OrderDropdownMenu from "../OrderDropdownMenu";
 import {
@@ -7,6 +7,7 @@ import {
   formatPickupNumber,
 } from "../../../../utils/orderHelpers";
 import Tag from "../../../../components/Tag";
+import { hoverStyles } from "../../../../style/helpers";
 
 const StyledOrderList = styled.div`
   width: 100%;
@@ -45,9 +46,9 @@ const OrderBody = styled.div`
 const OrderData = styled(OrderRow)`
   background-color: #fff;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f9fafb;
-  }
+  `)}
 
   & + & {
     border-top: 1px solid #f3f4f6;

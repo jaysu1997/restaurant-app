@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { hoverStyles } from "../style/helpers";
 
 const InputWrapper = styled.div`
   display: flex;
@@ -12,13 +13,15 @@ const InputWrapper = styled.div`
     border-color 0.2s ease,
     box-shadow 0.2s ease;
 
-  &:hover {
-    ${({ $isError }) =>
-      !$isError &&
-      css`
-        border-color: #b3b3b3;
-      `}
-  }
+  ${hoverStyles(css`
+    &:not(:focus-within) {
+      ${({ $isError }) =>
+        !$isError &&
+        css`
+          border-color: #b3b3b3;
+        `}
+    }
+  `)}
 
   &:focus-within {
     ${({ $isError }) =>

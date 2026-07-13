@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import SectionContainer from "../../components/SectionContainer";
 import { UsersRound } from "lucide-react";
-import UserAvatar from "../../ui/UserAvatar";
+import UserAvatar from "../../components/UserAvatar";
 import { UserRoundX } from "lucide-react";
 import { useState } from "react";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
@@ -9,6 +9,7 @@ import useUser from "../../hooks/data/auth/useUser";
 import { AVATAR_URL } from "../../utils/constants";
 import BaseSelect from "../../components/BaseSelect";
 import IconButton from "../../components/button/IconButton";
+import { hoverStyles } from "../../style/helpers";
 
 const List = styled.ul`
   display: flex;
@@ -30,10 +31,10 @@ const Item = styled.li`
     pointer-events: none;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: ${({ $isUpdating }) =>
       $isUpdating ? "#e5e7eb" : "#f9fafb"};
-  }
+  `)}
 
   ${({ $isUpdating }) =>
     $isUpdating &&
@@ -130,11 +131,9 @@ function StaffList({ staffList, onRequestDelete }) {
                   value: rolesById[item.id],
                 }}
                 onChange={(option) => handleChange(item.id, role, option.value)}
-                showDropdownIndicator={true}
               />
 
               <IconButton
-                $variant="plain"
                 disabled={item.id === user.id || updatingById[item.id]}
                 onClick={() => onRequestDelete(item)}
               >

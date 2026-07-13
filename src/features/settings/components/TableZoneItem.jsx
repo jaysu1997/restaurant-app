@@ -94,7 +94,7 @@ function TableZoneItem({ index, onRemove }) {
         }}
       />
 
-      <IconButton $variant="plain" type="button" onClick={onRemove}>
+      <IconButton type="button" onClick={onRemove}>
         <Trash2 />
       </IconButton>
 

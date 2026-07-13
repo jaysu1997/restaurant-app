@@ -1,5 +1,5 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Tag from "../../../components/Tag";
 import { formatPickupNumber } from "../../../utils/orderHelpers";
 import { useNavigate } from "react-router";
@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import SectionContainer from "../../../components/SectionContainer";
 import EmptyState from "./EmptyState";
 import Price from "../../../components/Price";
+import { hoverStyles } from "../../../style/helpers";
 
 const OrderList = styled.ul`
   height: 30rem;
@@ -25,9 +26,9 @@ const Order = styled.li`
   font-size: 1.6rem;
   font-weight: 500;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f9fafb;
-  }
+  `)}
 
   &:last-child {
     border-bottom: 1px solid #f3f4f6;

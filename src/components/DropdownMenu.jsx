@@ -1,7 +1,8 @@
 // ok
 import { useRef } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import useClickOutside from "../hooks/ui/useClickOutside";
+import { hoverStyles } from "../style/helpers";
 
 const Wrapper = styled.div`
   position: relative;
@@ -25,9 +26,9 @@ const MenuContainer = styled.ul`
 const MenuItem = styled.li`
   width: 16rem;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f3f4f6;
-  }
+  `)}
 
   button {
     width: 100%;

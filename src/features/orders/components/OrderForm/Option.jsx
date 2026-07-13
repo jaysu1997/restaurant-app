@@ -1,6 +1,7 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Check, Square } from "lucide-react";
+import { hoverStyles } from "../../../../style/helpers";
 
 const StyledOption = styled.label`
   display: grid;
@@ -13,9 +14,9 @@ const StyledOption = styled.label`
   border-radius: 6px;
   cursor: pointer;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: ${({ $hoverBgColor }) => $hoverBgColor};
-  }
+  `)}
 
   span {
     font-weight: 400;

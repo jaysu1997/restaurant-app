@@ -4,7 +4,17 @@ import CreatableSelect from "react-select/creatable";
 
 const selectStyle = {
   container: (base) => ({ ...base, width: "100%" }),
-  input: (base) => ({ ...base, maxWidth: "100%", overflow: "hidden" }),
+  input: (base) => ({
+    ...base,
+    maxWidth: "100%",
+    overflow: "hidden",
+  }),
+  placeholder: (base) => ({
+    ...base,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }),
   control: (base, state) => {
     const hasError = state.selectProps.error;
 
@@ -14,7 +24,6 @@ const selectStyle = {
       fontSize: "1.4rem",
       fontWeight: "400",
       height: "3.8rem",
-
       borderColor: hasError ? "#dc2626" : state.isFocused ? "#2684ff" : "#ddd",
 
       boxShadow:
@@ -40,15 +49,14 @@ const selectStyle = {
     color: "#000",
   }),
   menuPortal: (base) => ({ ...base, zIndex: "9999" }),
+  clearIndicator: (base) => ({
+    ...base,
+    padding: "0.8rem 0 0.8rem 0.8rem",
+  }),
 };
 
 // 基礎 react select 樣式元件
-function BaseSelect({
-  isCreatable = false,
-  error,
-  showDropdownIndicator = false,
-  ...rest
-}) {
+function BaseSelect({ isCreatable = false, error, ...rest }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -57,10 +65,12 @@ function BaseSelect({
     const handleScroll = (e) => {
       const target = e.target;
 
-      // 在 select menu 上滾動OK
-      if (target && target?.classList?.contains("rs__menu-list")) return;
+      // 下拉選單內滾動
+      if (target?.closest?.(".rs__menu")) return;
 
-      // 外部滾動則關閉 + blur input
+      // input 自動水平滾動
+      if (target?.closest?.(".rs__input-container")) return;
+
       setMenuOpen(false);
       document.activeElement?.blur();
     };
@@ -82,22 +92,13 @@ function BaseSelect({
       isClearable={isCreatable}
       styles={selectStyle}
       error={error}
-      formatCreateLabel={(inputValue) => `新增食材: ${inputValue}`}
+      formatCreateLabel={(inputValue) => `新增 "${inputValue}"`}
       menuPosition="fixed"
       menuPlacement="bottom"
       menuIsOpen={menuOpen}
       onMenuOpen={() => setMenuOpen(true)}
       onMenuClose={() => setMenuOpen(false)}
-      components={
-        showDropdownIndicator
-          ? {
-              IndicatorSeparator: () => null,
-            }
-          : {
-              IndicatorSeparator: () => null,
-              DropdownIndicator: () => null,
-            }
-      }
+      components={{ IndicatorSeparator: () => null }}
       {...rest}
     />
   );

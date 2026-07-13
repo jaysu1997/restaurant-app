@@ -1,46 +1,54 @@
 import styled, { css } from "styled-components";
+import { hoverStyles } from "../../style/helpers";
 
 const variant = {
   primary: css`
     color: #fff;
     background-color: #2563eb;
 
-    &:not(:disabled):hover {
+    ${hoverStyles(css`
       background-color: #1d4ed8;
-    }
+    `)}
   `,
   secondary: css`
     color: #3b82f6;
     background-color: #eff6ff;
 
-    &:not(:disabled):hover {
+    ${hoverStyles(css`
       background-color: #dbeafe;
-    }
+    `)}
   `,
   outline: css`
     color: #374151;
     background-color: #fff;
     border-color: #d1d5db;
 
-    &:not(:disabled):hover {
+    ${hoverStyles(css`
       background-color: #f9fafb;
-    }
+    `)}
   `,
   danger: css`
     color: #fff;
     background-color: #dc2626;
 
-    &:not(:disabled):hover {
+    ${hoverStyles(css`
       background-color: #b91c1c;
-    }
+    `)}
   `,
   ghost: css`
     color: #4b5563;
     border: none;
+    padding: 0.6rem;
+    height: 2.6rem;
 
-    &:not(:disabled):hover {
-      background-color: #f3f4f6;
+    & svg {
+      width: 1.4rem;
+      height: 1.4rem;
     }
+
+    ${hoverStyles(css`
+      background-color: #f3f4f6;
+    `)}
   `,
   plain: css`
     color: #6b7280;

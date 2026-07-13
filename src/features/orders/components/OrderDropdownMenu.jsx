@@ -1,5 +1,5 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import ConfirmDelete from "../../../components/ConfirmDelete";
@@ -10,6 +10,7 @@ import {
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
 import DropdownMenu from "../../../components/DropdownMenu";
 import { Ellipsis, Trash2, SquarePen, Eye } from "lucide-react";
+import { hoverStyles } from "../../../style/helpers";
 
 const ToggleButton = styled.button`
   display: flex;
@@ -26,9 +27,9 @@ const ToggleButton = styled.button`
     height: 2rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #e5e7eb;
-  }
+  `)}
 `;
 
 function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {

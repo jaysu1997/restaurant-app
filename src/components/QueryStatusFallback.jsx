@@ -1,5 +1,5 @@
 // ok
-import LoadingBars from "../ui/LoadingBars";
+import LoadingBars from "../components/LoadingBars";
 import errorSvg from "../assets/error.svg";
 import emptyStateSvg from "../assets/empty-state.svg";
 import { useNavigate } from "react-router";

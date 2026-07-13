@@ -42,15 +42,17 @@ const StyledDayPicker = styled(DayPicker)`
     height: 2.75rem;
   }
 
-  /* 左右移動按鈕hover效果 */
-  [class^="rdp-button_"]:not([aria-disabled="true"]):hover {
-    background-color: #dbeafe;
-    border-radius: 50%;
-  }
+  @media (hover: hover) and (pointer: fine) {
+    /* 左右移動按鈕hover效果 */
+    [class^="rdp-button_"]:not([aria-disabled="true"]):hover {
+      background-color: #dbeafe;
+      border-radius: 50%;
+    }
 
-  /* :hover日期的效果 */
-  .rdp-day:not(.rdp-selected):not(.rdp-disabled):hover .rdp-day_button {
-    border: 2px dashed #818cf8;
+    /* :hover日期的效果 */
+    .rdp-day:not(.rdp-selected):not(.rdp-disabled):hover .rdp-day_button {
+      border: 2px dashed #818cf8;
+    }
   }
 
   /* 隨著容器寬度調整日期的尺寸 */

@@ -1,5 +1,6 @@
 // ok
 import styled, { css } from "styled-components";
+import { hoverStyles } from "../../../style/helpers";
 
 const StyledButton = styled.button`
   position: absolute;
@@ -27,9 +28,9 @@ const StyledButton = styled.button`
     height: 1.6rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: rgba(0, 0, 0, 0.6);
-  }
+  `)}
 
   @media (pointer: coarse) and (max-width: 30em) {
     display: none;
@@ -39,15 +40,15 @@ const StyledButton = styled.button`
     $direction === "left"
       ? css`
           left: 1rem;
-          &:hover {
+          ${hoverStyles(css`
             transform: translateY(-50%) translateX(-4px);
-          }
+          `)}
         `
       : css`
           right: 1rem;
-          &:hover {
+          ${hoverStyles(css`
             transform: translateY(-50%) translateX(4px);
-          }
+          `)}
         `}
 `;
 

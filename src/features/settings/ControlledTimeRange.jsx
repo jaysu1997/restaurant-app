@@ -24,12 +24,6 @@ const StyledTimeRange = styled.ul`
   }
 `;
 
-const AppendButton = styled(IconButton)`
-  &:not(:disabled):hover {
-    color: #2563eb;
-  }
-`;
-
 // 一天的時段(每5分鐘一個選項)
 function generateTimeOptions() {
   const options = [];
@@ -100,8 +94,8 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
           />
 
           {slotIndex === 0 && (
-            <AppendButton
-              $variant="plain"
+            <IconButton
+              $hoverColor="blue"
               onClick={() =>
                 append({
                   openTime: { label: "09:00", value: 540 },
@@ -110,12 +104,11 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
               }
             >
               <Plus strokeWidth={2.4} />
-            </AppendButton>
+            </IconButton>
           )}
 
           {slotIndex !== 0 && (
             <IconButton
-              $variant="plain"
               title="清除這個時段的時間"
               disabled={fields.length === 1}
               onClick={() => remove(slotIndex)}

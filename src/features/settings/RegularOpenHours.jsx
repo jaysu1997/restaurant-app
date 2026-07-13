@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ControlledSwitch from "../../ui/ControlledSwitch";
+import ControlledSwitch from "../../components/ControlledSwitch";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
@@ -21,7 +21,7 @@ const BusinessPeriodItem = styled.li`
   column-gap: 3.2rem;
   row-gap: 0.6rem;
 
-  @media (max-width: 500px) {
+  @media (max-width: 35em) {
     grid-template-columns: 1fr;
   }
 `;
@@ -39,7 +39,7 @@ const DateField = styled.div`
     font-weight: 500;
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 35em) {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }

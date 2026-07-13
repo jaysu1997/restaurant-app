@@ -1,7 +1,7 @@
 // 新增or更新庫存食材
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertInventoryApi } from "../../../services/apiInventory";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 function useSubmitInventory() {
   const queryClient = useQueryClient();

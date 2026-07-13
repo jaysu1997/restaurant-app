@@ -4,7 +4,7 @@ import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
 import useUpdateUserAvatar from "../../hooks/data/auth/useUpdateUserAvatar";
-import showToast from "../../ui/showToast";
+import showToast from "../../utils/showToast";
 import FormActions from "../../components/FormActions";
 import { ModalContainer, ModalFooter } from "../../components/modal/ModalBody";
 

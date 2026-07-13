@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateAvatarFileApi } from "../../../services/apiAuth";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 // 更新用戶頭像(涵蓋新增頭像、更改user metadata頭像數據、刪除舊頭像)
 function useUpdateUserAvatar() {

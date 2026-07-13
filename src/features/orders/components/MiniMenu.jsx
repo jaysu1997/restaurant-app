@@ -62,7 +62,7 @@ function groupDishesByCategory(dishes) {
 
 function MiniMenu({ onClose }) {
   const [selectedDish, setSelectedDish] = useState(null);
-  const menusQuery = useGetMenus();
+  const { menusQuery } = useGetMenus();
   const { data: menus = [] } = menusQuery;
   const { inventoryObj } = useGetInventory();
   // 是菜單內容ui

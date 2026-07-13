@@ -51,12 +51,6 @@ const Title = styled.h4`
         `}
 `;
 
-const DeleteButton = styled(IconButton)`
-  &:hover {
-    color: #dc2626;
-  }
-`;
-
 function ModalFormCard({
   columns = 1,
   compact = false,
@@ -73,9 +67,9 @@ function ModalFormCard({
           </Title>
 
           {onDelete && (
-            <DeleteButton $variant="ghost" onClick={onDelete}>
+            <IconButton $size="sm" onClick={onDelete}>
               <Trash2 size={18} />
-            </DeleteButton>
+            </IconButton>
           )}
         </Header>
       )}

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   formatCreatedTime,
   formatPickupNumber,
@@ -12,6 +12,7 @@ import ConfirmDelete from "../../../components/ConfirmDelete";
 import OrderInfo from "./OrderInfo";
 import OrderDishes from "./OrderDishes";
 import SectionContainer from "../../../components/SectionContainer";
+import { hoverStyles } from "../../../style/helpers";
 
 const StyledOrderOverview = styled.div`
   display: flex;
@@ -49,17 +50,17 @@ const HeaderActions = styled.div`
   gap: 0.8rem;
 `;
 
-const EditButton = styled(Button).attrs({ $variant: "ghost" })`
+const EditButton = styled(Button).attrs({ $variant: "plain" })`
   height: 3.6rem;
   width: 7.2rem;
   padding: 0;
   color: #15803d;
   font-size: 1.3rem;
 
-  &:not(:disabled):hover {
+  ${hoverStyles(css`
     background: #f0fdf4;
     color: #166534;
-  }
+  `)}
 
   @media (max-width: 30em) {
     height: 3.2rem;
@@ -74,10 +75,10 @@ const EditButton = styled(Button).attrs({ $variant: "ghost" })`
 const DeleteButton = styled(EditButton)`
   color: #dc2626;
 
-  &:not(:disabled):hover {
+  ${hoverStyles(css`
     background-color: #fef2f2;
     color: #b91c1c;
-  }
+  `)}
 `;
 
 function OrderOverview({ orderData, items, isEdit, canModifyItems }) {

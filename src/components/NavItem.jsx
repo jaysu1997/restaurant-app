@@ -1,6 +1,7 @@
 // ok
 import { NavLink } from "react-router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { hoverStyles } from "../style/helpers";
 
 const StyleNavLink = styled(NavLink)`
   display: flex;
@@ -16,9 +17,9 @@ const StyleNavLink = styled(NavLink)`
     height: 2.4rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     color: #374151;
-  }
+  `)}
 
   &.active {
     color: #2563eb;

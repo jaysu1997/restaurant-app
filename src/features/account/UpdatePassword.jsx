@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FormProvider, useForm } from "react-hook-form";
-import showToast from "../../ui/showToast";
+import showToast from "../../utils/showToast";
 import FormPasswordField from "../../components/FormPasswordField";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
 import SectionContainer from "../../components/SectionContainer";

@@ -35,6 +35,8 @@ const queryClient = new QueryClient({
   },
 });
 
+// 根據AI建議，餐點可能需要加上圖片?然後需要增加桌台模式?reacme和demo要有、test data要有.........
+
 // 關於連絡電話的部分，或許可以加入placeholder提示格式，且改變validate處理(主動清除-和())?
 // 取餐編號的部分或許也可以(placeholder) 也有可能全部的input都建議設計placeholder?
 

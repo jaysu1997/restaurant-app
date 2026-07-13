@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useSearchParams } from "react-router";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getCategories } from "../utils/menuHelpers";
 import CategoryButton from "./CategoryButton";
 import ScrollNavButton from "./ScrollNavButton";
 import { getValidParam } from "../../../utils/filterHelpers";
@@ -36,14 +35,12 @@ const ScrollContainer = styled.div`
   }
 `;
 
-function CategoryBar({ menus }) {
+function CategoryBar({ categories }) {
   const scrollRef = useRef(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPrev, setShowPrev] = useState(false);
   const [showNext, setShowNext] = useState(false);
 
-  // 所有分類
-  const categories = getCategories(menus);
   // 篩選要呈現的餐點類別
   const selectedCategory = getValidParam(
     searchParams.get("category"),

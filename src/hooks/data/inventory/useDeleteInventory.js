@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInventoryApi } from "../../../services/apiInventory";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 function useDeleteInventory() {
   const queryClient = useQueryClient();

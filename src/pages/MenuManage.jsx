@@ -14,7 +14,6 @@ import DataDisplayCard from "../components/DataDisplayCard.jsx";
 import useDeleteMenu from "../hooks/data/menus/useDeleteMenu.js";
 import ConfirmDelete from "../components/ConfirmDelete.jsx";
 import HeaderActionButton from "../components/button/HeaderActionButton.jsx";
-import { getCategories } from "../features/menu/utils/menuHelpers.js";
 import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers.js";
 
 const Container = styled.ul`
@@ -51,15 +50,10 @@ function MenuManage() {
   const [modal, setModal] = useState({ type: null, data: null });
   const [searchParams] = useSearchParams();
   const deleteMutation = useDeleteMenu();
-  const menusQuery = useGetMenus();
+  const { menusQuery, categoriesOptions } = useGetMenus();
   const inventoryQuery = useGetInventory();
 
   const { data: menus = [] } = menusQuery;
-  // 所有分類選項
-  const categoriesOptions = getCategories(menus).map((category) => ({
-    label: category,
-    value: category,
-  }));
 
   const filtersConfig = [
     {
@@ -133,6 +127,7 @@ function MenuManage() {
 
       {modal.type === "menuForm" && (
         <MenuForm
+          categoriesOptions={categoriesOptions}
           inventoryObj={inventoryQuery.inventoryObj}
           menu={modal.data}
           onClose={() => setModal({ type: null, data: null })}

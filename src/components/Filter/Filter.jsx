@@ -5,13 +5,12 @@ import useClickOutside from "../../hooks/ui/useClickOutside";
 import useScrollLock from "../../hooks/ui/useScrollLock";
 import useMediaQuery from "../../hooks/ui/useMediaQuery";
 import Button from "../button/Button";
-import FilterIcon from "../../ui/FilterIcon";
 import StyledOverlay from "../StyledOverlay";
 import { X } from "lucide-react";
-import IconButton from "../button/IconButton";
 import HeaderActionButton from "../button/HeaderActionButton";
 import { buildSearchParams, hasActiveFilters } from "../../utils/filterHelpers";
 import FilterRenderer from "./FilterRenderer";
+import FilterIcon from "../FilterIcon";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -164,9 +163,9 @@ function Filter({ filtersConfig, filterState }) {
         <FilterHeader>
           <h3>篩選</h3>
 
-          <IconButton $variant="ghost" onClick={onClose}>
+          <Button $variant="ghost" onClick={onClose}>
             <X />
-          </IconButton>
+          </Button>
         </FilterHeader>
 
         <Content>

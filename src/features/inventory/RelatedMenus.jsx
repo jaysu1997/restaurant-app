@@ -1,7 +1,8 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { Fragment, useEffect, useState } from "react";
 import { ChevronRight, AlertCircle } from "lucide-react";
 import useIngredientMenus from "../../hooks/data/menus/useIngredientMenus";
+import { hoverStyles } from "../../style/helpers";
 
 const spin = keyframes`
   to {
@@ -53,18 +54,18 @@ const LoadingTitle = styled(AccordionTitle)`
   color: #6b7280;
   background-color: #f9fafb;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f3f4f6;
-  }
+  `)}
 `;
 
 const ErrorTitle = styled(AccordionTitle)`
   color: #b91c1c;
   background-color: #fef2f2;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #fee2e2;
-  }
+  `)}
 `;
 
 const ReadyTitle = styled(AccordionTitle)`
@@ -91,9 +92,9 @@ const ReadyTitle = styled(AccordionTitle)`
     transition: transform 0.2s;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f1f5f9;
-  }
+  `)}
 `;
 
 const AccordionContent = styled.div`
@@ -107,9 +108,11 @@ const AccordionContent = styled.div`
     cursor: pointer;
   }
 
-  span[tabindex="0"]:hover {
-    color: #2563eb;
-    text-decoration: underline;
+  span[tabindex="0"] {
+    ${hoverStyles(css`
+      color: #2563eb;
+      text-decoration: underline;
+    `)}
   }
 `;
 

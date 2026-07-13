@@ -1,9 +1,10 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSearchParams } from "react-router";
 import { useRef } from "react";
 import { ChevronRight, ChevronLeft, Dot } from "lucide-react";
-import { parsePositiveInt } from "../utils/helpers";
+import { parsePositiveInt } from "../../../utils/helpers";
+import { hoverStyles } from "../../../style/helpers";
 
 const StyledPagination = styled.footer`
   display: flex;
@@ -33,9 +34,9 @@ const PaginationControls = styled.div`
   button {
     color: #333;
 
-    &:not(:disabled):hover {
+    ${hoverStyles(css`
       color: #e63946;
-    }
+    `)}
   }
 `;
 
@@ -66,9 +67,9 @@ const JumpToPage = styled.div`
     background-color: #e63946;
     color: #fff;
 
-    &:hover {
+    ${hoverStyles(css`
       background-color: #dc2626;
-    }
+    `)}
   }
 `;
 

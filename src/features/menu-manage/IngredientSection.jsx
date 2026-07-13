@@ -37,7 +37,7 @@ function IngredientSection({ ingredientOptions }) {
             name={`ingredients.${index}.ingredient`}
             rules={{ required: "食材名稱不能空白" }}
             options={ingredientOptions}
-            placeholder="選擇現有食材或輸入新食材"
+            placeholder="選擇或新增食材"
             isCreatable
           />
 

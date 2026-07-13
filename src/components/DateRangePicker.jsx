@@ -2,9 +2,10 @@
 import styled, { css } from "styled-components";
 import { format } from "date-fns";
 import { useRef, useState } from "react";
-import RangeCalendar from "./RangeCalendar";
+import RangeCalendar from "../components/RangeCalendar";
 import { CalendarRange } from "lucide-react";
 import useClickOutside from "../hooks/ui/useClickOutside";
+import { hoverStyles } from "../style/helpers";
 
 const StyledDateRangePicker = styled.div`
   position: relative;
@@ -19,7 +20,7 @@ const DateField = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.2rem;
+  gap: 0.8rem;
   padding: 0.2rem 0.8rem;
   width: 100%;
   border-radius: 4px;
@@ -43,10 +44,10 @@ const DateField = styled.div`
     height: 2rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     border-color: ${({ $isPickerOpen }) =>
       $isPickerOpen ? "#2684ff" : "#b3b3b3"};
-  }
+  `)}
 `;
 
 const Panel = styled.div`

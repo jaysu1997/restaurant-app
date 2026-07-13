@@ -1,5 +1,6 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { hoverStyles } from "../../../style/helpers";
 
 const StyledCategoryItem = styled.button`
   display: flex;
@@ -20,9 +21,9 @@ const StyledCategoryItem = styled.button`
     background-color 0.2s,
     color 0.2s;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: ${({ $isActive }) => ($isActive ? "#fff" : "#737373")};
-  }
+  `)}
 
   @media (max-width: 40em) {
     width: calc((100% - 3rem) / 3.5);

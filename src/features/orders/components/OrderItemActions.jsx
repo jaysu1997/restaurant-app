@@ -6,7 +6,7 @@ import { useState } from "react";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import Modal from "../../../components/modal/Modal";
 import OrderForm from "./OrderForm/OrderForm";
-import IconButton from "../../../components/button/IconButton";
+import Button from "../../../components/button/Button";
 
 const StyledItemActions = styled.div`
   display: flex;
@@ -22,15 +22,15 @@ function OrderItemActions({ item, canModifyItems }) {
   return (
     <>
       <StyledItemActions>
-        <IconButton
+        <Button
           $variant="ghost"
           disabled={!canModifyItems}
           onClick={() => setEditingItem(item)}
         >
           <SquarePen />
-        </IconButton>
+        </Button>
 
-        <IconButton
+        <Button
           $variant="ghost"
           disabled={!canModifyItems}
           onClick={() =>
@@ -41,7 +41,7 @@ function OrderItemActions({ item, canModifyItems }) {
           }
         >
           <Trash2 />
-        </IconButton>
+        </Button>
       </StyledItemActions>
 
       {editingItem && (

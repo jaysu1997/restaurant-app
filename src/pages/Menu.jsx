@@ -25,7 +25,7 @@ const MenuContainer = styled.div`
 `;
 
 function Menu() {
-  const menusQuery = useGetMenus();
+  const { menusQuery, categories } = useGetMenus();
   const { data: menus = [] } = menusQuery;
   // 取得庫存數據
   const inventoryQuery = useOrderInventory();
@@ -53,9 +53,10 @@ function Menu() {
             </StoreClosedNotice>
           )}
 
-          <CategoryBar menus={menus} />
+          <CategoryBar categories={categories} />
           <MenuList
             menus={menus}
+            categories={categories}
             inventoryObj={inventoryQuery.inventoryObj}
             canPlaceOrder={canPlaceOrder}
           />

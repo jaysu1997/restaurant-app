@@ -20,7 +20,7 @@ const TextArea = styled.textarea`
   &:focus {
     outline: none;
     border-color: #2684ff;
-    box-shadow: 0 0 0 1px #2684ff;
+    box-shadow: 0 0 0 3px rgba(38, 132, 255, 0.15);
   }
 `;
 
@@ -29,8 +29,9 @@ function Note({ label, maxLength, className }) {
 
   return (
     <StyledNote className={className}>
-      {label && <label>{label}</label>}
+      {label && <label htmlFor="note">{label}</label>}
       <TextArea
+        id="note"
         maxLength={maxLength}
         placeholder={
           maxLength ? `備註內容最多${maxLength}個字` : "可輸入備註內容"

@@ -40,6 +40,7 @@ export function toMenuForm(menu, inventoryObj) {
 
   return {
     ...menu,
+    category: { label: menu.category, value: menu.category },
     ingredients: newIngredients,
     customizations: newCustomizations,
   };
@@ -95,6 +96,7 @@ export function toMenuPayload(data) {
   return {
     menuData: {
       ...data,
+      category: data.category?.value,
       ingredients: newIngredientsList,
       customizations: sortedCustomizations,
     },

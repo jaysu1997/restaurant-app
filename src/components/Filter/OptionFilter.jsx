@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { hoverStyles } from "../../style/helpers";
 
 const Container = styled.div`
   display: grid;
@@ -14,6 +15,7 @@ const OptionButton = styled.button`
   text-overflow: ellipsis;
   cursor: pointer;
 
+  font-weight: ${({ $isSelected }) => ($isSelected ? "500" : "400")};
   color: ${({ $isSelected }) => ($isSelected ? "#2563eb" : "#374151")};
   background-color: ${({ $isSelected }) =>
     $isSelected ? "#eff6ff" : "#f3f4f6"};
@@ -21,14 +23,15 @@ const OptionButton = styled.button`
     ${({ $isSelected }) => ($isSelected ? "#bfdbfe" : "transparent")};
 
   transition:
+    font-weight 0.15s,
     background-color 0.15s,
     color 0.15s,
     border-color 0.15s;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: ${({ $isSelected }) =>
       $isSelected ? "#dbeafe" : "#e5e7eb"};
-  }
+  `)}
 `;
 
 function OptionFilter({ filterValue, handleValueChange, filter }) {

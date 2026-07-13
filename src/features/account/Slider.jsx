@@ -7,6 +7,7 @@ const StyledSlider = styled.div`
   position: relative;
   cursor: pointer;
   user-select: none;
+  touch-action: none;
 `;
 
 const Track = styled.span`
@@ -28,7 +29,7 @@ const FilledTrack = styled.span`
   border-radius: 3px;
   background-color: #2563eb;
   z-index: 1;
-  width: ${({ $percent }) => `${$percent}%`};
+  width: var(--percent);
 `;
 
 const Thumb = styled.span`
@@ -36,21 +37,20 @@ const Thumb = styled.span`
   background: #fff;
   position: absolute;
   top: 50%;
-  left: ${({ $percent }) => `calc(${$percent}% - 1rem)`};
+  left: calc(var(--percent) - 1rem);
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  touch-action: none;
+
   transition: box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &:hover {
-    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.15);
-  }
-
-  &:active {
-    box-shadow: 0 0 0 16px rgba(37, 99, 235, 0.15);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover,
+    &:active {
+      box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.15);
+    }
   }
 `;
 
@@ -66,10 +66,8 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
     // 取得track的總長度，然後換算成react-easy-crop需要的zoom倍數值
     const rect = sliderRef.current.getBoundingClientRect();
     const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-    const raw = min + (x / rect.width) * (max - min);
 
-    // 讓zoom倍數值的間距為0.1，且不會有過長的浮點數
-    return Math.round(raw * 10) / 10;
+    return min + (x / rect.width) * (max - min);
   }
 
   // pointer按下
@@ -90,7 +88,7 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
   }
 
   // pointer鬆開
-  function handlePointerUp(e) {
+  function stopDragging(e) {
     isDraggingRef.current = false;
     // 清除監聽
     if (sliderRef.current?.hasPointerCapture(e.pointerId)) {
@@ -104,11 +102,16 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
       ref={sliderRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
+      onPointerUp={stopDragging}
+      onPointerCancel={stopDragging}
+      // percent一直變動會導致styled-components需要反覆生成隨機classname，會跳出warn message建議改用attrs，也可以直接使用inline style解決
+      style={{
+        "--percent": `${percent}%`,
+      }}
     >
       <Track />
-      <FilledTrack $percent={percent} />
-      <Thumb $percent={percent} />
+      <FilledTrack />
+      <Thumb />
     </StyledSlider>
   );
 }

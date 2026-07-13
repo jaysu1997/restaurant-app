@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import DateRangePicker from "../../ui/DateRangePicker";
-import ControlledSwitch from "../../ui/ControlledSwitch";
+import DateRangePicker from "../../components/DateRangePicker";
+import ControlledSwitch from "../../components/ControlledSwitch";
 import ControlledTimeRange from "./ControlledTimeRange";
 import {
   Controller,
@@ -13,7 +13,7 @@ import { addYears, endOfYear, isAfter, isToday } from "date-fns";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import { validateDateRangeField } from "./validateOverlap";
 import { normalizeSpecialOpenHours } from "./sortTimeSlots";
-import showToast from "../../ui/showToast";
+import showToast from "../../utils/showToast";
 import SectionContainer from "../../components/SectionContainer";
 import { Trash2, CalendarClock } from "lucide-react";
 import FormFieldLayout from "../../components/FormFieldLayout";
@@ -34,7 +34,7 @@ const BusinessPeriodItem = styled.li`
   border-bottom: 1px solid #e5e7eb;
   padding: 2.4rem 0;
 
-  @media (max-width: 500px) {
+  @media (max-width: 35em) {
     grid-template-columns: 1fr;
   }
 `;
@@ -169,7 +169,7 @@ function SpecialOpenHours({ settings }) {
                   />
                 </FormFieldLayout>
 
-                <IconButton $variant="plain" onClick={() => remove(dayIndex)}>
+                <IconButton onClick={() => remove(dayIndex)}>
                   <Trash2 />
                 </IconButton>
 

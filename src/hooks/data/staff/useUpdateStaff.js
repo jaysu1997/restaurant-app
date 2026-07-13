@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateStaffApi } from "../../../services/apiStaff";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 function useUpdateStaff() {
   const queryClient = useQueryClient();

@@ -1,13 +1,14 @@
 // ok
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import useLogout from "../hooks/data/auth/useLogout";
 import useUser from "../hooks/data/auth/useUser";
 import DropdownMenu from "../components/DropdownMenu";
-import UserAvatar from "../ui/UserAvatar";
+import UserAvatar from "../components/UserAvatar";
 import { UserRound, LogOut, ChevronRight } from "lucide-react";
 import { AVATAR_URL } from "../utils/constants";
+import { hoverStyles } from "../style/helpers";
 
 const StyledUser = styled.div`
   margin-right: 1rem;
@@ -27,9 +28,9 @@ const UserButton = styled.button`
   font-size: 1.4rem;
   justify-items: start;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f3f4f6;
-  }
+  `)}
 
   svg {
     transform: ${({ $isOpen }) => `rotate(${$isOpen ? "270deg" : "90deg"})`};

@@ -1,7 +1,8 @@
 // ok
 // 用來展示數據的卡片ui
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Trash2, SquarePen } from "lucide-react";
+import { hoverStyles } from "../style/helpers";
 
 const Card = styled.li`
   display: flex;
@@ -14,11 +15,6 @@ const Card = styled.li`
   font-size: 1.4rem;
   font-weight: 500;
   transition: transform 0.2s ease;
-
-  &:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    transform: translateY(-1px);
-  }
 `;
 
 const Row = styled.div`
@@ -60,17 +56,17 @@ const EditButton = styled.button`
     height: 1.5rem;
   }
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #f0fdf4;
-  }
+  `)}
 `;
 
 const DeleteButton = styled(EditButton)`
   color: #b91c1c;
 
-  &:hover {
+  ${hoverStyles(css`
     background-color: #fef2f2;
-  }
+  `)}
 `;
 
 const Divider = styled.div`

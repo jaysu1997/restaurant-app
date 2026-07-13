@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { formatPickupStr } from "../../../context/settings/settingsHelpers";
 import { formatCreatedTime } from "../../../utils/orderHelpers";
-import DiningMethodSegmented from "../../../ui/DiningMethodSegmented";
+import DiningMethodSegmented from "../../../components/DiningMethodSegmented";
 import DiningInfoField from "./DiningInfoField";
 import PaymentStatusField from "./PaymentStatusField";
 import OrderStatusField from "./OrderStatusField";

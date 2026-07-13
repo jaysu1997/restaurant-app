@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteMenuApi } from "../../../services/apiMenus";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 
 function useDeleteMenu() {
   const queryClient = useQueryClient();

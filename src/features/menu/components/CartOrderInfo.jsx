@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import DiningMethodSegmented from "../../../ui/DiningMethodSegmented";
+import DiningMethodSegmented from "../../../components/DiningMethodSegmented";
 import DiningInfoField from "../../orders/components/DiningInfoField";
 import PaymentStatusField from "../../orders/components/PaymentStatusField";
 import Note from "../../../components/Note";

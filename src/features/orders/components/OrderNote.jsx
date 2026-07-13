@@ -24,7 +24,7 @@ function OrderNote({ note, isEdit }) {
   return (
     <SectionContainer>
       <StyledOrderNote>
-        <label>訂單備註</label>
+        <label htmlFor="note">訂單備註</label>
         {!isEdit ? <span>{note || "無"}</span> : <Note />}
       </StyledOrderNote>
     </SectionContainer>

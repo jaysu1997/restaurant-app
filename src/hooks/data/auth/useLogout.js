@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import showToast from "../../../ui/showToast";
+import showToast from "../../../utils/showToast";
 import { logoutApi } from "../../../services/apiAuth";
 
 export function useLogout() {

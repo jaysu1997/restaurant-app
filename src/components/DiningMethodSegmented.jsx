@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from "react-hook-form";
 import styled from "styled-components";
-import FormFieldLayout from "../components/FormFieldLayout";
+import FormFieldLayout from "./FormFieldLayout";
 
 const StyledSegmented = styled.div`
   height: 3.8rem;
