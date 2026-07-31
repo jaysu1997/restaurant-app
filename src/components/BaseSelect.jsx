@@ -11,6 +11,7 @@ const selectStyle = {
   }),
   placeholder: (base) => ({
     ...base,
+    color: "#9ca3af",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -24,7 +25,11 @@ const selectStyle = {
       fontSize: "1.4rem",
       fontWeight: "400",
       height: "3.8rem",
-      borderColor: hasError ? "#dc2626" : state.isFocused ? "#2684ff" : "#ddd",
+      borderColor: hasError
+        ? "#dc2626"
+        : state.isFocused
+          ? "#2684ff"
+          : "#d1d5db",
 
       boxShadow:
         hasError && state.isFocused
@@ -68,7 +73,7 @@ function BaseSelect({ isCreatable = false, error, ...rest }) {
       // 下拉選單內滾動
       if (target?.closest?.(".rs__menu")) return;
 
-      // input 自動水平滾動
+      // input 自動水平滾動 (新增選項輸入的文字太長會發生自動滾動)
       if (target?.closest?.(".rs__input-container")) return;
 
       setMenuOpen(false);

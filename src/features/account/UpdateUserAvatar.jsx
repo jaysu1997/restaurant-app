@@ -1,86 +1,56 @@
-import { useState } from "react";
-import styled from "styled-components";
 import AvatarCropper from "./AvatarCropper";
 import UserAvatar from "../../components/UserAvatar";
 import SectionContainer from "../../components/SectionContainer";
-import Button from "../../components/button/Button";
-import { Upload } from "lucide-react";
-import { AVATAR_URL } from "../../utils/constants";
-
-const StyledUpdateUserAvatar = styled.div`
-  display: grid;
-  grid-template-columns: 9.6rem 1fr;
-  grid-template-rows: auto auto;
-  column-gap: 1.6rem;
-  row-gap: 0.8rem;
-  height: 9.6rem;
-  font-size: 1.4rem;
-
-  & label {
-    align-self: end;
-  }
-`;
+import ImageUploadPanel from "../../components/ImageUploadPanel";
+import { useState } from "react";
 
 function UpdateUserAvatar({ userData }) {
-  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   // 頭像圖檔來源
   const avatarFile = userData?.user_metadata?.avatarFile;
-  const avatarUrl = `${AVATAR_URL}${avatarFile}`;
 
-  function handleSelectFile(e) {
-    // 確認有選擇圖檔
-    const fileLength = e.target.files.length;
+  function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    // 如果記憶體中有舊的臨時url先清除(釋放空間)
-    if (selectedImageUrl) {
-      URL.revokeObjectURL(selectedImageUrl);
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage.url);
     }
 
-    // 為剛剛上傳的圖檔建立一個臨時網址，用來預覽
-    if (fileLength) {
-      const url = URL.createObjectURL(e.target.files[0]);
-      setSelectedImageUrl(url);
-    }
+    const url = URL.createObjectURL(file);
+
+    setSelectedImage({ file, url });
 
     // 避免同檔案無法再觸發 onChange
     e.target.value = "";
   }
 
-  function handleCloseModal() {
-    // 釋放空間
-    if (selectedImageUrl) {
-      URL.revokeObjectURL(selectedImageUrl);
+  function clearSelectedImage() {
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage.url);
     }
-    setSelectedImageUrl(undefined);
+
+    setSelectedImage(null);
   }
 
   return (
     <>
       <SectionContainer>
-        <StyledUpdateUserAvatar>
-          <UserAvatar avatarUrl={avatarUrl} />
-          <Button $variant="secondary" as="label" htmlFor="upload-avatar">
-            <Upload />
-            選擇新頭像
-          </Button>
-          <span>必須是 JPEG、PNG、GIF 檔。</span>
-        </StyledUpdateUserAvatar>
-
-        <input
-          id="upload-avatar"
-          name="avatar"
-          type="file"
-          accept="image/png, image/jpeg, image/webp"
-          hidden
-          onChange={(e) => handleSelectFile(e)}
-        />
+        <ImageUploadPanel
+          avatarFile={avatarFile}
+          buttonText={avatarFile ? "更換頭像" : "上傳頭像"}
+          onChange={handleFileChange}
+        >
+          <UserAvatar avatarFile={avatarFile} lazy={false} />
+        </ImageUploadPanel>
       </SectionContainer>
 
-      {selectedImageUrl && (
+      {selectedImage && (
         <AvatarCropper
           userData={userData}
-          imgUrl={selectedImageUrl}
-          onClose={handleCloseModal}
+          selectedImage={selectedImage}
+          onClose={clearSelectedImage}
         />
       )}
     </>

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import RequiredMark from "../RequiredMark";
 
 const Section = styled.section`
   display: grid;
@@ -42,6 +41,10 @@ const Description = styled.p`
   font-size: 1.3rem;
 `;
 
+const RequiredMark = styled.span`
+  color: #dc2626;
+`;
+
 function ModalFormSection({
   columns = 1,
   title,
@@ -54,7 +57,7 @@ function ModalFormSection({
       {title && (
         <Header>
           <Title>{title}</Title>
-          {required && <RequiredMark />}
+          {required && <RequiredMark aria-hidden="true">*</RequiredMark>}
         </Header>
       )}
 

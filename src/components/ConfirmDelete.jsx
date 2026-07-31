@@ -3,7 +3,7 @@ import Modal from "./modal/Modal";
 import ButtonSpinner from "../components/ButtonSpinner";
 import Button from "./button/Button";
 import { useState } from "react";
-import { ModalContent } from "./modal/ModalBody";
+import { ModalContent } from "./modal/Modal";
 
 const Main = styled.div`
   display: flex;

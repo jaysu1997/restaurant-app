@@ -35,6 +35,8 @@ const queryClient = new QueryClient({
   },
 });
 
+// 可能需要檢查是否features和其他folder中的檔案分類都正確，可能會忘記新增components和utils，檔案也忘記放進去
+
 // 根據AI建議，餐點可能需要加上圖片?然後需要增加桌台模式?reacme和demo要有、test data要有.........
 
 // 關於連絡電話的部分，或許可以加入placeholder提示格式，且改變validate處理(主動清除-和())?

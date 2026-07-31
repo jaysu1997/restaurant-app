@@ -1,5 +1,4 @@
 import { FormProvider, useForm } from "react-hook-form";
-import FormFieldLayout from "../../components/FormFieldLayout";
 import FormInputField from "../../components/FormInputField";
 import useCreateStaff from "../../hooks/data/staff/useCreateStaff";
 import FormPasswordField from "../../components/FormPasswordField";
@@ -12,7 +11,7 @@ import {
   ModalContainer,
   ModalContent,
   ModalFooter,
-} from "../../components/modal/ModalBody";
+} from "../../components/modal/Modal";
 import ModalFormSection from "../../components/modal/ModalFormSection";
 import showToast from "../../utils/showToast";
 
@@ -65,11 +64,7 @@ function Signup({ onClose }) {
     <FormProvider {...methods}>
       <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
         <ModalContent>
-          <ModalFormSection
-            columns={1}
-            title="登入資訊"
-            descriptions={["員工將使用此電子信箱與密碼登入系統"]}
-          >
+          <ModalFormSection columns={1} title="登入資訊">
             <FormInputField
               label="電子信箱"
               name="email"
@@ -80,21 +75,15 @@ function Signup({ onClose }) {
               }}
             />
 
-            <FormFieldLayout
-              label="密碼"
+            <FormPasswordField
               id="password"
+              autoComplete="current-password"
               error={errors?.password}
-            >
-              <FormPasswordField
-                id="password"
-                autoComplete="current-password"
-                error={errors?.password}
-                {...register("password", {
-                  required: "此欄位必須填寫",
-                  minLength: { value: 8, message: "密碼至少要有8碼" },
-                })}
-              />
-            </FormFieldLayout>
+              {...register("password", {
+                required: "此欄位必須填寫",
+                minLength: { value: 8, message: "密碼至少要有8碼" },
+              })}
+            />
           </ModalFormSection>
 
           <ModalFormSection columns={1} title="員工資料">
@@ -139,6 +128,7 @@ function Signup({ onClose }) {
           <Button
             type="submit"
             $isFullWidth={true}
+            $radius="6px"
             $isProcessing={isCreatingStaff}
             disabled={isCreatingStaff}
           >

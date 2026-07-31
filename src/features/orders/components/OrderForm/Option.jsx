@@ -3,25 +3,32 @@ import styled, { css } from "styled-components";
 import { Check, Square } from "lucide-react";
 import { hoverStyles } from "../../../../style/helpers";
 
-const StyledOption = styled.label`
+const OptionRow = styled.label`
   display: grid;
   grid-template-columns: 2rem 1fr auto;
-  grid-template-rows: 2.8rem;
   align-items: center;
-  gap: 1.2rem;
-  position: relative;
-  padding: 0.6rem;
-  border-radius: 6px;
+  gap: 1.6rem;
+  padding: 1.2rem 0.6rem;
+
+  border-radius: 12px;
   cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 500;
+  user-select: none;
+
+  transition: background-color 0.18s ease;
 
   ${hoverStyles(css`
-    background-color: ${({ $hoverBgColor }) => $hoverBgColor};
+    background-color: #f3f4f6;
   `)}
 
-  span {
-    font-weight: 400;
-    font-size: 1.4rem;
+  &:active {
+    transform: scale(0.99);
   }
+`;
+
+const Checkbox = styled.div`
+  position: relative;
 
   svg:first-of-type {
     color: ${({ $checked }) => ($checked ? "#007bff" : "currentColor")};
@@ -32,7 +39,8 @@ const StyledOption = styled.label`
 
   svg:last-of-type {
     position: absolute;
-    left: 0.8rem;
+    top: 0.2rem;
+    left: 0.2rem;
     color: #fff;
     opacity: ${({ $checked }) => ($checked ? "1" : "0")};
     width: 1.6rem;
@@ -41,12 +49,19 @@ const StyledOption = styled.label`
 `;
 
 const OptionName = styled.span`
+  color: #111827;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  /* line-height: 1.45; */
 `;
 
-function Option({ hoverBgColor, optionData, onToggle, selectedOptions }) {
+const OptionPrice = styled.span`
+  color: #374151;
+`;
+
+function Option({ optionData, onToggle, selectedOptions }) {
   const { optionId, name, extraPrice } = optionData;
 
   // 當前選項是否是被選中的選項
@@ -55,11 +70,7 @@ function Option({ hoverBgColor, optionData, onToggle, selectedOptions }) {
   );
 
   return (
-    <StyledOption
-      $hoverBgColor={hoverBgColor}
-      htmlFor={optionId}
-      $checked={isChecked}
-    >
+    <OptionRow htmlFor={optionId} $checked={isChecked}>
       <input
         type="checkbox"
         hidden
@@ -69,12 +80,17 @@ function Option({ hoverBgColor, optionData, onToggle, selectedOptions }) {
         onChange={(e) => onToggle(e)}
       />
 
-      <Square />
-      <Check strokeWidth={3} />
+      <Checkbox $checked={isChecked}>
+        <Square />
+        <Check strokeWidth={3} />
+      </Checkbox>
 
       <OptionName>{name}</OptionName>
-      <span>{extraPrice === 0 ? "免費" : `+ $ ${extraPrice}`}</span>
-    </StyledOption>
+
+      <OptionPrice>
+        {extraPrice === 0 ? "免費" : `+ $ ${extraPrice}`}
+      </OptionPrice>
+    </OptionRow>
   );
 }
 

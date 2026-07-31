@@ -6,7 +6,6 @@ import { UserRoundX } from "lucide-react";
 import { useState } from "react";
 import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
 import useUser from "../../hooks/data/auth/useUser";
-import { AVATAR_URL } from "../../utils/constants";
 import BaseSelect from "../../components/BaseSelect";
 import IconButton from "../../components/button/IconButton";
 import { hoverStyles } from "../../style/helpers";
@@ -108,12 +107,10 @@ function StaffList({ staffList, onRequestDelete }) {
       <List>
         {sortedList.map((item) => {
           const { avatarFile, name, role } = item.user_metadata;
+
           return (
             <Item key={item.id} $isUpdating={!!updatingById[item.id]}>
-              <UserAvatar
-                avatarUrl={`${AVATAR_URL}${avatarFile}`}
-                lazyLoading={true}
-              />
+              <UserAvatar avatarFile={avatarFile} lazy={true} />
 
               <Profile>
                 <span>{name}</span>

@@ -1,20 +1,20 @@
 // 用來新增或更新單筆menu數據的表單
 import { useForm, FormProvider } from "react-hook-form";
-import Modal from "../../components/modal/Modal";
-import { toMenuPayload, toMenuForm } from "./utils/menuTransform";
-import useSubmitMenuForm from "../../hooks/data/menus/useSubmitMenuForm";
-import IngredientSection from "./IngredientSection";
-import CustomizeSection from "./CustomizeSection";
-import { parsePositiveInt, trimString } from "../../utils/helpers";
-import FormActions from "../../components/FormActions";
-import FormInputField from "../../components/FormInputField";
-import {
+import Modal, {
   ModalContainer,
   ModalContent,
   ModalFooter,
-} from "../../components/modal/ModalBody";
-import ModalFormSection from "../../components/modal/ModalFormSection";
-import FormSelectField from "../../components/FormSelectField";
+} from "../../../components/modal/Modal";
+import { toMenuPayload, toMenuForm } from "../utils/menuTransform";
+import useSubmitMenuForm from "../../../hooks/data/menus/useSubmitMenuForm";
+import IngredientSection from "./IngredientSection";
+import CustomizeSection from "./CustomizeSection";
+import { parsePositiveInt, trimString } from "../../../utils/helpers";
+import FormActions from "../../../components/FormActions";
+import FormInputField from "../../../components/FormInputField";
+import ModalFormSection from "../../../components/modal/ModalFormSection";
+import FormSelectField from "../../../components/FormSelectField";
+import ImageSection from "./ImageSection";
 
 function MenuForm({ categoriesOptions, onClose, menu, inventoryObj }) {
   const { submitMenuForm, isSubmittingMenuForm } = useSubmitMenuForm();
@@ -32,12 +32,11 @@ function MenuForm({ categoriesOptions, onClose, menu, inventoryObj }) {
 
   function onSubmit(data) {
     // 整理好要上傳的數據格式
-    const { menuData, newIngredients } = toMenuPayload(data);
-    console.log(menuData, newIngredients);
+    const { menuData, newIngredients, imageData } = toMenuPayload(data);
 
     // 執行表單數據上傳
     submitMenuForm(
-      { menuData, newIngredients },
+      { menuData, newIngredients, imageData },
       { onSuccess: () => onClose?.() },
     );
   }
@@ -94,6 +93,8 @@ function MenuForm({ categoriesOptions, onClose, menu, inventoryObj }) {
                 }}
               />
             </ModalFormSection>
+
+            <ImageSection />
 
             <IngredientSection ingredientOptions={ingredientOptions} />
 

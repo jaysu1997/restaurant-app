@@ -12,7 +12,7 @@ import PageContainer from "../components/PageContainer";
 import RelatedMenus from "../features/inventory/RelatedMenus";
 import useDeleteInventory from "../hooks/data/inventory/useDeleteInventory";
 import ConfirmDelete from "../components/ConfirmDelete";
-import MenuForm from "../features/menu-manage/MenuForm";
+import MenuForm from "../features/menu-manage/components/MenuForm";
 import HeaderActionButton from "../components/button/HeaderActionButton";
 import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers";
 import DataDisplayCard from "../components/DataDisplayCard";

@@ -5,9 +5,7 @@ import useOrderDraft from "../../../context/orders/useOrderDraft";
 // 把取得的庫存數據放到useReducer
 function useOrderInventory() {
   const { dispatch } = useOrderDraft();
-
   const inventoryQuery = useGetInventory();
-
   const { data, inventoryObj } = inventoryQuery;
 
   useEffect(() => {

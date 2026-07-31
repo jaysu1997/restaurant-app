@@ -5,10 +5,9 @@ import { useState } from "react";
 import useLogout from "../hooks/data/auth/useLogout";
 import useUser from "../hooks/data/auth/useUser";
 import DropdownMenu from "../components/DropdownMenu";
-import UserAvatar from "../components/UserAvatar";
-import { UserRound, LogOut, ChevronRight } from "lucide-react";
-import { AVATAR_URL } from "../utils/constants";
+import { UserRound, LogOut, ChevronDown } from "lucide-react";
 import { hoverStyles } from "../style/helpers";
+import UserAvatar from "./UserAvatar";
 
 const StyledUser = styled.div`
   margin-right: 1rem;
@@ -17,41 +16,31 @@ const StyledUser = styled.div`
 
 const UserButton = styled.button`
   height: 5.6rem;
-  display: grid;
-  grid-template-columns: 4rem auto 2rem;
-  grid-template-rows: 2rem 2rem;
-  align-content: center;
+  display: flex;
   align-items: center;
-  column-gap: 1rem;
-  padding: 1rem;
+  gap: 1rem;
+  padding: 0.8rem 1.2rem;
   border-radius: 6px;
-  font-size: 1.4rem;
-  justify-items: start;
+  font-size: 1.3rem;
+  border: 1px solid transparent;
 
   ${hoverStyles(css`
-    background-color: #f3f4f6;
+    background: #f9fafb;
+    border-color: #e5e7eb;
   `)}
 
-  svg {
-    transform: ${({ $isOpen }) => `rotate(${$isOpen ? "270deg" : "90deg"})`};
-    grid-row: 1 / -1;
-    grid-column: 3;
-    color: #374151;
-    transition: transform 0.3s;
-    width: 2rem;
-    height: 2rem;
+  @media (max-width: 50em) {
+    padding: 0.8rem;
   }
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 
   @media (max-width: 50em) {
-    height: fit-content;
-    grid-template-columns: 3.6rem;
-    grid-template-rows: 3.6rem;
-    padding: 0.8rem;
-
-    span,
-    svg {
-      display: none;
-    }
+    display: none;
   }
 `;
 
@@ -67,6 +56,18 @@ const UserRole = styled.span`
   color: #71717a;
 `;
 
+const ArrowIcon = styled(ChevronDown)`
+  width: 2rem;
+  height: 2rem;
+  color: #374151;
+  transform: ${({ $isOpen }) => `rotate(${$isOpen ? "180deg" : "0"})`};
+  transition: transform 0.2s ease;
+
+  @media (max-width: 50em) {
+    display: none;
+  }
+`;
+
 function User() {
   const navigate = useNavigate();
   const { logout } = useLogout();
@@ -76,7 +77,6 @@ function User() {
   const userName = user?.user_metadata?.name;
   const userRole = user?.user_metadata?.role;
   const avatarFile = user?.user_metadata?.avatarFile;
-  const avatarUrl = `${AVATAR_URL}${avatarFile}`;
 
   const actions = [
     {
@@ -101,15 +101,20 @@ function User() {
         onClose={() => setIsUserMenuOpen(false)}
       >
         <UserButton
-          $isOpen={isUserMenuOpen}
+          aria-haspopup="menu"
+          aria-expanded={isUserMenuOpen}
           onClick={() => {
             setIsUserMenuOpen((isOpenMenu) => !isOpenMenu);
           }}
         >
-          <UserAvatar avatarUrl={avatarUrl} />
-          <UserName>{userName}</UserName>
-          <UserRole>{userRole}</UserRole>
-          <ChevronRight strokeWidth={2.4} />
+          <UserAvatar avatarFile={avatarFile} lazy={false} />
+
+          <UserInfo>
+            <UserName>{userName}</UserName>
+            <UserRole>{userRole}</UserRole>
+          </UserInfo>
+
+          <ArrowIcon strokeWidth={2.4} $isOpen={isUserMenuOpen} />
         </UserButton>
       </DropdownMenu>
     </StyledUser>

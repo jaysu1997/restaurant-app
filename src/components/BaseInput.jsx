@@ -8,7 +8,7 @@ const InputWrapper = styled.div`
   overflow: hidden;
   height: 3.8rem;
   border-radius: 4px;
-  border: 1px solid ${({ $isError }) => ($isError ? "#dc2626" : "#ddd")};
+  border: 1px solid ${({ $isError }) => ($isError ? "#dc2626" : "#d1d5db")};
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -39,7 +39,7 @@ const InputWrapper = styled.div`
 const Input = styled.input`
   font-size: 1.4rem;
   font-weight: 400;
-  padding: 0.2rem 0.8rem;
+  padding: 0.2rem 1rem;
   height: 100%;
   flex: 1;
   min-width: 0px;

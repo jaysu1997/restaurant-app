@@ -1,7 +1,7 @@
 // 菜單設定頁面
 import { useSearchParams } from "react-router";
 import { useState } from "react";
-import MenuForm from "../features/menu-manage/MenuForm.jsx";
+import MenuForm from "../features/menu-manage/components/MenuForm.jsx";
 import PageHeader from "../components/PageHeader.jsx";
 import useGetMenus from "../hooks/data/menus/useGetMenus.js";
 import Filter from "../components/Filter/Filter.jsx";

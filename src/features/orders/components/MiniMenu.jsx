@@ -1,16 +1,14 @@
 // 訂單編輯頁面的迷你菜單
 import styled from "styled-components";
 import { useState } from "react";
-import Modal from "../../../components/modal/Modal";
-import useGetInventory from "../../../hooks/data/inventory/useGetInventory";
+import Modal, {
+  ModalContainer,
+  ModalContent,
+} from "../../../components/modal/Modal";
 import useGetMenus from "../../../hooks/data/menus/useGetMenus";
 import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import DishCard from "../../menu/components/DishCard";
 import OrderForm from "./OrderForm/OrderForm";
-import {
-  ModalContainer,
-  ModalContent,
-} from "../../../components/modal/ModalBody";
 
 const StyledMiniMenu = styled(ModalContent)`
   gap: 3.2rem;
@@ -64,12 +62,15 @@ function MiniMenu({ onClose }) {
   const [selectedDish, setSelectedDish] = useState(null);
   const { menusQuery } = useGetMenus();
   const { data: menus = [] } = menusQuery;
-  const { inventoryObj } = useGetInventory();
   // 是菜單內容ui
   const isMenuView = !selectedDish;
 
   return (
-    <Modal onClose={onClose} title={isMenuView ? "菜單" : selectedDish.name}>
+    <Modal
+      onClose={onClose}
+      title={isMenuView ? "菜單" : selectedDish.name}
+      maxWidth={42}
+    >
       <QueryStatusFallback
         queries={[menusQuery]}
         hasNoData={menus.length === 0}
@@ -90,7 +91,6 @@ function MiniMenu({ onClose }) {
                       <DishCard
                         dish={dish}
                         onSelect={setSelectedDish}
-                        inventoryObj={inventoryObj}
                         key={dish.id}
                       />
                     ))}

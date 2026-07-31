@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import RequiredMark from "./RequiredMark";
 
 const StyledFormField = styled.div`
   display: flex;
@@ -10,8 +9,6 @@ const StyledFormField = styled.div`
 
 const Label = styled.label`
   width: fit-content;
-  display: flex;
-  gap: 0.2rem;
 `;
 
 const MetaText = styled.p`
@@ -35,17 +32,12 @@ const MetaText = styled.p`
 `;
 
 // label + field + hint + error message
-function FormFieldLayout({ label, id, isRequired, error, hint, children }) {
+function FormFieldLayout({ label, id, error, hint, children }) {
   const message = error?.message || hint || "";
 
   return (
     <StyledFormField>
-      {label && (
-        <Label htmlFor={id}>
-          {label}
-          {isRequired && <RequiredMark />}
-        </Label>
-      )}
+      {label && <Label htmlFor={id}>{label}</Label>}
       {children}
       <MetaText $error={!!error}>{message}</MetaText>
     </StyledFormField>

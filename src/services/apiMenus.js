@@ -17,7 +17,7 @@ export async function getMenusApi() {
 
 // 新增or更新單筆menu數據
 export async function upsertMenuApi(upsertData) {
-  const { menuData, newIngredients } = upsertData;
+  const { menuData, newIngredients, imageData } = upsertData;
 
   if (newIngredients.length > 0) {
     // 將輸入的食材新增到stocks表單中
@@ -32,6 +32,14 @@ export async function upsertMenuApi(upsertData) {
     });
   }
 
+  const { newPath, oldPath, file } = imageData;
+
+  if (file) {
+    const { error } = await supabase.storage.from("menu").upload(newPath, file);
+
+    handleSupabaseApiError(error);
+  }
+
   // 新增餐點數據
   const { data, error } = await supabase
     .from("menus")
@@ -41,6 +49,16 @@ export async function upsertMenuApi(upsertData) {
   handleSupabaseApiError(error, {
     23505: `${menuData.name}已存在。`,
   });
+
+  if (oldPath) {
+    const { error } = await supabase.storage.from("menu").remove([oldPath]);
+
+    // 舊圖片刪除失敗不影響更新功能，所以不做throw error，只需要簡單通知
+    if (error) {
+      console.log("舊圖片刪除失敗");
+      console.warn(error);
+    }
+  }
 
   return data;
 }

@@ -44,28 +44,28 @@ export async function getCurrentUserApi() {
 
 // 更新用戶的頭像
 export async function updateAvatarFileApi(updateAvatarPayload) {
-  const { oldFileName, newFileName, newFile } = updateAvatarPayload;
+  const { oldPath, newPath, newFile } = updateAvatarPayload;
 
   const { data, error } = await supabase.storage
     .from("avatar")
-    .upload(newFileName, newFile);
+    .upload(newPath, newFile);
 
   handleSupabaseApiError(error);
 
   const { error: userMetaDataError } = await supabase.auth.updateUser({
-    data: { avatarFile: newFileName },
+    data: { avatarFile: newPath },
   });
 
   handleSupabaseApiError(userMetaDataError);
 
-  const { error: removeOlderAvatar } = await supabase.storage
-    .from("avatar")
-    .remove([oldFileName]);
+  if (oldPath) {
+    const { error } = await supabase.storage.from("avatar").remove([oldPath]);
 
-  // 舊頭像刪除失敗不影響更新功能，所以不做throw error，只需要簡單通知
-  if (removeOlderAvatar) {
-    console.log("舊頭像刪除失敗");
-    console.warn(removeOlderAvatar);
+    // 舊頭像刪除失敗不影響更新功能，所以不做throw error，只需要簡單通知
+    if (error) {
+      console.log("舊頭像刪除失敗");
+      console.warn(error);
+    }
   }
 
   return data;

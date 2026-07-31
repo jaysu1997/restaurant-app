@@ -14,7 +14,14 @@ const StyledCartOrderInfo = styled.div`
     display: flex;
     gap: 0.2rem;
     font-weight: 600;
+    width: fit-content;
   }
+`;
+
+const NoteGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 `;
 
 function CartOrderInfo({ canPlaceOrder }) {
@@ -23,7 +30,10 @@ function CartOrderInfo({ canPlaceOrder }) {
       <DiningMethodSegmented disabled={!canPlaceOrder} />
       <DiningInfoField disabled={!canPlaceOrder} />
       <PaymentStatusField disabled={!canPlaceOrder} />
-      <Note label="訂單備註" />
+      <NoteGroup>
+        <label htmlFor="note">訂單備註</label>
+        <Note label="訂單備註" />
+      </NoteGroup>
     </StyledCartOrderInfo>
   );
 }

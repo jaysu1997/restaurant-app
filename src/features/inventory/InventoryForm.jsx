@@ -1,16 +1,15 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import showToast from "../../utils/showToast";
-import Modal from "../../components/modal/Modal";
+import Modal, {
+  ModalContainer,
+  ModalContent,
+  ModalFooter,
+} from "../../components/modal/Modal";
 import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
 import { parsePositiveInt, trimString } from "../../utils/helpers";
 import FormActions from "../../components/FormActions";
 import FormInputField from "../../components/FormInputField";
-import {
-  ModalContainer,
-  ModalContent,
-  ModalFooter,
-} from "../../components/modal/ModalBody";
 import ModalFormSection from "../../components/modal/ModalFormSection";
 
 function InventoryForm({ inventory, onClose }) {

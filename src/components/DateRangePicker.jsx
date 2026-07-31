@@ -28,7 +28,7 @@ const DateField = styled.div`
   cursor: pointer;
 
   border: 1px solid
-    ${({ $isPickerOpen }) => ($isPickerOpen ? "#2684ff" : "#ddd")};
+    ${({ $isPickerOpen }) => ($isPickerOpen ? "#2684ff" : "#d1d5db")};
   box-shadow: ${({ $isPickerOpen }) =>
     $isPickerOpen ? "0 0 0 3px rgba(38, 132, 255, 0.15)" : "none"};
 

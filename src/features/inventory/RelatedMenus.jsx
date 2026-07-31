@@ -21,7 +21,7 @@ const Spinner = styled.div`
 
 const Accordion = styled.div`
   width: 100%;
-  border: 1px solid ${({ $isError }) => ($isError ? "#fecaca" : "#ddd")};
+  border: 1px solid ${({ $isError }) => ($isError ? "#fecaca" : "#d1d5db")};
   border-radius: 6px;
   overflow: hidden;
   font-size: 1.2rem;
@@ -80,7 +80,7 @@ const ReadyTitle = styled(AccordionTitle)`
     left: 0;
     width: 100%;
     height: 1px;
-    background-color: #ddd;
+    background-color: #d1d5db;
     opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
     transition: opacity 0.2s;
   }

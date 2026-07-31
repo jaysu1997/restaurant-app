@@ -142,6 +142,7 @@ function Login() {
               fullWidth={true}
               isProcessing={isLoggingIn}
               disabled={isLoggingIn}
+              $radius="6px"
             />
           </LoginForm>
         </StyledLogin>

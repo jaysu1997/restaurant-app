@@ -19,7 +19,7 @@ const StyleModal = styled.div`
   margin: 0 0.6rem;
   background-color: #fff;
   box-shadow: 0 20px 20px 2px rgba(0, 0, 0, 0.25);
-  border-radius: 6px;
+  border-radius: 18px;
   overflow: hidden;
 `;
 
@@ -28,21 +28,49 @@ const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 5.6rem;
-  padding: 1rem 2rem;
-  background-color: #fafaf9;
+  height: 6rem;
+  padding: 1.4rem 2.4rem;
   box-shadow: inset 0 -1px #e5e7eb;
   gap: 1.2rem;
   flex-shrink: 0;
 `;
 
 const Title = styled.h2`
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 700;
   color: ${({ $color }) => $color};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+// Modal的容器
+export const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+`;
+
+// Modal內容放置處(可壓縮、可滾動區塊)
+export const ModalContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  padding: 2.4rem;
+  overflow-y: auto;
+`;
+
+// Modal底部(固定顯示)
+export const ModalFooter = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 2rem;
+  padding: 1.6rem 2.4rem;
+  background-color: #fff;
+  box-shadow: inset 0 1px #e5e7eb;
 `;
 
 function Modal({

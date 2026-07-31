@@ -57,7 +57,6 @@ function Menu() {
           <MenuList
             menus={menus}
             categories={categories}
-            inventoryObj={inventoryQuery.inventoryObj}
             canPlaceOrder={canPlaceOrder}
           />
           <ShoppingCart canPlaceOrder={canPlaceOrder} />

@@ -178,6 +178,7 @@ function ShoppingCart({ canPlaceOrder }) {
                 isProcessing={isCreatingOrder}
                 disabled={!hasItems || isCreatingOrder || !isValid}
                 onClick={handleSubmit(onSubmit)}
+                $radius="6px"
               />
             </Footer>
           </>

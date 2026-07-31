@@ -11,11 +11,13 @@ const variant = {
     `)}
   `,
   secondary: css`
-    color: #3b82f6;
-    background-color: #eff6ff;
+    color: #2563eb;
+    background: #fff;
+    border: 1px solid #dbe4f0;
 
     ${hoverStyles(css`
-      background-color: #dbeafe;
+      background: #f8fbff;
+      border-color: #93c5fd;
     `)}
   `,
   outline: css`
@@ -69,15 +71,16 @@ const Button = styled.button.attrs((props) => ({
   font-size: 1.4rem;
   font-weight: 500;
   border: 1px solid transparent;
+  border-radius: ${({ $radius = "999px" }) => $radius};
   padding: 0.8rem 2rem;
+  height: 4rem;
+  width: ${({ $isFullWidth }) => ($isFullWidth ? "100%" : "max-content")};
+  min-width: max-content;
 
   transition:
     color 0.2s,
-    background-color 0.2s;
-  height: 4rem;
-  width: ${({ $isFullWidth }) => ($isFullWidth ? "100%" : "max-content")};
-  border-radius: ${({ $isFullWidth }) => ($isFullWidth ? "6px" : "999px")};
-  min-width: max-content;
+    background-color 0.2s,
+    border-color 0.2s;
 
   &:disabled {
     cursor: not-allowed;

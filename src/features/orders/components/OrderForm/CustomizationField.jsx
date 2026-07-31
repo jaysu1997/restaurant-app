@@ -4,104 +4,113 @@ import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import Option from "./Option";
 
 // 不同填寫要求和狀態的樣式設定
-const fieldUIConfig = {
+const FIELD_UI = {
   optional: {
-    backgroundColor: "#fafaf9",
-    label: {
-      text: "選填",
-      background: "#e7e5e4",
-      font: "#000",
-    },
-    optionHover: "#e7e5e4",
+    label: "選填",
+    color: "#6b7280",
+    bg: "#f9fafb",
+    border: "#e5e7eb",
+    optionHover: "#f3f4f6",
   },
   requiredEmpty: {
-    backgroundColor: "#fff1f2",
-    label: {
-      text: "必填",
-      background: "#f43f5e",
-      font: "#fff",
-    },
-    optionHover: "#fecdd3",
+    label: "必填",
+    color: "#dc2626",
+    bg: "#fef2f2",
+    border: "#fecaca",
+    optionHover: "#fef2f2",
   },
   requiredFilled: {
-    backgroundColor: "#f0f9ff",
-    label: {
-      text: "完成",
-      background: "#3b82f6",
-      font: "#fff",
-    },
-    optionHover: "#bae6fd",
+    label: "完成",
+    color: "#2563eb",
+    bg: "#eff6ff",
+    border: "#bfdbfe",
+    optionHover: "#eff6ff",
   },
 };
 
-const StyledCustomizationField = styled.section`
-  display: grid;
-  grid-template-rows: 2.8rem 3.8rem 1fr;
-  border: 1px solid #cacaca;
-  padding: 1.2rem;
-  border-radius: 6px;
-  background-color: ${({ $bgColor }) => $bgColor};
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 2.8rem;
-`;
-
-const Title = styled.h3`
-  font-size: 1.8rem;
-  font-weight: 600;
-  letter-spacing: 0.1rem;
-`;
-
-const RequiredLabel = styled.span`
-  font-weight: 400;
-  font-size: 1.2rem;
-  border-radius: 999px;
-  height: 100%;
-  width: 4.5rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ $labelStyle }) => $labelStyle.background};
-  color: ${({ $labelStyle }) => $labelStyle.font};
-`;
-
-const ChoiceHint = styled.p`
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.6);
-`;
-
-const OptionsArea = styled.div`
+const Section = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  /* padding: 2.4rem 0; */
+  /* gap: 1.4rem; */
+  gap: 1.6rem;
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.4rem;
+`;
+
+const SectionTitleGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+`;
+
+const SectionTitle = styled.h4`
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
+const SectionHint = styled.span`
+  font-size: 1.3rem;
+  color: #6b7280;
+`;
+
+const Badge = styled.div`
+  /* height: 2.8rem; */
+  height: 2.6rem;
+  flex-shrink: 0;
+  width: max-content;
+  padding: 0 1rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  color: ${({ $status }) => $status.color};
+  background: ${({ $status }) => $status.bg};
+  border: 1px solid ${({ $status }) => $status.border};
+`;
+
+const OptionList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 `;
 
 // 根據欄位要求和填寫狀態控制樣式
-function getFieldStatus(customization) {
-  const isRequiredField = customization.isRequired;
-  const isFilled = customization.selectedOptions.length > 0;
-
+function getFieldUI({ isRequired, selectedOptions }) {
   // 選填
-  if (!isRequiredField) return "optional";
+  if (!isRequired) return FIELD_UI.optional;
 
-  return isFilled ? "requiredFilled" : "requiredEmpty";
+  return selectedOptions.length
+    ? FIELD_UI.requiredFilled
+    : FIELD_UI.requiredEmpty;
 }
 
 // 自訂選項區塊
 function CustomizationField({ customization }) {
   const { dispatch } = useOrderDraft();
-  const { type, customizationId, name, options } = customization;
+  const {
+    type,
+    customizationId,
+    name,
+    options,
+    isRequired,
+    selectedOptions = [],
+  } = customization;
 
   // 填寫狀態(控制樣式)
-  const fieldStatus = getFieldStatus(customization);
-  const uiType = fieldUIConfig[fieldStatus];
-  // 已選選項
-  const selectedOptions = customization.selectedOptions ?? [];
+  const ui = getFieldUI({ isRequired, selectedOptions });
 
   function handleOptionChange(e, optionData) {
     let actionType;
@@ -124,27 +133,29 @@ function CustomizationField({ customization }) {
   }
 
   return (
-    <StyledCustomizationField $bgColor={uiType.backgroundColor}>
-      <Header>
-        <Title>{name}</Title>
-        <RequiredLabel $labelStyle={uiType.label}>
-          {uiType.label.text}
-        </RequiredLabel>
-      </Header>
+    <Section>
+      <SectionHeader>
+        <SectionTitleGroup>
+          <SectionTitle>{name}</SectionTitle>
+          <SectionHint>
+            {type === "single" ? "只能單選" : "可以多選"}
+          </SectionHint>
+        </SectionTitleGroup>
 
-      <ChoiceHint>{type === "single" ? "只能單選" : "可以多選"}</ChoiceHint>
-      <OptionsArea>
+        <Badge $status={ui}>{ui.label}</Badge>
+      </SectionHeader>
+
+      <OptionList>
         {options.map((optionData) => (
           <Option
-            hoverBgColor={uiType.optionHover}
             optionData={optionData}
             onToggle={(e) => handleOptionChange(e, optionData)}
             selectedOptions={selectedOptions}
             key={optionData.optionId}
           />
         ))}
-      </OptionsArea>
-    </StyledCustomizationField>
+      </OptionList>
+    </Section>
   );
 }
 

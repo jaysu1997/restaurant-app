@@ -3,35 +3,28 @@ import { X } from "lucide-react";
 import { hoverStyles } from "../style/helpers";
 
 const StyledCloseButton = styled.button`
-  width: 2.8rem;
-  height: 2.8rem;
-  color: #000;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  transition: all 0.18s;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   flex-shrink: 0;
 
-  & svg {
-    width: 1.6rem;
-    height: 1.6rem;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: 1px solid #374151;
-    border-radius: 50%;
-    transition: all 0.3s;
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
   }
 
   ${hoverStyles(css`
-    &::before {
-      transform: scale(1.1);
-      box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-    }
+    background-color: #f3f4f6;
   `)}
+
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 function ModalCloseButton({ onClose }) {

@@ -1,12 +1,12 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus } from "lucide-react";
 import OptionSection from "./OptionSection";
-import TextButton from "../../components/button/TextButton";
-import FormFieldLayout from "../../components/FormFieldLayout";
-import FormInputField from "../../components/FormInputField";
-import ControlledSwitch from "../../components/ControlledSwitch";
-import ModalFormSection from "../../components/modal/ModalFormSection";
-import ModalFormCard from "../../components/modal/ModalFormCard";
+import TextButton from "../../../components/button/TextButton";
+import FormFieldLayout from "../../../components/FormFieldLayout";
+import FormInputField from "../../../components/FormInputField";
+import ControlledSwitch from "../../../components/ControlledSwitch";
+import ModalFormSection from "../../../components/modal/ModalFormSection";
+import ModalFormCard from "../../../components/modal/ModalFormCard";
 
 function CustomizeSection({ ingredientOptions }) {
   const { control } = useFormContext();

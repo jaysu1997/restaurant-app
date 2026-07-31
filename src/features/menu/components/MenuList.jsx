@@ -10,11 +10,11 @@ import { getValidParam } from "../../../utils/filterHelpers";
 const StyledMenuList = styled.ul`
   grid-column: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
   gap: 2.4rem;
 `;
 
-function MenuList({ menus, inventoryObj, categories, canPlaceOrder }) {
+function MenuList({ menus, categories, canPlaceOrder }) {
   const [searchParams] = useSearchParams();
   const [selectedDish, setSelectedDish] = useState(null);
 
@@ -39,7 +39,6 @@ function MenuList({ menus, inventoryObj, categories, canPlaceOrder }) {
           <DishCard
             dish={dish}
             onSelect={setSelectedDish}
-            inventoryObj={inventoryObj}
             disabled={!canPlaceOrder}
             key={dish.id}
           />
@@ -47,7 +46,7 @@ function MenuList({ menus, inventoryObj, categories, canPlaceOrder }) {
       </StyledMenuList>
 
       {selectedDish && (
-        <Modal onClose={onClose} title={selectedDish.name}>
+        <Modal onClose={onClose} title="新增餐點" maxWidth={42}>
           <OrderForm
             orderDish={selectedDish}
             isEdit={false}

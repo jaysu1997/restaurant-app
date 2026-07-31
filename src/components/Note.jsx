@@ -2,20 +2,16 @@ import styled from "styled-components";
 import { trimString } from "../utils/helpers";
 import { useFormContext } from "react-hook-form";
 
-const StyledNote = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
+const Textarea = styled.textarea`
   resize: none;
-  min-height: 8rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 0.6rem 0.8rem;
+  width: 100%;
   font-size: 1.4rem;
+  min-height: 10rem;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: 0.18s;
 
   &:focus {
     outline: none;
@@ -24,23 +20,18 @@ const TextArea = styled.textarea`
   }
 `;
 
-function Note({ label, maxLength, className }) {
+function Note({ maxLength }) {
   const { register } = useFormContext();
 
   return (
-    <StyledNote className={className}>
-      {label && <label htmlFor="note">{label}</label>}
-      <TextArea
-        id="note"
-        maxLength={maxLength}
-        placeholder={
-          maxLength ? `備註內容最多${maxLength}個字` : "可輸入備註內容"
-        }
-        {...register("note", {
-          setValueAs: trimString,
-        })}
-      />
-    </StyledNote>
+    <Textarea
+      id="note"
+      maxLength={maxLength}
+      placeholder={maxLength ? `備註內容最多${maxLength}個字` : "輸入備註"}
+      {...register("note", {
+        setValueAs: trimString,
+      })}
+    />
   );
 }
 

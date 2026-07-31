@@ -1,10 +1,10 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus } from "lucide-react";
-import { parsePositiveInt } from "../../utils/helpers";
-import TextButton from "../../components/button/TextButton";
-import FormInputField from "../../components/FormInputField";
-import FormSelectField from "../../components/FormSelectField";
-import ModalFormCard from "../../components/modal/ModalFormCard";
+import { parsePositiveInt } from "../../../utils/helpers";
+import TextButton from "../../../components/button/TextButton";
+import FormInputField from "../../../components/FormInputField";
+import FormSelectField from "../../../components/FormSelectField";
+import ModalFormCard from "../../../components/modal/ModalFormCard";
 
 function OptionSection({ nestedIndex, ingredientOptions }) {
   const { control } = useFormContext();

@@ -34,7 +34,7 @@ function DiningInfoField({ disabled }) {
       label={isTakeout ? "取餐時間" : "內用桌號"}
       name={isTakeout ? "pickupTime" : "tableNumber"}
       options={isTakeout ? pickupTimeOptions : dineInTableOptions}
-      placeholder={isTakeout ? "選擇取餐時間" : "選擇桌號"}
+      placeholder={isTakeout ? "請選擇取餐時間" : "請選擇內用桌號"}
       disabled={disabled}
       rules={{
         required: isTakeout ? "請選擇取餐時間" : "請選擇內用桌號",
