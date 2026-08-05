@@ -46,7 +46,7 @@ function MenuList({ menus, categories, canPlaceOrder }) {
       </StyledMenuList>
 
       {selectedDish && (
-        <Modal onClose={onClose} title="新增餐點" maxWidth={42}>
+        <Modal onClose={onClose} title="新增餐點" maxWidth={40}>
           <OrderForm
             orderDish={selectedDish}
             isEdit={false}

@@ -25,7 +25,7 @@ const StyleHeader = styled.header`
   }
 
   @media (max-width: 64em) {
-    grid-template-columns: 1fr 20rem 1fr;
+    grid-template-columns: auto auto 1fr;
   }
 `;
 

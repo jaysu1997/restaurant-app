@@ -8,14 +8,15 @@ const HeaderActionButton = styled(Button)`
   }
 
   @media (max-width: 30em) {
-    width: 4rem;
-    min-width: 4rem;
-    height: 4rem;
-    padding: 0;
-    border-radius: 50%;
+    height: 3.6rem;
+    padding: 0.8rem 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 16px;
 
-    span {
-      display: none;
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
     }
   }
 `;

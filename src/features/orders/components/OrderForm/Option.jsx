@@ -9,13 +9,11 @@ const OptionRow = styled.label`
   align-items: center;
   gap: 1.6rem;
   padding: 1.2rem 0.6rem;
-
   border-radius: 12px;
   cursor: pointer;
   font-size: 1.4rem;
   font-weight: 500;
   user-select: none;
-
   transition: background-color 0.18s ease;
 
   ${hoverStyles(css`
@@ -23,7 +21,7 @@ const OptionRow = styled.label`
   `)}
 
   &:active {
-    transform: scale(0.99);
+    transform: scale(0.98);
   }
 `;
 
@@ -35,6 +33,13 @@ const Checkbox = styled.div`
     fill: ${({ $checked }) => ($checked ? "#007bff" : "transparent")};
     width: 2rem;
     height: 2rem;
+
+    transform: ${({ $checked }) => ($checked ? "scale(1.06)" : "scale(1)")};
+
+    transition:
+      fill 0.16s ease,
+      color 0.16s ease,
+      transform 0.16s ease;
   }
 
   svg:last-of-type {
@@ -45,6 +50,12 @@ const Checkbox = styled.div`
     opacity: ${({ $checked }) => ($checked ? "1" : "0")};
     width: 1.6rem;
     height: 1.6rem;
+
+    transform: ${({ $checked }) => ($checked ? "scale(1)" : "scale(0.6)")};
+
+    transition:
+      opacity 0.12s ease,
+      transform 0.12s ease;
   }
 `;
 
@@ -53,8 +64,6 @@ const OptionName = styled.span`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-
-  /* line-height: 1.45; */
 `;
 
 const OptionPrice = styled.span`

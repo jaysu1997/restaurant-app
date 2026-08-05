@@ -21,7 +21,7 @@ const Overlay = styled(StyledOverlay)`
   @media (max-width: 64em) {
     display: block;
     opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
-    transition: opacity 0.25s;
+    transition: opacity 0.25s ease;
   }
 `;
 
@@ -49,7 +49,7 @@ const Nav = styled.nav`
     transform: ${({ $isOpen }) =>
       $isOpen ? "translateX(0)" : "translateX(-20rem)"};
 
-    transition: transform 0.25s;
+    transition: transform 0.25s ease;
   }
 `;
 

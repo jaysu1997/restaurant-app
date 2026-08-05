@@ -11,7 +11,10 @@ const Textarea = styled.textarea`
   border-radius: 4px;
   border: 1px solid #d1d5db;
   outline: none;
-  transition: 0.18s;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:focus {
     outline: none;
@@ -20,12 +23,12 @@ const Textarea = styled.textarea`
   }
 `;
 
-function Note({ maxLength }) {
+function Note({ id = "note", maxLength }) {
   const { register } = useFormContext();
 
   return (
     <Textarea
-      id="note"
+      id={id}
       maxLength={maxLength}
       placeholder={maxLength ? `備註內容最多${maxLength}個字` : "輸入備註"}
       {...register("note", {

@@ -28,9 +28,12 @@ function FormActions({
 
       <SubmitButton
         onClick={onSubmit}
-        isProcessing={isProcessing}
-        disabled={submitDisabled || isProcessing}
-      />
+        processing={isProcessing}
+        disabled={submitDisabled}
+        round
+      >
+        儲存
+      </SubmitButton>
     </StyledFormActions>
   );
 }

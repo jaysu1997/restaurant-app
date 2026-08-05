@@ -7,11 +7,7 @@ const TextButton = styled(Button).attrs({ $variant: "plain" })`
   padding: 0.6rem 0.8rem;
   border-radius: 4px;
   height: 3.6rem;
-
-  & svg {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
+  width: fit-content;
 
   ${hoverStyles(css`
     background-color: #eff6ff;

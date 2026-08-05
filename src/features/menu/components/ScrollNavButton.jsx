@@ -20,8 +20,8 @@ const StyledButton = styled.button`
   cursor: pointer;
 
   transition:
-    background-color 0.2s,
-    transform 0.2s;
+    background-color 0.2s ease,
+    transform 0.2s ease;
 
   svg {
     width: 1.6rem;

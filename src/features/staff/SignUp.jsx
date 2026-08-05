@@ -2,8 +2,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import FormInputField from "../../components/FormInputField";
 import useCreateStaff from "../../hooks/data/staff/useCreateStaff";
 import FormPasswordField from "../../components/FormPasswordField";
-import Button from "../../components/button/Button";
-import ButtonSpinner from "../../components/ButtonSpinner";
 import { trimString, validatePhoneNumber } from "../../utils/helpers";
 import FormSelectField from "../../components/FormSelectField";
 import { isValidEmail } from "../../utils/validation";
@@ -14,6 +12,7 @@ import {
 } from "../../components/modal/Modal";
 import ModalFormSection from "../../components/modal/ModalFormSection";
 import showToast from "../../utils/showToast";
+import SubmitButton from "../../components/button/SubmitButton";
 
 function Signup({ onClose }) {
   const { createStaff, isCreatingStaff } = useCreateStaff();
@@ -125,16 +124,13 @@ function Signup({ onClose }) {
         </ModalContent>
 
         <ModalFooter>
-          <Button
-            type="submit"
-            $isFullWidth={true}
-            $radius="6px"
-            $isProcessing={isCreatingStaff}
+          <SubmitButton
+            fullWidth
+            processing={isCreatingStaff}
             disabled={isCreatingStaff}
           >
-            <span>註冊</span>
-            {isCreatingStaff && <ButtonSpinner />}
-          </Button>
+            註冊
+          </SubmitButton>
         </ModalFooter>
       </ModalContainer>
     </FormProvider>

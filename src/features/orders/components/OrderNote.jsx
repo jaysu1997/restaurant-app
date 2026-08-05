@@ -25,8 +25,8 @@ function OrderNote({ note, isEdit }) {
   return (
     <SectionContainer>
       <NoteGroup>
-        <NoteLabel htmlFor="note">訂單備註</NoteLabel>
-        {!isEdit ? <span>{note || "無"}</span> : <Note />}
+        <NoteLabel htmlFor="order-note">訂單備註</NoteLabel>
+        {!isEdit ? <span>{note || "無"}</span> : <Note id="order-note" />}
       </NoteGroup>
     </SectionContainer>
   );

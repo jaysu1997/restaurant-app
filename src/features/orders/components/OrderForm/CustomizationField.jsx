@@ -31,8 +31,6 @@ const FIELD_UI = {
 const Section = styled.section`
   display: flex;
   flex-direction: column;
-  /* padding: 2.4rem 0; */
-  /* gap: 1.4rem; */
   gap: 1.6rem;
 `;
 
@@ -61,30 +59,28 @@ const SectionTitle = styled.h4`
 
 const SectionHint = styled.span`
   font-size: 1.3rem;
+  line-height: 1.15;
   color: #6b7280;
 `;
 
 const Badge = styled.div`
-  /* height: 2.8rem; */
-  height: 2.6rem;
+  height: 2.8rem;
   flex-shrink: 0;
-  width: max-content;
   padding: 0 1rem;
   border-radius: 999px;
   display: flex;
   align-items: center;
   font-size: 1.2rem;
   font-weight: 600;
-
   color: ${({ $status }) => $status.color};
-  background: ${({ $status }) => $status.bg};
+  background-color: ${({ $status }) => $status.bg};
   border: 1px solid ${({ $status }) => $status.border};
 `;
 
 const OptionList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.4rem;
 `;
 
 // 根據欄位要求和填寫狀態控制樣式

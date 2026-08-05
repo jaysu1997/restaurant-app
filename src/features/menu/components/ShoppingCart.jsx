@@ -173,13 +173,13 @@ function ShoppingCart({ canPlaceOrder }) {
               </OrderSummary>
 
               <SubmitButton
-                label="提交"
-                fullWidth={true}
-                isProcessing={isCreatingOrder}
+                fullWidth
+                processing={isCreatingOrder}
                 disabled={!hasItems || isCreatingOrder || !isValid}
                 onClick={handleSubmit(onSubmit)}
-                $radius="6px"
-              />
+              >
+                提交
+              </SubmitButton>
             </Footer>
           </>
         )}

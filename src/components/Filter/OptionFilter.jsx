@@ -23,10 +23,10 @@ const OptionButton = styled.button`
     ${({ $isSelected }) => ($isSelected ? "#bfdbfe" : "transparent")};
 
   transition:
-    font-weight 0.15s,
-    background-color 0.15s,
-    color 0.15s,
-    border-color 0.15s;
+    font-weight 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 
   ${hoverStyles(css`
     background-color: ${({ $isSelected }) =>

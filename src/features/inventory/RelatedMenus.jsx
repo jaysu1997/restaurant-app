@@ -28,7 +28,7 @@ const Accordion = styled.div`
   margin-top: 2.4rem;
   padding: 0;
   max-height: ${({ $isExpanded }) => ($isExpanded ? "13.8rem" : "3.8rem")};
-  transition: max-height 0.3s;
+  transition: max-height 0.3s ease;
 `;
 
 const AccordionTitle = styled.div`
@@ -41,7 +41,7 @@ const AccordionTitle = styled.div`
   gap: 0.6rem;
   font-size: 1.4rem;
 
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
 
   svg {
     width: 1.3rem;
@@ -82,14 +82,14 @@ const ReadyTitle = styled(AccordionTitle)`
     height: 1px;
     background-color: #d1d5db;
     opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
-    transition: opacity 0.2s;
+    transition: opacity 0.2s ease;
   }
 
   svg {
     transform: ${({ $isExpanded }) =>
       $isExpanded ? "rotate(0.25turn)" : "rotate(0)"};
 
-    transition: transform 0.2s;
+    transition: transform 0.2s ease;
   }
 
   ${hoverStyles(css`

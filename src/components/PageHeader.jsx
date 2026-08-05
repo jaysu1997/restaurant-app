@@ -11,6 +11,11 @@ const StyledPageHeader = styled.header`
 
 const PageHeading = styled.h1`
   font-size: 3.2rem;
+  line-height: 1.25;
+
+  @media (max-width: 30em) {
+    font-size: 2.8rem;
+  }
 `;
 
 const PageTools = styled.div`

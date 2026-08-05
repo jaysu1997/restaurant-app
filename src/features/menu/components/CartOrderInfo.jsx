@@ -31,8 +31,8 @@ function CartOrderInfo({ canPlaceOrder }) {
       <DiningInfoField disabled={!canPlaceOrder} />
       <PaymentStatusField disabled={!canPlaceOrder} />
       <NoteGroup>
-        <label htmlFor="note">訂單備註</label>
-        <Note label="訂單備註" />
+        <label htmlFor="cart-note">訂單備註</label>
+        <Note id="cart-note" label="訂單備註" />
       </NoteGroup>
     </StyledCartOrderInfo>
   );

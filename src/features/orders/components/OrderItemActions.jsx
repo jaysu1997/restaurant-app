@@ -45,7 +45,7 @@ function OrderItemActions({ item, canModifyItems }) {
       </StyledItemActions>
 
       {editingItem && (
-        <Modal onClose={onClose} title={editingItem.name} maxWidth={42}>
+        <Modal onClose={onClose} title="編輯餐點" maxWidth={40}>
           <OrderForm orderDish={editingItem} onClose={onClose} isEdit={true} />
         </Modal>
       )}

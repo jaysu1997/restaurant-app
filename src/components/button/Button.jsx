@@ -28,6 +28,10 @@ const variant = {
     ${hoverStyles(css`
       background-color: #f9fafb;
     `)}
+
+    &:disabled {
+      background-color: #f9fafb;
+    }
   `,
   danger: css`
     color: #fff;
@@ -62,39 +66,30 @@ const Button = styled.button.attrs((props) => ({
   type: props.type || "button",
 }))`
   cursor: pointer;
-  position: ${({ $isProcessing }) => ($isProcessing ? "relative" : "static")};
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-
   font-size: 1.4rem;
   font-weight: 500;
   border: 1px solid transparent;
-  border-radius: ${({ $radius = "999px" }) => $radius};
+  border-radius: 999px;
   padding: 0.8rem 2rem;
   height: 4rem;
-  width: ${({ $isFullWidth }) => ($isFullWidth ? "100%" : "max-content")};
   min-width: max-content;
 
   transition:
-    color 0.2s,
-    background-color 0.2s,
-    border-color 0.2s;
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 
   &:disabled {
     cursor: not-allowed;
   }
 
   & svg {
-    width: ${({ $iconSize }) => ($iconSize ? $iconSize : "1.6rem")};
-    height: ${({ $iconSize }) => ($iconSize ? $iconSize : "1.6rem")};
-  }
-
-  /* 載入中顯示動畫 */
-  & > span {
-    visibility: ${({ $isProcessing }) =>
-      $isProcessing ? "hidden" : "visible"};
+    width: 1.6rem;
+    height: 1.6rem;
   }
 
   ${({ $variant }) => variant[$variant || "primary"]}

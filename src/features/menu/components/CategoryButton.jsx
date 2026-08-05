@@ -18,8 +18,8 @@ const StyledCategoryItem = styled.button`
   color: ${({ $isActive }) => ($isActive ? "#262626" : "#e5e5e5")};
   background-color: ${({ $isActive }) => ($isActive ? "#fff" : "#525252")};
   transition:
-    background-color 0.2s,
-    color 0.2s;
+    background-color 0.2s ease,
+    color 0.2s ease;
 
   ${hoverStyles(css`
     background-color: ${({ $isActive }) => ($isActive ? "#fff" : "#737373")};

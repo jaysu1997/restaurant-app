@@ -23,6 +23,19 @@ const Actions = styled.div`
   margin-top: 2rem;
 `;
 
+const CancelButton = styled(Button)`
+  width: 100%;
+`;
+
+const DeleteButton = styled(CancelButton)`
+  position: relative;
+`;
+
+const ButtonContent = styled.span`
+  /* 隱藏span顯示載入中spinner */
+  visibility: ${({ $processing }) => ($processing ? "hidden" : "visible")};
+`;
+
 function ConfirmDelete({ data, render, deleteMutation, onClose }) {
   const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
   // 刪除功能
@@ -34,14 +47,12 @@ function ConfirmDelete({ data, render, deleteMutation, onClose }) {
         <Main>{render({ setIsDeleteDisabled })}</Main>
 
         <Actions>
-          <Button $variant="outline" onClick={onClose} $isFullWidth={true}>
+          <CancelButton $variant="outline" onClick={onClose}>
             取消
-          </Button>
+          </CancelButton>
 
-          <Button
+          <DeleteButton
             $variant="danger"
-            $isProcessing={isDeleting}
-            $isFullWidth={true}
             disabled={isDeleteDisabled || isDeleting}
             onClick={() => {
               handleDelete(data.id, {
@@ -49,9 +60,9 @@ function ConfirmDelete({ data, render, deleteMutation, onClose }) {
               });
             }}
           >
-            <span>刪除</span>
+            <ButtonContent $processing={isDeleting}>刪除</ButtonContent>
             {isDeleting && <ButtonSpinner />}
-          </Button>
+          </DeleteButton>
         </Actions>
       </ModalContent>
     </Modal>

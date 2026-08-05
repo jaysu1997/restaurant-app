@@ -85,6 +85,9 @@ const Footer = styled.footer`
   border-top: 1px solid #f3f4f6;
   padding: 2rem;
   background-color: #fff;
+  & > button {
+    width: 100%;
+  }
 `;
 
 function Filter({ filtersConfig, filterState }) {
@@ -182,16 +185,13 @@ function Filter({ filtersConfig, filterState }) {
         <Footer>
           <Button
             $variant="outline"
-            $isFullWidth
             disabled={isClearDisabled}
             onClick={clearFilters}
           >
             清空條件
           </Button>
 
-          <Button $isFullWidth onClick={confirmFilters}>
-            確認
-          </Button>
+          <Button onClick={confirmFilters}>確認</Button>
         </Footer>
       </FilterContainer>
     </StyledFilter>

@@ -68,8 +68,8 @@ function MiniMenu({ onClose }) {
   return (
     <Modal
       onClose={onClose}
-      title={isMenuView ? "菜單" : selectedDish.name}
-      maxWidth={42}
+      title={isMenuView ? "菜單" : "新增餐點"}
+      maxWidth={40}
     >
       <QueryStatusFallback
         queries={[menusQuery]}

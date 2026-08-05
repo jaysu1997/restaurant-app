@@ -6,7 +6,7 @@ const StyledCloseButton = styled.button`
   width: 3.2rem;
   height: 3.2rem;
   border-radius: 50%;
-  transition: all 0.18s;
+  transition: all 0.18s ease;
 
   display: flex;
   justify-content: center;

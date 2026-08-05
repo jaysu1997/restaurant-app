@@ -60,10 +60,10 @@ const LoginForm = styled.form`
     font-size: 1.4rem;
     font-weight: 500;
   }
+`;
 
-  & > button {
-    margin-top: 2rem;
-  }
+const Footer = styled.footer`
+  margin-top: 2.4rem;
 `;
 
 // 登入頁面UI元件
@@ -109,7 +109,7 @@ function Login() {
       <PageLayout>
         <StyledLogin>
           <Logo src="/logo.webp" alt="logo" />
-          <LoginHeading>登入 Aurora Bites</LoginHeading>
+          <LoginHeading>登入 Restro</LoginHeading>
 
           {/* 登入失敗提示訊息 */}
           {errors?.root && (
@@ -137,13 +137,15 @@ function Login() {
               }}
             />
 
-            <SubmitButton
-              label="登入"
-              fullWidth={true}
-              isProcessing={isLoggingIn}
-              disabled={isLoggingIn}
-              $radius="6px"
-            />
+            <Footer>
+              <SubmitButton
+                fullWidth
+                processing={isLoggingIn}
+                disabled={isLoggingIn}
+              >
+                登入
+              </SubmitButton>
+            </Footer>
           </LoginForm>
         </StyledLogin>
       </PageLayout>

@@ -32,7 +32,7 @@ function Logo() {
   return (
     <StyledLogo>
       <Img src="/logo.webp" alt="logo" />
-      <h1>Aurora Bites</h1>
+      <h1>Restro</h1>
     </StyledLogo>
   );
 }
