@@ -44,7 +44,7 @@ const FilterContainer = styled.div`
     display: flex;
     position: fixed;
     top: 25%;
-    z-index: 150;
+    z-index: 151;
     width: 100%;
     height: 75%;
     border-radius: 0;

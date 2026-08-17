@@ -128,9 +128,7 @@ export const GlobalStyles = styled.createGlobalStyle`
     color: #1f2937;
     background-color: #f9fafb;
     min-height: 100dvh;
-
-    overflow-y: scroll;
-    padding-right: 0px !important;
+    overflow-y: auto;
   }
 
   h1,

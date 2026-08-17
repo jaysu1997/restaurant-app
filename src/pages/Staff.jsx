@@ -40,7 +40,7 @@ function Staff() {
         <StaffLayout>
           <QueryStatusFallback queries={[staffQuery]}>
             <StaffList
-              staffList={staffQuery?.data?.users}
+              staffList={staffQuery?.data}
               onRequestDelete={setStaffToDelete}
             />
           </QueryStatusFallback>
@@ -63,7 +63,7 @@ function Staff() {
               請確認是否要刪除
               <strong>
                 {" "}
-                {staffToDelete.user_metadata.name} ({staffToDelete.email}){" "}
+                {staffToDelete.name} ({staffToDelete.email}){" "}
               </strong>
               ?
             </p>

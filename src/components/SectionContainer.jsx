@@ -1,3 +1,4 @@
+// 這個可能需要改動設計(標題大小、padding、footer...)
 import styled from "styled-components";
 import { Plus } from "lucide-react";
 import TextButton from "./button/TextButton";

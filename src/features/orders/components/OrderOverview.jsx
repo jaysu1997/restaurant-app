@@ -17,7 +17,7 @@ import { hoverStyles } from "../../../style/helpers";
 const StyledOrderOverview = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 2.4rem;
   font-weight: 600;
 `;
 
@@ -26,7 +26,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  margin-bottom: 3.6rem;
+  margin-bottom: 3.2rem;
 `;
 
 const PickupNumber = styled.div`

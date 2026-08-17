@@ -1,23 +1,17 @@
 // ok
 import styled from "styled-components";
-import { Minus, ArrowBigDown, ArrowBigUp } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 
 const StyledStatItem = styled.article`
   border-radius: 6px;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 2.4rem;
   align-items: center;
-  column-gap: 1rem;
-  row-gap: 0.6rem;
-  background-color: ${(props) => props.$bgColor};
-  border: 1px solid ${(props) => props.$bgColor};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-
-  svg {
-    width: 2rem;
-    height: 2rem;
-  }
+  column-gap: 0rem;
+  row-gap: 1.2rem;
+  background-color: ${({ $cardStyle }) => $cardStyle.bg};
+  border: 1px solid ${({ $cardStyle }) => $cardStyle.border};
 `;
 
 const StatHeading = styled.h6`
@@ -34,45 +28,31 @@ const StatValue = styled.div`
   min-width: 0;
 
   span {
-    flex-shrink: 1;
     display: flex;
-    font-size: 1.8rem;
-    font-weight: 600;
+    font-size: 2rem;
+    font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #111827;
   }
 `;
 
 function StatItem({ stat }) {
-  const { icon: Icon, iconColor, trend, cardColor, heading, value } = stat;
-  const shouldShowTrend = trend != null;
-  const trendDirection = trend > 0 ? "up" : trend < 0 ? "down" : null;
+  const { icon: Icon, cardStyle, trend, iconStyle, heading, value } = stat;
+  const isPositive = trend > 0;
+  const isNegative = trend < 0;
 
   return (
-    <StyledStatItem $bgColor={cardColor}>
+    <StyledStatItem $cardStyle={cardStyle}>
       <StatHeading>{heading}</StatHeading>
-      <Icon color={iconColor} />
+      <Icon color={iconStyle} />
 
       <StatValue>
-        <span>
-          {value === null ? (
-            <>
-              <Minus />
-              <Minus />
-            </>
-          ) : (
-            value
-          )}
-        </span>
+        {isPositive && <ArrowBigUp color="#22c55e" fill="#22c55e" />}
+        {isNegative && <ArrowBigDown color="#f43f5e" fill="#f43f5e" />}
 
-        {shouldShowTrend && trendDirection === "up" && (
-          <ArrowBigUp color="#22c55e" fill="#22c55e" />
-        )}
-
-        {shouldShowTrend && trendDirection === "down" && (
-          <ArrowBigDown color="#f43f5e" fill="#f43f5e" />
-        )}
+        <span>{value}</span>
       </StatValue>
     </StyledStatItem>
   );

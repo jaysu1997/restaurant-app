@@ -21,10 +21,11 @@ const selectStyle = {
 
     return {
       ...base,
-
+      borderRadius: "8px",
       fontSize: "1.4rem",
       fontWeight: "400",
-      height: "3.8rem",
+      height: "4.2rem",
+      minHeight: "4.2rem",
       borderColor: hasError
         ? "#dc2626"
         : state.isFocused

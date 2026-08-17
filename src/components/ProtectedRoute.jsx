@@ -6,9 +6,10 @@ import useUser from "../hooks/data/auth/useUser";
 function ProtectedRoute({ children, roles }) {
   const navigate = useNavigate();
   const { user, userIsLoading } = useUser();
-  const userRole = user?.user_metadata?.role;
+  const userRole = user?.userRole?.value;
+
   // 已授權
-  const isAuthorized = user && (!roles || roles.includes(userRole));
+  const isAuthorized = !!user && (!roles || roles.includes(userRole));
 
   useEffect(() => {
     if (userIsLoading) return;

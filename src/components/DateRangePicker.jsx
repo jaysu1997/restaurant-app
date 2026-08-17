@@ -16,14 +16,14 @@ const StyledDateRangePicker = styled.div`
 `;
 
 const DateField = styled.div`
-  height: 3.8rem;
+  height: 4.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
   padding: 0.2rem 0.8rem;
   width: 100%;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #fff;
   cursor: pointer;
 

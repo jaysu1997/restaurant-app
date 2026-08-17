@@ -9,6 +9,7 @@ import FormPasswordField from "../components/FormPasswordField";
 import FormInputField from "../components/FormInputField";
 import { isValidEmail } from "../utils/validation";
 import SubmitButton from "../components/button/SubmitButton";
+import BrandImage from "../components/BrandImage";
 
 const PageLayout = styled.div`
   width: 100%;
@@ -16,54 +17,107 @@ const PageLayout = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3.6rem 1rem;
-`;
+  padding: 4rem 1.6rem;
 
-const StyledLogin = styled.div`
-  width: clamp(0px, 32rem, 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 3.2rem;
-`;
-
-const Logo = styled.img`
-  width: 9.6rem;
-  height: auto;
-`;
-
-const LoginHeading = styled.h3`
-  font-size: 2rem;
-`;
-
-const LoginFailMessage = styled.div`
-  background-color: #fecaca;
-  border: 1px solid #f87171;
-  border-radius: 6px;
-  color: #dc2626;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  font-size: 1.4rem;
-  font-weight: 500;
-`;
-
-const LoginForm = styled.form`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-
-  label {
-    font-size: 1.4rem;
-    font-weight: 500;
+  @media (max-width: 30em) {
+    padding: 0;
   }
 `;
 
-const Footer = styled.footer`
-  margin-top: 2.4rem;
+const StyledLogin = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: min(42rem, 100%);
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 4.8rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  box-shadow:
+    0 20px 48px rgba(15, 23, 42, 0.08),
+    0 4px 12px rgba(15, 23, 42, 0.04);
+
+  @media (max-width: 30em) {
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    padding: 4.8rem 2.8rem;
+  }
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+
+  & > img {
+    width: 8rem;
+    height: auto;
+
+    @media (max-width: 30em) {
+      width: 6.4rem;
+    }
+  }
+`;
+
+const Heading = styled.h1`
+  color: #111827;
+  font-size: 2.8rem;
+  font-weight: 700;
+
+  @media (max-width: 30em) {
+    font-size: 2.4rem;
+  }
+`;
+
+const ErrorContainer = styled.div`
+  padding: 1.6rem 0 2.4rem;
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 1.2rem;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #b91c1c;
+`;
+
+const ErrorIcon = styled.div`
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #dc2626;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+`;
+
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+
+  label {
+    color: #374151;
+  }
+`;
+
+const LoginButton = styled(SubmitButton)`
+  height: 5rem;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
 `;
 
 // 登入頁面UI元件
@@ -108,13 +162,20 @@ function Login() {
     <FormProvider {...methods}>
       <PageLayout>
         <StyledLogin>
-          <Logo src="/logo.webp" alt="logo" />
-          <LoginHeading>登入 Restro</LoginHeading>
+          <Header>
+            <BrandImage />
+            <Heading>登入 Restro</Heading>
+          </Header>
 
           {/* 登入失敗提示訊息 */}
-          {errors?.root && (
-            <LoginFailMessage>{errors?.root?.message}</LoginFailMessage>
-          )}
+          <ErrorContainer>
+            {errors?.root && (
+              <ErrorMessage role="alert">
+                <ErrorIcon aria-hidden="true">!</ErrorIcon>
+                <span>{errors.root.message}</span>
+              </ErrorMessage>
+            )}
+          </ErrorContainer>
 
           <LoginForm onSubmit={handleSubmit(onSubmit)}>
             <FormInputField
@@ -137,15 +198,13 @@ function Login() {
               }}
             />
 
-            <Footer>
-              <SubmitButton
-                fullWidth
-                processing={isLoggingIn}
-                disabled={isLoggingIn}
-              >
-                登入
-              </SubmitButton>
-            </Footer>
+            <LoginButton
+              fullWidth
+              processing={isLoggingIn}
+              disabled={isLoggingIn}
+            >
+              登入
+            </LoginButton>
           </LoginForm>
         </StyledLogin>
       </PageLayout>

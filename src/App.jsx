@@ -64,6 +64,8 @@ const queryClient = new QueryClient({
 
 // react.lazy 是否需要?
 
+// 清理註解
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -107,7 +109,7 @@ export default function App() {
             <Route
               path="/staff"
               element={
-                <ProtectedRoute roles={["店長"]}>
+                <ProtectedRoute roles={["manager"]}>
                   <Staff />
                 </ProtectedRoute>
               }

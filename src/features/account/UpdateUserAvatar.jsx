@@ -8,7 +8,7 @@ function UpdateUserAvatar({ userData }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   // 頭像圖檔來源
-  const avatarFile = userData?.user_metadata?.avatarFile;
+  const avatarFile = userData.avatarFile;
 
   function handleFileChange(e) {
     const file = e.target.files?.[0];

@@ -71,18 +71,15 @@ const Profile = styled.div`
 `;
 
 function StaffList({ staffList, onRequestDelete }) {
-  const rolesById = Object.fromEntries(
-    staffList.map((item) => [item.id, item.user_metadata.role]),
-  );
   const [updatingById, setUpdatingById] = useState({});
   const { updateStaff } = useUpdateStaff();
   const { user } = useUser();
 
   const sortedList = staffList.toSorted((a, b) => {
     const priority = (item) => {
-      if (item.id === user.id) return 0; // 第一順位
-      if (item.user_metadata.role === "店長") return 1; // 第二順位
-      return 2; // 第三順位（員工）
+      if (item.id === user.id) return 0;
+      if (item.userRole.value === "manager") return 1;
+      return 2;
     };
 
     return priority(a) - priority(b);
@@ -105,40 +102,35 @@ function StaffList({ staffList, onRequestDelete }) {
   return (
     <SectionContainer header={{ title: "人員列表", icon: <UsersRound /> }}>
       <List>
-        {sortedList.map((item) => {
-          const { avatarFile, name, role } = item.user_metadata;
+        {sortedList.map((item) => (
+          <Item key={item.id} $isUpdating={!!updatingById[item.id]}>
+            <UserAvatar avatarFile={item.avatarFile} lazy={true} />
 
-          return (
-            <Item key={item.id} $isUpdating={!!updatingById[item.id]}>
-              <UserAvatar avatarFile={avatarFile} lazy={true} />
+            <Profile>
+              <span>{item.name}</span>
+              <span>{item.email}</span>
+            </Profile>
 
-              <Profile>
-                <span>{name}</span>
-                <span>{item.email}</span>
-              </Profile>
+            <BaseSelect
+              isDisabled={item.id === user.id || updatingById[item.id]}
+              options={[
+                { label: "店長", value: "manager" },
+                { label: "員工", value: "staff" },
+              ]}
+              value={item.userRole}
+              onChange={(option) =>
+                handleChange(item.id, item.userRole.value, option.value)
+              }
+            />
 
-              <BaseSelect
-                isDisabled={item.id === user.id || updatingById[item.id]}
-                options={[
-                  { label: "店長", value: "店長" },
-                  { label: "員工", value: "員工" },
-                ]}
-                value={{
-                  label: rolesById[item.id],
-                  value: rolesById[item.id],
-                }}
-                onChange={(option) => handleChange(item.id, role, option.value)}
-              />
-
-              <IconButton
-                disabled={item.id === user.id || updatingById[item.id]}
-                onClick={() => onRequestDelete(item)}
-              >
-                <UserRoundX strokeWidth={2.2} />
-              </IconButton>
-            </Item>
-          );
-        })}
+            <IconButton
+              disabled={item.id === user.id || updatingById[item.id]}
+              onClick={() => onRequestDelete(item)}
+            >
+              <UserRoundX strokeWidth={2.2} />
+            </IconButton>
+          </Item>
+        ))}
       </List>
     </SectionContainer>
   );

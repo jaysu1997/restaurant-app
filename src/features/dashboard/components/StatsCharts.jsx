@@ -17,13 +17,23 @@ const StyledStatsCharts = styled.section`
 
 // 圖表
 function StatsCharts({ analyzedData }) {
-  const { todayOrders, todayTopDishes, hourlyOrderCounts, last7DaysStats } =
-    analyzedData;
+  const {
+    todayOrders,
+    hourlyOrderCounts,
+    last7DaysStats,
+    totalDishTypes,
+    totalDishServings,
+    todayDishSalesStats,
+  } = analyzedData;
 
   return (
     <StyledStatsCharts>
       <TodayOrderList data={todayOrders} />
-      <TopDishesChart data={todayTopDishes} />
+      <TopDishesChart
+        totalDishTypes={totalDishTypes}
+        totalDishServings={totalDishServings}
+        todayDishSalesStats={todayDishSalesStats}
+      />
       <PeakHoursChart data={hourlyOrderCounts} />
       <RevenueTrendChart data={last7DaysStats} />
     </StyledStatsCharts>

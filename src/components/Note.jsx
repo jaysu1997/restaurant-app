@@ -8,7 +8,7 @@ const Textarea = styled.textarea`
   font-size: 1.4rem;
   min-height: 10rem;
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 8px;
   border: 1px solid #d1d5db;
   outline: none;
 

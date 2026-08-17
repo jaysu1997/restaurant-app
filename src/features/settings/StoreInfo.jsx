@@ -34,8 +34,6 @@ function StoreInfo({ settings }) {
   } = methods;
 
   function onSubmit(data) {
-    console.log("成功", data);
-
     submitSettings(data, {
       onSuccess: (newData) => reset({ storeInfo: newData.storeInfo }),
     });

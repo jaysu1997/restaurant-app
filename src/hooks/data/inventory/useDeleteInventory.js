@@ -17,7 +17,6 @@ function useDeleteInventory() {
       queryClient.invalidateQueries({ queryKey: ["inventory"] });
     },
     onError: (error) => {
-      console.log(error);
       showToast({
         type: "error",
         title: "庫存食材刪除失敗",

@@ -6,8 +6,8 @@ const InputWrapper = styled.div`
   align-items: center;
   background-color: #fff;
   overflow: hidden;
-  height: 3.8rem;
-  border-radius: 4px;
+  height: 4.2rem;
+  border-radius: 8px;
   border: 1px solid ${({ $isError }) => ($isError ? "#dc2626" : "#d1d5db")};
   transition:
     border-color 0.2s ease,
@@ -46,8 +46,8 @@ const Input = styled.input`
 `;
 
 const EndAdornment = styled.div`
-  height: 3.6rem;
-  width: 3.6rem;
+  height: 100%;
+  aspect-ratio: 1 / 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -61,7 +61,11 @@ const EndAdornment = styled.div`
   svg {
     height: 100%;
     width: 100%;
-    color: #374151;
+    color: #6b7280;
+
+    ${hoverStyles(css`
+      color: #111827;
+    `)}
   }
 `;
 

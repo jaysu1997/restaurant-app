@@ -18,9 +18,7 @@ function Signup({ onClose }) {
   const { createStaff, isCreatingStaff } = useCreateStaff();
 
   const methods = useForm({
-    defaultValues: {
-      role: null,
-    },
+    defaultValues: { role: null },
   });
 
   const {
@@ -77,6 +75,7 @@ function Signup({ onClose }) {
             <FormPasswordField
               id="password"
               autoComplete="current-password"
+              label="密碼"
               error={errors?.password}
               {...register("password", {
                 required: "此欄位必須填寫",
@@ -103,8 +102,8 @@ function Signup({ onClose }) {
               label="職位"
               name="role"
               options={[
-                { label: "店長", value: "店長" },
-                { label: "員工", value: "員工" },
+                { label: "店長", value: "manager" },
+                { label: "員工", value: "staff" },
               ]}
               rules={{
                 required: "此欄位必須填寫",

@@ -36,7 +36,7 @@ function AvatarCropper({ userData, selectedImage, onClose }) {
 
       // 更新需要用到的數據(新檔名、舊檔名、新圖檔)
       const updateAvatarPayload = {
-        oldPath: userData.user_metadata.avatarFile,
+        oldPath: userData.avatarFile,
         newPath: `${userData.id}_${Date.now()}.webp`,
         newFile: blob,
       };

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import Header from "./Header";
 import { Outlet } from "react-router";
-import Navbar from "./Navbar";
+import Navbar from "./Navigation/Navbar";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -11,10 +11,12 @@ const StyledAppLayout = styled.div`
   grid-template-columns: auto 1fr;
   min-height: 100dvh;
   width: 100%;
-  max-width: 192rem;
-  margin: 0 auto;
 
   @media (max-width: 64em) {
+    grid-template-columns: 7.2rem 1fr;
+  }
+
+  @media (max-width: 50em) {
     grid-template-columns: 1fr;
   }
 `;
@@ -22,6 +24,7 @@ const StyledAppLayout = styled.div`
 const Body = styled.div`
   width: 100%;
   padding: 3.6rem 2.4rem;
+  grid-column: -1 / -2;
 
   @media (max-width: 50em) {
     padding: 3.6rem 1rem;

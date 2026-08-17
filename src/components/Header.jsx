@@ -1,9 +1,12 @@
 // ok
 // 網站頂部
-import styled from "styled-components";
-import Logo from "./Logo";
+import styled, { css } from "styled-components";
 import User from "./User";
 import { Menu } from "lucide-react";
+import BrandImage from "./BrandImage";
+import BrandName from "./BrandName";
+import { Link } from "react-router";
+import { hoverStyles } from "../style/helpers";
 
 const StyleHeader = styled.header`
   width: 100%;
@@ -16,31 +19,61 @@ const StyleHeader = styled.header`
   box-shadow: inset 0px -1px #e5e7eb;
 
   display: grid;
-  grid-template-columns: 24rem 1fr;
-  justify-items: center;
+  grid-template-columns: auto 1fr;
   align-items: center;
+  padding-left: 2.4rem;
 
   @media (max-width: 80em) {
     grid-template-columns: 20rem 1fr;
   }
 
   @media (max-width: 64em) {
+    grid-template-columns: 7.2rem auto 1fr;
+    padding-left: 0;
+  }
+
+  @media (max-width: 50em) {
     grid-template-columns: auto auto 1fr;
+    gap: 1.2rem;
+    padding: 0 1rem;
   }
 `;
 
 const MenuButton = styled.button`
-  justify-self: flex-start;
   display: none;
 
-  svg {
+  @media (max-width: 64em) {
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
     width: 3.6rem;
     height: 3.6rem;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+
+    ${hoverStyles(css`
+      background-color: #f9fafb;
+    `)}
+  }
+`;
+
+const HeaderBrand = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  & > img {
+    height: 4rem;
+    width: auto;
   }
 
-  @media (max-width: 64em) {
-    display: flex;
-    margin-left: 1rem;
+  & > span {
+    font-size: 2.4rem;
   }
 `;
 
@@ -50,7 +83,12 @@ function Header({ onOpenNav }) {
       <MenuButton onClick={onOpenNav}>
         <Menu />
       </MenuButton>
-      <Logo />
+
+      <HeaderBrand to="/">
+        <BrandImage />
+        <BrandName />
+      </HeaderBrand>
+
       <User />
     </StyleHeader>
   );

@@ -9,6 +9,7 @@ import OrderStatusField from "./OrderStatusField";
 const StyledOrderInfo = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 2.4rem;
 
   label {
     color: #64748b;
@@ -47,7 +48,6 @@ const InfoItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  min-height: 8.8rem;
 `;
 
 const statusStyles = {
@@ -66,6 +66,7 @@ const statusStyles = {
 };
 
 const Value = styled.div`
+  height: 4.2rem;
   font-size: 1.6rem;
   font-weight: 600;
   overflow-wrap: anywhere;

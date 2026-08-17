@@ -3,10 +3,10 @@ import styled from "styled-components";
 import FormFieldLayout from "./FormFieldLayout";
 
 const StyledSegmented = styled.div`
-  height: 3.8rem;
+  height: 4.2rem;
   width: 100%;
   background-color: #e7e5e4;
-  border-radius: 6px;
+  border-radius: 8px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 0.4rem;
@@ -15,7 +15,7 @@ const StyledSegmented = styled.div`
 
 const SegmentedButton = styled.button`
   font-size: 1.2rem;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: ${({ $isActive }) => ($isActive ? "#fff" : "transparent")};
   color: ${({ $isActive }) => ($isActive ? "#111827" : "#6b7280")};
   font-weight: ${({ $isActive }) => ($isActive ? "600" : "400")};

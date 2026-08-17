@@ -11,6 +11,11 @@ import Price from "../../../components/Price";
 import TextButton from "../../../components/button/TextButton";
 import MiniMenu from "./MiniMenu";
 
+const StyledOrderDishes = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const OrderDishesList = styled.ul`
   display: flex;
   flex-direction: column;
@@ -119,36 +124,41 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
 
   return (
     <>
-      <DishHeader>
-        <span>訂購餐點</span>
-        <span>金額</span>
-        <span>數量</span>
-      </DishHeader>
+      <StyledOrderDishes>
+        <DishHeader>
+          <span>訂購餐點</span>
+          <span>金額</span>
+          <span>數量</span>
+        </DishHeader>
 
-      <OrderDishesList>
-        {items.map((item) => (
-          <OrderDishRow key={item.uniqueId}>
-            <ItemName>{item.name}</ItemName>
+        <OrderDishesList>
+          {items.map((item) => (
+            <OrderDishRow key={item.uniqueId}>
+              <ItemName>{item.name}</ItemName>
 
-            <ItemDetails>
-              {item.customizations.length !== 0 && (
-                <p>{summarizeMealChoices(item)}</p>
+              <ItemDetails>
+                {item.customizations.length !== 0 && (
+                  <p>{summarizeMealChoices(item)}</p>
+                )}
+
+                {item.note && <p className="itemNote">{`"${item.note}"`}</p>}
+              </ItemDetails>
+
+              <ItemPrice>$ {item.unitPrice * item.servings}</ItemPrice>
+
+              <ItemServings>{item.servings} 份</ItemServings>
+
+              {isEdit && (
+                <ItemActions>
+                  <OrderItemActions
+                    item={item}
+                    canModifyItems={canModifyItems}
+                  />
+                </ItemActions>
               )}
-
-              {item.note && <p className="itemNote">{`"${item.note}"`}</p>}
-            </ItemDetails>
-
-            <ItemPrice>$ {item.unitPrice * item.servings}</ItemPrice>
-
-            <ItemServings>{item.servings} 份</ItemServings>
-
-            {isEdit && (
-              <ItemActions>
-                <OrderItemActions item={item} canModifyItems={canModifyItems} />
-              </ItemActions>
-            )}
-          </OrderDishRow>
-        ))}
+            </OrderDishRow>
+          ))}
+        </OrderDishesList>
 
         <Footer>
           {isEdit && (
@@ -166,7 +176,7 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
             <Price>$ {totalPrice}</Price>
           </Summary>
         </Footer>
-      </OrderDishesList>
+      </StyledOrderDishes>
 
       {isMiniMenuOpen && <MiniMenu onClose={() => setIsMiniMenuOpen(false)} />}
     </>

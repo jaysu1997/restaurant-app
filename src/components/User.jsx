@@ -10,7 +10,6 @@ import { hoverStyles } from "../style/helpers";
 import UserAvatar from "./UserAvatar";
 
 const StyledUser = styled.div`
-  margin-right: 1rem;
   margin-left: auto;
 `;
 
@@ -19,7 +18,7 @@ const UserButton = styled.button`
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.8rem 1.2rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 6px;
   font-size: 1.3rem;
   border: 1px solid transparent;
@@ -30,7 +29,7 @@ const UserButton = styled.button`
   `)}
 
   @media (max-width: 50em) {
-    padding: 0.8rem;
+    padding: 0.6rem;
   }
 `;
 
@@ -74,9 +73,7 @@ function User() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const { user } = useUser();
-  const userName = user?.user_metadata?.name;
-  const userRole = user?.user_metadata?.role;
-  const avatarFile = user?.user_metadata?.avatarFile;
+  const { name, userRole, avatarFile } = user;
 
   const actions = [
     {
@@ -110,8 +107,8 @@ function User() {
           <UserAvatar avatarFile={avatarFile} lazy={false} />
 
           <UserInfo>
-            <UserName>{userName}</UserName>
-            <UserRole>{userRole}</UserRole>
+            <UserName>{name}</UserName>
+            <UserRole>{userRole.label}</UserRole>
           </UserInfo>
 
           <ArrowIcon strokeWidth={2.4} $isOpen={isUserMenuOpen} />

@@ -24,8 +24,6 @@ function InventoryForm({ inventory, onClose }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   function onSubmit(data) {
-    console.log(data);
-
     submitInventory(data, {
       onSuccess: () => {
         showToast({

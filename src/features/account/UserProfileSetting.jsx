@@ -20,12 +20,10 @@ const Fields = styled.div`
 
 function UserProfileSetting({ userData }) {
   const { updateUserProfile, isUpdatingUserProfile } = useUpdateUserProfile();
+  const { name, personalPhone } = userData;
 
   const methods = useForm({
-    defaultValues: {
-      name: userData?.user_metadata?.name,
-      personalPhone: userData?.user_metadata?.personalPhone,
-    },
+    defaultValues: { name, personalPhone },
   });
 
   const {
@@ -39,6 +37,7 @@ function UserProfileSetting({ userData }) {
       onSuccess: (newData) => {
         // 消除field的focus狀態
         document.activeElement?.blur();
+
         const { name, personalPhone } = newData.user.user_metadata;
         reset({ name, personalPhone });
       },

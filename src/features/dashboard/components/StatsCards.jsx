@@ -4,7 +4,7 @@ import {
   ClipboardList,
   CircleDollarSign,
   TrendingUpDown,
-  Trophy,
+  Calculator,
 } from "lucide-react";
 import StatItem from "./StatItem";
 
@@ -21,40 +21,46 @@ const StyledStatsCards = styled.section`
 
 // 今日數據卡
 function StatsCards({ analyzedData }) {
-  const { todayOrderCounts, todayRevenue, todayRevenueTrend, todayTopDishes } =
-    analyzedData;
+  const {
+    todayOrderCount,
+    todayRevenue,
+    todayRevenueTrend,
+    averageOrderValue,
+  } = analyzedData;
+
+  console.log(todayOrderCount);
 
   const stats = [
     {
       heading: "今日訂單總數",
-      value: todayOrderCounts,
-      cardColor: "#dbeafe",
-      iconColor: "#2563eb",
+      value: todayOrderCount,
+      cardStyle: { bg: "#eff6ff", border: "#bfdbfe" },
+      iconStyle: "#2563eb",
       icon: ClipboardList,
       trend: null,
     },
     {
       heading: "今日營收金額",
       value: `$ ${todayRevenue}`,
-      cardColor: "#dcfce7",
-      iconColor: "#16a34a",
+      cardStyle: { bg: "#f0fdf4", border: "#bbf7d0" },
+      iconStyle: "#16a34a",
       icon: CircleDollarSign,
       trend: null,
     },
     {
-      heading: "今日營收趨勢",
-      value: `$ ${todayRevenueTrend}`,
-      cardColor: "#f3e8ff",
-      iconColor: "#9333ea",
+      heading: "今日營收變化",
+      value: `${Math.abs(Number(todayRevenueTrend.toFixed(1)))}%`,
+      cardStyle: { bg: "#faf5ff", border: "#e9d5ff" },
+      iconStyle: "#9333ea",
       icon: TrendingUpDown,
       trend: todayRevenueTrend,
     },
     {
-      heading: "今日熱銷商品",
-      value: todayTopDishes.length === 0 ? null : todayTopDishes[0].name,
-      cardColor: "#ffedd5",
-      iconColor: "#ea580c",
-      icon: Trophy,
+      heading: "訂單平均營收",
+      value: `$ ${Math.round(averageOrderValue)}`,
+      cardStyle: { bg: "#fff7ed", border: "#fed7aa" },
+      iconStyle: "#ea580c",
+      icon: Calculator,
       trend: null,
     },
   ];
