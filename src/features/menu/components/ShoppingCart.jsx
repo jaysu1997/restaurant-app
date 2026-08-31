@@ -47,6 +47,8 @@ const StyledShoppingCart = styled.aside`
 `;
 
 const Header = styled.header`
+  height: 6.4rem;
+
   padding: 0.8rem 1.6rem;
   border-bottom: 1px solid #dcdcdc;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
@@ -169,7 +171,7 @@ function ShoppingCart({ canPlaceOrder }) {
             <Footer>
               <OrderSummary>
                 <span>總計：</span>
-                <Price>{`$ ${totalPrice}`}</Price>
+                <Price>${totalPrice}</Price>
               </OrderSummary>
 
               <SubmitButton

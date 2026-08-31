@@ -1,62 +1,107 @@
 // ok
 import styled, { css } from "styled-components";
 import { hoverStyles } from "../../../style/helpers";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-const StyledButton = styled.button`
+const ScrollFade = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: ${({ $direction }) => ($direction === "left" ? 0 : "auto")};
+  right: ${({ $direction }) => ($direction === "right" ? 0 : "auto")};
+  z-index: 1;
+  width: 6rem;
+  pointer-events: none;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  background: linear-gradient(
+    ${({ $direction }) => ($direction === "left" ? "90deg" : "270deg")},
+    rgba(249, 250, 251, 1) 0%,
+    rgba(249, 250, 251, 0.9) 28%,
+    rgba(249, 250, 251, 0) 100%
+  );
+
+  @media (pointer: coarse) {
+    display: none;
+  }
+`;
+
+const StyledScrollNavButton = styled.button`
   position: absolute;
   top: 50%;
+  left: ${({ $direction }) => ($direction === "left" ? 0 : "auto")};
+  right: ${({ $direction }) => ($direction === "right" ? 0 : "auto")};
   transform: translateY(-50%);
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 50%;
+  z-index: 3;
+  width: 3.6rem;
+  height: 3.6rem;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  cursor: pointer;
+  background-color: rgba(38, 38, 38, 0.68);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
 
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  ${({ $visible }) =>
+    !$visible &&
+    css`
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    `}
 
   svg {
     width: 1.6rem;
     height: 1.6rem;
+    stroke-width: 3;
   }
 
   ${hoverStyles(css`
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(38, 38, 38, 0.88);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      0 1px 3px rgba(0, 0, 0, 0.1);
   `)}
 
-  @media (pointer: coarse) and (max-width: 30em) {
-    display: none;
+  &:active {
+    transform: translateY(-50%) scale(0.94);
   }
 
-  ${({ $direction }) =>
-    $direction === "left"
-      ? css`
-          left: 1rem;
-          ${hoverStyles(css`
-            transform: translateY(-50%) translateX(-4px);
-          `)}
-        `
-      : css`
-          right: 1rem;
-          ${hoverStyles(css`
-            transform: translateY(-50%) translateX(4px);
-          `)}
-        `}
+  transition:
+    background-color 0.1s ease,
+    box-shadow 0.1s ease,
+    transform 0.1s ease;
+
+  @media (pointer: coarse) {
+    display: none;
+  }
 `;
 
-function ScrollNavButton({ direction, children, handleClick }) {
+function ScrollNavButton({ ref, direction, visible, handleScroll }) {
+  const ariaLabel = direction === "left" ? "上一個分類" : "下一個分類";
+
   return (
-    <StyledButton $direction={direction} onClick={handleClick}>
-      {children}
-    </StyledButton>
+    <>
+      <ScrollFade
+        $direction={direction}
+        $visible={visible}
+        aria-hidden="true"
+      />
+
+      <StyledScrollNavButton
+        type="button"
+        ref={ref}
+        $visible={visible}
+        $direction={direction}
+        onClick={() => handleScroll(direction)}
+        aria-label={ariaLabel}
+      >
+        {direction === "left" ? <ArrowLeft /> : <ArrowRight />}
+      </StyledScrollNavButton>
+    </>
   );
 }
 

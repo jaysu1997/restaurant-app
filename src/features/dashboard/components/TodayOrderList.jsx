@@ -1,57 +1,76 @@
 // ok
 import styled, { css } from "styled-components";
 import Tag from "../../../components/Tag";
-import { formatPickupNumber } from "../../../utils/orderHelpers";
-import { useNavigate } from "react-router";
-import { ArrowRight } from "lucide-react";
+import { formatPickupNumber, formatTime } from "../../../utils/orderHelpers";
+import { Link } from "react-router";
 import SectionContainer from "../../../components/SectionContainer";
 import EmptyState from "./EmptyState";
-import Price from "../../../components/Price";
 import { hoverStyles } from "../../../style/helpers";
+import {
+  ClipboardList,
+  ArrowRight,
+  ClipboardClock,
+  ClipboardCheck,
+} from "lucide-react";
+import StatsFooter from "./StatsFooter";
 
-const OrderList = styled.ul`
-  height: 30rem;
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 2.4rem;
+  height: 36rem;
   overflow-y: auto;
-  scrollbar-gutter: stable;
 `;
 
-const Order = styled.li`
+const List = styled.ul`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Item = styled.li`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 7.2rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f3f4f6;
+
+  &:nth-child(n + 5):last-child {
+    border-bottom: none;
+  }
+`;
+
+const OrderItemHeader = styled.div`
   display: grid;
-  grid-template-columns: 5rem 1fr 5rem 4.6rem;
+  grid-template-columns: auto minmax(0, 1fr) repeat(3, auto);
   align-items: center;
-  padding: 1.5rem 0;
-  column-gap: 1.6rem;
-  row-gap: 1rem;
-  border-top: 1px solid #f3f4f6;
-  font-size: 1.6rem;
-  font-weight: 500;
-
-  ${hoverStyles(css`
-    background-color: #f9fafb;
-  `)}
-
-  &:last-child {
-    border-bottom: 1px solid #f3f4f6;
-  }
-
-  & > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  & > span:nth-child(2) {
-    font-weight: 400;
-  }
+  gap: 0.8rem;
 `;
 
-const OrderDetailsLink = styled.button`
-  color: #6366f1;
+const PickupNumber = styled.span`
+  color: #111827;
+  font-weight: 700;
+`;
+
+const OrderCreatedAt = styled.time`
+  color: #9ca3af;
+  font-weight: 500;
+  font-size: 1.2rem;
+`;
+
+const OrderViewLink = styled(Link)`
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  font-size: 1.4rem;
+  flex-shrink: 0;
+  gap: 0.2rem;
+  color: #2563eb;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: color 0.15s ease;
+
+  ${hoverStyles(css`
+    color: #1d4ed8;
+  `)}
 
   svg {
     width: 1.4rem;
@@ -59,55 +78,89 @@ const OrderDetailsLink = styled.button`
   }
 `;
 
-const OrderStatus = styled.div`
-  grid-row: 2;
-  grid-column: 2 / -1;
-  display: flex;
-  gap: 1rem;
+const OrderItemDetails = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.2rem;
 `;
 
-function formatDishes(items) {
-  return items.map((item) => `${item.name} x${item.servings}`).join(" , ");
+const OrderAmount = styled.span`
+  color: #111827;
+  font-weight: 700;
+`;
+
+const OrderItemsSummary = styled.span`
+  color: #6b7280;
+  font-size: 1.4rem;
+  font-weight: 400;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
+
+// 這個或許也可以搬出去到helpers中
+function formatOrderItems(items) {
+  return items.map((item) => `${item.name} x${item.servings}`).join("、");
 }
 
 // 今日訂單列表
-function TodayOrderList({ data }) {
-  const navigate = useNavigate();
-
-  if (data.length === 0)
-    return (
-      <SectionContainer header={{ title: "今日訂單列表" }}>
-        <EmptyState />
-      </SectionContainer>
-    );
+function TodayOrderList({ todayOrders, orderStatus }) {
+  const hasOrders = todayOrders.length > 0;
 
   return (
-    <SectionContainer header={{ title: "今日訂單列表" }}>
-      <OrderList>
-        {data.map((order) => (
-          <Order key={order.id}>
-            <span>{formatPickupNumber(order.pickupNumber)}</span>
-            <span>{formatDishes(order.items)}</span>
-            <Price>{`$ ${order.totalPrice}`}</Price>
+    <SectionContainer icon={<ClipboardList />} header="今日訂單列表">
+      <Content>
+        {!hasOrders && <EmptyState />}
 
-            <OrderDetailsLink
-              onClick={() =>
-                navigate(`/orders/${order.id}`, {
-                  state: { from: "dashboard" },
-                })
-              }
-            >
-              <span>檢視</span>
-              <ArrowRight strokeWidth={2.4} />
-            </OrderDetailsLink>
+        {hasOrders && (
+          <List>
+            {todayOrders.map((item) => (
+              <Item key={item.orderUUID}>
+                <OrderItemHeader>
+                  <PickupNumber>
+                    {formatPickupNumber(item.pickupNumber)}
+                  </PickupNumber>
 
-            <OrderStatus>
-              <Tag $tagStatus={order.status}>{order.status}</Tag>
-              <Tag $tagStatus={order.paid}>{order.paid}</Tag>
-            </OrderStatus>
-          </Order>
-        ))}
-      </OrderList>
+                  <OrderCreatedAt dateTime={formatTime(item.createdAt)}>
+                    {formatTime(item.createdAt)}
+                  </OrderCreatedAt>
+
+                  <Tag $status={item.status}>{item.status}</Tag>
+                  <Tag $status={item.paid}>{item.paid}</Tag>
+
+                  <OrderViewLink to={`/orders/${item.id}`}>
+                    <ArrowRight />
+                  </OrderViewLink>
+                </OrderItemHeader>
+
+                <OrderItemDetails>
+                  <OrderItemsSummary>
+                    {formatOrderItems(item.items)}
+                  </OrderItemsSummary>
+
+                  <OrderAmount>${item.totalPrice}</OrderAmount>
+                </OrderItemDetails>
+              </Item>
+            ))}
+          </List>
+        )}
+      </Content>
+
+      <StatsFooter
+        stats={[
+          {
+            icon: <ClipboardClock />,
+            label: "準備中訂單",
+            value: `${orderStatus.preparing} 筆`,
+          },
+          {
+            icon: <ClipboardCheck />,
+            label: "已完成訂單",
+            value: `${orderStatus.completed} 筆`,
+          },
+        ]}
+      />
     </SectionContainer>
   );
 }

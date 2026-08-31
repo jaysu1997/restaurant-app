@@ -5,6 +5,7 @@ import FormPasswordField from "../../components/FormPasswordField";
 import useUpdateUserPassword from "../../hooks/data/auth/useUpdateUserPassword";
 import SectionContainer from "../../components/SectionContainer";
 import { KeyRound } from "lucide-react";
+import SectionForm from "../../components/SectionForm";
 
 const Fields = styled.div`
   display: flex;
@@ -76,52 +77,54 @@ function UpdatePassword({ userData }) {
 
   return (
     <FormProvider {...methods}>
-      <SectionContainer
-        header={{ title: "變更密碼", icon: <KeyRound /> }}
-        onSubmit={handleSubmit(onSubmit)}
-        onReset={() => reset()}
-        isDirty={isDirty}
-        isProcessing={isUpdatingUserPassword}
-      >
-        <Fields>
-          <FormPasswordField
-            label="現有密碼"
-            name="currentPassword"
-            autoComplete="current-password"
-            rules={{
-              onChange: () => clearErrors("currentPassword"),
-              deps: ["newPassword"],
-              required: "密碼必須填寫",
-              minLength: { value: 8, message: "密碼至少要有8碼" },
-            }}
-          />
+      <SectionContainer header="變更密碼" icon={<KeyRound />}>
+        <SectionForm
+          onSubmit={handleSubmit(onSubmit)}
+          onReset={() => reset()}
+          isDirty={isDirty}
+          isProcessing={isUpdatingUserPassword}
+        >
+          <Fields>
+            <FormPasswordField
+              label="現有密碼"
+              name="currentPassword"
+              autoComplete="current-password"
+              rules={{
+                onChange: () => clearErrors("currentPassword"),
+                deps: ["newPassword"],
+                required: "密碼必須填寫",
+                minLength: { value: 8, message: "密碼至少要有8碼" },
+              }}
+            />
 
-          <FormPasswordField
-            label="新的密碼"
-            name="newPassword"
-            autoComplete="new-password"
-            rules={{
-              deps: ["confirmPassword"],
-              required: "請輸入新的密碼",
-              minLength: { value: 8, message: "密碼至少要有8碼" },
-              validate: (value) =>
-                value !== getValues("currentPassword") ||
-                "新密碼不能與舊密碼相同",
-            }}
-          />
+            <FormPasswordField
+              label="新的密碼"
+              name="newPassword"
+              autoComplete="new-password"
+              rules={{
+                deps: ["confirmPassword"],
+                required: "請輸入新的密碼",
+                minLength: { value: 8, message: "密碼至少要有8碼" },
+                validate: (value) =>
+                  value !== getValues("currentPassword") ||
+                  "新密碼不能與舊密碼相同",
+              }}
+            />
 
-          <FormPasswordField
-            label="確認新密碼"
-            name="confirmPassword"
-            autoComplete="new-password"
-            rules={{
-              required: "請再次輸入新密碼",
-              minLength: { value: 8, message: "密碼至少要有8碼" },
-              validate: (value) =>
-                value === getValues("newPassword") || "兩次輸入的新密碼不一致",
-            }}
-          />
-        </Fields>
+            <FormPasswordField
+              label="確認新密碼"
+              name="confirmPassword"
+              autoComplete="new-password"
+              rules={{
+                required: "請再次輸入新密碼",
+                minLength: { value: 8, message: "密碼至少要有8碼" },
+                validate: (value) =>
+                  value === getValues("newPassword") ||
+                  "兩次輸入的新密碼不一致",
+              }}
+            />
+          </Fields>
+        </SectionForm>
       </SectionContainer>
     </FormProvider>
   );

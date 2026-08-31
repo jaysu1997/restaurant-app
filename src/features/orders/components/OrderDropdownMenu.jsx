@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import ConfirmDelete from "../../../components/ConfirmDelete";
 import {
-  formatCreatedTime,
+  formatDateTime,
   formatPickupNumber,
 } from "../../../utils/orderHelpers";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
@@ -90,7 +90,7 @@ function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
                 {" "}
                 {`取餐號碼 ${formatPickupNumber(pickupNumber)}`}{" "}
               </strong>
-              ({formatCreatedTime(createdAt)})?
+              ({formatDateTime(createdAt)})?
             </p>
           )}
         />

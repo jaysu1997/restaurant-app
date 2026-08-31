@@ -54,6 +54,7 @@ function Menu() {
           )}
 
           <CategoryBar categories={categories} />
+
           <MenuList
             menus={menus}
             categories={categories}

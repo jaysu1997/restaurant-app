@@ -10,7 +10,7 @@ const StyledStatsCharts = styled.section`
   grid-template-columns: repeat(2, 1fr);
   gap: 2.8rem;
 
-  @media (max-width: 48em) {
+  @media (max-width: 50em) {
     grid-template-columns: 1fr;
   }
 `;
@@ -18,24 +18,19 @@ const StyledStatsCharts = styled.section`
 // 圖表
 function StatsCharts({ analyzedData }) {
   const {
+    dailyRevenue,
+    hourlyOrders,
     todayOrders,
-    hourlyOrderCounts,
-    last7DaysStats,
-    totalDishTypes,
-    totalDishServings,
-    todayDishSalesStats,
+    orderStatus,
+    todayTopDishes,
   } = analyzedData;
 
   return (
     <StyledStatsCharts>
-      <TodayOrderList data={todayOrders} />
-      <TopDishesChart
-        totalDishTypes={totalDishTypes}
-        totalDishServings={totalDishServings}
-        todayDishSalesStats={todayDishSalesStats}
-      />
-      <PeakHoursChart data={hourlyOrderCounts} />
-      <RevenueTrendChart data={last7DaysStats} />
+      <TodayOrderList todayOrders={todayOrders} orderStatus={orderStatus} />
+      <TopDishesChart todayTopDishes={todayTopDishes} />
+      <PeakHoursChart hourlyOrders={hourlyOrders} />
+      <RevenueTrendChart dailyRevenue={dailyRevenue} />
     </StyledStatsCharts>
   );
 }

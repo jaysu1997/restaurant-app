@@ -6,6 +6,7 @@ const NoteGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  padding: 2.4rem;
 
   span {
     min-width: 0;

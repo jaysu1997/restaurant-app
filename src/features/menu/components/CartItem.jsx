@@ -69,7 +69,7 @@ function CartItem({ item }) {
       {item.note && <DishNote>&quot; {item.note} &quot;</DishNote>}
 
       <Row>
-        <Price>$ {itemTotalPrice}</Price>
+        <Price>${itemTotalPrice}</Price>
         <ServingsControl
           canIncrease={canIncrease}
           servings={item.servings}

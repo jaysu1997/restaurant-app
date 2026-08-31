@@ -1,137 +1,153 @@
 // ok
 import styled from "styled-components";
-import { useSearchParams } from "react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import CategoryButton from "./CategoryButton";
 import ScrollNavButton from "./ScrollNavButton";
-import { getValidParam } from "../../../utils/filterHelpers";
+import CategoryChipButton from "./CategoryChipButton";
 
 const StyledCategoryBar = styled.div`
-  grid-column: 1;
+  position: relative;
   width: 100%;
   min-width: 0;
-  padding: 1rem;
-  background-color: #262626;
-  border-radius: 12px;
-  position: relative;
 `;
 
-const Viewport = styled.div`
-  width: 100%;
-  border-radius: 6px;
-  overflow: hidden;
-`;
-
-const ScrollContainer = styled.div`
+const CategoryTrack = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  gap: 1.2rem;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (pointer: coarse) {
+    scroll-snap-type: x proximity;
+  }
 `;
 
-function CategoryBar({ categories }) {
+function CategoryBar({ categories = [] }) {
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
   const scrollRef = useRef(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [showPrev, setShowPrev] = useState(false);
-  const [showNext, setShowNext] = useState(false);
+  const scrollNavButtonRef = useRef(null);
+  const categoryItemMetricsRef = useRef([]);
 
-  // 篩選要呈現的餐點類別
-  const selectedCategory = getValidParam(
-    searchParams.get("category"),
-    categories,
-    "all",
-  );
+  // 判別是否需要顯示左右滾動按鈕
+  function syncScrollButtonState(el) {
+    // 計算滾動軸當前滾動狀態
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    const isAtStart = scrollLeft <= 0;
+    const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 1;
 
-  function handleFilter(type) {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("category", type);
-    setSearchParams(newParams);
+    setCanScrollPrev(!isAtStart);
+    setCanScrollNext(!isAtEnd);
   }
 
-  function handleScroll(direction) {
-    // 計算滾動距離(item寬度 + 容器gap)
-    const el = scrollRef.current;
-    const firstItemWidth = el.children[0].offsetWidth;
-    const style = window.getComputedStyle(el);
-    const gap = parseFloat(style.gap);
+  // 更新每個分類item的offsetLeft和offsetWidth
+  function measureCategoryItems(el) {
+    const data = Array.from(el.children).map((item) => {
+      return {
+        offsetLeft: item.offsetLeft,
+        offsetWidth: item.offsetWidth,
+      };
+    });
 
-    const scrollAmount = firstItemWidth + gap;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+    categoryItemMetricsRef.current = data;
+  }
+
+  // 計算左右滾動按鈕需要移動的距離
+  function handleScroll(direction) {
+    let nextLeft = 0;
+    const el = scrollRef.current;
+    const { scrollLeft, clientWidth } = el;
+    const items = categoryItemMetricsRef.current ?? [];
+    const scrollNavButtonWidth = scrollNavButtonRef.current?.offsetWidth ?? 0;
+
+    if (direction === "right") {
+      const rightSafeEdge = scrollLeft + clientWidth - scrollNavButtonWidth;
+      const target = items.find(
+        (item) => item.offsetLeft + item.offsetWidth > rightSafeEdge,
+      );
+
+      if (!target) return;
+      nextLeft = Math.max(0, target.offsetLeft - scrollNavButtonWidth);
+    }
+
+    if (direction === "left") {
+      const leftSafeEdge = scrollLeft + scrollNavButtonWidth;
+      const target = [...items]
+        .reverse()
+        .find((item) => item.offsetLeft < leftSafeEdge);
+
+      if (!target) return;
+      nextLeft = Math.max(
+        0,
+        target.offsetLeft +
+          target.offsetWidth -
+          (clientWidth - scrollNavButtonWidth),
+      );
+    }
+
+    el.scrollTo({
+      left: nextLeft,
       behavior: "smooth",
     });
   }
 
   useEffect(() => {
     const el = scrollRef.current;
+    if (!el) return;
 
-    function update() {
-      // 計算滾動軸當前滾動狀態
-      const { scrollLeft, scrollWidth, clientWidth } = el;
-      const isAtStart = scrollLeft <= 0;
-      const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 1;
-      setShowPrev(!isAtStart);
-      setShowNext(!isAtEnd);
-    }
+    const update = () => {
+      syncScrollButtonState(el);
+      measureCategoryItems(el);
+    };
 
     update();
 
     const observer = new ResizeObserver(update);
     observer.observe(el);
-    el.addEventListener("scroll", update);
+    el.addEventListener("scroll", () => syncScrollButtonState(el));
 
     return () => {
       observer.disconnect();
-      el.removeEventListener("scroll", update);
+      el.removeEventListener("scroll", () => syncScrollButtonState(el));
     };
   }, []);
 
   return (
-    <StyledCategoryBar>
-      {showPrev && (
-        <ScrollNavButton
-          direction="left"
-          handleClick={() => handleScroll("left")}
-        >
-          <ArrowLeft />
-        </ScrollNavButton>
-      )}
+    <StyledCategoryBar aria-label="餐點分類" aria-orientation="horizontal">
+      <CategoryTrack ref={scrollRef}>
+        <CategoryChipButton category="all" categories={categories}>
+          全部
+        </CategoryChipButton>
 
-      <Viewport>
-        <ScrollContainer ref={scrollRef}>
-          <CategoryButton
-            handleClick={() => handleFilter("all")}
-            isActive={selectedCategory === "all"}
+        {categories.map((category) => (
+          <CategoryChipButton
+            category={category}
+            categories={categories}
+            key={category}
           >
-            全部
-          </CategoryButton>
+            {category}
+          </CategoryChipButton>
+        ))}
+      </CategoryTrack>
 
-          {categories.map((category) => (
-            <CategoryButton
-              key={category}
-              handleClick={() => handleFilter(category)}
-              isActive={selectedCategory === category}
-            >
-              {category}
-            </CategoryButton>
-          ))}
-        </ScrollContainer>
-      </Viewport>
+      <ScrollNavButton
+        direction="left"
+        visible={canScrollPrev}
+        handleScroll={handleScroll}
+      />
 
-      {showNext && (
-        <ScrollNavButton
-          direction="right"
-          handleClick={() => handleScroll("right")}
-        >
-          <ArrowRight />
-        </ScrollNavButton>
-      )}
+      <ScrollNavButton
+        direction="right"
+        visible={canScrollNext}
+        handleScroll={handleScroll}
+      />
     </StyledCategoryBar>
   );
 }

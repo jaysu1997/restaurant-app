@@ -21,10 +21,6 @@ const Sidebar = styled.aside`
     transform 0.25s ease;
 
   @media (max-width: 80em) {
-    width: 20rem;
-  }
-
-  @media (max-width: 64em) {
     width: 7.2rem;
   }
 
@@ -38,7 +34,7 @@ function Navbar({ isOpen, onClose }) {
   // 是否為店長
   const isManager = user.userRole.value === "manager";
 
-  const isDrawerMode = useMediaQuery(64, onClose);
+  const isDrawerMode = useMediaQuery(80, onClose);
   // html滾動功能鎖定
   useScrollLock(isDrawerMode && isOpen);
 

@@ -20,21 +20,17 @@ const StyleHeader = styled.header`
 
   display: grid;
   grid-template-columns: auto 1fr;
+  gap: 1.2rem;
   align-items: center;
   padding-left: 2.4rem;
 
   @media (max-width: 80em) {
-    grid-template-columns: 20rem 1fr;
-  }
-
-  @media (max-width: 64em) {
     grid-template-columns: 7.2rem auto 1fr;
     padding-left: 0;
   }
 
   @media (max-width: 50em) {
     grid-template-columns: auto auto 1fr;
-    gap: 1.2rem;
     padding: 0 1rem;
   }
 `;
@@ -42,7 +38,7 @@ const StyleHeader = styled.header`
 const MenuButton = styled.button`
   display: none;
 
-  @media (max-width: 64em) {
+  @media (max-width: 80em) {
     justify-self: center;
     display: flex;
     justify-content: center;

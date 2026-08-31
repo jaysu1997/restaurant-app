@@ -97,7 +97,7 @@ function Option({ optionData, onToggle, selectedOptions }) {
       <OptionName>{name}</OptionName>
 
       <OptionPrice>
-        {extraPrice === 0 ? "免費" : `+ $ ${extraPrice}`}
+        {extraPrice === 0 ? "免費" : `+ $${extraPrice}`}
       </OptionPrice>
     </OptionRow>
   );

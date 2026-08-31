@@ -2,10 +2,9 @@ import styled from "styled-components";
 import SubmitButton from "./button/SubmitButton";
 import Button from "./button/Button";
 
-const StyledFormActions = styled.footer`
+const StyledFormActions = styled.div`
   display: flex;
   gap: ${({ $gap }) => $gap};
-  /* margin-left: auto; */
 `;
 
 function FormActions({

@@ -9,7 +9,7 @@ import NavList from "./NavList";
 const Overlay = styled(StyledOverlay)`
   display: none;
 
-  @media (max-width: 64em) {
+  @media (max-width: 80em) {
     display: block;
     opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
     transition: opacity 0.25s ease;

@@ -66,7 +66,7 @@ function OrderDishHeader({ orderDish }) {
       <Meta>
         <Category>{category}</Category>
         <DishName>{name}</DishName>
-        <DishPrice>$ {salePrice}</DishPrice>
+        <DishPrice>${salePrice}</DishPrice>
       </Meta>
     </DishHeader>
   );

@@ -1,5 +1,4 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Plus } from "lucide-react";
 import { parsePositiveInt } from "../../../utils/helpers";
 import TextButton from "../../../components/button/TextButton";
 import FormInputField from "../../../components/FormInputField";
@@ -79,7 +78,6 @@ function OptionSection({ nestedIndex, ingredientOptions }) {
           });
         }}
       >
-        <Plus />
         新增選項
       </TextButton>
     </>

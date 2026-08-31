@@ -18,7 +18,7 @@ const NavGroup = styled.nav`
   padding: 1.2rem 1rem;
   overflow-y: auto;
 
-  @media (max-width: 64em) {
+  @media (max-width: 80em) {
     scrollbar-width: thin;
   }
 `;
@@ -58,7 +58,7 @@ const NavLabel = styled.span`
   font-weight: 500;
   white-space: nowrap;
 
-  @media (max-width: 64em) {
+  @media (max-width: 80em) {
     display: ${({ $iconOnly }) => ($iconOnly ? "none" : "block")};
   }
 `;

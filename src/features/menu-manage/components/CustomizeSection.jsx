@@ -1,5 +1,4 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Plus } from "lucide-react";
 import OptionSection from "./OptionSection";
 import TextButton from "../../../components/button/TextButton";
 import FormFieldLayout from "../../../components/FormFieldLayout";
@@ -91,7 +90,6 @@ function CustomizeSection({ ingredientOptions }) {
           });
         }}
       >
-        <Plus />
         新增自訂項目
       </TextButton>
     </ModalFormSection>

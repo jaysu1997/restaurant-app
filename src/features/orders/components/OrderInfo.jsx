@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import { formatPickupStr } from "../../../context/settings/settingsHelpers";
-import { formatCreatedTime } from "../../../utils/orderHelpers";
+import { formatDateTime } from "../../../utils/orderHelpers";
 import DiningMethodSegmented from "../../../components/DiningMethodSegmented";
 import DiningInfoField from "./DiningInfoField";
 import PaymentStatusField from "./PaymentStatusField";
@@ -91,7 +91,7 @@ function OrderInfo({ orderData, isEdit, canModifyItems }) {
       <MetadataGrid>
         <InfoItem>
           <label>建立時間</label>
-          <Value>{formatCreatedTime(createdAt)}</Value>
+          <Value>{formatDateTime(createdAt)}</Value>
         </InfoItem>
 
         <InfoItem>

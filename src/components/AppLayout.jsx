@@ -12,7 +12,7 @@ const StyledAppLayout = styled.div`
   min-height: 100dvh;
   width: 100%;
 
-  @media (max-width: 64em) {
+  @media (max-width: 80em) {
     grid-template-columns: 7.2rem 1fr;
   }
 

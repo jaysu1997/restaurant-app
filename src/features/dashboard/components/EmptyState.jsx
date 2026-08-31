@@ -1,18 +1,49 @@
 // ok
+import { ClipboardX } from "lucide-react";
 import styled from "styled-components";
 
-const StyledEmptyState = styled.p`
-  height: 30rem;
-  width: 100%;
+const StyledEmptyState = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  font-size: 1.6rem;
-  font-weight: 500;
+  justify-content: center;
+  height: 36rem;
+  padding: 2.4rem;
+  gap: 1.2rem;
+`;
+
+const EmptyIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  color: #9ca3af;
+  background-color: #f9fafb;
+  border-radius: 8px;
+
+  svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+`;
+
+const EmptyTitle = styled.p`
+  color: #374151;
+  font-size: 1.4rem;
+  font-weight: 600;
 `;
 
 function EmptyState() {
-  return <StyledEmptyState>今日尚無任何訂單</StyledEmptyState>;
+  return (
+    <StyledEmptyState>
+      <EmptyIcon>
+        <ClipboardX />
+      </EmptyIcon>
+
+      <EmptyTitle>今日尚無銷售資料</EmptyTitle>
+    </StyledEmptyState>
+  );
 }
 
 export default EmptyState;

@@ -63,14 +63,15 @@ export const ModalContent = styled.div`
 
 // Modal底部(固定顯示)
 export const ModalFooter = styled.footer`
+  height: 7.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
   gap: 2rem;
-  padding: 1.6rem 2.4rem;
+  padding: 0 2.4rem;
   background-color: #fff;
-  box-shadow: inset 0 1px #e5e7eb;
+  border-top: 1px solid #e5e7eb;
 `;
 
 function Modal({

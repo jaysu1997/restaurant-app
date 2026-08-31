@@ -3,6 +3,11 @@ import UserAvatar from "../../components/UserAvatar";
 import SectionContainer from "../../components/SectionContainer";
 import ImageUploadPanel from "../../components/ImageUploadPanel";
 import { useState } from "react";
+import styled from "styled-components";
+
+const SectionInner = styled.div`
+  padding: 2.4rem;
+`;
 
 function UpdateUserAvatar({ userData }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -37,13 +42,15 @@ function UpdateUserAvatar({ userData }) {
   return (
     <>
       <SectionContainer>
-        <ImageUploadPanel
-          avatarFile={avatarFile}
-          buttonText={avatarFile ? "更換頭像" : "上傳頭像"}
-          onChange={handleFileChange}
-        >
-          <UserAvatar avatarFile={avatarFile} lazy={false} />
-        </ImageUploadPanel>
+        <SectionInner>
+          <ImageUploadPanel
+            avatarFile={avatarFile}
+            buttonText={avatarFile ? "更換頭像" : "上傳頭像"}
+            onChange={handleFileChange}
+          >
+            <UserAvatar avatarFile={avatarFile} lazy={false} />
+          </ImageUploadPanel>
+        </SectionInner>
       </SectionContainer>
 
       {selectedImage && (

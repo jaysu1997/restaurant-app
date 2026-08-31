@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import OrderDropdownMenu from "../OrderDropdownMenu";
 import {
-  formatCreatedTime,
+  formatDateTime,
   formatPickupNumber,
 } from "../../../../utils/orderHelpers";
 import Tag from "../../../../components/Tag";
@@ -37,18 +37,6 @@ const CardHeader = styled.div`
 const PickupNumber = styled.div`
   font-size: 2rem;
   font-weight: 700;
-`;
-
-const DiningBadge = styled.span`
-  width: fit-content;
-  height: fit-content;
-  padding: 0.2rem 0.8rem;
-  border-radius: 999px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: ${(props) => (props.$diningMethod === "內用" ? "#2563eb" : "#16a34a")};
-  background-color: ${(props) =>
-    props.$diningMethod === "內用" ? "#e8f1ff" : "#e8f8ed"};
 `;
 
 const CreatedTime = styled.div`
@@ -88,9 +76,7 @@ function OrdersListMobile({ ordersData }) {
               {formatPickupNumber(orderData.pickupNumber)}
             </PickupNumber>
 
-            <DiningBadge $diningMethod={orderData.diningMethod}>
-              {orderData.diningMethod}
-            </DiningBadge>
+            <Tag $status={orderData.diningMethod}>{orderData.diningMethod}</Tag>
 
             <OrderDropdownMenu
               orderData={orderData}
@@ -99,15 +85,15 @@ function OrdersListMobile({ ordersData }) {
             />
           </CardHeader>
 
-          <CreatedTime>{formatCreatedTime(orderData.createdAt)}</CreatedTime>
+          <CreatedTime>{formatDateTime(orderData.createdAt)}</CreatedTime>
 
           <Footer>
             <StatusRow>
-              <Tag $tagStatus={orderData.status}>{orderData.status}</Tag>
-              <Tag $tagStatus={orderData.paid}>{orderData.paid}</Tag>
+              <Tag $status={orderData.status}>{orderData.status}</Tag>
+              <Tag $status={orderData.paid}>{orderData.paid}</Tag>
             </StatusRow>
 
-            <Price>{`$ ${orderData.totalPrice}`}</Price>
+            <Price>${orderData.totalPrice}</Price>
           </Footer>
         </OrderCard>
       ))}

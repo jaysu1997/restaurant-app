@@ -1,12 +1,17 @@
-// 這裡可能有不少函式之後可能要移到別的資料夾，因為這些函式並非全域通用
+// 這裡可能有不少函式之後可能要移到別的資料夾，因為這些函式並非全域通用，但是也有的是全域通用的
 import { format } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
-// 將訂單建立時間格式化
-export function formatCreatedTime(createdAt) {
-  return format(new Date(createdAt), "yyyy年MM月dd日 HH:mm", {
+// 將日期時間格式化
+export function formatDateTime(dateTime) {
+  return format(new Date(dateTime), "yyyy年MM月dd日 HH:mm", {
     locale: zhTW,
   });
+}
+
+// 將時間格式化
+export function formatTime(dateTime) {
+  return format(new Date(dateTime), "HH:mm");
 }
 
 // 訂單編號格式化

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import {
-  formatCreatedTime,
+  formatDateTime,
   formatPickupNumber,
 } from "../../../utils/orderHelpers";
 import { SquarePen, Trash2 } from "lucide-react";
@@ -19,6 +19,7 @@ const StyledOrderOverview = styled.div`
   flex-direction: column;
   gap: 2.4rem;
   font-weight: 600;
+  padding: 2.4rem;
 `;
 
 const Header = styled.header`
@@ -137,7 +138,7 @@ function OrderOverview({ orderData, items, isEdit, canModifyItems }) {
                 orderData.pickupNumber,
               )}`}</strong>
               &#8203;&nbsp;(
-              {formatCreatedTime(orderData.createdAt)})？
+              {formatDateTime(orderData.createdAt)})？
             </p>
           )}
         />

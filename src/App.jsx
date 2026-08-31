@@ -35,6 +35,8 @@ const queryClient = new QueryClient({
   },
 });
 
+// 可能需要一個個檔案檢查aria的使用，聽說建議加上，讓ai檢查就可以。
+
 // 可能需要檢查是否features和其他folder中的檔案分類都正確，可能會忘記新增components和utils，檔案也忘記放進去
 
 // 根據AI建議，餐點可能需要加上圖片?然後需要增加桌台模式?reacme和demo要有、test data要有.........
@@ -52,8 +54,6 @@ const queryClient = new QueryClient({
 
 // 好像Modal的表單有修改建議，
 
-// 列表類的ui，如果有border設計問題，建議都改成& + &解決
-
 // 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?或許可以一律套用class?
 
 // 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)，或許可以分成日期時間helper、正則helpers...
@@ -65,6 +65,14 @@ const queryClient = new QueryClient({
 // react.lazy 是否需要?
 
 // 清理註解
+
+// 時間和日期相關的ui都應該改成使用time元素和dateTime屬性
+
+// 那些地方用inset shadow，那些地方用border
+
+// 表單padding是否需要統一? input的字體顏色粗細是否需要統一? border顏色是否需要統一? 哪些應該用inset? fooer和header的寬高是否也都需要統一?
+
+// 分頁ui好像建議改成有列出多個數字的風格。
 
 export default function App() {
   return (

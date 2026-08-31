@@ -6,6 +6,7 @@ import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
 import { normalizeRegularOpenHours } from "./sortTimeSlots";
 import SectionContainer from "../../components/SectionContainer";
 import { Clock } from "lucide-react";
+import SectionForm from "../../components/SectionForm";
 
 const BusinessPeriodList = styled.ul`
   display: flex;
@@ -82,43 +83,43 @@ function RegularOpenHours({ settings }) {
   return (
     <FormProvider {...methods}>
       <SectionContainer
-        header={{
-          title: "一般營業時間",
-          icon: <Clock />,
-          description:
-            "設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。",
-        }}
-        onSubmit={handleSubmit(onSubmit)}
-        onReset={() => reset()}
-        isDirty={isDirty}
-        isProcessing={isSubmittingSettings}
+        header="一般營業時間"
+        icon={<Clock />}
+        description="設定店鋪的一般營業時間，系統將會根據此設定來顯示當前是否正在營業。"
       >
-        <BusinessPeriodList>
-          {dayFields.map((day, dayIndex) => (
-            <BusinessPeriodItem key={day.id}>
-              <DateField>
-                <label htmlFor={day.dayOfWeek}>{day.label}</label>
+        <SectionForm
+          onSubmit={handleSubmit(onSubmit)}
+          onReset={() => reset()}
+          isDirty={isDirty}
+          isProcessing={isSubmittingSettings}
+        >
+          <BusinessPeriodList>
+            {dayFields.map((day, dayIndex) => (
+              <BusinessPeriodItem key={day.id}>
+                <DateField>
+                  <label htmlFor={day.dayOfWeek}>{day.label}</label>
 
-                <ControlledSwitch
-                  options={{
-                    name: `regularOpenHours.${dayIndex}.isBusinessDay`,
-                    option1: { label: "公休", value: false },
-                    option2: { label: "營業", value: true },
-                  }}
-                  handleChange={() =>
-                    clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
-                  }
+                  <ControlledSwitch
+                    options={{
+                      name: `regularOpenHours.${dayIndex}.isBusinessDay`,
+                      option1: { label: "公休", value: false },
+                      option2: { label: "營業", value: true },
+                    }}
+                    handleChange={() =>
+                      clearErrors(`regularOpenHours.${dayIndex}.timeSlots`)
+                    }
+                  />
+                </DateField>
+
+                <ControlledTimeRange
+                  control={control}
+                  dayIndex={dayIndex}
+                  fieldArrayName="regularOpenHours"
                 />
-              </DateField>
-
-              <ControlledTimeRange
-                control={control}
-                dayIndex={dayIndex}
-                fieldArrayName="regularOpenHours"
-              />
-            </BusinessPeriodItem>
-          ))}
-        </BusinessPeriodList>
+              </BusinessPeriodItem>
+            ))}
+          </BusinessPeriodList>
+        </SectionForm>
       </SectionContainer>
     </FormProvider>
   );

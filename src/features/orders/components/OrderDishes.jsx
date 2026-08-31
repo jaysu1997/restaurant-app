@@ -6,7 +6,6 @@ import {
 import styled from "styled-components";
 import OrderItemActions from "./OrderItemActions";
 import { useState } from "react";
-import { Plus } from "lucide-react";
 import Price from "../../../components/Price";
 import TextButton from "../../../components/button/TextButton";
 import MiniMenu from "./MiniMenu";
@@ -144,7 +143,7 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
                 {item.note && <p className="itemNote">{`"${item.note}"`}</p>}
               </ItemDetails>
 
-              <ItemPrice>$ {item.unitPrice * item.servings}</ItemPrice>
+              <ItemPrice>${item.unitPrice * item.servings}</ItemPrice>
 
               <ItemServings>{item.servings} 份</ItemServings>
 
@@ -166,14 +165,13 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
               onClick={() => setIsMiniMenuOpen(true)}
               disabled={!canModifyItems}
             >
-              <Plus />
               新增餐點
             </TextButton>
           )}
 
           <Summary>
             <span>總計：</span>
-            <Price>$ {totalPrice}</Price>
+            <Price>${totalPrice}</Price>
           </Summary>
         </Footer>
       </StyledOrderDishes>

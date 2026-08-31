@@ -14,6 +14,7 @@ const List = styled.ul`
   display: flex;
   flex-direction: column;
   font-size: 1.4rem;
+  /* padding: 0 2.4rem; */
 `;
 
 const Item = styled.li`
@@ -22,8 +23,9 @@ const Item = styled.li`
   grid-template-rows: 4.5rem;
   align-items: center;
   gap: 2rem;
-  padding: 1rem;
+  /* padding: 1rem; */
   border-top: 1px solid #f3f4f6;
+  padding: 1.2rem 2.4rem;
 
   &:first-child {
     border: none;
@@ -46,7 +48,7 @@ const Item = styled.li`
 
   @media (max-width : 25em) {
     gap: 1.2rem;
-    padding: 1rem 0.4rem;
+    padding: 1.2rem;
   }
 `;
 
@@ -100,7 +102,7 @@ function StaffList({ staffList, onRequestDelete }) {
   }
 
   return (
-    <SectionContainer header={{ title: "人員列表", icon: <UsersRound /> }}>
+    <SectionContainer header="人員列表" icon={<UsersRound />}>
       <List>
         {sortedList.map((item) => (
           <Item key={item.id} $isUpdating={!!updatingById[item.id]}>

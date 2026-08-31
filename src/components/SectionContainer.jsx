@@ -1,106 +1,61 @@
 // 這個可能需要改動設計(標題大小、padding、footer...)
 import styled from "styled-components";
-import { Plus } from "lucide-react";
-import TextButton from "./button/TextButton";
-import FormActions from "./FormActions";
 import Description from "./Description";
 
-const Section = styled.section`
+const Container = styled.section`
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background-color: #fff;
   border: 1px solid #e5e7eb;
-  padding: 2.4rem;
-  border-radius: 6px;
-  height: fit-content;
+  border-radius: 12px;
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
-`;
-
-const SectionHeader = styled.header`
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-`;
-
-const TitleRow = styled.div`
+const Header = styled.header`
   display: flex;
   align-items: center;
   gap: 1.2rem;
+  height: 6.4rem;
+  padding: 1.6rem 2.4rem;
+  border-bottom: 1px solid #f3f4f6;
 
   & > svg {
-    color: #6b7280;
     width: 2rem;
     height: 2rem;
+    color: #6b7280;
   }
 `;
 
-const Title = styled.h3`
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #292929;
+const Title = styled.h2`
+  color: #111827;
+  font-size: 1.6rem;
 `;
 
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
+const DescriptionWrapper = styled.div`
+  padding: 2.4rem 2.4rem 0;
 `;
 
 // 通用 section ui 元件
-function SectionContainer({
-  header,
-  onSubmit,
-  onReset,
-  isDirty,
-  isProcessing,
-  appendButton,
-  children,
-}) {
-  const { title, icon, description } = header || {};
-  // 檢查是否需要用到form還是純展示
-  const isForm = Boolean(onSubmit);
-
+function SectionContainer({ header, icon, description, children }) {
   return (
-    <Section>
-      <Container
-        as={isForm ? "form" : "div"}
-        onSubmit={isForm ? onSubmit : undefined}
-      >
-        {header && (
-          <SectionHeader>
-            <TitleRow>
-              <Title>{title}</Title>
-              {icon}
-            </TitleRow>
+    <Container>
+      {header && (
+        <Header>
+          {icon}
+          <Title>{header}</Title>
+        </Header>
+      )}
 
-            {description && <Description>{description}</Description>}
-          </SectionHeader>
-        )}
+      {description && (
+        <DescriptionWrapper>
+          <Description>{description}</Description>
+        </DescriptionWrapper>
+      )}
 
-        <Content>
-          {children}
-
-          {appendButton && (
-            <TextButton onClick={appendButton.actionFn}>
-              <Plus />
-              {appendButton.label}
-            </TextButton>
-          )}
-        </Content>
-
-        {isForm && (
-          <FormActions
-            onCancel={onReset}
-            isProcessing={isProcessing}
-            submitDisabled={!isDirty || isProcessing}
-            cancelDisabled={!isDirty || isProcessing}
-          />
-        )}
-      </Container>
-    </Section>
+      {children}
+    </Container>
   );
 }
 

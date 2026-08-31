@@ -1,5 +1,4 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Plus } from "lucide-react";
 import { parsePositiveInt } from "../../../utils/helpers";
 import TextButton from "../../../components/button/TextButton";
 import FormSelectField from "../../../components/FormSelectField";
@@ -63,7 +62,6 @@ function IngredientSection({ ingredientOptions }) {
           });
         }}
       >
-        <Plus />
         新增備料
       </TextButton>
     </ModalFormSection>

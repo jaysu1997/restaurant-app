@@ -4,6 +4,12 @@ import * as styled from "styled-components";
 // focus color
 // #2684ff
 
+// &:focus-visible {
+//   outline: 2px solid #93c5fd;
+//   outline-offset: 2px;
+//   border-radius: 2px;
+// }
+
 // 像是border-radius和border color這些或許建議都要做系統差異化。
 
 // | 元件                               | 建議 Radius   | 理由                                            |
@@ -171,10 +177,12 @@ export const GlobalStyles = styled.createGlobalStyle`
     cursor: pointer;
     border: none;
     background-color: transparent;
+    font: inherit;
+    user-select: none;
 
     &:disabled {
       opacity: 0.5;
-      cursor: default;
+      cursor: not-allowed;
     }
   }
 

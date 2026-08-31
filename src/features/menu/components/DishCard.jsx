@@ -62,7 +62,7 @@ const Thumbnail = styled.div`
 function DishCard({ dish, onSelect, disabled }) {
   const { name, basePrice, discount, image } = dish;
 
-  const finalPrice = `$ ${basePrice - discount}`;
+  const finalPrice = `$${basePrice - discount}`;
 
   const imagePath = image
     ? `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/menu/${image}`
