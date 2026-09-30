@@ -106,10 +106,6 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-
-  label {
-    color: #374151;
-  }
 `;
 
 const LoginButton = styled(SubmitButton)`

@@ -116,7 +116,12 @@ function MenuManage() {
                 dataFormat={[
                   { label: "名稱", value: menu.name },
                   { label: "分類", value: menu.category },
-                  { label: "售價", value: menu.basePrice - menu.discount },
+                  {
+                    label: "售價",
+                    value: (menu.basePrice - menu.discount).toLocaleString(
+                      "zh-TW",
+                    ),
+                  },
                 ]}
                 key={menu.id}
               />

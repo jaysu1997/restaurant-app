@@ -3,6 +3,7 @@ import SubmitButton from "./button/SubmitButton";
 import Button from "./button/Button";
 
 const StyledFormActions = styled.div`
+  margin-left: auto;
   display: flex;
   gap: ${({ $gap }) => $gap};
 `;

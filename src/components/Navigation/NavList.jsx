@@ -1,6 +1,6 @@
 // ok
 import { NavLink } from "react-router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -18,9 +18,15 @@ const NavGroup = styled.nav`
   padding: 1.2rem 1rem;
   overflow-y: auto;
 
-  @media (max-width: 80em) {
-    scrollbar-width: thin;
-  }
+  ${({ $iconOnly }) =>
+    $iconOnly &&
+    css`
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    `}
 `;
 
 const NavItem = styled(NavLink)`
@@ -74,12 +80,18 @@ const navItems = [
 
 function NavList({ isManager, onClose, iconOnly }) {
   return (
-    <NavGroup>
+    <NavGroup $iconOnly={iconOnly}>
       {navItems.map((item) => {
         const Icon = item.icon;
 
         return (
-          <NavItem to={item.to} onClick={onClose} key={item.label}>
+          <NavItem
+            to={item.to}
+            onClick={onClose}
+            aria-label={item.label}
+            title={item.label}
+            key={item.label}
+          >
             <Icon />
             <NavLabel $iconOnly={iconOnly}>{item.label}</NavLabel>
           </NavItem>
@@ -87,7 +99,13 @@ function NavList({ isManager, onClose, iconOnly }) {
       })}
 
       {isManager && (
-        <NavItem to="/staff" onClick={onClose} key="員工管理">
+        <NavItem
+          to="/staff"
+          onClick={onClose}
+          aria-label="員工管理"
+          title="員工管理"
+          key="員工管理"
+        >
           <UsersRound />
           <NavLabel $iconOnly={iconOnly}>員工管理</NavLabel>
         </NavItem>

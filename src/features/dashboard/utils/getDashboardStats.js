@@ -39,7 +39,7 @@ function createOrderStat() {
 
 function accumulateOrder(order, stat) {
   stat.orderCount += 1;
-  stat.revenue += order.totalPrice;
+  stat.revenue += order.totalAmount;
 
   if (order.diningMethod === "內用") {
     stat.dineInOrderCount += 1;
@@ -73,9 +73,7 @@ function accumulateSales(item, sales) {
   sales.items.set(id, {
     id,
     name,
-    image: image
-      ? `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/menu/${image}`
-      : null,
+    image: image ? image : null,
     servings: (current?.servings ?? 0) + servings,
   });
 
@@ -136,7 +134,7 @@ export function getDashboardStats(recentOrders) {
     const dailyItem = dailyRevenue.find((item) => item.date === orderDate);
 
     if (dailyItem) {
-      dailyItem.revenue += order.totalPrice;
+      dailyItem.revenue += order.totalAmount;
     }
 
     // 昨日

@@ -8,6 +8,8 @@ const StyledCategoryBar = styled.div`
   position: relative;
   width: 100%;
   min-width: 0;
+  background-color: #f9fafb;
+  padding: 1.2rem 0;
 `;
 
 const CategoryTrack = styled.div`
@@ -102,20 +104,24 @@ function CategoryBar({ categories = [] }) {
     const el = scrollRef.current;
     if (!el) return;
 
-    const update = () => {
+    function handleScroll() {
       syncScrollButtonState(el);
+    }
+
+    function update() {
+      handleScroll();
       measureCategoryItems(el);
-    };
+    }
 
     update();
 
     const observer = new ResizeObserver(update);
     observer.observe(el);
-    el.addEventListener("scroll", () => syncScrollButtonState(el));
+    el.addEventListener("scroll", handleScroll);
 
     return () => {
       observer.disconnect();
-      el.removeEventListener("scroll", () => syncScrollButtonState(el));
+      el.removeEventListener("scroll", handleScroll);
     };
   }, []);
 

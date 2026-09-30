@@ -20,11 +20,6 @@ const Fields = styled.ul`
     row-gap: 0.4rem;
     align-items: center;
   }
-
-  label {
-    color: #525252;
-    font-weight: 500;
-  }
 `;
 
 const EmptyMessage = styled.p`

@@ -6,11 +6,13 @@ import QueryStatusFallback from "../components/QueryStatusFallback";
 import PageContainer from "../components/PageContainer";
 import useSettings from "../context/settings/useSettings";
 import { ChevronLeft } from "lucide-react";
-import OrderDetailPage from "../features/orders/components/OrderDetailPage";
+import OrderContent from "../features/orders/components/OrderContent";
 import OrderEditPage from "../features/orders/components/OrderEditPage";
 import { hoverStyles } from "../style/helpers";
+import { OrderProvider } from "../context/orders/OrderContext";
+import { canCreateOrder } from "../context/settings/settingsHelpers";
 
-const OrderLayout = styled.div`
+const OrderContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -37,7 +39,7 @@ const BackButton = styled.button`
   `)}
 `;
 
-const OrderContent = styled.div`
+const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.8rem;
@@ -50,28 +52,40 @@ function Order() {
   const { pathname } = useLocation();
   const isEditPage = pathname.includes("edit");
   const orderQuery = useGetOrder();
-  const { settingsQuery } = useSettings();
+  const { settingsQuery, todayOpenInfo } = useSettings();
+  // 當前屬於可以建立訂單的時段
+  const canModifyItems = canCreateOrder(todayOpenInfo);
 
   return (
-    <PageContainer>
-      <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
-      <QueryStatusFallback queries={[orderQuery, settingsQuery]}>
-        <OrderLayout>
-          <BackButton onClick={() => navigate(-1)}>
-            <ChevronLeft />
-            返回
-          </BackButton>
+    <OrderProvider>
+      <PageContainer>
+        <PageHeader title={isEditPage ? "訂單編輯" : "訂單詳情"} />
+        <QueryStatusFallback queries={[orderQuery, settingsQuery]}>
+          <OrderContainer>
+            <BackButton onClick={() => navigate(-1)}>
+              <ChevronLeft />
+              返回
+            </BackButton>
 
-          <OrderContent>
-            {isEditPage ? (
-              <OrderEditPage orderData={orderQuery.data} />
-            ) : (
-              <OrderDetailPage orderData={orderQuery.data} />
-            )}
-          </OrderContent>
-        </OrderLayout>
-      </QueryStatusFallback>
-    </PageContainer>
+            <Content>
+              {isEditPage ? (
+                <OrderEditPage
+                  orderData={orderQuery.data}
+                  canModifyItems={canModifyItems}
+                />
+              ) : (
+                <OrderContent
+                  orderData={orderQuery.data}
+                  orderItems={orderQuery.data?.items}
+                  canModifyItems={canModifyItems}
+                  isEdit={false}
+                />
+              )}
+            </Content>
+          </OrderContainer>
+        </QueryStatusFallback>
+      </PageContainer>
+    </OrderProvider>
   );
 }
 

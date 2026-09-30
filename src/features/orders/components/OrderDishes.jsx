@@ -1,163 +1,144 @@
 // 訂單詳情頁面中的訂購餐點列表
-import {
-  summarizeMealChoices,
-  calculateOrderSummary,
-} from "../../../utils/orderHelpers";
+import { calculateOrderSummary } from "../../../utils/orderHelpers";
 import styled from "styled-components";
-import OrderItemActions from "./OrderItemActions";
 import { useState } from "react";
 import Price from "../../../components/Price";
 import TextButton from "../../../components/button/TextButton";
 import MiniMenu from "./MiniMenu";
+import OrderItem from "./OrderItem";
+import OrderDishesTableRow from "./OrderDishesTableRow";
+import OrderItemForm from "./OrderItemForm/OrderItemForm";
 
 const StyledOrderDishes = styled.div`
+  padding-top: 1.6rem;
   display: flex;
   flex-direction: column;
+  gap: 1.6rem;
 `;
 
-const OrderDishesList = styled.ul`
+const Title = styled.h3`
+  font-weight: 600;
+  font-size: 1.8rem;
+`;
+
+const OrderDishesTable = styled.div`
   display: flex;
   flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+
+  @media (max-width: 50em) {
+    display: none;
+  }
 `;
 
-const DishHeader = styled.div`
+const TableHeader = styled.div`
   display: grid;
-  grid-template-columns: 1.2fr repeat(2, minmax(5.4rem, 0.4fr)) 5.6rem;
-  gap: 0.6rem;
-  padding: 1rem;
-  background-color: #e7e5e4;
-  border-radius: 6px;
+  grid-template-columns:
+    minmax(0, 1fr) repeat(2, 8rem)
+    ${({ $isEdit }) => ($isEdit ? "8rem" : "")};
+  justify-items: center;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.2rem 2rem;
+  background-color: #f3f4f6;
+  font-size: 1.4rem;
   font-weight: 500;
 
-  @media (max-width: 35em) {
-    grid-template-columns: minmax(0, 1fr) auto;
-
-    span:not(:first-child) {
-      display: none;
-    }
+  span:first-child {
+    justify-self: start;
   }
 `;
 
-const OrderDishRow = styled.li`
-  display: grid;
-  grid-template-columns: 1.2fr repeat(2, minmax(5.4rem, 0.4fr)) 5.6rem;
-  grid-template-areas:
-    "name price servings actions"
-    "meta price servings actions";
+const MobileDishList = styled.ul`
+  display: none;
 
-  gap: 0.6rem;
-  padding: 1rem;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-  border-bottom: 1px solid #dcdcdc;
-  min-height: 10rem;
-
-  @media (max-width: 35em) {
-    grid-template-columns: minmax(0, 1fr) auto;
-
-    grid-template-areas:
-      "name actions"
-      "meta meta"
-      "price servings";
+  @media (max-width: 50em) {
+    display: block;
+    padding: 0 1.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
   }
-`;
-
-const ItemName = styled.span`
-  grid-area: name;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`;
-
-const ItemDetails = styled.div`
-  grid-area: meta;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  font-size: 1.4rem;
-  font-weight: 400;
-
-  .itemNote {
-    color: #6b7280;
-  }
-`;
-
-const ItemPrice = styled(Price)`
-  grid-area: price;
-  font-weight: 600;
-`;
-
-const ItemServings = styled.span`
-  grid-area: servings;
-
-  @media (max-width: 35em) {
-    justify-self: end;
-  }
-`;
-
-const ItemActions = styled.div`
-  grid-area: actions;
 `;
 
 const Footer = styled.div`
+  min-height: 5.6rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  font-size: 1.8rem;
-  padding: 1rem 0;
+  gap: 0.4rem;
 `;
 
 const Summary = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  font-weight: 600;
+  gap: 1.4rem;
+  padding: 0.4rem 0.8rem;
   margin-left: auto;
+  font-weight: 600;
 `;
 
-function OrderDishes({ items, isEdit, canModifyItems }) {
+const TotalLabel = styled.span`
+  color: #475569;
+  font-size: 1.4rem;
+  font-weight: 600;
+`;
+
+const TotalAmount = styled(Price)`
+  font-size: 2rem;
+  font-weight: 700;
+`;
+
+function OrderDishes({ orderItems, isEdit, canModifyItems }) {
+  const [activeForm, setActiveForm] = useState(null);
   const [isMiniMenuOpen, setIsMiniMenuOpen] = useState(false);
-  const { totalPrice } = calculateOrderSummary(items);
+  const { totalAmount } = calculateOrderSummary(orderItems);
+
+  function openCreateForm(dish) {
+    setActiveForm({ mode: "create", dish });
+  }
+
+  function openEditForm(dish) {
+    setActiveForm({ mode: "edit", dish });
+  }
 
   return (
     <>
       <StyledOrderDishes>
-        <DishHeader>
-          <span>訂購餐點</span>
-          <span>金額</span>
-          <span>數量</span>
-        </DishHeader>
+        <Title>訂購餐點</Title>
 
-        <OrderDishesList>
-          {items.map((item) => (
-            <OrderDishRow key={item.uniqueId}>
-              <ItemName>{item.name}</ItemName>
+        <OrderDishesTable>
+          <TableHeader $isEdit={isEdit}>
+            <span>餐點內容</span>
+            <span>金額</span>
+            <span>數量</span>
+            {isEdit && <span>操作</span>}
+          </TableHeader>
 
-              <ItemDetails>
-                {item.customizations.length !== 0 && (
-                  <p>{summarizeMealChoices(item)}</p>
-                )}
-
-                {item.note && <p className="itemNote">{`"${item.note}"`}</p>}
-              </ItemDetails>
-
-              <ItemPrice>${item.unitPrice * item.servings}</ItemPrice>
-
-              <ItemServings>{item.servings} 份</ItemServings>
-
-              {isEdit && (
-                <ItemActions>
-                  <OrderItemActions
-                    item={item}
-                    canModifyItems={canModifyItems}
-                  />
-                </ItemActions>
-              )}
-            </OrderDishRow>
+          {orderItems.map((item) => (
+            <OrderDishesTableRow
+              item={item}
+              isEdit={isEdit}
+              onEditDish={openEditForm}
+              canModifyItems={canModifyItems}
+              key={item.uniqueId}
+            />
           ))}
-        </OrderDishesList>
+        </OrderDishesTable>
+
+        <MobileDishList>
+          {orderItems.map((item) => (
+            <OrderItem
+              item={item}
+              isEdit={isEdit}
+              canModifyItems={canModifyItems}
+              onEditDish={openEditForm}
+              key={item.uniqueId}
+            />
+          ))}
+        </MobileDishList>
 
         <Footer>
           {isEdit && (
@@ -170,13 +151,29 @@ function OrderDishes({ items, isEdit, canModifyItems }) {
           )}
 
           <Summary>
-            <span>總計：</span>
-            <Price>${totalPrice}</Price>
+            <TotalLabel>訂單總計</TotalLabel>
+            <TotalAmount value={totalAmount} />
           </Summary>
         </Footer>
       </StyledOrderDishes>
 
-      {isMiniMenuOpen && <MiniMenu onClose={() => setIsMiniMenuOpen(false)} />}
+      {isMiniMenuOpen && (
+        <MiniMenu
+          onCreateDish={openCreateForm}
+          onClose={() => setIsMiniMenuOpen(false)}
+        />
+      )}
+
+      {activeForm && (
+        <OrderItemForm
+          orderDish={activeForm.dish}
+          onClose={() => {
+            if (activeForm.mode === "create") setIsMiniMenuOpen(true);
+            setActiveForm(null);
+          }}
+          isEdit={activeForm.mode === "edit"}
+        />
+      )}
     </>
   );
 }

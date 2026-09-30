@@ -3,29 +3,18 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 const selectStyle = {
-  container: (base) => ({ ...base, width: "100%" }),
-  input: (base) => ({
+  container: (base) => ({
     ...base,
-    maxWidth: "100%",
-    overflow: "hidden",
-  }),
-  placeholder: (base) => ({
-    ...base,
-    color: "#9ca3af",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
+    width: "100%",
   }),
   control: (base, state) => {
     const hasError = state.selectProps.error;
 
     return {
       ...base,
-      borderRadius: "8px",
-      fontSize: "1.4rem",
-      fontWeight: "400",
       height: "4.2rem",
       minHeight: "4.2rem",
+      borderRadius: "8px",
       borderColor: hasError
         ? "#dc2626"
         : state.isFocused
@@ -48,16 +37,58 @@ const selectStyle = {
       },
     };
   },
-  menuList: (base) => ({
+  valueContainer: (base) => ({
+    ...base,
+    paddingRight: 0,
+  }),
+  singleValue: (base) => ({
     ...base,
     fontSize: "1.4rem",
     fontWeight: "400",
-    color: "#000",
+    marginRight: 0,
   }),
-  menuPortal: (base) => ({ ...base, zIndex: "9999" }),
+  placeholder: (base) => ({
+    ...base,
+    color: "#94a3b8",
+    fontSize: "1.4rem",
+    fontWeight: "400",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }),
+  input: (base) => ({
+    ...base,
+    maxWidth: "100%",
+    overflow: "hidden",
+    margin: 0,
+    fontSize: "1.4rem",
+    fontWeight: "400",
+  }),
+  dropdownIndicator: (base) => ({
+    ...base,
+    marginRight: "4px",
+    padding: "0px 4px",
+    "& svg": {
+      width: "1.6rem",
+      height: "1.6rem",
+    },
+  }),
   clearIndicator: (base) => ({
     ...base,
-    padding: "0.8rem 0 0.8rem 0.8rem",
+    padding: "0px 4px",
+    "& svg": {
+      width: "1.6rem",
+      height: "1.6rem",
+    },
+  }),
+  option: (base) => ({
+    ...base,
+    fontSize: "1.4rem",
+    fontWeight: "400",
+  }),
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: 9999,
   }),
 };
 

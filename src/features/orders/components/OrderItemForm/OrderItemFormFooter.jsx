@@ -4,15 +4,13 @@ import { Minus, Plus, ShoppingBag } from "lucide-react";
 import Button from "../../../../components/button/Button";
 import SubmitButton from "../../../../components/button/SubmitButton";
 
-const Quantity = styled.div`
+const ServingStepper = styled.div`
   display: flex;
   align-items: center;
   gap: 0.8rem;
 `;
 
-const QuantityButton = styled(Button).attrs({
-  $variant: "outline",
-})`
+const AdjustButton = styled(Button)`
   padding: 0;
   border-radius: 10px;
   width: 3.6rem;
@@ -23,30 +21,36 @@ const QuantityButton = styled(Button).attrs({
   }
 `;
 
-const QuantityValue = styled.div`
+const ServingValue = styled.div`
   width: 2.8rem;
   text-align: center;
   font-size: 1.6rem;
   font-weight: 600;
 `;
 
-function OrderFooter({ isEdit, servings, setServings, disabled }) {
+function OrderFormFooter({ isEdit, servings, setServings }) {
   return (
     <ModalFooter>
-      <Quantity>
-        <QuantityButton
+      <ServingStepper>
+        <AdjustButton
+          $variant="outline"
           onClick={() => setServings((prev) => (prev -= 1))}
           disabled={servings <= 1}
         >
           <Minus />
-        </QuantityButton>
-        <QuantityValue>{servings}</QuantityValue>
-        <QuantityButton onClick={() => setServings((prev) => (prev += 1))}>
-          <Plus />
-        </QuantityButton>
-      </Quantity>
+        </AdjustButton>
 
-      <SubmitButton fullWidth disabled={disabled}>
+        <ServingValue>{servings}</ServingValue>
+
+        <AdjustButton
+          $variant="outline"
+          onClick={() => setServings((prev) => (prev += 1))}
+        >
+          <Plus />
+        </AdjustButton>
+      </ServingStepper>
+
+      <SubmitButton fullWidth>
         <ShoppingBag />
         {isEdit ? "更新購物車" : "加入購物車"}
       </SubmitButton>
@@ -54,4 +58,4 @@ function OrderFooter({ isEdit, servings, setServings, disabled }) {
   );
 }
 
-export default OrderFooter;
+export default OrderFormFooter;

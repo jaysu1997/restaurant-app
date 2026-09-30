@@ -55,7 +55,7 @@ const UploadTrigger = styled.label`
   width: fit-content;
 `;
 
-const RemoveButton = styled(Button).attrs({ $variant: "ghost" })`
+const RemoveButton = styled(Button)`
   width: 4rem;
   height: 4rem;
   color: #dc2626;
@@ -104,6 +104,7 @@ function ImageUploadPanel({
 
           {hasImage && onClear && (
             <RemoveButton
+              $variant="ghost"
               onClick={onClear}
               aria-label="移除圖片"
               title="移除圖片"

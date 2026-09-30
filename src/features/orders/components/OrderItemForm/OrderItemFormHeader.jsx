@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import Image from "../../../../components/Image";
-import ImagePlaceholder from "../../../../components/ImagePlaceholder";
 import Price from "../../../../components/Price";
+import DishImage from "../../../../components/DishImage";
 
-const DishHeader = styled.div`
+const Container = styled.div`
   display: flex;
   gap: 1.6rem;
+  padding: 1.2rem 0;
 `;
 
 const ImageWrapper = styled.div`
@@ -41,35 +41,28 @@ const DishName = styled.h3`
 
 const DishPrice = styled(Price)`
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-top: auto;
+  color: #dc2626;
 `;
 
-function OrderDishHeader({ orderDish }) {
+function OrderFormHeader({ orderDish }) {
   const { image, name, category, basePrice, discount } = orderDish;
   const salePrice = basePrice - discount;
 
-  const imagePath = image
-    ? `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/menu/${image}`
-    : null;
-
   return (
-    <DishHeader>
+    <Container>
       <ImageWrapper>
-        {imagePath ? (
-          <Image src={imagePath} lazy={false} alt={name} radius="8px" />
-        ) : (
-          <ImagePlaceholder />
-        )}
+        <DishImage image={image} alt={name} />
       </ImageWrapper>
 
       <Meta>
         <Category>{category}</Category>
         <DishName>{name}</DishName>
-        <DishPrice>${salePrice}</DishPrice>
+        <DishPrice value={salePrice} />
       </Meta>
-    </DishHeader>
+    </Container>
   );
 }
 
-export default OrderDishHeader;
+export default OrderFormHeader;

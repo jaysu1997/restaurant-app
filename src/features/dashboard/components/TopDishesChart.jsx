@@ -2,9 +2,9 @@
 import styled from "styled-components";
 import SectionContainer from "../../../components/SectionContainer";
 import { Tags, PaperBag, Trophy } from "lucide-react";
-import Image from "../../../components/Image";
 import EmptyState from "./EmptyState";
 import StatsFooter from "./StatsFooter";
+import DishImage from "../../../components/DishImage";
 
 const Content = styled.div`
   display: flex;
@@ -105,7 +105,7 @@ function TopDishesChart({ todayTopDishes }) {
               <Item key={item.name}>
                 <RankNumber>{String(index + 1).padStart(2, "0")}</RankNumber>
                 <ImageWrapper>
-                  <Image src={item.image} alt={item.name} radius="8px" />
+                  <DishImage image={item.image} alt={item.name} />
                 </ImageWrapper>
 
                 <Info>

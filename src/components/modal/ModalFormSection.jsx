@@ -1,16 +1,11 @@
 import styled from "styled-components";
+import RequiredMark from "../RequiredMark";
 
 const Section = styled.section`
   display: grid;
   grid-template-columns: ${({ $columns }) => `repeat(${$columns}, 1fr)`};
   column-gap: 2.4rem;
   row-gap: 1.6rem;
-
-  label {
-    color: #4b5563;
-    font-size: 1.3rem;
-    font-weight: 500;
-  }
 
   @media (max-width: 35em) {
     grid-template-columns: 1fr;
@@ -41,10 +36,6 @@ const Description = styled.p`
   font-size: 1.3rem;
 `;
 
-const RequiredMark = styled.span`
-  color: #dc2626;
-`;
-
 function ModalFormSection({
   columns = 1,
   title,
@@ -57,7 +48,7 @@ function ModalFormSection({
       {title && (
         <Header>
           <Title>{title}</Title>
-          {required && <RequiredMark aria-hidden="true">*</RequiredMark>}
+          {required && <RequiredMark />}
         </Header>
       )}
 

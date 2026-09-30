@@ -1,4 +1,4 @@
-import "react-day-picker/style.css";
+import "@daypicker/react/style.css";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -35,7 +35,11 @@ const queryClient = new QueryClient({
   },
 });
 
-// 可能需要一個個檔案檢查aria的使用，聽說建議加上，讓ai檢查就可以。
+// 可能有不少元件命名有混淆，可能需要調整，以及function helpers也是
+
+// 可能要把餐點圖片的url設計成const.js，因為現在在多個地方使用，或者設計成helper?
+
+// 可能需要一個個檔案檢查aria的使用，聽說建議加上，讓ai檢查就可以。還有附帶title說明，尤其是純icon button
 
 // 可能需要檢查是否features和其他folder中的檔案分類都正確，可能會忘記新增components和utils，檔案也忘記放進去
 
@@ -44,15 +48,11 @@ const queryClient = new QueryClient({
 // 關於連絡電話的部分，或許可以加入placeholder提示格式，且改變validate處理(主動清除-和())?
 // 取餐編號的部分或許也可以(placeholder) 也有可能全部的input都建議設計placeholder?
 
-// field error 應該要調整field的樣式(red border)
-
 // 可以考慮使用ai查看box-shadow inset和borde的使用是否都合適，應該怎麼調整?
 
 // 還有form應該可以抽成form layout、form footer、form content...
 
 // FormFieldLayout現在有提供必填props，可以全部進行調整
-
-// 好像Modal的表單有修改建議，
 
 // 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?或許可以一律套用class?
 
@@ -93,7 +93,7 @@ export default function App() {
             <Route
               path="/menu"
               element={
-                <OrderProvider key="create">
+                <OrderProvider>
                   <Menu />
                 </OrderProvider>
               }
@@ -101,14 +101,7 @@ export default function App() {
             <Route path="/orders">
               <Route index element={<Orders />} />
               <Route path=":orderId" element={<Order />} />
-              <Route
-                path=":orderId/edit"
-                element={
-                  <OrderProvider key="edit">
-                    <Order />
-                  </OrderProvider>
-                }
-              />
+              <Route path=":orderId/edit" element={<Order />} />
             </Route>
             <Route path="/menu-manage" element={<MenuManage />} />
             <Route path="/inventory" element={<Inventory />} />

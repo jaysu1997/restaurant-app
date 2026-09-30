@@ -21,6 +21,7 @@ const Footer = styled.footer`
   height: 7.2rem;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 `;
 
 function SectionForm({

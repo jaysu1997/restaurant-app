@@ -56,7 +56,8 @@ const FilterContainer = styled.div`
 
   label {
     font-size: 1.3rem;
-    color: #666;
+    color: #374151;
+    font-weight: 500;
   }
 `;
 

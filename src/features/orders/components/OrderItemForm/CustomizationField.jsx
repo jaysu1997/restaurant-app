@@ -2,6 +2,7 @@
 import styled from "styled-components";
 import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import Option from "./Option";
+import { CircleAlert } from "lucide-react";
 
 // 不同填寫要求和狀態的樣式設定
 const FIELD_UI = {
@@ -10,56 +11,60 @@ const FIELD_UI = {
     color: "#6b7280",
     bg: "#f9fafb",
     border: "#e5e7eb",
-    optionHover: "#f3f4f6",
   },
-  requiredEmpty: {
+  required: {
     label: "必填",
-    color: "#dc2626",
-    bg: "#fef2f2",
-    border: "#fecaca",
-    optionHover: "#fef2f2",
+    color: "#e11d48",
+    bg: "#fff1f2",
+    border: "#fecdd3",
   },
-  requiredFilled: {
+  completed: {
     label: "完成",
     color: "#2563eb",
     bg: "#eff6ff",
     border: "#bfdbfe",
-    optionHover: "#eff6ff",
+  },
+  error: {
+    label: "請選擇",
+    color: "#dc2626",
+    bg: "#fef2f2",
+    border: "#fecaca",
   },
 };
 
-const Section = styled.section`
+const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 2.4rem;
 `;
 
-const SectionHeader = styled.div`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   gap: 0.4rem;
 `;
 
-const SectionTitleGroup = styled.div`
+const TitleGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   min-width: 0;
 `;
 
-const SectionTitle = styled.h4`
+const Title = styled.h4`
   font-size: 1.8rem;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 600;
+  color: ${({ $isError }) => ($isError ? "#dc2626" : "#111827")};
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
-const SectionHint = styled.span`
+const Hint = styled.span`
   font-size: 1.3rem;
-  line-height: 1.15;
+  line-height: 1.6rem;
   color: #6b7280;
 `;
 
@@ -70,11 +75,17 @@ const Badge = styled.div`
   border-radius: 999px;
   display: flex;
   align-items: center;
+  gap: 0.6rem;
   font-size: 1.2rem;
   font-weight: 600;
   color: ${({ $status }) => $status.color};
   background-color: ${({ $status }) => $status.bg};
   border: 1px solid ${({ $status }) => $status.border};
+
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
 `;
 
 const OptionList = styled.div`
@@ -84,17 +95,24 @@ const OptionList = styled.div`
 `;
 
 // 根據欄位要求和填寫狀態控制樣式
-function getFieldUI({ isRequired, selectedOptions }) {
-  // 選填
-  if (!isRequired) return FIELD_UI.optional;
+function getFieldUI({ isRequired, hasSelection, showError }) {
+  if (!isRequired) {
+    return FIELD_UI.optional;
+  }
 
-  return selectedOptions.length
-    ? FIELD_UI.requiredFilled
-    : FIELD_UI.requiredEmpty;
+  if (showError) {
+    return FIELD_UI.error;
+  }
+
+  if (hasSelection) {
+    return FIELD_UI.completed;
+  }
+
+  return FIELD_UI.required;
 }
 
 // 自訂選項區塊
-function CustomizationField({ customization }) {
+function CustomizationField({ customization, submitAttempted }) {
   const { dispatch } = useOrderDraft();
   const {
     type,
@@ -105,8 +123,14 @@ function CustomizationField({ customization }) {
     selectedOptions = [],
   } = customization;
 
+  const hasSelection = selectedOptions.length > 0;
+  // 必填項目尚未填寫
+  const isRequiredEmpty = isRequired && !hasSelection;
+  // 必填項目尚未填寫就已經按下提交按鈕
+  const showError = submitAttempted && isRequiredEmpty;
+
   // 填寫狀態(控制樣式)
-  const ui = getFieldUI({ isRequired, selectedOptions });
+  const ui = getFieldUI({ isRequired, hasSelection, showError });
 
   function handleOptionChange(e, optionData) {
     let actionType;
@@ -129,17 +153,18 @@ function CustomizationField({ customization }) {
   }
 
   return (
-    <Section>
-      <SectionHeader>
-        <SectionTitleGroup>
-          <SectionTitle>{name}</SectionTitle>
-          <SectionHint>
-            {type === "single" ? "只能單選" : "可以多選"}
-          </SectionHint>
-        </SectionTitleGroup>
+    <Container data-customization-id={customizationId}>
+      <Header>
+        <TitleGroup>
+          <Title $isError={showError}>{name}</Title>
+          <Hint>{type === "single" ? "只能單選" : "可以多選"}</Hint>
+        </TitleGroup>
 
-        <Badge $status={ui}>{ui.label}</Badge>
-      </SectionHeader>
+        <Badge $status={ui}>
+          {showError && <CircleAlert />}
+          <span>{ui.label}</span>
+        </Badge>
+      </Header>
 
       <OptionList>
         {options.map((optionData) => (
@@ -151,7 +176,7 @@ function CustomizationField({ customization }) {
           />
         ))}
       </OptionList>
-    </Section>
+    </Container>
   );
 }
 

@@ -1,20 +1,22 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { formatPickupStr } from "../../../context/settings/settingsHelpers";
 import { formatDateTime } from "../../../utils/orderHelpers";
 import DiningMethodSegmented from "../../../components/DiningMethodSegmented";
 import DiningInfoField from "./DiningInfoField";
 import PaymentStatusField from "./PaymentStatusField";
 import OrderStatusField from "./OrderStatusField";
+import Label from "../../../components/Label";
 
 const StyledOrderInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 2.4rem;
+  min-height: 20.8rem;
 
-  label {
-    color: #64748b;
-    font-size: 1.3rem;
-    font-weight: 500;
+  @media (max-width: 35em) {
+    gap: 0px;
   }
 `;
 
@@ -32,7 +34,7 @@ const MetadataGrid = styled(InfoSection)`
   }
 `;
 
-const StatusGrid = styled(InfoSection)`
+const OrderDetailsGrid = styled(InfoSection)`
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
   @media (max-width: 45em) {
@@ -50,27 +52,15 @@ const InfoItem = styled.div`
   gap: 0.6rem;
 `;
 
-const statusStyles = {
-  準備中: css`
-    color: #475569;
-  `,
-  已完成: css`
-    color: #0f703c;
-  `,
-  未付款: css`
-    color: #c03b00;
-  `,
-  已付款: css`
-    color: #0052b3;
-  `,
-};
-
 const Value = styled.div`
-  height: 4.2rem;
+  height: 4rem;
   font-size: 1.6rem;
-  font-weight: 600;
+  font-weight: 500;
   overflow-wrap: anywhere;
-  ${({ $status }) => statusStyles[$status]}
+
+  @media (max-width: 35em) {
+    height: 5.6rem;
+  }
 `;
 
 function OrderInfo({ orderData, isEdit, canModifyItems }) {
@@ -90,22 +80,22 @@ function OrderInfo({ orderData, isEdit, canModifyItems }) {
     <StyledOrderInfo>
       <MetadataGrid>
         <InfoItem>
-          <label>建立時間</label>
+          <Label>建立時間</Label>
           <Value>{formatDateTime(createdAt)}</Value>
         </InfoItem>
 
         <InfoItem>
-          <label>訂單編號</label>
+          <Label>訂單編號</Label>
           <Value>{orderUUID}</Value>
         </InfoItem>
       </MetadataGrid>
 
-      <StatusGrid>
+      <OrderDetailsGrid>
         {isEdit ? (
           <DiningMethodSegmented disabled={!canModifyItems} />
         ) : (
           <InfoItem>
-            <label>用餐方式</label>
+            <Label>用餐方式</Label>
             <Value>{diningMethod}</Value>
           </InfoItem>
         )}
@@ -114,7 +104,7 @@ function OrderInfo({ orderData, isEdit, canModifyItems }) {
           <DiningInfoField disabled={!canModifyItems} />
         ) : (
           <InfoItem>
-            <label>{isTakeout ? "取餐時間" : "內用桌號"}</label>
+            <Label>{isTakeout ? "取餐時間" : "內用桌號"}</Label>
             <Value>
               {isTakeout ? formatPickupStr(pickupTime) : tableNumber}
             </Value>
@@ -122,11 +112,11 @@ function OrderInfo({ orderData, isEdit, canModifyItems }) {
         )}
 
         {isEdit ? (
-          <PaymentStatusField disabled={false} />
+          <PaymentStatusField />
         ) : (
           <InfoItem>
-            <label>付款狀態</label>
-            <Value $status={paid}>{paid}</Value>
+            <Label>付款狀態</Label>
+            <Value>{paid}</Value>
           </InfoItem>
         )}
 
@@ -134,11 +124,11 @@ function OrderInfo({ orderData, isEdit, canModifyItems }) {
           <OrderStatusField />
         ) : (
           <InfoItem>
-            <label>訂單狀態</label>
-            <Value $status={status}>{status}</Value>
+            <Label>訂單狀態</Label>
+            <Value>{status}</Value>
           </InfoItem>
         )}
-      </StatusGrid>
+      </OrderDetailsGrid>
     </StyledOrderInfo>
   );
 }

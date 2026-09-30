@@ -36,7 +36,7 @@ function StatsCards({ analyzedData }) {
       iconStyle: { color: "#16a34a", background: "#f0fdf4" },
       icon: DollarSign,
       change: growth.revenue,
-      formatter: (value) => `$${value}`,
+      formatter: (value) => `$${value.toLocaleString("zh-TW")}`,
     },
     {
       title: "內用訂單占比",
@@ -52,7 +52,8 @@ function StatsCards({ analyzedData }) {
       iconStyle: { color: "#8b5cf6", background: "#f5f3ff" },
       icon: Calculator,
       change: growth.averageOrderRevenue,
-      formatter: (value) => `$${Number(value.toFixed(1))}`,
+      formatter: (value) =>
+        `$${Number(value.toFixed(1)).toLocaleString("zh-TW")}`,
     },
   ];
 

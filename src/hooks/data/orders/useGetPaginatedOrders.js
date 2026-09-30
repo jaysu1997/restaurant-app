@@ -46,29 +46,29 @@ function useGetPaginatedOrders() {
   });
 
   const { isPending } = ordersQuery;
-  const maxPage = ordersQuery.data?.maxPage ?? 1;
+  const totalPages = ordersQuery.data?.totalPages ?? 1;
 
-  // 當page > maxPage，自動校正回最後一個分頁
+  // 當page > totalPage，自動校正回最後一個分頁
   useEffect(() => {
-    if (isPending || page <= maxPage) return;
+    if (isPending || page <= totalPages) return;
 
     setSearchParams(
       (prev) => {
         const params = new URLSearchParams(prev);
 
-        params.set("page", String(maxPage));
+        params.set("page", String(totalPages));
 
         return params;
       },
       { replace: true },
     );
-  }, [isPending, page, maxPage, setSearchParams]);
+  }, [isPending, page, totalPages, setSearchParams]);
 
   useEffect(() => {
     if (isPending) return;
 
     // 預先獲取前後頁的數據
-    if (page < maxPage) {
+    if (page < totalPages) {
       queryClient.prefetchQuery({
         queryKey: ["orders", page + 1, createdAt, pickupNumber],
         queryFn: () => getPaginatedOrdersApi(page + 1, createdAt, pickupNumber),
@@ -81,7 +81,7 @@ function useGetPaginatedOrders() {
         queryFn: () => getPaginatedOrdersApi(page - 1, createdAt, pickupNumber),
       });
     }
-  }, [isPending, page, maxPage, createdAt, pickupNumber, queryClient]);
+  }, [isPending, page, totalPages, createdAt, pickupNumber, queryClient]);
 
   return ordersQuery;
 }

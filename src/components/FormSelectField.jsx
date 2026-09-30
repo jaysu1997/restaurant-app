@@ -10,6 +10,7 @@ function FormSelectField({
   isCreatable = false,
   placeholder = null,
   disabled = false,
+  required = false,
 }) {
   const {
     control,
@@ -21,7 +22,7 @@ function FormSelectField({
   const error = get(errors, name);
 
   return (
-    <FormFieldLayout label={label} id={name} error={error}>
+    <FormFieldLayout label={label} id={name} error={error} required={required}>
       <BaseSelect
         {...field}
         inputId={name}

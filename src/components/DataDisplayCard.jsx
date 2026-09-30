@@ -43,7 +43,7 @@ const Footer = styled.div`
 `;
 
 const EditButton = styled.button`
-  color: #15803d;
+  color: #6b7280;
   font-weight: 600;
   padding: 0.6rem 1.2rem;
   display: flex;
@@ -57,7 +57,7 @@ const EditButton = styled.button`
   }
 
   ${hoverStyles(css`
-    background-color: #f0fdf4;
+    color: #3b82f6;
   `)}
 `;
 
@@ -65,7 +65,7 @@ const DeleteButton = styled(EditButton)`
   color: #b91c1c;
 
   ${hoverStyles(css`
-    background-color: #fef2f2;
+    color: #dc2626;
   `)}
 `;
 

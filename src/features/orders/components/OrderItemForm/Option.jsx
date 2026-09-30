@@ -19,10 +19,6 @@ const OptionRow = styled.label`
   ${hoverStyles(css`
     background-color: #f3f4f6;
   `)}
-
-  &:active {
-    transform: scale(0.98);
-  }
 `;
 
 const Checkbox = styled.div`
@@ -33,13 +29,6 @@ const Checkbox = styled.div`
     fill: ${({ $checked }) => ($checked ? "#007bff" : "transparent")};
     width: 2rem;
     height: 2rem;
-
-    transform: ${({ $checked }) => ($checked ? "scale(1.06)" : "scale(1)")};
-
-    transition:
-      fill 0.16s ease,
-      color 0.16s ease,
-      transform 0.16s ease;
   }
 
   svg:last-of-type {
@@ -97,7 +86,7 @@ function Option({ optionData, onToggle, selectedOptions }) {
       <OptionName>{name}</OptionName>
 
       <OptionPrice>
-        {extraPrice === 0 ? "免費" : `+ $${extraPrice}`}
+        {extraPrice === 0 ? "免費" : `+ $${extraPrice.toLocaleString()}`}
       </OptionPrice>
     </OptionRow>
   );

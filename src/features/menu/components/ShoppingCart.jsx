@@ -5,103 +5,62 @@ import EmptyCart from "./EmptyCart";
 import useCreateOrder from "../../../hooks/data/orders/useCreateOrder";
 import { useState } from "react";
 import useScrollLock from "../../../hooks/ui/useScrollLock";
-import CartOpenButton from "./CartOpenButton";
-import SubmitButton from "../../../components/button/SubmitButton";
-import CartItem from "./CartItem";
+import MobileCartTrigger from "./MobileCartTrigger";
+import OrderItem from "../../orders/components/OrderItem";
 import useMediaQuery from "../../../hooks/ui/useMediaQuery";
-import Price from "../../../components/Price";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import {
   buildOrderData,
   calculateOrderSummary,
 } from "../../../utils/orderHelpers";
-import ModalCloseButton from "../../../components/ModalCloseButton";
 import CartOrderInfo from "./CartOrderInfo";
+import CartHeader from "./CartHeader";
+import CartFooter from "./CartFooter";
 
-const StyledShoppingCart = styled.aside`
+const CartContainer = styled.aside`
   position: fixed;
   top: 18rem;
   right: calc(50% - 72rem);
-  border: 1px solid #dcdcdc;
-  background-color: #fff;
+  z-index: 100;
+  width: 32rem;
+  height: min(64.8rem, calc(100dvh - 18rem));
   display: flex;
   flex-direction: column;
-  border-radius: 6px;
-  height: min(64.8rem, calc(100dvh - 18rem));
-  width: 26rem;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   overflow: hidden;
-  z-index: 100;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 4px 12px rgba(15, 23, 42, 0.04);
 
   @media (max-width: 93em) {
     right: 2.4rem;
   }
 
   @media (max-width: 50em) {
-    inset: 0;
     display: ${({ $isCartOpen }) => ($isCartOpen ? "flex" : "none")};
-    height: 100%;
+    inset: 0;
     width: 100%;
+    height: 100%;
     border: none;
     border-radius: 0;
+    box-shadow: none;
   }
 `;
 
-const Header = styled.header`
-  height: 6.4rem;
-
-  padding: 0.8rem 1.6rem;
-  border-bottom: 1px solid #dcdcdc;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  h3 {
-    font-size: 2.6rem;
-    font-weight: 600;
-  }
-
-  button {
-    display: none;
-  }
-
-  @media (max-width: 50em) {
-    button {
-      display: flex;
-    }
-  }
-`;
-
-const CartContent = styled.div`
-  padding: 0 1.6rem;
-  height: 100%;
+const CartBody = styled.div`
+  flex: 1;
+  padding: 0 2rem;
   overflow-y: auto;
-  scrollbar-gutter: stable;
 `;
 
-const CartList = styled.ul`
-  display: flex;
-  flex-direction: column;
+const CartItemList = styled.ul`
+  border-bottom: 1px solid #e5e7eb;
 `;
 
-const Footer = styled.footer`
-  border-top: 1px solid #dcdcdc;
-  background-color: #fff;
-  width: 100%;
-  padding: 1.6rem;
-  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
-`;
-
-const OrderSummary = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  font-weight: 500;
-  padding: 0.8rem 0 2.4rem 0;
-`;
-
-function ShoppingCart({ canPlaceOrder }) {
+function ShoppingCart({ canPlaceOrder, onEditDish }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { createOrder, isCreatingOrder } = useCreateOrder();
   const onClose = () => setIsCartOpen(false);
@@ -132,7 +91,7 @@ function ShoppingCart({ canPlaceOrder }) {
 
   const hasItems = items.length > 0;
 
-  const { totalServings, totalPrice } = calculateOrderSummary(items);
+  const { totalServings, totalAmount } = calculateOrderSummary(items);
 
   function onSubmit(data) {
     const orderData = buildOrderData(items, data);
@@ -148,49 +107,43 @@ function ShoppingCart({ canPlaceOrder }) {
 
   return (
     <FormProvider {...methods}>
-      <StyledShoppingCart $isCartOpen={isCartOpen}>
-        <Header>
-          <h3>購物車</h3>
-          <ModalCloseButton onClose={onClose} />
-        </Header>
+      <CartContainer $isCartOpen={isCartOpen} aria-label="購物車">
+        <CartHeader onClose={onClose} />
 
         {!hasItems ? (
           <EmptyCart />
         ) : (
-          <>
-            <CartContent>
-              <CartList>
-                {items.map((item) => (
-                  <CartItem item={item} key={item.uniqueId} />
-                ))}
-              </CartList>
+          <CartBody>
+            <CartItemList>
+              {items.map((item) => (
+                <OrderItem
+                  item={item}
+                  canModifyItems={canPlaceOrder}
+                  isEdit={true}
+                  onEditDish={onEditDish}
+                  key={item.uniqueId}
+                />
+              ))}
+            </CartItemList>
 
-              <CartOrderInfo canPlaceOrder={canPlaceOrder} />
-            </CartContent>
-
-            <Footer>
-              <OrderSummary>
-                <span>總計：</span>
-                <Price>${totalPrice}</Price>
-              </OrderSummary>
-
-              <SubmitButton
-                fullWidth
-                processing={isCreatingOrder}
-                disabled={!hasItems || isCreatingOrder || !isValid}
-                onClick={handleSubmit(onSubmit)}
-              >
-                提交
-              </SubmitButton>
-            </Footer>
-          </>
+            <CartOrderInfo canPlaceOrder={canPlaceOrder} />
+          </CartBody>
         )}
-      </StyledShoppingCart>
+
+        {hasItems && (
+          <CartFooter
+            totalAmount={totalAmount}
+            isCreatingOrder={isCreatingOrder}
+            onSubmit={handleSubmit(onSubmit)}
+            isValid={isValid}
+          />
+        )}
+      </CartContainer>
 
       {hasItems && (
-        <CartOpenButton
+        <MobileCartTrigger
           totalServings={totalServings}
-          totalPrice={totalPrice}
+          totalAmount={totalAmount}
           onOpen={() => setIsCartOpen(true)}
         />
       )}

@@ -1,7 +1,7 @@
 // ok
 import LoadingBars from "../components/LoadingBars";
-import errorSvg from "../assets/error.svg";
-import emptyStateSvg from "../assets/empty-state.svg";
+import ErrorSvg from "../assets/error.svg?react";
+import EmptyStateSvg from "../assets/empty-state.svg?react";
 import { useNavigate } from "react-router";
 import FeedbackState from "./FeedbackState";
 
@@ -19,7 +19,7 @@ function QueryStatusFallback({ queries, hasNoData, noDataFallback, children }) {
     return (
       <FeedbackState
         minHeight="100%"
-        illustration={<img src={errorSvg} alt="數據獲取失敗警告圖示" />}
+        illustration={<ErrorSvg aria-hidden="true" />}
         heading="數據獲取失敗"
         description={error?.error?.message}
         action={{
@@ -33,7 +33,7 @@ function QueryStatusFallback({ queries, hasNoData, noDataFallback, children }) {
     return (
       <FeedbackState
         minHeight="100%"
-        illustration={<img src={emptyStateSvg} alt="沒有相關數據圖示" />}
+        illustration={<EmptyStateSvg aria-hidden="true" />}
         heading="沒有相關數據"
         description={noDataFallback?.message}
         action={{

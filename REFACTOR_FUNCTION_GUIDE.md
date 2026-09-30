@@ -224,7 +224,7 @@
 
 備註：
 
-- OrderForm、OrderOverview、OrderDishes 等元件內的「純判斷與轉換邏輯」若太多，應逐步移到 utils。
+- OrderItemForm、OrderOverview、OrderDishes 等元件內的「純判斷與轉換邏輯」若太多，應逐步移到 utils。
 
 ### 7. settings
 

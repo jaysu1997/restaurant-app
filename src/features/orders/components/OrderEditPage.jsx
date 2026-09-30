@@ -6,32 +6,24 @@ import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import { Navigate, useNavigate } from "react-router";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 import useOrderInventory from "../hooks/useOrderInventory";
-import OrderOverview from "./OrderOverview";
-import OrderNote from "./OrderNote";
 import useOrderEdit from "../hooks/useOrderEdit";
-import StoreClosedNotice from "./StoreClosedNotice";
-import useSettings from "../../../context/settings/useSettings";
-import { canCreateOrder } from "../../../context/settings/settingsHelpers";
 import FormActions from "../../../components/FormActions";
+import OrderContent from "./OrderContent";
 
-function OrderEditPage({ orderData }) {
+function OrderEditPage({ orderData, canModifyItems }) {
   const navigate = useNavigate();
+  const inventoryQuery = useOrderInventory();
   const { updateOrder, isUpdatingOrder } = useUpdateOrder();
-  const { todayOpenInfo } = useSettings();
-  // 當前屬於可以建立訂單的時段
-  const canPlaceOrder = canCreateOrder(todayOpenInfo);
 
   const {
-    state: { items },
+    state: { items: draftItems },
   } = useOrderDraft();
-
-  const inventoryQuery = useOrderInventory();
 
   const methods = useOrderEdit(orderData);
   const { handleSubmit } = methods;
 
   function onSubmit(data) {
-    const orderData = buildOrderData(items, data);
+    const orderData = buildOrderData(draftItems, data);
     updateOrder(orderData);
   }
 
@@ -42,28 +34,19 @@ function OrderEditPage({ orderData }) {
 
   return (
     <QueryStatusFallback queries={[inventoryQuery]}>
-      {!canPlaceOrder && (
-        <StoreClosedNotice>
-          目前為非營業時段，無法修改餐點與用餐資訊， 但仍可更新付款與訂單狀態。
-        </StoreClosedNotice>
-      )}
-
       <FormProvider {...methods}>
-        <OrderOverview
+        <OrderContent
           orderData={orderData}
-          items={items}
+          orderItems={draftItems}
+          canModifyItems={canModifyItems}
           isEdit={true}
-          canModifyItems={canPlaceOrder}
         />
 
-        <OrderNote isEdit={true} note={orderData.note} />
-
-        {/* 目前這裡在沒有修正的情況下是可以使用button的，不確定是否需要disabled或者不用? */}
         <FormActions
           onSubmit={handleSubmit(onSubmit)}
           onCancel={() => navigate(-1)}
           isProcessing={isUpdatingOrder}
-          submitDisabled={items.length === 0 || isUpdatingOrder}
+          submitDisabled={draftItems.length === 0 || isUpdatingOrder}
         />
       </FormProvider>
     </QueryStatusFallback>

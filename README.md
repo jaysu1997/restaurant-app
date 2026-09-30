@@ -124,10 +124,10 @@ restaurant-app
 │  │  │  │  ├─ OrderDishes.jsx
 │  │  │  │  ├─ OrderDropdownMenu.jsx
 │  │  │  │  ├─ OrderEditPage.jsx
-│  │  │  │  ├─ OrderForm
+│  │  │  │  ├─ OrderItemForm
 │  │  │  │  │  ├─ CustomizationField.jsx
 │  │  │  │  │  ├─ Option.jsx
-│  │  │  │  │  └─ OrderForm.jsx
+│  │  │  │  │  └─ OrderItemForm.jsx
 │  │  │  │  ├─ OrderInfo.jsx
 │  │  │  │  ├─ OrderItemActions.jsx
 │  │  │  │  ├─ OrderNote.jsx

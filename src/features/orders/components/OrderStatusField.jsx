@@ -25,6 +25,7 @@ function OrderStatusField() {
           return true;
         },
       }}
+      required
     />
   );
 }

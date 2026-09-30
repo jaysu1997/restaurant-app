@@ -35,15 +35,15 @@ const DateField = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  label {
-    color: #525252;
-    font-weight: 500;
-  }
-
   @media (max-width: 35em) {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
   }
+`;
+
+const DateOfWeek = styled.span`
+  color: #374151;
+  font-weight: 500;
 `;
 
 function RegularOpenHours({ settings }) {
@@ -97,7 +97,7 @@ function RegularOpenHours({ settings }) {
             {dayFields.map((day, dayIndex) => (
               <BusinessPeriodItem key={day.id}>
                 <DateField>
-                  <label htmlFor={day.dayOfWeek}>{day.label}</label>
+                  <DateOfWeek>{day.label}</DateOfWeek>
 
                   <ControlledSwitch
                     options={{

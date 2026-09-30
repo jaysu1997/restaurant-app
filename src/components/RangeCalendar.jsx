@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { DayPicker } from "react-day-picker";
-import { zhTW } from "react-day-picker/locale";
+import { DayPicker } from "@daypicker/react";
+import { zhTW } from "@daypicker/react/locale";
 import { isDate, isValid, parseISO } from "date-fns";
 
 const StyledDayPicker = styled(DayPicker)`

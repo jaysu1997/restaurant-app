@@ -1,10 +1,14 @@
-// ok
-// 售價
 import styled from "styled-components";
 
-const Price = styled.span`
-  font-weight: 500;
-  color: #dc2626;
+const StyledPrice = styled.span`
+  color: #1f2937;
+  font-weight: 600;
 `;
+
+function Price({ value, className }) {
+  const formattedValue = Number(value).toLocaleString("zh-TW");
+
+  return <StyledPrice className={className}>${formattedValue}</StyledPrice>;
+}
 
 export default Price;

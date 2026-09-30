@@ -18,8 +18,14 @@ const Preview = styled.div`
   grid-column: 1 / -2;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.6rem;
   width: 100%;
+
+  label {
+    font-weight: 500;
+    font-size: 1.3rem;
+    color: #374151;
+  }
 
   div {
     display: flex;

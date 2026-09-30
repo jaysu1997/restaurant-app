@@ -41,7 +41,11 @@ function Navbar({ isOpen, onClose }) {
   return (
     <>
       <Sidebar>
-        <NavList isManager={isManager} onClose={onClose} iconOnly />
+        <NavList
+          isManager={isManager}
+          onClose={onClose}
+          iconOnly={isDrawerMode}
+        />
       </Sidebar>
 
       {isDrawerMode && (

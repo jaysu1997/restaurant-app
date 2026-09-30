@@ -34,8 +34,8 @@ const Text = styled.p`
 
 function ImagePlaceholder({ text }) {
   return (
-    <StyledImagePlaceholder>
-      <EmptyImageIcon strokeWidth={1.5} />
+    <StyledImagePlaceholder role="img" aria-label="沒有圖片">
+      <EmptyImageIcon strokeWidth={1.5} aria-hidden="true" />
       {text && <Text>{text}</Text>}
     </StyledImagePlaceholder>
   );

@@ -21,8 +21,10 @@ const OrdersContainer = styled.div`
 function Orders() {
   const [searchParams] = useSearchParams();
   const ordersQuery = useGetPaginatedOrders();
-  const { isPending, data: { ordersData = [], page = 1, maxPage = 1 } = {} } =
-    ordersQuery;
+  const {
+    isPending,
+    data: { ordersData = [], page = 1, totalPages = 1 } = {},
+  } = ordersQuery;
 
   const filtersConfig = [
     {
@@ -70,8 +72,7 @@ function Orders() {
         <OrdersContainer>
           <OrdersListDesktop ordersData={ordersData} />
           <OrdersListMobile ordersData={ordersData} />
-
-          <Pagination curPage={Number(page)} maxPage={Number(maxPage)} />
+          <Pagination curPage={Number(page)} totalPages={Number(totalPages)} />
         </OrdersContainer>
       </QueryStatusFallback>
     </PageContainer>

@@ -39,6 +39,7 @@ function DiningInfoField({ disabled }) {
       rules={{
         required: isTakeout ? "請選擇取餐時間" : "請選擇內用桌號",
       }}
+      required
       key={isTakeout ? "pickupTime" : "tableNumber"}
     />
   );

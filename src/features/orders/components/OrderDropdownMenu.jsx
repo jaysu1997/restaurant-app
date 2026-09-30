@@ -1,16 +1,16 @@
 // ok
 import styled, { css } from "styled-components";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import ConfirmDelete from "../../../components/ConfirmDelete";
 import {
   formatDateTime,
   formatPickupNumber,
 } from "../../../utils/orderHelpers";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
-import DropdownMenu from "../../../components/DropdownMenu";
+import DropdownMenu from "../../../components/DropdownMenu/DropdownMenu";
 import { Ellipsis, Trash2, SquarePen, Eye } from "lucide-react";
 import { hoverStyles } from "../../../style/helpers";
+import DropdownItem from "../../../components/DropdownMenu/DropdownItem";
 
 const ToggleButton = styled.button`
   display: flex;
@@ -33,49 +33,58 @@ const ToggleButton = styled.button`
 `;
 
 function OrderDropdownMenu({ orderData, openMenuId, setOpenMenuId }) {
-  const navigate = useNavigate();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const deleteMutation = useDeleteOrder();
 
   const { id, pickupNumber, createdAt, status } = orderData;
   const isFinished = status === "已完成";
 
-  const actions = [
-    {
-      name: "檢視訂單",
-      icon: Eye,
-      handleClick: () => navigate(`/orders/${id}`),
-      hidden: false,
-    },
-    {
-      name: "編輯訂單",
-      icon: SquarePen,
-      handleClick: () => navigate(`/orders/${id}/edit`),
-      hidden: isFinished,
-    },
-    {
-      name: "刪除訂單",
-      icon: Trash2,
-      handleClick: () => setIsDeleteModalOpen(true),
-      hidden: isFinished,
-    },
-  ];
+  const handleClose = () => setOpenMenuId(null);
 
   return (
     <>
       <DropdownMenu
-        items={actions}
         isOpen={openMenuId === id}
         onClose={() => setOpenMenuId(null)}
+        trigger={
+          <ToggleButton
+            $isActive={openMenuId === id}
+            onClick={() => {
+              setOpenMenuId((isOpenMenu) => (isOpenMenu === id ? null : id));
+            }}
+            aria-label="訂單選單"
+            aria-expanded={openMenuId === id}
+          >
+            <Ellipsis strokeWidth={2.4} />
+          </ToggleButton>
+        }
       >
-        <ToggleButton
-          $isActive={openMenuId === id}
+        <DropdownItem
+          name="檢視訂單"
+          to={`/orders/${id}`}
+          icon={<Eye />}
+          onClick={handleClose}
+        />
+
+        {!isFinished && (
+          <DropdownItem
+            name="編輯訂單"
+            to={`/orders/${id}/edit`}
+            icon={<SquarePen />}
+            onClick={handleClose}
+          />
+        )}
+
+        <DropdownItem
+          as="button"
+          type="button"
           onClick={() => {
-            setOpenMenuId((isOpenMenu) => (isOpenMenu === id ? null : id));
+            setIsDeleteModalOpen(true);
+            handleClose();
           }}
-        >
-          <Ellipsis strokeWidth={2.4} />
-        </ToggleButton>
+          name="刪除訂單"
+          icon={<Trash2 />}
+        />
       </DropdownMenu>
 
       {isDeleteModalOpen && (

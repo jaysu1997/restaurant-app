@@ -8,6 +8,7 @@ import {
 } from "../../../../utils/orderHelpers";
 import Tag from "../../../../components/Tag";
 import { hoverStyles } from "../../../../style/helpers";
+import Price from "../../../../components/Price";
 
 const StyledOrderList = styled.div`
   width: 100%;
@@ -17,7 +18,7 @@ const StyledOrderList = styled.div`
   border: 1px solid #e5e7eb;
   font-weight: 600;
 
-  @media (max-width: 45em) {
+  @media (max-width: 50em) {
     display: none;
   }
 `;
@@ -25,9 +26,10 @@ const StyledOrderList = styled.div`
 const OrderRow = styled.div`
   display: grid;
   grid-template-columns:
-    minmax(0, 0.3fr) minmax(0, 0.5fr) minmax(0, 1fr)
-    repeat(3, minmax(0, 0.5fr)) 3rem;
+    5.2rem minmax(6rem, 0.5fr) minmax(16.4rem, 0.5fr)
+    repeat(3, minmax(7.6rem, 0.5fr)) 3rem;
   align-items: center;
+  justify-items: center;
   gap: 1rem;
   padding: 1.6rem 2rem;
 `;
@@ -86,7 +88,7 @@ function OrdersListDesktop({ ordersData }) {
             <span>{formatDateTime(orderData.createdAt)}</span>
             <Tag $status={orderData.status}>{orderData.status}</Tag>
             <Tag $status={orderData.paid}>{orderData.paid}</Tag>
-            <span>${orderData.totalPrice}</span>
+            <Price value={orderData.totalAmount} />
 
             <OrderDropdownMenu
               orderData={orderData}

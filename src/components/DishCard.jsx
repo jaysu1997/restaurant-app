@@ -1,10 +1,9 @@
 // ok
 // 餐點品項卡片
 import styled, { css } from "styled-components";
-import Price from "../../../components/Price";
-import { hoverStyles } from "../../../style/helpers";
-import Image from "../../../components/Image";
-import ImagePlaceholder from "../../../components/ImagePlaceholder";
+import Price from "./Price";
+import { hoverStyles } from "../style/helpers";
+import DishImage from "./DishImage";
 
 const StyledDishCard = styled.button`
   width: 100%;
@@ -35,7 +34,6 @@ const StyledDishCard = styled.button`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: start;
   gap: 0.6rem;
   min-width: 0;
@@ -43,12 +41,29 @@ const Content = styled.div`
 
 const DishName = styled.span`
   color: #1f2937;
-  font-weight: 500;
+  font-weight: 600;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   min-width: 0;
   max-width: 100%;
+`;
+
+const DishCategory = styled.span`
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1;
+  color: #6b7280;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+  max-width: 100%;
+`;
+
+const DishPrice = styled(Price)`
+  color: #dc2626;
+  margin-top: auto;
 `;
 
 const Thumbnail = styled.div`
@@ -59,29 +74,22 @@ const Thumbnail = styled.div`
   overflow: hidden;
 `;
 
-function DishCard({ dish, onSelect, disabled }) {
-  const { name, basePrice, discount, image } = dish;
+function DishCard({ dish, onSelect, canPlaceOrder }) {
+  const { name, basePrice, discount, image, category } = dish;
 
-  const finalPrice = `$${basePrice - discount}`;
-
-  const imagePath = image
-    ? `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/menu/${image}`
-    : null;
+  const finalPrice = basePrice - discount;
 
   return (
     <li>
-      <StyledDishCard onClick={() => onSelect(dish)} disabled={disabled}>
+      <StyledDishCard onClick={onSelect} disabled={!canPlaceOrder}>
         <Content>
           <DishName>{name}</DishName>
-          <Price>{finalPrice}</Price>
+          <DishCategory>{category}</DishCategory>
+          <DishPrice value={finalPrice} />
         </Content>
 
         <Thumbnail>
-          {imagePath ? (
-            <Image src={imagePath} lazy={true} alt={name} radius="8px" />
-          ) : (
-            <ImagePlaceholder />
-          )}
+          <DishImage image={image} alt={name} />
         </Thumbnail>
       </StyledDishCard>
     </li>

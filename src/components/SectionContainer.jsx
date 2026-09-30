@@ -7,7 +7,6 @@ const Container = styled.section`
   min-width: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   background-color: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;

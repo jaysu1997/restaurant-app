@@ -26,12 +26,13 @@ const StyledFeedbackState = styled.div`
   padding: 3.6rem 1rem;
   text-align: center;
   animation: ${fadeIn} 0.3s ease forwards;
+  overflow: auto;
 `;
 
 const Illustration = styled.div`
   max-width: 28rem;
 
-  img {
+  svg {
     width: 100%;
     height: auto;
   }

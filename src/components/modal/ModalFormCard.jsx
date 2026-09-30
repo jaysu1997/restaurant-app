@@ -68,7 +68,7 @@ function ModalFormCard({
 
           {onDelete && (
             <IconButton $size="sm" onClick={onDelete}>
-              <Trash2 size={18} />
+              <Trash2 />
             </IconButton>
           )}
         </Header>

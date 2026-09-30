@@ -13,6 +13,7 @@ import {
   ClipboardCheck,
 } from "lucide-react";
 import StatsFooter from "./StatsFooter";
+import Price from "../../../components/Price";
 
 const Content = styled.div`
   display: flex;
@@ -85,11 +86,6 @@ const OrderItemDetails = styled.div`
   gap: 1.2rem;
 `;
 
-const OrderAmount = styled.span`
-  color: #111827;
-  font-weight: 700;
-`;
-
 const OrderItemsSummary = styled.span`
   color: #6b7280;
   font-size: 1.4rem;
@@ -139,7 +135,7 @@ function TodayOrderList({ todayOrders, orderStatus }) {
                     {formatOrderItems(item.items)}
                   </OrderItemsSummary>
 
-                  <OrderAmount>${item.totalPrice}</OrderAmount>
+                  <Price value={item.totalAmount} />
                 </OrderItemDetails>
               </Item>
             ))}

@@ -4,12 +4,13 @@ import { hoverStyles } from "../../style/helpers";
 
 const sizeStyles = {
   sm: css`
-    height: 2.6rem;
-    padding: 0.6rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
 
     svg {
-      width: 1.4rem;
-      height: 1.4rem;
+      width: 1.6rem;
+      height: 1.6rem;
     }
   `,
   md: css`

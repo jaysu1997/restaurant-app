@@ -37,23 +37,23 @@ export function summarizeMealChoices(item) {
 // 計算訂單的總份數和總金額
 // 這也是換個位置
 export function calculateOrderSummary(items) {
-  const { totalServings, totalPrice } = items.reduce(
+  const { totalServings, totalAmount } = items.reduce(
     (acc, cur) => {
       acc.totalServings += cur.servings;
-      acc.totalPrice += cur.servings * cur.unitPrice;
+      acc.totalAmount += cur.servings * cur.unitPrice;
       return acc;
     },
-    { totalServings: 0, totalPrice: 0 },
+    { totalServings: 0, totalAmount: 0 },
   );
 
-  return { totalServings, totalPrice };
+  return { totalServings, totalAmount };
 }
 
 // 整合要上傳的訂單數據
 // 這也是換個位置
 export function buildOrderData(items, data) {
   // 計算餐點總數與總價
-  const { totalServings, totalPrice } = calculateOrderSummary(items);
+  const { totalServings, totalAmount } = calculateOrderSummary(items);
 
   const orderData = {
     ...data,
@@ -65,7 +65,7 @@ export function buildOrderData(items, data) {
       })),
     })),
     totalServings,
-    totalPrice,
+    totalAmount,
     tableNumber: data.tableNumber?.value ?? null,
     pickupTime: data.pickupTime?.value ?? null,
     paid: data.paid?.value ?? "未付款",

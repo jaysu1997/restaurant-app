@@ -1,13 +1,13 @@
 // ok
 import styled, { css } from "styled-components";
-import { useNavigate } from "react-router";
 import { useState } from "react";
 import useLogout from "../hooks/data/auth/useLogout";
 import useUser from "../hooks/data/auth/useUser";
-import DropdownMenu from "../components/DropdownMenu";
+import DropdownMenu from "./DropdownMenu/DropdownMenu";
 import { UserRound, LogOut, ChevronDown } from "lucide-react";
 import { hoverStyles } from "../style/helpers";
 import UserAvatar from "./UserAvatar";
+import DropdownItem from "./DropdownMenu/DropdownItem";
 
 const StyledUser = styled.div`
   margin-left: auto;
@@ -68,51 +68,54 @@ const ArrowIcon = styled(ChevronDown)`
 `;
 
 function User() {
-  const navigate = useNavigate();
   const { logout } = useLogout();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const { user } = useUser();
   const { name, userRole, avatarFile } = user;
 
-  const actions = [
-    {
-      name: "用戶設定",
-      icon: UserRound,
-      handleClick: () => navigate("/account"),
-      hidden: false,
-    },
-    {
-      name: "登出",
-      icon: LogOut,
-      handleClick: () => logout(),
-      hidden: false,
-    },
-  ];
+  const handleClose = () => setIsUserMenuOpen(false);
 
   return (
     <StyledUser>
       <DropdownMenu
-        items={actions}
         isOpen={isUserMenuOpen}
         onClose={() => setIsUserMenuOpen(false)}
+        trigger={
+          <UserButton
+            aria-haspopup="menu"
+            aria-expanded={isUserMenuOpen}
+            onClick={() => {
+              setIsUserMenuOpen((isOpenMenu) => !isOpenMenu);
+            }}
+          >
+            <UserAvatar avatarFile={avatarFile} lazy={false} />
+
+            <UserInfo>
+              <UserName>{name}</UserName>
+              <UserRole>{userRole.label}</UserRole>
+            </UserInfo>
+
+            <ArrowIcon strokeWidth={2.4} $isOpen={isUserMenuOpen} />
+          </UserButton>
+        }
       >
-        <UserButton
-          aria-haspopup="menu"
-          aria-expanded={isUserMenuOpen}
+        <DropdownItem
+          name="用戶設定"
+          to="account"
+          icon={<UserRound />}
+          onClick={handleClose}
+        />
+        <DropdownItem
+          as="button"
+          type="button"
+          name="登出"
           onClick={() => {
-            setIsUserMenuOpen((isOpenMenu) => !isOpenMenu);
+            logout();
+            handleClose();
           }}
-        >
-          <UserAvatar avatarFile={avatarFile} lazy={false} />
-
-          <UserInfo>
-            <UserName>{name}</UserName>
-            <UserRole>{userRole.label}</UserRole>
-          </UserInfo>
-
-          <ArrowIcon strokeWidth={2.4} $isOpen={isUserMenuOpen} />
-        </UserButton>
+          icon={<LogOut />}
+        />
       </DropdownMenu>
     </StyledUser>
   );

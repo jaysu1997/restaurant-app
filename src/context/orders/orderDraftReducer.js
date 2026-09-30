@@ -23,6 +23,13 @@ export function reducer(state, action) {
         activeCustomizations: [...action.payload],
       };
     }
+    // 關閉OrderForm的時候清空activeCustomizations
+    case "customization/reset": {
+      return {
+        ...state,
+        activeCustomizations: [],
+      };
+    }
     // 單選選項新增
     case "customization/setSingle": {
       const updatedCustomizations = state.activeCustomizations.map((item) =>

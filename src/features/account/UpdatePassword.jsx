@@ -12,11 +12,6 @@ const Fields = styled.div`
   flex-direction: column;
   gap: 0.4rem;
   font-size: 1.4rem;
-
-  label {
-    color: #525252;
-    font-weight: 500;
-  }
 `;
 
 function UpdatePassword({ userData }) {

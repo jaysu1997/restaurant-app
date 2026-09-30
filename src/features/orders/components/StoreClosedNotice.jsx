@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { AlertTriangle } from "lucide-react";
 
 const StyledNotice = styled.div`
-  height: 4.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -13,7 +12,7 @@ const StyledNotice = styled.div`
   color: #9a3412;
   font-size: 1.4rem;
   font-weight: 500;
-  margin-bottom: -0.8rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
 
   svg {
     height: 1.8rem;

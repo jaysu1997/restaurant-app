@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { ChartNoAxesCombined } from "lucide-react";
 import SectionContainer from "../../../components/SectionContainer";
+import Price from "../../../components/Price";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -54,7 +55,7 @@ function CustomTooltip({ active, payload }) {
       <TooltipDate>{item.date}</TooltipDate>
 
       <TooltipRevenue>
-        總營收 <span>${item.revenue}</span>
+        總營收 <Price value={item.revenue} />
       </TooltipRevenue>
     </TooltipContainer>
   );

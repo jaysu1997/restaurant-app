@@ -1,5 +1,5 @@
 // ok
-import warningIcon from "../assets/warning.svg";
+import WarningIcon from "../assets/warning.svg?react";
 import FeedbackState from "./FeedbackState";
 
 function ErrorBoundaryFallback({ error, resetErrorBoundary }) {
@@ -8,7 +8,7 @@ function ErrorBoundaryFallback({ error, resetErrorBoundary }) {
   return (
     <FeedbackState
       minHeight="100dvh"
-      illustration={<img src={warningIcon} alt="程式錯誤警告圖示" />}
+      illustration={<WarningIcon aria-hidden="true" />}
       heading="發生錯誤"
       description={error.message}
       action={{
