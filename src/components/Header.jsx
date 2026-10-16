@@ -11,18 +11,18 @@ import { hoverStyles } from "../style/helpers";
 const StyleHeader = styled.header`
   width: 100%;
   height: 6.4rem;
-  background-color: #fff;
+  background-color: var(--color-surface);
   position: sticky;
   top: 0;
   z-index: 50;
   grid-column: 1 / -1;
-  box-shadow: inset 0px -1px #e5e7eb;
+  box-shadow: inset 0px -1px var(--color-border);
 
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1.2rem;
+  gap: var(--space-3);
   align-items: center;
-  padding-left: 2.4rem;
+  padding-left: var(--space-6);
 
   @media (max-width: 80em) {
     grid-template-columns: 7.2rem auto 1fr;
@@ -31,7 +31,7 @@ const StyleHeader = styled.header`
 
   @media (max-width: 50em) {
     grid-template-columns: auto auto 1fr;
-    padding: 0 1rem;
+    padding: 0 var(--space-2-5);
   }
 `;
 
@@ -43,7 +43,7 @@ const MenuButton = styled.button`
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     width: 3.6rem;
     height: 3.6rem;
 
@@ -53,7 +53,7 @@ const MenuButton = styled.button`
     }
 
     ${hoverStyles(css`
-      background-color: #f9fafb;
+      background-color: var(--color-background);
     `)}
   }
 `;
@@ -61,7 +61,7 @@ const MenuButton = styled.button`
 const HeaderBrand = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
 
   & > img {
     height: 4rem;
@@ -69,7 +69,7 @@ const HeaderBrand = styled(Link)`
   }
 
   & > span {
-    font-size: 2.4rem;
+    font-size: var(--font-size-xl);
   }
 `;
 

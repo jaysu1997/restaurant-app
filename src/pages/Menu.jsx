@@ -10,15 +10,15 @@ import ShoppingCart from "../features/menu/components/ShoppingCart";
 import CategoryBar from "../features/menu/components/CategoryBar";
 import useOrderInventory from "../features/orders/hooks/useOrderInventory";
 import StoreClosedNotice from "../features/orders/components/StoreClosedNotice";
-import { canCreateOrder } from "../context/settings/settingsHelpers";
+import { canCreateOrder } from "../features/settings/utils/openHours.js";
 import { useState } from "react";
 import OrderItemForm from "../features/orders/components/OrderItemForm/OrderItemForm";
 
 const MenuContainer = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 85.2rem) 32rem;
-  column-gap: 2.8rem;
-  row-gap: 1.6rem;
+  column-gap: var(--space-7);
+  row-gap: var(--space-4);
   width: 100%;
 
   @media (max-width: 50em) {
@@ -31,12 +31,14 @@ const MenuStickyWrapper = styled.div`
   position: sticky;
   top: 6.4rem;
   z-index: 1;
-  margin-top: -1.2rem;
+  margin-top: -var(--space-3);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 `;
 
 function Menu() {
+  const [selectedCategory, setSelectedCategory] = useState("全部");
   const [activeForm, setActiveForm] = useState(null);
   const { menusQuery, categories } = useGetMenus();
   const { data: menus = [] } = menusQuery;
@@ -70,7 +72,11 @@ function Menu() {
         >
           <MenuContainer>
             <MenuStickyWrapper>
-              <CategoryBar categories={categories} />
+              <CategoryBar
+                categories={["全部", ...categories]}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
               {!canPlaceOrder && (
                 <StoreClosedNotice>
                   目前為非營業時段，暫時無法建立新訂單。
@@ -80,7 +86,7 @@ function Menu() {
 
             <MenuDishGrid
               menus={menus}
-              categories={categories}
+              selectedCategory={selectedCategory}
               canPlaceOrder={canPlaceOrder}
               onCreateDish={openCreateForm}
             />

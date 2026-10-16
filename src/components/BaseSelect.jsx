@@ -14,25 +14,25 @@ const selectStyle = {
       ...base,
       height: "4.2rem",
       minHeight: "4.2rem",
-      borderRadius: "8px",
+      borderRadius: "var(--radius-lg)",
       borderColor: hasError
-        ? "#dc2626"
+        ? "var(--color-danger)"
         : state.isFocused
-          ? "#2684ff"
-          : "#d1d5db",
+          ? "var(--color-focus)"
+          : "var(--color-border-strong)",
 
       boxShadow:
         hasError && state.isFocused
-          ? "0 0 0 3px rgba(220,38,38,.15)"
+          ? "var(--shadow-focus-error)"
           : !hasError && state.isFocused
-            ? "0 0 0 3px rgba(38,132,255,.15)"
+            ? "var(--shadow-focus-control)"
             : "none",
 
       "&:hover": {
         borderColor: hasError
-          ? "#dc2626"
+          ? "var(--color-danger)"
           : state.isFocused
-            ? "#2684ff"
+            ? "var(--color-focus)"
             : "#bbb",
       },
     };
@@ -43,15 +43,15 @@ const selectStyle = {
   }),
   singleValue: (base) => ({
     ...base,
-    fontSize: "1.4rem",
-    fontWeight: "400",
+    fontSize: "var(--font-size-sm)",
+    fontWeight: "var(--font-weight-regular)",
     marginRight: 0,
   }),
   placeholder: (base) => ({
     ...base,
-    color: "#94a3b8",
-    fontSize: "1.4rem",
-    fontWeight: "400",
+    color: "var(--color-text-placeholder)",
+    fontSize: "var(--font-size-sm)",
+    fontWeight: "var(--font-weight-regular)",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -61,13 +61,13 @@ const selectStyle = {
     maxWidth: "100%",
     overflow: "hidden",
     margin: 0,
-    fontSize: "1.4rem",
-    fontWeight: "400",
+    fontSize: "var(--font-size-sm)",
+    fontWeight: "var(--font-weight-regular)",
   }),
   dropdownIndicator: (base) => ({
     ...base,
     marginRight: "4px",
-    padding: "0px 4px",
+    padding: "0 var(--space-1)",
     "& svg": {
       width: "1.6rem",
       height: "1.6rem",
@@ -75,7 +75,7 @@ const selectStyle = {
   }),
   clearIndicator: (base) => ({
     ...base,
-    padding: "0px 4px",
+    padding: "0 var(--space-1)",
     "& svg": {
       width: "1.6rem",
       height: "1.6rem",
@@ -83,8 +83,8 @@ const selectStyle = {
   }),
   option: (base) => ({
     ...base,
-    fontSize: "1.4rem",
-    fontWeight: "400",
+    fontSize: "var(--font-size-sm)",
+    fontWeight: "var(--font-weight-regular)",
   }),
   menuPortal: (base) => ({
     ...base,
@@ -136,6 +136,14 @@ function BaseSelect({ isCreatable = false, error, ...rest }) {
       onMenuOpen={() => setMenuOpen(true)}
       onMenuClose={() => setMenuOpen(false)}
       components={{ IndicatorSeparator: () => null }}
+      onKeyDown={(e) => {
+        if (!menuOpen) return;
+
+        // 避免選單操作觸發外層快捷鍵
+        if (e.key === "Escape" || e.key === "Enter") {
+          e.stopPropagation();
+        }
+      }}
       {...rest}
     />
   );

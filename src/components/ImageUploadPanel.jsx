@@ -1,12 +1,13 @@
 import styled, { css } from "styled-components";
 import { Trash2, Upload } from "lucide-react";
 import Button from "./button/Button";
-import { hoverStyles } from "../style/helpers";
+import { focusRingStyles, hoverStyles } from "../style/helpers";
+import VisuallyHiddenInput from "./VisuallyHiddenInput";
 
 const Container = styled.div`
   display: flex;
   align-items: center;
-  gap: 2.4rem;
+  gap: var(--space-6);
 
   @media (max-width: 25em) {
     flex-direction: column;
@@ -33,18 +34,18 @@ const Content = styled.div`
 `;
 
 const Description = styled.p`
-  color: #6b7280;
-  font-size: 1.4rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 
   strong {
-    color: #374151;
-    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-semibold);
   }
 `;
 
 const Actions = styled.div`
   display: flex;
-  gap: 1.2rem;
+  gap: var(--space-3);
 
   @media (max-width: 25em) {
     justify-content: center;
@@ -53,15 +54,21 @@ const Actions = styled.div`
 
 const UploadTrigger = styled.label`
   width: fit-content;
+  position: relative;
+  border-radius: 999px;
+
+  &:has(input:focus-visible) {
+    ${focusRingStyles}
+  }
 `;
 
 const RemoveButton = styled(Button)`
   width: 4rem;
   height: 4rem;
-  color: #dc2626;
+  color: var(--color-danger);
 
   ${hoverStyles(css`
-    background-color: #fef2f2;
+    background-color: var(--color-danger-subtle);
   `)}
 
   svg {
@@ -94,8 +101,7 @@ function ImageUploadPanel({
               {buttonText}
             </Button>
 
-            <input
-              hidden
+            <VisuallyHiddenInput
               type="file"
               accept="image/png,image/jpeg,image/webp"
               onChange={onChange}

@@ -2,26 +2,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { getPaginatedOrdersApi } from "../../../services/apiOrders";
-import { addDays } from "date-fns";
-import { parsePositiveInt } from "../../../utils/helpers";
+import { parsePositiveInt } from "../../../utils/numbers.js";
 import { useEffect } from "react";
-import { parseDateRange } from "../../../utils/filterHelpers";
-
-// 將日期篩選條件轉換成supabase時間欄位的要求格式
-function getCreatedTime(searchParams) {
-  const dateRange = parseDateRange(searchParams);
-
-  if (dateRange) {
-    const { from: fromDate, to: toDate } = dateRange;
-
-    return {
-      from: fromDate.toISOString(),
-      to: addDays(toDate, 1).toISOString(),
-    };
-  }
-
-  return null;
-}
+import { getCreatedAtRange } from "../../../features/orders/utils/orderFilters.js";
 
 function useGetPaginatedOrders() {
   const queryClient = useQueryClient();
@@ -38,7 +21,7 @@ function useGetPaginatedOrders() {
     fallback: searchParams.get("pickupNumber") !== null ? -1 : null,
   });
 
-  const createdAt = getCreatedTime(searchParams);
+  const createdAt = getCreatedAtRange(searchParams);
 
   const ordersQuery = useQuery({
     queryKey: ["orders", page, createdAt, pickupNumber],

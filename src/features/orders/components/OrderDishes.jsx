@@ -1,5 +1,5 @@
 // 訂單詳情頁面中的訂購餐點列表
-import { calculateOrderSummary } from "../../../utils/orderHelpers";
+import { calculateOrderSummary } from "../../../utils/orderData.js";
 import styled from "styled-components";
 import { useState } from "react";
 import Price from "../../../components/Price";
@@ -10,22 +10,22 @@ import OrderDishesTableRow from "./OrderDishesTableRow";
 import OrderItemForm from "./OrderItemForm/OrderItemForm";
 
 const StyledOrderDishes = styled.div`
-  padding-top: 1.6rem;
+  padding-top: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: var(--space-4);
 `;
 
 const Title = styled.h3`
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-size: 1.8rem;
 `;
 
 const OrderDishesTable = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   overflow: hidden;
 
   @media (max-width: 50em) {
@@ -40,11 +40,11 @@ const TableHeader = styled.div`
     ${({ $isEdit }) => ($isEdit ? "8rem" : "")};
   justify-items: center;
   align-items: center;
-  gap: 1.6rem;
-  padding: 1.2rem 2rem;
-  background-color: #f3f4f6;
-  font-size: 1.4rem;
-  font-weight: 500;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--color-surface-subtle);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 
   span:first-child {
     justify-self: start;
@@ -56,9 +56,9 @@ const MobileDishList = styled.ul`
 
   @media (max-width: 50em) {
     display: block;
-    padding: 0 1.6rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
   }
 `;
 
@@ -68,27 +68,27 @@ const Footer = styled.div`
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: var(--space-1);
 `;
 
 const Summary = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 1.4rem;
-  padding: 0.4rem 0.8rem;
+  gap: var(--space-3-5);
+  padding: var(--space-1) var(--space-2);
   margin-left: auto;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 `;
 
 const TotalLabel = styled.span`
-  color: #475569;
-  font-size: 1.4rem;
-  font-weight: 600;
+  color: var(--color-text-slate);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 `;
 
 const TotalAmount = styled(Price)`
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 `;
 
 function OrderDishes({ orderItems, isEdit, canModifyItems }) {
@@ -140,8 +140,15 @@ function OrderDishes({ orderItems, isEdit, canModifyItems }) {
           ))}
         </MobileDishList>
 
+        {isMiniMenuOpen && (
+          <MiniMenu
+            onCreateDish={openCreateForm}
+            onClose={() => setIsMiniMenuOpen(false)}
+          />
+        )}
+
         <Footer>
-          {isEdit && (
+          {isEdit && !isMiniMenuOpen && (
             <TextButton
               onClick={() => setIsMiniMenuOpen(true)}
               disabled={!canModifyItems}
@@ -157,20 +164,10 @@ function OrderDishes({ orderItems, isEdit, canModifyItems }) {
         </Footer>
       </StyledOrderDishes>
 
-      {isMiniMenuOpen && (
-        <MiniMenu
-          onCreateDish={openCreateForm}
-          onClose={() => setIsMiniMenuOpen(false)}
-        />
-      )}
-
       {activeForm && (
         <OrderItemForm
           orderDish={activeForm.dish}
-          onClose={() => {
-            if (activeForm.mode === "create") setIsMiniMenuOpen(true);
-            setActiveForm(null);
-          }}
+          onClose={() => setActiveForm(null)}
           isEdit={activeForm.mode === "edit"}
         />
       )}

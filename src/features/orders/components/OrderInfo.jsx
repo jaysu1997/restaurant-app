@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { formatPickupStr } from "../../../context/settings/settingsHelpers";
-import { formatDateTime } from "../../../utils/orderHelpers";
+import { formatDateTime, formatPickupStr } from "../../../utils/dateTime.js";
 import DiningMethodSegmented from "../../../components/DiningMethodSegmented";
 import DiningInfoField from "./DiningInfoField";
 import PaymentStatusField from "./PaymentStatusField";
@@ -10,9 +9,9 @@ import Label from "../../../components/Label";
 const StyledOrderInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 2.4rem;
+  gap: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-6);
   min-height: 20.8rem;
 
   @media (max-width: 35em) {
@@ -22,8 +21,8 @@ const StyledOrderInfo = styled.div`
 
 const InfoSection = styled.div`
   display: grid;
-  column-gap: 2.8rem;
-  row-gap: 0.6rem;
+  column-gap: var(--space-7);
+  row-gap: var(--space-1-5);
 `;
 
 const MetadataGrid = styled(InfoSection)`
@@ -49,13 +48,13 @@ const OrderDetailsGrid = styled(InfoSection)`
 const InfoItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
 `;
 
 const Value = styled.div`
   height: 4rem;
-  font-size: 1.6rem;
-  font-weight: 500;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
   overflow-wrap: anywhere;
 
   @media (max-width: 35em) {

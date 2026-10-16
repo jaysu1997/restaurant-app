@@ -6,7 +6,7 @@ import BrandName from "./BrandName";
 const StyledLogo = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-2-5);
 
   & > img {
     height: 4rem;
@@ -19,10 +19,10 @@ const StyledLogo = styled.div`
   }
 
   & > span {
-    font-size: 2.4rem;
+    font-size: var(--font-size-xl);
 
     @media (max-width: 80em) {
-      font-size: 2rem;
+      font-size: var(--font-size-lg);
     }
   }
 `;

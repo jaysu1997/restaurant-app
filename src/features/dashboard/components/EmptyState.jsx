@@ -8,8 +8,8 @@ const StyledEmptyState = styled.div`
   align-items: center;
   justify-content: center;
   height: 36rem;
-  padding: 2.4rem;
-  gap: 1.2rem;
+  padding: var(--space-6);
+  gap: var(--space-3);
 `;
 
 const EmptyIcon = styled.div`
@@ -18,9 +18,9 @@ const EmptyIcon = styled.div`
   justify-content: center;
   width: 4rem;
   height: 4rem;
-  color: #9ca3af;
-  background-color: #f9fafb;
-  border-radius: 8px;
+  color: var(--color-text-placeholder);
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
 
   svg {
     width: 2.4rem;
@@ -29,9 +29,9 @@ const EmptyIcon = styled.div`
 `;
 
 const EmptyTitle = styled.p`
-  color: #374151;
-  font-size: 1.4rem;
-  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 `;
 
 function EmptyState() {

@@ -8,7 +8,7 @@ import TopDishesChart from "./TopDishesChart";
 const StyledStatsCharts = styled.section`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2.8rem;
+  gap: var(--space-7);
 
   @media (max-width: 50em) {
     grid-template-columns: 1fr;

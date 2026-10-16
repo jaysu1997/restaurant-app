@@ -8,11 +8,11 @@ const StyledSegmented = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem;
+  gap: var(--space-1);
   background-color: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.4rem;
+  border: 1px solid var(--color-border-slate);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
   cursor: ${({ $isDisabled }) => ($isDisabled ? "not-allowed" : "pointer")};
 `;
 
@@ -20,13 +20,13 @@ const SegmentedButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  background-color: ${({ $isActive }) => ($isActive ? "#fff" : "transparent")};
-  color: ${({ $isActive }) => ($isActive ? "#1e293b" : "#64748b")};
+  font-size: var(--font-size-xs);
+  background-color: ${({ $isActive }) => ($isActive ? "var(--color-surface)" : "transparent")};
+  color: ${({ $isActive }) => ($isActive ? "var(--color-text-slate-strong)" : "var(--color-text-slate-muted)")};
   font-weight: ${({ $isActive }) => ($isActive ? "600" : "500")};
   border: 1px solid
     ${({ $isActive }) => ($isActive ? "#dce3ea" : "transparent")};
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   box-shadow: ${({ $isActive }) =>
     $isActive ? "0 1px 2px rgba(15, 23, 42, 0.06)" : "none"};
 
@@ -41,7 +41,7 @@ const SegmentedButton = styled.button`
   }
 
   ${hoverStyles(css`
-    color: #1e293b;
+    color: var(--color-text-slate-strong);
   `)}
 `;
 

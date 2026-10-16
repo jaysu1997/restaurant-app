@@ -1,7 +1,8 @@
 // ok
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import useClickOutside from "../../hooks/ui/useClickOutside";
+import useRestoreFocus from "../../hooks/ui/useRestoreFocus";
 
 const Wrapper = styled.div`
   position: relative;
@@ -13,11 +14,11 @@ const MenuContainer = styled.ul`
   top: calc(100% + 6px);
   right: 0;
   width: min(16rem, calc(100dvw - 2rem));
-  background-color: #fff;
+  background-color: var(--color-surface);
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e3e5e7;
-  border-radius: 6px;
-  padding: 0.8rem 0;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) 0;
   display: flex;
   flex-direction: column;
   z-index: 2;
@@ -27,6 +28,7 @@ const MenuContainer = styled.ul`
 function DropdownMenu({ trigger, onClose, isOpen, children }) {
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, isOpen, onClose);
+  useRestoreFocus(onClose, isOpen);
 
   return (
     <Wrapper ref={wrapperRef}>

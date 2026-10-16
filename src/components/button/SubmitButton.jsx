@@ -17,7 +17,7 @@ const ButtonContent = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   /* 隱藏span顯示載入中spinner */
   visibility: ${({ $processing }) => ($processing ? "hidden" : "visible")};
 `;

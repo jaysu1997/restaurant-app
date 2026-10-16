@@ -5,12 +5,12 @@ import Label from "./Label";
 const StyledFormField = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   min-width: 0px;
 `;
 
 const MetaText = styled.p`
-  padding-left: 0.8rem;
+  padding-left: var(--space-2);
   font-size: 1.3rem;
   min-height: 2rem;
   transition:
@@ -20,12 +20,12 @@ const MetaText = styled.p`
   ${({ $error }) =>
     $error
       ? css`
-          color: #dc2626;
-          font-weight: 500;
+          color: var(--color-danger);
+          font-weight: var(--font-weight-medium);
         `
       : css`
-          color: #9ca3af;
-          font-weight: 400;
+          color: var(--color-text-placeholder);
+          font-weight: var(--font-weight-regular);
         `}
 `;
 

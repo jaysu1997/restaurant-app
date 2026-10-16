@@ -2,20 +2,20 @@ import styled from "styled-components";
 import { MoveUp, MoveDown, Minus } from "lucide-react";
 
 const trend = {
-  up: "#16a34a",
-  down: "#dc2626",
-  equal: "#9ca3af",
+  up: "var(--color-success)",
+  down: "var(--color-danger)",
+  equal: "var(--color-text-placeholder)",
 };
 
 const Card = styled.article`
   min-width: 0;
-  padding: 2rem;
+  padding: var(--space-5);
   display: grid;
   grid-template-columns: 4rem minmax(0, 1fr);
-  column-gap: 1.2rem;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  column-gap: var(--space-3);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
 `;
 
 const IconWrapper = styled.div`
@@ -25,7 +25,7 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   background-color: ${({ $iconStyle }) => $iconStyle.background};
   color: ${({ $iconStyle }) => $iconStyle.color};
 
@@ -36,15 +36,15 @@ const IconWrapper = styled.div`
 `;
 
 const Title = styled.h3`
-  color: #4b5563;
+  color: var(--color-text-tertiary);
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 `;
 
 const Value = styled.div`
-  color: #111827;
-  font-size: 2.4rem;
-  font-weight: 600;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,10 +53,10 @@ const Value = styled.div`
 const Change = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: var(--space-1);
   color: ${({ $changeType }) => trend[$changeType]};
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 
   svg {
     width: 1.3rem;
@@ -67,9 +67,9 @@ const Change = styled.div`
 `;
 
 const Comparison = styled.span`
-  color: #9ca3af;
-  font-size: 1.2rem;
-  font-weight: 500;
+  color: var(--color-text-placeholder);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 `;
 
 function StatCard({ stat }) {

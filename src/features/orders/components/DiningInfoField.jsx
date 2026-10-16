@@ -1,17 +1,8 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { generatePickupTimeOptions } from "../../../context/settings/settingsHelpers";
+import { generatePickupTimeOptions } from "../../settings/utils/openHours.js";
 import useSettings from "../../../context/settings/useSettings";
 import FormSelectField from "../../../components/FormSelectField";
-
-function ensureOptionExists(options, option = null) {
-  if (!option) return options;
-
-  const exists = options.some((current) => current.value === option.value);
-
-  if (exists) return options;
-
-  return [option, ...options];
-}
+import { ensureOptionExists } from "../utils/diningInfo.js";
 
 function DiningInfoField({ disabled }) {
   const { todayOpenInfo, dineInTableOptions } = useSettings();

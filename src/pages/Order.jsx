@@ -10,23 +10,23 @@ import OrderContent from "../features/orders/components/OrderContent";
 import OrderEditPage from "../features/orders/components/OrderEditPage";
 import { hoverStyles } from "../style/helpers";
 import { OrderProvider } from "../context/orders/OrderContext";
-import { canCreateOrder } from "../context/settings/settingsHelpers";
+import { canCreateOrder } from "../features/settings/utils/openHours.js";
 
 const OrderContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-2-5);
 `;
 
 const BackButton = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   width: fit-content;
-  border-radius: 8px;
-  color: #64748b;
-  font-size: 1.4rem;
-  font-weight: 500;
+  border-radius: var(--radius-lg);
+  color: var(--color-text-slate-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   transition: color 0.2s ease;
 
   svg {
@@ -35,15 +35,8 @@ const BackButton = styled.button`
   }
 
   ${hoverStyles(css`
-    color: #2563eb;
+    color: var(--color-brand);
   `)}
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2.8rem;
-  width: 100%;
 `;
 
 function Order() {
@@ -67,21 +60,19 @@ function Order() {
               返回
             </BackButton>
 
-            <Content>
-              {isEditPage ? (
-                <OrderEditPage
-                  orderData={orderQuery.data}
-                  canModifyItems={canModifyItems}
-                />
-              ) : (
-                <OrderContent
-                  orderData={orderQuery.data}
-                  orderItems={orderQuery.data?.items}
-                  canModifyItems={canModifyItems}
-                  isEdit={false}
-                />
-              )}
-            </Content>
+            {isEditPage ? (
+              <OrderEditPage
+                orderData={orderQuery.data}
+                canModifyItems={canModifyItems}
+              />
+            ) : (
+              <OrderContent
+                orderData={orderQuery.data}
+                orderItems={orderQuery.data?.items}
+                canModifyItems={canModifyItems}
+                isEdit={false}
+              />
+            )}
           </OrderContainer>
         </QueryStatusFallback>
       </PageContainer>

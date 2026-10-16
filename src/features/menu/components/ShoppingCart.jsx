@@ -12,10 +12,12 @@ import useOrderDraft from "../../../context/orders/useOrderDraft";
 import {
   buildOrderData,
   calculateOrderSummary,
-} from "../../../utils/orderHelpers";
+} from "../../../utils/orderData.js";
 import CartOrderInfo from "./CartOrderInfo";
 import CartHeader from "./CartHeader";
 import CartFooter from "./CartFooter";
+import useFocusTrap from "../../../hooks/ui/useFocusTrap.js";
+import useRestoreFocus from "../../../hooks/ui/useRestoreFocus.js";
 
 const CartContainer = styled.aside`
   position: fixed;
@@ -26,9 +28,9 @@ const CartContainer = styled.aside`
   height: min(64.8rem, calc(100dvh - 18rem));
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   overflow: hidden;
 
   box-shadow:
@@ -52,12 +54,12 @@ const CartContainer = styled.aside`
 
 const CartBody = styled.div`
   flex: 1;
-  padding: 0 2rem;
+  padding: 0 var(--space-5);
   overflow-y: auto;
 `;
 
 const CartItemList = styled.ul`
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-border);
 `;
 
 function ShoppingCart({ canPlaceOrder, onEditDish }) {
@@ -67,6 +69,9 @@ function ShoppingCart({ canPlaceOrder, onEditDish }) {
   const isMatched = useMediaQuery(50, onClose);
   // 自動鎖定 scrollbar
   useScrollLock(isMatched && isCartOpen);
+
+  useRestoreFocus(onClose, isCartOpen);
+  const containerRef = useFocusTrap(isMatched && isCartOpen);
 
   const {
     state: { items },
@@ -107,7 +112,11 @@ function ShoppingCart({ canPlaceOrder, onEditDish }) {
 
   return (
     <FormProvider {...methods}>
-      <CartContainer $isCartOpen={isCartOpen} aria-label="購物車">
+      <CartContainer
+        ref={containerRef}
+        $isCartOpen={isCartOpen}
+        aria-label="購物車"
+      >
         <CartHeader onClose={onClose} />
 
         {!hasItems ? (

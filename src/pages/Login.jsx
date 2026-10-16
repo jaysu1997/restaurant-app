@@ -7,7 +7,7 @@ import useLogin from "../hooks/data/auth/useLogin";
 import useUser from "../hooks/data/auth/useUser";
 import FormPasswordField from "../components/FormPasswordField";
 import FormInputField from "../components/FormInputField";
-import { isValidEmail } from "../utils/validation";
+import { isValidEmail } from "../utils/validation.js";
 import SubmitButton from "../components/button/SubmitButton";
 import BrandImage from "../components/BrandImage";
 
@@ -17,7 +17,7 @@ const PageLayout = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1.6rem;
+  padding: var(--space-10) var(--space-4);
 
   @media (max-width: 30em) {
     padding: 0;
@@ -28,21 +28,19 @@ const StyledLogin = styled.div`
   display: flex;
   flex-direction: column;
   width: min(42rem, 100%);
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  padding: 4.8rem;
-  font-size: 1.4rem;
-  font-weight: 500;
-  box-shadow:
-    0 20px 48px rgba(15, 23, 42, 0.08),
-    0 4px 12px rgba(15, 23, 42, 0.04);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-11);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-lg), var(--shadow-md);
 
   @media (max-width: 30em) {
     box-shadow: none;
     border: none;
     background-color: transparent;
-    padding: 4.8rem 2.8rem;
+    padding: var(--space-11) var(--space-7);
   }
 `;
 
@@ -50,7 +48,7 @@ const Header = styled.header`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
+  gap: var(--space-2);
 
   & > img {
     width: 8rem;
@@ -63,29 +61,29 @@ const Header = styled.header`
 `;
 
 const Heading = styled.h1`
-  color: #111827;
+  color: var(--color-text-strong);
   font-size: 2.8rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 
   @media (max-width: 30em) {
-    font-size: 2.4rem;
+    font-size: var(--font-size-xl);
   }
 `;
 
 const ErrorContainer = styled.div`
-  padding: 1.6rem 0 2.4rem;
+  padding: var(--space-4) 0 var(--space-6);
 `;
 
 const ErrorMessage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 1.2rem 1.4rem;
+  gap: var(--space-2-5);
+  padding: var(--space-3) var(--space-3-5);
   border-radius: 1.2rem;
-  border: 1px solid #fecaca;
-  background-color: #fef2f2;
-  color: #b91c1c;
+  border: 1px solid var(--color-danger-border);
+  background-color: var(--color-danger-subtle);
+  color: var(--color-danger-text);
 `;
 
 const ErrorIcon = styled.div`
@@ -96,24 +94,24 @@ const ErrorIcon = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #dc2626;
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: 700;
+  background-color: var(--color-danger);
+  color: var(--color-surface);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
 `;
 
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
+  gap: var(--space-4);
 `;
 
 const LoginButton = styled(SubmitButton)`
   height: 5rem;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   font-size: 1.5rem;
-  font-weight: 600;
-  margin-top: 2rem;
+  font-weight: var(--font-weight-semibold);
+  margin-top: var(--space-5);
 `;
 
 // 登入頁面UI元件

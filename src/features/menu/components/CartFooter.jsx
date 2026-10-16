@@ -5,9 +5,9 @@ import SubmitButton from "../../../components/button/SubmitButton";
 const Footer = styled.footer`
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  padding: 1.6rem 2rem;
-  border-top: 1px solid #e5e7eb;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border);
   box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.025);
 `;
 
@@ -15,23 +15,23 @@ const CartTotalRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.2rem;
+  gap: var(--space-3);
 `;
 
 const CartTotalLabel = styled.span`
-  color: #475569;
-  font-size: 1.4rem;
-  font-weight: 600;
+  color: var(--color-text-slate);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 `;
 
 const CartTotalAmount = styled(Price)`
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 `;
 
 const SubmitOrderButton = styled(SubmitButton)`
   height: 5.2rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 
   &:not(:disabled):active {
     transform: translateY(1px);

@@ -14,37 +14,16 @@ import useDeleteInventory from "../hooks/data/inventory/useDeleteInventory";
 import ConfirmDelete from "../components/ConfirmDelete";
 import MenuForm from "../features/menu-manage/components/MenuForm";
 import HeaderActionButton from "../components/button/HeaderActionButton";
-import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers";
+import { hasActiveFilters, parseFilterQuery } from "../utils/queryFilters.js";
 import DataDisplayCard from "../components/DataDisplayCard";
+import { filterInventoryData } from "../features/inventory/utils/inventoryFilters.js";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: 2.8rem;
+  gap: var(--space-7);
 `;
-
-function filterData(inventoryData, filterState) {
-  let displayData = inventoryData;
-
-  const nameSearchParams = filterState.name.value;
-  const quantitySearchParams = filterState.quantity.value;
-
-  if (nameSearchParams) {
-    displayData = inventoryData.filter((inventory) =>
-      inventory.name.includes(nameSearchParams),
-    );
-  }
-
-  if (quantitySearchParams) {
-    displayData = displayData.filter(
-      (inventory) =>
-        inventory.remainingQuantity <= Number(quantitySearchParams),
-    );
-  }
-
-  return displayData;
-}
 
 function Inventory() {
   const [modal, setModal] = useState({
@@ -80,7 +59,7 @@ function Inventory() {
   const filterState = parseFilterQuery(searchParams, filtersConfig);
 
   // 要展示的數據
-  const displayInventoryData = filterData(inventory, filterState);
+  const displayInventoryData = filterInventoryData(inventory, filterState);
 
   const hasAppliedFilters = hasActiveFilters(filterState);
 
@@ -147,8 +126,9 @@ function Inventory() {
         <InventoryForm inventory={modal.inventory} onClose={onClose} />
       )}
 
-      {modal.type === "confirmDelete" && (
+      {(modal.type === "confirmDelete" || modal.type === "menuForm") && (
         <ConfirmDelete
+          isSuspended={modal.type === "menuForm"}
           onClose={onClose}
           deleteMutation={deleteMutation}
           data={modal.inventory}

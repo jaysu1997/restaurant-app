@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import styled from "styled-components";
+import VisuallyHiddenInput from "../../components/VisuallyHiddenInput";
 
 const StyledSlider = styled.div`
   flex: 1;
@@ -27,14 +28,14 @@ const FilledTrack = styled.span`
   transform: translateY(-50%);
   height: 0.5rem;
   border-radius: 3px;
-  background-color: #2563eb;
+  background-color: var(--color-brand);
   z-index: 1;
   width: var(--percent);
 `;
 
 const Thumb = styled.span`
-  border: 2px solid #2563eb;
-  background: #fff;
+  border: 2px solid var(--color-brand);
+  background: var(--color-surface);
   position: absolute;
   top: 50%;
   left: calc(var(--percent) - 1rem);
@@ -51,6 +52,10 @@ const Thumb = styled.span`
     &:active {
       box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.15);
     }
+  }
+
+  &:has(input:focus-visible) {
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.15);
   }
 `;
 
@@ -111,7 +116,21 @@ function Slider({ min = 1, max = 3, zoom, setZoom }) {
     >
       <Track />
       <FilledTrack />
-      <Thumb />
+      <Thumb>
+        <VisuallyHiddenInput
+          type="range"
+          min={min}
+          max={max}
+          step="any"
+          value={zoom}
+          aria-label="圖片縮放"
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={zoom}
+          aria-valuetext={`${Number(zoom).toFixed(2)} 倍`}
+          onChange={(e) => setZoom(Number(e.target.value))}
+        />
+      </Thumb>
     </StyledSlider>
   );
 }

@@ -1,17 +1,19 @@
 import styled from "styled-components";
 import { useController, useFormContext } from "react-hook-form";
 import { Check, X } from "lucide-react";
+import VisuallyHiddenInput from "./VisuallyHiddenInput";
+import { focusRingStyles } from "../style/helpers";
 
 const StyledSwitch = styled.label`
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: var(--space-1);
   cursor: pointer;
   width: fit-content;
 
   span {
-    font-size: 1.4rem;
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     color: rgba(0, 0, 0, 0.6);
     user-select: none;
   }
@@ -23,10 +25,15 @@ const SwitchContainer = styled.div`
   align-items: center;
   width: 5rem;
   height: 2.6rem;
-  background: ${(props) => (props.$checked ? "#007bff" : "#ccc")};
-  border-radius: 999px;
+  background: ${(props) =>
+    props.$checked ? "var(--color-control-active)" : "#ccc"};
+  border-radius: var(--radius-full);
   position: relative;
   transition: background 0.3s ease-in-out;
+
+  &:has(input:focus-visible) {
+    ${focusRingStyles}
+  }
 `;
 
 // 滑動圓圈
@@ -64,9 +71,8 @@ function ControlledSwitch({ options, handleChange }) {
   return (
     <StyledSwitch>
       <SwitchContainer $checked={checked}>
-        <input
+        <VisuallyHiddenInput
           type="checkbox"
-          hidden
           checked={checked}
           onChange={(e) => {
             const nextValue = e.target.checked
@@ -80,8 +86,13 @@ function ControlledSwitch({ options, handleChange }) {
             }
           }}
         />
+
         <SwitchHandle $checked={checked}>
-          {checked ? <Check color="#007bff" /> : <X color="#ccc" />}
+          {checked ? (
+            <Check color="var(--color-control-active)" />
+          ) : (
+            <X color="#ccc" />
+          )}
         </SwitchHandle>
       </SwitchContainer>
 

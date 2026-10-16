@@ -3,7 +3,7 @@ import styled from "styled-components";
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3.2rem;
+  gap: var(--space-8);
   width: 100%;
   max-width: ${({ $maxWidth }) => $maxWidth || "100%"};
 `;

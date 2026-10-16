@@ -2,10 +2,8 @@
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import ConfirmDelete from "../../../components/ConfirmDelete";
-import {
-  formatDateTime,
-  formatPickupNumber,
-} from "../../../utils/orderHelpers";
+import { formatDateTime } from "../../../utils/dateTime.js";
+import { formatPickupNumber } from "../../../utils/orderFormatting.js";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
 import DropdownMenu from "../../../components/DropdownMenu/DropdownMenu";
 import { Ellipsis, Trash2, SquarePen, Eye } from "lucide-react";
@@ -16,11 +14,11 @@ const ToggleButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   height: 3rem;
   width: 3rem;
   background-color: ${({ $isActive }) =>
-    $isActive ? "#e5e7eb" : "transparent"};
+    $isActive ? "var(--color-border)" : "transparent"};
 
   svg {
     width: 2rem;
@@ -28,7 +26,7 @@ const ToggleButton = styled.button`
   }
 
   ${hoverStyles(css`
-    background-color: #e5e7eb;
+    background-color: var(--color-border);
   `)}
 `;
 

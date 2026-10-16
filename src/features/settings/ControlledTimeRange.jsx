@@ -8,40 +8,27 @@ import styled from "styled-components";
 import { Trash2, Plus, Minus } from "lucide-react";
 import IconButton from "../../components/button/IconButton";
 import BaseSelect from "../../components/BaseSelect";
+import { generateTimeOptions } from "./utils/timeOptions.js";
 
 const StyledTimeRange = styled.ul`
   display: flex;
   flex-direction: column;
   /* row-gap: 0.3rem; */
-  row-gap: 1rem;
+  row-gap: var(--space-2-5);
 
   li {
     display: grid;
     grid-template-columns: minmax(7.8rem, 1fr) 1.4rem minmax(7.8rem, 1fr) 2rem;
     /* grid-template-rows: 3.8rem; */
     align-items: center;
-    column-gap: 0.6rem;
+    column-gap: var(--space-1-5);
   }
 `;
 
-// 一天的時段(每5分鐘一個選項)
-function generateTimeOptions() {
-  const options = [];
-
-  for (let time = 0; time <= 1440; time += 5) {
-    const hour = Math.floor(time / 60);
-    const minute = time % 60;
-
-    const label = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-
-    options.push({
-      value: time,
-      label,
-    });
-  }
-
-  return options;
-}
+const StyledMinusIcon = styled(Minus)`
+  width: 1.4rem;
+  height: 1.4rem;
+`;
 
 const times = generateTimeOptions();
 
@@ -78,7 +65,7 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
             )}
           />
 
-          <Minus className="icon-sm" />
+          <StyledMinusIcon />
 
           <Controller
             control={control}

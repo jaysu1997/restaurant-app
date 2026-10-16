@@ -1,32 +1,40 @@
 // ok
 import styled, { css } from "styled-components";
 import { Check, Square } from "lucide-react";
-import { hoverStyles } from "../../../../style/helpers";
+import { focusRingStyles, hoverStyles } from "../../../../style/helpers";
+import VisuallyHiddenInput from "../../../../components/VisuallyHiddenInput";
 
 const OptionRow = styled.label`
+  position: relative;
   display: grid;
   grid-template-columns: 2rem 1fr auto;
   align-items: center;
-  gap: 1.6rem;
-  padding: 1.2rem 0.6rem;
-  border-radius: 12px;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-1-5);
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   user-select: none;
   transition: background-color 0.18s ease;
 
   ${hoverStyles(css`
-    background-color: #f3f4f6;
+    background-color: var(--color-surface-subtle);
   `)}
+
+  &:has(input:focus-visible) {
+    ${focusRingStyles}
+  }
 `;
 
 const Checkbox = styled.div`
   position: relative;
 
   svg:first-of-type {
-    color: ${({ $checked }) => ($checked ? "#007bff" : "currentColor")};
-    fill: ${({ $checked }) => ($checked ? "#007bff" : "transparent")};
+    color: ${({ $checked }) =>
+      $checked ? "var(--color-control-active)" : "currentColor"};
+    fill: ${({ $checked }) =>
+      $checked ? "var(--color-control-active)" : "transparent"};
     width: 2rem;
     height: 2rem;
   }
@@ -35,7 +43,7 @@ const Checkbox = styled.div`
     position: absolute;
     top: 0.2rem;
     left: 0.2rem;
-    color: #fff;
+    color: var(--color-surface);
     opacity: ${({ $checked }) => ($checked ? "1" : "0")};
     width: 1.6rem;
     height: 1.6rem;
@@ -49,14 +57,14 @@ const Checkbox = styled.div`
 `;
 
 const OptionName = styled.span`
-  color: #111827;
+  color: var(--color-text-strong);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
 const OptionPrice = styled.span`
-  color: #374151;
+  color: var(--color-text-secondary);
 `;
 
 function Option({ optionData, onToggle, selectedOptions }) {
@@ -69,13 +77,18 @@ function Option({ optionData, onToggle, selectedOptions }) {
 
   return (
     <OptionRow htmlFor={optionId} $checked={isChecked}>
-      <input
+      <VisuallyHiddenInput
         type="checkbox"
-        hidden
         id={optionId}
         // 避免數據尚未處理完成時isChecked = undefined報出受控元件error，所以設false為默認值
         checked={isChecked ?? false}
         onChange={(e) => onToggle(e)}
+        onKeyDown={(e) => {
+          // checkbox input不應該被enter觸發form提交
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
       />
 
       <Checkbox $checked={isChecked}>

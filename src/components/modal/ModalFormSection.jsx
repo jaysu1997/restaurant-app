@@ -4,10 +4,10 @@ import RequiredMark from "../RequiredMark";
 const Section = styled.section`
   display: grid;
   grid-template-columns: ${({ $columns }) => `repeat(${$columns}, 1fr)`};
-  column-gap: 2.4rem;
-  row-gap: 1.6rem;
+  column-gap: var(--space-6);
+  row-gap: var(--space-4);
 
-  @media (max-width: 35em) {
+  @media (max-width: 30em) {
     grid-template-columns: 1fr;
   }
 `;
@@ -15,24 +15,24 @@ const Section = styled.section`
 const Header = styled.div`
   grid-column: 1 / -1;
   display: flex;
-  gap: 0.4rem;
-  font-size: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  gap: var(--space-1);
+  font-size: var(--font-size-lg);
+  padding-bottom: var(--space-2-5);
+  border-bottom: 1px solid var(--color-border);
 `;
 
 const Title = styled.h3`
-  font-size: 2rem;
-  color: #111827;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-strong);
 `;
 
 const Description = styled.p`
   grid-column: 1 / -1;
-  padding: 1.2rem 1.4rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  padding: var(--space-3) var(--space-3-5);
+  border: 1px solid var(--color-border-slate);
+  border-radius: var(--radius-md);
   background-color: #f8fafc;
-  color: #475569;
+  color: var(--color-text-slate);
   font-size: 1.3rem;
 `;
 

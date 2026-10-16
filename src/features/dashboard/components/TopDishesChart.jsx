@@ -9,7 +9,7 @@ import DishImage from "../../../components/DishImage";
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 2.4rem;
+  padding: 0 var(--space-6);
   height: 36rem;
 `;
 
@@ -23,11 +23,11 @@ const Item = styled.li`
   display: grid;
   grid-template-columns: 2rem 4rem minmax(0, 1fr) 5.2rem 4.4rem;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
   height: 7.2rem;
-  padding: 0.8rem 0;
-  font-size: 1.4rem;
-  border-bottom: 1px solid #f3f4f6;
+  padding: var(--space-2) 0;
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--color-surface-subtle);
 
   &:nth-child(n + 5):last-child {
     border-bottom: none;
@@ -38,8 +38,8 @@ const RankNumber = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #374151;
-  font-weight: 700;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-bold);
 `;
 
 const ImageWrapper = styled.div`
@@ -50,12 +50,12 @@ const ImageWrapper = styled.div`
 const Info = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--space-1);
 `;
 
 const Name = styled.span`
-  color: #111827;
-  font-weight: 600;
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-semibold);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -64,8 +64,8 @@ const Name = styled.span`
 const Progress = styled.div`
   width: 100%;
   height: 0.6rem;
-  background-color: #f3f4f6;
-  border-radius: 999px;
+  background-color: var(--color-surface-subtle);
+  border-radius: var(--radius-full);
   overflow: hidden;
 `;
 
@@ -73,20 +73,20 @@ const ProgressValue = styled.div`
   width: ${({ $percentage = 0 }) =>
     `${Math.min(Math.max($percentage, 0), 100)}%`};
   height: 100%;
-  background-color: #111827;
-  border-radius: 999px;
+  background-color: var(--color-text-strong);
+  border-radius: var(--radius-full);
 `;
 
 const Quantity = styled.span`
   text-align: center;
-  color: #111827;
-  font-weight: 700;
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-bold);
 `;
 
 const SalesShare = styled.span`
   text-align: center;
-  color: #374151;
-  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
 `;
 
 // 今日熱銷餐點圖表

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const StyledBrandName = styled.span`
-  color: #111827;
-  font-weight: 700;
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-bold);
 `;
 
 function BrandName() {

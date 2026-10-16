@@ -10,8 +10,8 @@ const StyledEmptyCart = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  padding: 2rem 0;
+  gap: var(--space-5);
+  padding: var(--space-5) 0;
 `;
 
 const EmptyCartIcon = styled.div`
@@ -31,8 +31,8 @@ const EmptyCartIcon = styled.div`
 
 const EmptyCartTitle = styled.h3`
   color: #334155;
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 `;
 
 function EmptyCart() {

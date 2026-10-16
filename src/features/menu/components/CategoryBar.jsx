@@ -2,22 +2,23 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import ScrollNavButton from "./ScrollNavButton";
-import CategoryChipButton from "./CategoryChipButton";
+import Button from "../../../components/button/Button";
 
 const StyledCategoryBar = styled.div`
   position: relative;
   width: 100%;
   min-width: 0;
-  background-color: #f9fafb;
-  padding: 1.2rem 0;
+  background-color: var(--color-background);
 `;
 
 const CategoryTrack = styled.div`
   display: flex;
   align-items: center;
+  gap: var(--space-3);
   width: 100%;
+  min-width: 0;
   height: 100%;
-  gap: 1.2rem;
+  padding: var(--space-3) var(--space-1);
   overflow-x: auto;
   scrollbar-width: none;
 
@@ -30,7 +31,23 @@ const CategoryTrack = styled.div`
   }
 `;
 
-function CategoryBar({ categories = [] }) {
+const CategoryChipButton = styled(Button)`
+  padding: 0 var(--space-6);
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  @media (pointer: coarse) {
+    scroll-snap-align: start;
+  }
+`;
+
+function CategoryBar({
+  selectedCategory,
+  setSelectedCategory,
+  categories = [],
+}) {
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -128,14 +145,11 @@ function CategoryBar({ categories = [] }) {
   return (
     <StyledCategoryBar aria-label="餐點分類" aria-orientation="horizontal">
       <CategoryTrack ref={scrollRef}>
-        <CategoryChipButton category="all" categories={categories}>
-          全部
-        </CategoryChipButton>
-
         {categories.map((category) => (
           <CategoryChipButton
-            category={category}
-            categories={categories}
+            $variant={selectedCategory === category ? "primary" : "outline"}
+            onClick={() => setSelectedCategory(category)}
+            aria-pressed={selectedCategory === category}
             key={category}
           >
             {category}
@@ -144,6 +158,7 @@ function CategoryBar({ categories = [] }) {
       </CategoryTrack>
 
       <ScrollNavButton
+        ref={scrollNavButtonRef}
         direction="left"
         visible={canScrollPrev}
         handleScroll={handleScroll}

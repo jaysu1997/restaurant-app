@@ -17,19 +17,19 @@ const UserButton = styled.button`
   height: 5.6rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  gap: var(--space-2-5);
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-md);
   font-size: 1.3rem;
   border: 1px solid transparent;
 
   ${hoverStyles(css`
-    background: #f9fafb;
-    border-color: #e5e7eb;
+    background: var(--color-background);
+    border-color: var(--color-border);
   `)}
 
   @media (max-width: 50em) {
-    padding: 0.6rem;
+    padding: var(--space-1-5);
   }
 `;
 
@@ -48,7 +48,7 @@ const UserName = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 `;
 
 const UserRole = styled.span`
@@ -58,7 +58,7 @@ const UserRole = styled.span`
 const ArrowIcon = styled(ChevronDown)`
   width: 2rem;
   height: 2rem;
-  color: #374151;
+  color: var(--color-text-secondary);
   transform: ${({ $isOpen }) => `rotate(${$isOpen ? "180deg" : "0"})`};
   transition: transform 0.2s ease;
 

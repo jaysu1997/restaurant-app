@@ -1,21 +1,23 @@
 import { FormProvider, useForm } from "react-hook-form";
-import FormInputField from "../../components/FormInputField";
-import useCreateStaff from "../../hooks/data/staff/useCreateStaff";
-import FormPasswordField from "../../components/FormPasswordField";
-import { trimString, validatePhoneNumber } from "../../utils/helpers";
-import FormSelectField from "../../components/FormSelectField";
-import { isValidEmail } from "../../utils/validation";
-import {
-  ModalContainer,
+import FormInputField from "../../../components/FormInputField";
+import useCreateStaff from "../../../hooks/data/staff/useCreateStaff";
+import FormPasswordField from "../../../components/FormPasswordField";
+import { trimString } from "../../../utils/text.js";
+import { validatePhoneNumber } from "../../../utils/validation.js";
+import FormSelectField from "../../../components/FormSelectField";
+import { isValidEmail } from "../../../utils/validation.js";
+import Modal, {
   ModalContent,
   ModalFooter,
-} from "../../components/modal/Modal";
-import ModalFormSection from "../../components/modal/ModalFormSection";
-import showToast from "../../utils/showToast";
-import SubmitButton from "../../components/button/SubmitButton";
+} from "../../../components/modal/Modal";
+import ModalFormSection from "../../../components/modal/ModalFormSection";
+import showToast from "../../../utils/showToast";
+import SubmitButton from "../../../components/button/SubmitButton";
+import useRestoreFocus from "../../../hooks/ui/useRestoreFocus.js";
 
 function Signup({ onClose }) {
   const { createStaff, isCreatingStaff } = useCreateStaff();
+  const handleCloseModal = useRestoreFocus(onClose);
 
   const methods = useForm({
     defaultValues: { role: null },
@@ -35,7 +37,7 @@ function Signup({ onClose }) {
       {
         onSuccess: () => {
           reset();
-          onClose();
+          handleCloseModal();
         },
         onError: (error) => {
           if (error.code === "EMAIL_EXISTS") {
@@ -59,9 +61,14 @@ function Signup({ onClose }) {
 
   return (
     <FormProvider {...methods}>
-      <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Modal
+        title="建立員工帳號"
+        onClose={handleCloseModal}
+        maxWidth={52}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <ModalContent>
-          <ModalFormSection columns={1} title="登入資訊">
+          <ModalFormSection columns={2} title="登入資訊">
             <FormInputField
               label="電子信箱"
               name="email"
@@ -84,7 +91,7 @@ function Signup({ onClose }) {
             />
           </ModalFormSection>
 
-          <ModalFormSection columns={1} title="員工資料">
+          <ModalFormSection columns={2} title="員工資料">
             <FormInputField
               label="用戶名稱"
               name="name"
@@ -131,7 +138,7 @@ function Signup({ onClose }) {
             註冊
           </SubmitButton>
         </ModalFooter>
-      </ModalContainer>
+      </Modal>
     </FormProvider>
   );
 }

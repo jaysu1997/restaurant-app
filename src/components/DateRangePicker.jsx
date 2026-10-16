@@ -1,62 +1,74 @@
 // 日期範圍選擇元件
 import styled, { css } from "styled-components";
-import { format } from "date-fns";
 import { useRef, useState } from "react";
 import RangeCalendar from "../components/RangeCalendar";
 import { CalendarRange } from "lucide-react";
 import useClickOutside from "../hooks/ui/useClickOutside";
 import { hoverStyles } from "../style/helpers";
+import { formatRangeDate } from "../utils/dateTime.js";
+import useRestoreFocus from "../hooks/ui/useRestoreFocus.js";
 
 const StyledDateRangePicker = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
 `;
 
-const DateField = styled.div`
+const DateField = styled.button`
   height: 4.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.8rem;
-  padding: 0.2rem 0.8rem;
+  gap: var(--space-2);
+  padding: var(--space-0-5) var(--space-2);
   width: 100%;
-  border-radius: 8px;
-  background-color: #fff;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
   cursor: pointer;
+  white-space: nowrap;
 
   border: 1px solid
-    ${({ $isPickerOpen }) => ($isPickerOpen ? "#2684ff" : "#d1d5db")};
+    ${({ $isPickerOpen }) =>
+      $isPickerOpen ? "var(--color-focus)" : "var(--color-border-strong)"};
   box-shadow: ${({ $isPickerOpen }) =>
-    $isPickerOpen ? "0 0 0 3px rgba(38, 132, 255, 0.15)" : "none"};
-
-  input {
-    font-size: 1.4rem;
-    width: 100%;
-    cursor: pointer;
-  }
+    $isPickerOpen ? "var(--shadow-focus-control)" : "none"};
 
   svg {
-    color: #3b82f6;
+    color: var(--color-info);
     width: 2rem;
     height: 2rem;
   }
 
   ${hoverStyles(css`
-    border-color: ${({ $isPickerOpen }) =>
-      $isPickerOpen ? "#2684ff" : "#b3b3b3"};
+    &:not(:focus) {
+      border-color: ${({ $isPickerOpen }) =>
+        $isPickerOpen ? "var(--color-focus)" : "var(--color-border-hover)"};
+    }
   `)}
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-focus);
+    box-shadow: var(--shadow-focus-control);
+  }
+`;
+
+const Placeholder = styled.span`
+  color: var(--color-text-placeholder);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-sm);
 `;
 
 const Panel = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-2-5);
   background-color: #fafafa;
-  border-radius: 8px;
-  padding: ${({ $popover }) => ($popover ? "1.6rem" : "1rem 0")};
+  border-radius: var(--radius-lg);
+  padding: ${({ $popover }) =>
+    $popover ? "var(--space-4)" : "var(--space-2-5) 0"};
 
   ${({ $popover }) =>
     $popover &&
@@ -65,7 +77,7 @@ const Panel = styled.div`
       top: 4.5rem;
       z-index: 10;
       box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-      border: 1px solid #e3e5e7;
+      border: 1px solid var(--color-border-subtle);
     `}
 `;
 
@@ -76,19 +88,12 @@ const Footer = styled.footer`
 
 const ActionButton = styled.button`
   display: flex;
-  padding: 0.5rem 1.2rem;
-  color: #1d4ed8;
+  padding: 0.5rem var(--space-3);
+  color: var(--color-brand-hover);
   background-color: transparent;
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 `;
-
-function formatRangeDate(selectedDate) {
-  return `${format(selectedDate.from, "yyyy/MM/dd")} ~ ${format(
-    selectedDate.to,
-    "yyyy/MM/dd",
-  )}`;
-}
 
 function DateRangePicker({ display = "inline", onClear, ...rest }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -98,7 +103,8 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
   const onClose = () => setIsPickerOpen(false);
   const isPopover = display === "popover";
 
-  useClickOutside(wrapperRef, isPickerOpen && isPopover, onClose);
+  const handleCloseModal = useRestoreFocus(onClose, isPopover && isPickerOpen);
+  useClickOutside(wrapperRef, isPickerOpen && isPopover, handleCloseModal);
 
   function handleClick() {
     if (!isPickerOpen) {
@@ -111,13 +117,16 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
 
   return (
     <StyledDateRangePicker ref={wrapperRef}>
-      <DateField $isPickerOpen={isPickerOpen} onClick={handleClick}>
-        <input
-          name="dateRange"
-          value={rest.selected ? formatRangeDate(rest.selected) : ""}
-          placeholder="選擇日期範圍"
-          readOnly
-        />
+      <DateField
+        type="button"
+        $isPickerOpen={isPickerOpen}
+        onClick={handleClick}
+      >
+        {rest.selected ? (
+          formatRangeDate(rest.selected)
+        ) : (
+          <Placeholder>選擇日期範圍</Placeholder>
+        )}
         <CalendarRange />
       </DateField>
 
@@ -138,7 +147,7 @@ function DateRangePicker({ display = "inline", onClear, ...rest }) {
                 清除
               </ActionButton>
 
-              <ActionButton type="button" onClick={onClose}>
+              <ActionButton type="button" onClick={handleCloseModal}>
                 確認
               </ActionButton>
             </Footer>

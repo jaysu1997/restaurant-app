@@ -4,23 +4,24 @@ import ButtonSpinner from "../components/ButtonSpinner";
 import Button from "./button/Button";
 import { useState } from "react";
 import { ModalContent } from "./modal/Modal";
+import useRestoreFocus from "../hooks/ui/useRestoreFocus";
 
 const Main = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  font-size: 1.6rem;
+  gap: var(--space-1-5);
+  font-size: var(--font-size-base);
 
   strong {
-    color: #dc2626;
+    color: var(--color-danger);
     word-break: break-all;
   }
 `;
 
 const Actions = styled.div`
   display: flex;
-  gap: 1.6rem;
-  margin-top: 2rem;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
 `;
 
 const CancelButton = styled(Button)`
@@ -36,18 +37,31 @@ const ButtonContent = styled.span`
   visibility: ${({ $processing }) => ($processing ? "hidden" : "visible")};
 `;
 
-function ConfirmDelete({ data, render, deleteMutation, onClose }) {
+function ConfirmDelete({
+  isSuspended = false,
+  data,
+  render,
+  deleteMutation,
+  onClose,
+}) {
+  const handleCloseModal = useRestoreFocus(onClose, !isSuspended);
   const [isDeleteDisabled, setIsDeleteDisabled] = useState(false);
   // 刪除功能
   const { mutate: handleDelete, isPending: isDeleting } = deleteMutation;
 
   return (
-    <Modal title="確認刪除" titleColor="#991b1b" onClose={onClose}>
+    <Modal
+      isSuspended={isSuspended}
+      maxWidth={36}
+      title="確認刪除"
+      titleColor="#991b1b"
+      onClose={handleCloseModal}
+    >
       <ModalContent>
         <Main>{render({ setIsDeleteDisabled })}</Main>
 
         <Actions>
-          <CancelButton $variant="outline" onClick={onClose}>
+          <CancelButton $variant="outline" onClick={handleCloseModal}>
             取消
           </CancelButton>
 
@@ -56,7 +70,7 @@ function ConfirmDelete({ data, render, deleteMutation, onClose }) {
             disabled={isDeleteDisabled || isDeleting}
             onClick={() => {
               handleDelete(data.id, {
-                onSuccess: () => onClose(),
+                onSuccess: () => handleCloseModal(),
               });
             }}
           >

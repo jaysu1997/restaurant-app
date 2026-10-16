@@ -3,7 +3,7 @@ import ControlledSwitch from "../../components/ControlledSwitch";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import ControlledTimeRange from "./ControlledTimeRange";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
-import { normalizeRegularOpenHours } from "./sortTimeSlots";
+import { normalizeRegularOpenHours } from "./utils/timeSlotNormalization.js";
 import SectionContainer from "../../components/SectionContainer";
 import { Clock } from "lucide-react";
 import SectionForm from "../../components/SectionForm";
@@ -11,16 +11,16 @@ import SectionForm from "../../components/SectionForm";
 const BusinessPeriodList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  font-size: 1.4rem;
+  gap: var(--space-6);
+  font-size: var(--font-size-sm);
 `;
 
 const BusinessPeriodItem = styled.li`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr minmax(27.2rem, 1fr);
-  column-gap: 3.2rem;
-  row-gap: 0.6rem;
+  column-gap: var(--space-8);
+  row-gap: var(--space-1-5);
 
   @media (max-width: 35em) {
     grid-template-columns: 1fr;
@@ -31,7 +31,7 @@ const DateField = styled.div`
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: 3.8rem;
-  row-gap: 0.6rem;
+  row-gap: var(--space-1-5);
   align-items: center;
   justify-content: space-between;
 
@@ -42,8 +42,8 @@ const DateField = styled.div`
 `;
 
 const DateOfWeek = styled.span`
-  color: #374151;
-  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
 `;
 
 function RegularOpenHours({ settings }) {

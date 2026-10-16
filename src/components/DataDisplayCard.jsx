@@ -2,35 +2,35 @@
 // 用來展示數據的卡片ui
 import styled, { css } from "styled-components";
 import { Trash2, SquarePen } from "lucide-react";
-import { hoverStyles } from "../style/helpers";
+import { hoverStyles, insetFocusVisible } from "../style/helpers";
 
 const Card = styled.li`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  border: 1px solid #d1d5db;
-  background-color: #fff;
-  font-size: 1.4rem;
-  font-weight: 500;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-surface);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   transition: transform 0.2s ease;
 `;
 
 const Row = styled.div`
   display: grid;
   grid-template-columns: 4.5rem 1fr;
-  border-bottom: 1px solid #d1d5db;
+  border-bottom: 1px solid var(--color-border-strong);
 `;
 
 const Label = styled.div`
-  background-color: #e2e8f0;
-  padding: 0.8rem;
-  color: #475569;
+  background-color: var(--color-border-slate);
+  padding: var(--space-2);
+  color: var(--color-text-slate);
 `;
 
 const Value = styled.div`
-  padding: 0.8rem;
+  padding: var(--space-2);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -43,13 +43,14 @@ const Footer = styled.div`
 `;
 
 const EditButton = styled.button`
-  color: #6b7280;
-  font-weight: 600;
-  padding: 0.6rem 1.2rem;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-1-5) var(--space-3);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: var(--space-2);
+  border-radius: 0px 0px 0px var(--radius-md);
 
   svg {
     width: 1.5rem;
@@ -57,20 +58,25 @@ const EditButton = styled.button`
   }
 
   ${hoverStyles(css`
-    color: #3b82f6;
+    color: var(--color-info);
   `)}
+
+  &:focus-visible {
+    ${insetFocusVisible}
+  }
 `;
 
 const DeleteButton = styled(EditButton)`
-  color: #b91c1c;
+  color: var(--color-danger-text);
+  border-radius: 0px 0px var(--radius-md) 0px;
 
   ${hoverStyles(css`
-    color: #dc2626;
+    color: var(--color-danger);
   `)}
 `;
 
 const Divider = styled.div`
-  background-color: #d1d5db;
+  background-color: var(--color-border-strong);
   width: 1px;
   height: 100%;
 `;
@@ -86,12 +92,12 @@ function DataDisplayCard({ handleEditButton, handleDeleteButton, dataFormat }) {
       ))}
 
       <Footer>
-        <EditButton onClick={handleEditButton}>
+        <EditButton type="button" onClick={handleEditButton}>
           <SquarePen />
           <span>編輯</span>
         </EditButton>
         <Divider />
-        <DeleteButton onClick={handleDeleteButton}>
+        <DeleteButton type="button" onClick={handleDeleteButton}>
           <Trash2 />
           <span>刪除</span>
         </DeleteButton>

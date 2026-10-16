@@ -15,7 +15,7 @@ const NavGroup = styled.nav`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1.2rem 1rem;
+  padding: var(--space-3) var(--space-2-5);
   overflow-y: auto;
 
   ${({ $iconOnly }) =>
@@ -35,22 +35,22 @@ const NavItem = styled(NavLink)`
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 2rem;
-  padding: 1.4rem;
+  gap: var(--space-5);
+  padding: var(--space-3-5);
   border-radius: 10px;
-  color: #4b5563;
+  color: var(--color-text-tertiary);
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
 
   &:hover {
-    background-color: #f9fafb;
-    color: #111827;
+    background-color: var(--color-background);
+    color: var(--color-text-strong);
   }
 
   &.active {
-    background-color: #eff6ff;
-    color: #2563eb;
+    background-color: var(--color-brand-subtle);
+    color: var(--color-brand);
   }
 
   & > svg {
@@ -58,10 +58,14 @@ const NavItem = styled(NavLink)`
     height: 2.4rem;
     flex-shrink: 0;
   }
+
+  &:focus-visible {
+    z-index: 1;
+  }
 `;
 
 const NavLabel = styled.span`
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   white-space: nowrap;
 
   @media (max-width: 80em) {

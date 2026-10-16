@@ -1,4 +1,3 @@
-// 確認輸入的參數是否完整且都合法
 function hasValidCropArea(cropArea) {
   if (!cropArea) return false;
 
@@ -7,7 +6,6 @@ function hasValidCropArea(cropArea) {
   );
 }
 
-// 計算默認的裁切參數(保留中間部分，然後圖檔尺寸為300x300)
 function getDefaultCropArea(imageBitmap) {
   const size = Math.min(imageBitmap.width, imageBitmap.height);
 
@@ -19,30 +17,24 @@ function getDefaultCropArea(imageBitmap) {
   };
 }
 
-// 使用 Canvas 將 File 指定區域裁切並輸出為 WebP Blob
 export async function cropImage(file, cropArea) {
-  const OUTPUT_SIZE = 300;
+  const outputSize = 300;
   let imageBitmap;
 
   try {
-    // File -> ImageBitmap
     imageBitmap = await createImageBitmap(file);
-    // 沒有輸入完整合格參數就改用默認參數裁切
     const area = hasValidCropArea(cropArea)
       ? cropArea
       : getDefaultCropArea(imageBitmap);
 
     const canvas = document.createElement("canvas");
-    canvas.width = OUTPUT_SIZE;
-    canvas.height = OUTPUT_SIZE;
+    canvas.width = outputSize;
+    canvas.height = outputSize;
 
-    const ctx = canvas.getContext("2d");
-
-    // 高品質縮放
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    ctx.drawImage(
+    const context = canvas.getContext("2d");
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(
       imageBitmap,
       area.x,
       area.y,
@@ -50,8 +42,8 @@ export async function cropImage(file, cropArea) {
       area.height,
       0,
       0,
-      OUTPUT_SIZE,
-      OUTPUT_SIZE,
+      outputSize,
+      outputSize,
     );
 
     return new Promise((resolve, reject) => {

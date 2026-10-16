@@ -6,7 +6,7 @@ import Note from "../../../components/Note";
 import Label from "../../../components/Label";
 
 const Container = styled.div`
-  padding: 2rem 0;
+  padding: var(--space-5) 0;
   display: flex;
   flex-direction: column;
 `;
@@ -14,12 +14,12 @@ const Container = styled.div`
 const NoteGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
 
   label {
     font-size: 1.3rem;
-    font-weight: 500;
-    color: #374151;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
   }
 `;
 

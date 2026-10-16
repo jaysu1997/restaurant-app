@@ -2,7 +2,7 @@ import styled, { css, keyframes } from "styled-components";
 import { Fragment, useEffect, useState } from "react";
 import { ChevronRight, AlertCircle } from "lucide-react";
 import useIngredientMenus from "../../hooks/data/menus/useIngredientMenus";
-import { hoverStyles } from "../../style/helpers";
+import { focusRingStyles, hoverStyles } from "../../style/helpers";
 
 const spin = keyframes`
   to {
@@ -14,18 +14,20 @@ const Spinner = styled.div`
   width: 1.2rem;
   height: 1.2rem;
   border-radius: 50%;
-  border: 2px solid #d1d5db;
-  border-top-color: #6b7280;
+  border: 2px solid var(--color-border-strong);
+  border-top-color: var(--color-text-muted);
   animation: ${spin} 0.8s linear infinite;
 `;
 
 const Accordion = styled.div`
   width: 100%;
-  border: 1px solid ${({ $isError }) => ($isError ? "#fecaca" : "#d1d5db")};
-  border-radius: 6px;
+  border: 1px solid
+    ${({ $isError }) =>
+      $isError ? "var(--color-danger-border)" : "var(--color-border-strong)"};
+  border-radius: var(--radius-md);
   overflow: hidden;
-  font-size: 1.2rem;
-  margin-top: 2.4rem;
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-6);
   padding: 0;
   max-height: ${({ $isExpanded }) => ($isExpanded ? "13.8rem" : "3.8rem")};
   transition: max-height 0.3s ease;
@@ -37,9 +39,9 @@ const AccordionTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.8rem 1.2rem;
-  gap: 0.6rem;
-  font-size: 1.4rem;
+  padding: var(--space-2) var(--space-3);
+  gap: var(--space-1-5);
+  font-size: var(--font-size-sm);
 
   transition: background-color 0.2s ease;
 
@@ -51,17 +53,17 @@ const AccordionTitle = styled.div`
 `;
 
 const LoadingTitle = styled(AccordionTitle)`
-  color: #6b7280;
-  background-color: #f9fafb;
+  color: var(--color-text-muted);
+  background-color: var(--color-background);
 
   ${hoverStyles(css`
-    background-color: #f3f4f6;
+    background-color: var(--color-surface-subtle);
   `)}
 `;
 
 const ErrorTitle = styled(AccordionTitle)`
-  color: #b91c1c;
-  background-color: #fef2f2;
+  color: var(--color-danger-text);
+  background-color: var(--color-danger-subtle);
 
   ${hoverStyles(css`
     background-color: #fee2e2;
@@ -69,8 +71,8 @@ const ErrorTitle = styled(AccordionTitle)`
 `;
 
 const ReadyTitle = styled(AccordionTitle)`
-  color: #111827;
-  background-color: #f9fafb;
+  color: var(--color-text-strong);
+  background-color: var(--color-background);
   position: relative;
 
   &::after {
@@ -80,7 +82,7 @@ const ReadyTitle = styled(AccordionTitle)`
     left: 0;
     width: 100%;
     height: 1px;
-    background-color: #d1d5db;
+    background-color: var(--color-border-strong);
     opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
     transition: opacity 0.2s ease;
   }
@@ -98,26 +100,30 @@ const ReadyTitle = styled(AccordionTitle)`
 `;
 
 const AccordionContent = styled.div`
-  font-size: 1.4rem;
-  padding: 0.6rem 1.2rem;
+  font-size: var(--font-size-sm);
+  padding: var(--space-1-5) var(--space-3);
   max-height: 10rem;
   overflow-y: auto;
-
-  span[tabindex="0"] {
-    color: #3b82f6;
-    cursor: pointer;
-  }
-
-  span[tabindex="0"] {
-    ${hoverStyles(css`
-      color: #2563eb;
-      text-decoration: underline;
-    `)}
-  }
 `;
 
 const EmptyContent = styled.span`
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
+`;
+
+const RelatedMenuButton = styled.span`
+  color: var(--color-info);
+  cursor: pointer;
+
+  ${hoverStyles(css`
+    font-weight: var(--font-weight-medium);
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  `)}
+
+  &:focus-visible {
+    ${focusRingStyles}
+  }
 `;
 
 function RelatedMenus({ setModal, ingredientId, setIsDeleteDisabled }) {
@@ -171,7 +177,7 @@ function RelatedMenus({ setModal, ingredientId, setIsDeleteDisabled }) {
             ) : (
               relatedMenus.map((menu, index) => (
                 <Fragment key={menu.id}>
-                  <span
+                  <RelatedMenuButton
                     role="button"
                     tabIndex="0"
                     onClick={() =>
@@ -182,7 +188,9 @@ function RelatedMenus({ setModal, ingredientId, setIsDeleteDisabled }) {
                       }))
                     }
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") {
+                      if (e.key === "Enter" || e.key === " ") {
+                        if (e.key === " ") e.preventDefault();
+
                         setModal((prev) => ({
                           ...prev,
                           type: "menuForm",
@@ -192,7 +200,7 @@ function RelatedMenus({ setModal, ingredientId, setIsDeleteDisabled }) {
                     }}
                   >
                     {menu.name}
-                  </span>
+                  </RelatedMenuButton>
 
                   {index < relatedMenus.length - 1 && "、"}
                 </Fragment>

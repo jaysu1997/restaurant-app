@@ -4,11 +4,13 @@ import { hoverStyles } from "../style/helpers";
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: var(--color-surface);
   overflow: hidden;
   height: 4.2rem;
-  border-radius: 8px;
-  border: 1px solid ${({ $isError }) => ($isError ? "#dc2626" : "#d1d5db")};
+  border-radius: var(--radius-lg);
+  border: 1px solid
+    ${({ $isError }) =>
+      $isError ? "var(--color-danger)" : "var(--color-border-strong)"};
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -18,7 +20,7 @@ const InputWrapper = styled.div`
       ${({ $isError }) =>
         !$isError &&
         css`
-          border-color: #b3b3b3;
+          border-color: var(--color-border-hover);
         `}
     }
   `)}
@@ -27,22 +29,24 @@ const InputWrapper = styled.div`
     ${({ $isError }) =>
       $isError
         ? css`
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+            box-shadow: var(--shadow-focus-error);
           `
         : css`
-            border-color: #2684ff;
-            box-shadow: 0 0 0 3px rgba(38, 132, 255, 0.15);
+            border-color: var(--color-focus);
+            box-shadow: var(--shadow-focus-control);
           `}
   }
 `;
 
 const Input = styled.input`
-  font-size: 1.4rem;
-  font-weight: 400;
-  padding: 0.2rem 1rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  padding: var(--space-0-5) var(--space-2-5);
   height: 100%;
   flex: 1;
   min-width: 0px;
+  border: none;
+  outline: none;
 `;
 
 const EndAdornment = styled.div`
@@ -51,7 +55,7 @@ const EndAdornment = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
+  background-color: var(--color-surface);
 
   button {
     width: 1.8rem;
@@ -61,10 +65,10 @@ const EndAdornment = styled.div`
   svg {
     height: 100%;
     width: 100%;
-    color: #6b7280;
+    color: var(--color-text-muted);
 
     ${hoverStyles(css`
-      color: #111827;
+      color: var(--color-text-strong);
     `)}
   }
 `;

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import Price from "../../../components/Price";
-import { summarizeMealChoices } from "../../../utils/orderHelpers";
+import { summarizeMealChoices } from "../../../utils/orderData.js";
 import DishImage from "../../../components/DishImage";
 import Button from "../../../components/button/Button";
 import { hoverStyles } from "../../../style/helpers";
@@ -13,18 +13,18 @@ const TableRow = styled.div`
     ${({ $isEdit }) => ($isEdit ? "8rem" : "")};
   justify-items: center;
   align-items: center;
-  gap: 1.6rem;
-  padding: 1.6rem 2rem;
-  background-color: #fff;
-  border-top: 1px solid #e5e7eb;
-  font-size: 1.6rem;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-base);
 `;
 
 const DishInfo = styled.div`
   justify-self: start;
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: var(--space-4);
 `;
 
 const ImageWrapper = styled.div`
@@ -35,38 +35,38 @@ const ImageWrapper = styled.div`
 const DishMeta = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  font-weight: 400;
+  gap: var(--space-1);
+  font-weight: var(--font-weight-regular);
 `;
 
 const DishName = styled.span`
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 `;
 
 const DishOptions = styled.span`
-  font-size: 1.4rem;
+  font-size: var(--font-size-sm);
   word-break: break-all;
-  color: #374151;
+  color: var(--color-text-secondary);
 `;
 
 const DishNote = styled.span`
-  font-size: 1.2rem;
+  font-size: var(--font-size-xs);
   word-break: break-all;
-  color: #6b7280;
+  color: var(--color-text-muted);
 `;
 
 const DishLineTotal = styled(Price)`
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 `;
 
 const DishServings = styled.span`
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 `;
 
 const DishAction = styled.div`
   display: flex;
-  gap: 1.2rem;
-  font-size: 1.4rem;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
 `;
 
 const EditButton = styled(Button)`
@@ -74,15 +74,15 @@ const EditButton = styled(Button)`
   height: 2.4rem;
 
   ${hoverStyles(css`
-    color: #3b82f6;
+    color: var(--color-info);
   `)}
 `;
 
 const DeleteButton = styled(EditButton)`
-  color: #b91c1c;
+  color: var(--color-danger-text);
 
   ${hoverStyles(css`
-    color: #dc2626;
+    color: var(--color-danger);
   `)}
 `;
 

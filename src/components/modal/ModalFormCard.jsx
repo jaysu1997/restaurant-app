@@ -5,19 +5,19 @@ import IconButton from "../button/IconButton";
 const Card = styled.div`
   display: grid;
   grid-template-columns: ${({ $columns }) => `repeat(${$columns}, 1fr)`};
-  column-gap: 2.4rem;
-  row-gap: 1.6rem;
+  column-gap: var(--space-6);
+  row-gap: var(--space-4);
 
   ${({ $compact }) =>
     !$compact &&
     css`
-      padding: 2rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
       background: #fafafa;
     `}
 
-  @media (max-width: 35em) {
+  @media (max-width: 30em) {
     grid-template-columns: 1fr;
   }
 `;
@@ -31,8 +31,8 @@ const Header = styled.div`
   ${({ $compact }) =>
     !$compact &&
     css`
-      padding-bottom: 0.8rem;
-      border-bottom: 1px dashed #e5e7eb;
+      padding-bottom: var(--space-2);
+      border-bottom: 1px dashed var(--color-border);
     `}
 `;
 
@@ -40,14 +40,14 @@ const Title = styled.h4`
   ${({ $compact }) =>
     $compact
       ? css`
-          font-size: 1.4rem;
-          font-weight: 600;
-          color: #374151;
+          font-size: var(--font-size-sm);
+          font-weight: var(--font-weight-semibold);
+          color: var(--color-text-primary);
         `
       : css`
           font-size: 1.8rem;
-          font-weight: 600;
-          color: #111827;
+          font-weight: var(--font-weight-semibold);
+          color: var(--color-text-strong);
         `}
 `;
 

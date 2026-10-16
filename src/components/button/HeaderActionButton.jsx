@@ -9,9 +9,9 @@ const HeaderActionButton = styled(Button)`
 
   @media (max-width: 30em) {
     height: 3.6rem;
-    padding: 0.8rem 1rem;
-    font-size: 1.2rem;
-    font-weight: 600;
+    padding: var(--space-2) var(--space-2-5);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
     border-radius: 16px;
 
     svg {

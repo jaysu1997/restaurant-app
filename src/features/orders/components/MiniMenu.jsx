@@ -1,131 +1,63 @@
 // 訂單編輯頁面的迷你菜單
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useState } from "react";
-import Modal, {
-  ModalContainer,
-  ModalContent,
-} from "../../../components/modal/Modal";
 import useGetMenus from "../../../hooks/data/menus/useGetMenus";
 import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import DishCard from "../../../components/DishCard";
-import { SquareMenu } from "lucide-react";
-import { hoverStyles } from "../../../style/helpers";
+import CloseButton from "../../../components/CloseButton";
+import CategoryBar from "../../menu/components/CategoryBar";
 
-const StyledMiniMenu = styled(ModalContainer)`
-  position: relative;
+const MenuPickerContainer = styled.section`
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background-color: var(--color-background);
 `;
 
 const MenuHeader = styled.header`
-  flex-shrink: 0;
-  padding: 0 2.4rem;
-  height: 5.2rem;
-  display: grid;
-  grid-template-columns: 3.6rem minmax(0px, 1fr) 3.6rem;
-  align-items: center;
-  justify-items: center;
-  border-bottom: 1px solid #f3f4f6;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  z-index: 1;
-`;
-
-const ToggleButton = styled.button`
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 3.6rem;
-  height: 3.6rem;
-  color: #4b5563;
-  border-radius: 8px;
-
-  svg {
-    height: 2.4rem;
-    width: 2.4rem;
-  }
-
-  ${hoverStyles(css`
-    color: #1f2937;
-    background-color: #f3f4f6;
-  `)}
-`;
-
-const CategoryName = styled.h3`
-  font-size: 1.6rem;
-  font-weight: 600;
-  max-width: 100%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
-
-const MiniMenuContent = styled(ModalContent)`
-  background-color: #f9fafb;
-  flex-basis: 56rem;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 5.2rem;
-  left: 0;
-  z-index: 2;
-  width: 100%;
-  height: calc(100% - 5.2rem);
-  background-color: rgba(0, 0, 0, 0.2);
-  opacity: ${({ $open }) => ($open ? 1 : 0)};
-  visibility: ${({ $open }) => ($open ? "visible" : "hidden")};
-
-  transition:
-    opacity 0.15s ease,
-    visibility 0.15s ease;
-`;
-
-const CategoryList = styled.div`
-  max-height: min(24rem, 100%);
-  overflow-y: auto;
-  scrollbar-gutter: stable both-edges;
-  padding: 0.8rem 1.2rem;
-  border-bottom: 1px solid #f3f4f6;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  transform: ${({ $open }) =>
-    $open ? "translateY(0)" : "translateY(-1.2rem)"};
-
-  transition: transform 0.18s ease;
-`;
-
-const CategoryOption = styled.button`
-  width: 100%;
-  min-height: 4rem;
-  padding: 1.2rem;
+  min-height: 5.6rem;
+  padding: var(--space-2) var(--space-4);
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  font-size: 1.4rem;
-  background-color: ${({ $active }) => ($active ? "#eff6ff" : "transparent")};
-  color: ${({ $active }) => ($active ? "#2563eb" : "#4b5563")};
-  font-weight: ${({ $active }) => ($active ? 600 : 500)};
+  justify-content: space-between;
+  gap: var(--space-4);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+`;
 
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+const MenuTitle = styled.h4`
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+`;
 
-  ${hoverStyles(css`
-    background-color: ${({ $active }) => ($active ? "#eff6ff" : "#f9fafb")};
-    color: ${({ $active }) => ($active ? "#2563eb" : "#111827")};
-  `)}
+const MenuBody = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-4);
 `;
 
 const DishList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  align-content: start;
+  gap: var(--space-4);
+  padding: var(--space-1);
+  max-height: min(50rem, 55vh);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+
+  @media (max-width: 50em) {
+    max-height: min(36rem, 50vh);
+  }
 `;
 
 function MiniMenu({ onCreateDish, onClose }) {
   const [selectedCategory, setSelectedCategory] = useState("全部");
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const { menusQuery, categories } = useGetMenus();
-  const menuCategories = ["全部", ...categories];
 
   const { data: menus = [] } = menusQuery;
   const displayMenus =
@@ -134,66 +66,41 @@ function MiniMenu({ onCreateDish, onClose }) {
       : menus.filter((dish) => dish.category === selectedCategory);
 
   return (
-    <Modal onClose={onClose} title="菜單" maxWidth={40}>
-      <QueryStatusFallback
-        queries={[menusQuery]}
-        hasNoData={menus.length === 0}
-        noDataFallback={{
-          message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
-          actionLabel: "新增餐點",
-          redirectTo: "/menu-manage",
-        }}
-      >
-        <StyledMiniMenu>
-          <MenuHeader>
-            <ToggleButton
-              type="button"
-              aria-label="選擇分類"
-              onClick={() => setIsCategoryOpen((prev) => !prev)}
-            >
-              <SquareMenu />
-            </ToggleButton>
-            <CategoryName>{selectedCategory}</CategoryName>
-          </MenuHeader>
+    <QueryStatusFallback
+      queries={[menusQuery]}
+      hasNoData={menus.length === 0}
+      noDataFallback={{
+        message: "目前沒有任何餐點數據，請前往菜單設定頁面新增餐點。",
+        actionLabel: "新增餐點",
+        redirectTo: "/menu-manage",
+      }}
+    >
+      <MenuPickerContainer>
+        <MenuHeader>
+          <MenuTitle>新增餐點</MenuTitle>
+          <CloseButton onClose={onClose} />
+        </MenuHeader>
 
-          <Overlay
-            $open={isCategoryOpen}
-            onClick={() => setIsCategoryOpen(false)}
-          >
-            <CategoryList $open={isCategoryOpen}>
-              {menuCategories.map((category) => (
-                <CategoryOption
-                  $active={selectedCategory === category}
-                  onClick={() => {
-                    setSelectedCategory(category);
-                    setIsCategoryOpen(false);
-                  }}
-                  key={category}
-                >
-                  {category}
-                </CategoryOption>
-              ))}
-            </CategoryList>
-          </Overlay>
+        <MenuBody>
+          <CategoryBar
+            categories={["全部", ...categories]}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
 
-          <MiniMenuContent inert={isCategoryOpen}>
-            <DishList>
-              {displayMenus.map((dish) => (
-                <DishCard
-                  dish={dish}
-                  onSelect={() => {
-                    onClose();
-                    onCreateDish(dish);
-                  }}
-                  canPlaceOrder={true}
-                  key={dish.id}
-                />
-              ))}
-            </DishList>
-          </MiniMenuContent>
-        </StyledMiniMenu>
-      </QueryStatusFallback>
-    </Modal>
+          <DishList>
+            {displayMenus.map((dish) => (
+              <DishCard
+                dish={dish}
+                onSelect={() => onCreateDish(dish)}
+                canPlaceOrder={true}
+                key={dish.id}
+              />
+            ))}
+          </DishList>
+        </MenuBody>
+      </MenuPickerContainer>
+    </QueryStatusFallback>
   );
 }
 

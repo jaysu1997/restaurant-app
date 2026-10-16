@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import useScrollLock from "../../hooks/ui/useScrollLock";
-import ModalCloseButton from "../ModalCloseButton";
+import CloseButton from "../CloseButton";
 import StyledOverlay from "../StyledOverlay";
 import { createPortal } from "react-dom";
+import useFocusTrap from "../../hooks/ui/useFocusTrap";
 
 const Overlay = styled(StyledOverlay)`
   display: flex;
   justify-content: center;
   align-items: center;
+  visibility: ${({ $isSuspended }) => ($isSuspended ? "hidden" : "visible")};
 `;
 
 const StyleModal = styled.div`
@@ -16,8 +18,8 @@ const StyleModal = styled.div`
   flex-direction: column;
   width: min(${({ $maxWidth }) => `${$maxWidth}rem`}, 95dvw);
   max-height: 90dvh;
-  margin: 0 0.6rem;
-  background-color: #fff;
+  margin: 0 var(--space-1-5);
+  background-color: var(--color-surface);
   box-shadow: 0 20px 20px 2px rgba(0, 0, 0, 0.25);
   border-radius: 18px;
   overflow: hidden;
@@ -29,15 +31,15 @@ const Header = styled.header`
   justify-content: space-between;
   width: 100%;
   height: 6rem;
-  padding: 1.4rem 2.4rem;
-  box-shadow: inset 0 -1px #e5e7eb;
-  gap: 1.2rem;
+  padding: var(--space-3-5) var(--space-6);
+  box-shadow: inset 0 -1px var(--color-border);
+  gap: var(--space-3);
   flex-shrink: 0;
 `;
 
 const Title = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
   color: ${({ $color }) => $color};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -45,7 +47,7 @@ const Title = styled.h2`
 `;
 
 // Modal的容器
-export const ModalContainer = styled.div`
+const ModalContainer = styled.form`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -56,8 +58,8 @@ export const ModalContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  padding: 2.4rem;
+  gap: var(--space-6);
+  padding: var(--space-7) var(--space-6) var(--space-8);
   overflow-y: auto;
 `;
 
@@ -68,30 +70,52 @@ export const ModalFooter = styled.footer`
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
-  gap: 2rem;
-  padding: 0 2.4rem;
-  background-color: #fff;
-  border-top: 1px solid #e5e7eb;
+  gap: var(--space-5);
+  padding: 0 var(--space-6);
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
 `;
 
 function Modal({
+  isSuspended,
   children,
   onClose,
+  onSubmit,
   title = "表單",
-  titleColor = "#374151",
-  maxWidth = 36,
+  titleColor = "var(--color-text-secondary)",
+  maxWidth = 40,
 }) {
+  const containerRef = useFocusTrap();
+
   useScrollLock(true);
 
   return createPortal(
-    <Overlay>
-      <StyleModal $maxWidth={maxWidth}>
+    <Overlay
+      $isSuspended={isSuspended}
+      inert={isSuspended ? true : undefined}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <StyleModal $maxWidth={maxWidth} ref={containerRef}>
         <Header>
           <Title $color={titleColor}>{title}</Title>
-          <ModalCloseButton onClose={onClose} />
+          <CloseButton onClose={onClose} />
         </Header>
 
-        {children}
+        <ModalContainer
+          as={onSubmit ? "form" : "div"}
+          onSubmit={(e) => {
+            if (onSubmit) {
+              e.stopPropagation();
+              onSubmit(e);
+            }
+          }}
+        >
+          {children}
+        </ModalContainer>
       </StyleModal>
     </Overlay>,
     document.body,

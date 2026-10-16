@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { parsePositiveInt } from "../../../utils/helpers";
+import { parsePositiveInt } from "../../../utils/numbers.js";
 import TextButton from "../../../components/button/TextButton";
 import FormInputField from "../../../components/FormInputField";
 import FormSelectField from "../../../components/FormSelectField";

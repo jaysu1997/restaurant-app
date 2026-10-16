@@ -1,4 +1,4 @@
-import { findItemIndexById, updateInventory } from "../../utils/orderHelpers";
+import { findItemIndexById, updateInventory } from "../../utils/orderData.js";
 
 // 單筆訂單數據建立與編輯useReducer
 export const initialState = {

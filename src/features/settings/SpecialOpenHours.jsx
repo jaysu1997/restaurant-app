@@ -11,8 +11,8 @@ import {
 } from "react-hook-form";
 import { addYears, endOfYear, isAfter, isToday } from "date-fns";
 import useSubmitSettings from "../../hooks/data/settings/useSubmitSettings";
-import { validateDateRangeField } from "./validateOverlap";
-import { normalizeSpecialOpenHours } from "./sortTimeSlots";
+import { validateDateRangeField } from "./utils/dateRangeValidation.js";
+import { normalizeSpecialOpenHours } from "./utils/timeSlotNormalization.js";
 import showToast from "../../utils/showToast";
 import SectionContainer from "../../components/SectionContainer";
 import { Trash2, CalendarClock } from "lucide-react";
@@ -23,17 +23,17 @@ import SectionForm from "../../components/SectionForm";
 const BusinessPeriodList = styled.ul`
   display: flex;
   flex-direction: column;
-  font-size: 1.4rem;
+  font-size: var(--font-size-sm);
 `;
 
 const BusinessPeriodItem = styled.li`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   align-items: start;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 2.4rem 0;
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-6) 0;
 
   @media (max-width: 35em) {
     grid-template-columns: 1fr;
@@ -42,13 +42,13 @@ const BusinessPeriodItem = styled.li`
 
 const EmptyMessage = styled.p`
   color: #b0b0b0;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 `;
 
 const DateField = styled.div`
   display: grid;
   grid-template-columns: minmax(20rem, 1fr) 2rem;
-  column-gap: 0.6rem;
+  column-gap: var(--space-1-5);
   row-gap: 0.3rem;
 `;
 

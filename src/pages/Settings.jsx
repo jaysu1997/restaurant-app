@@ -11,7 +11,7 @@ import useSettings from "../context/settings/useSettings.js";
 const SettingsLayout = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.8rem;
+  gap: var(--space-7);
   width: 100%;
   max-width: 60rem;
 `;

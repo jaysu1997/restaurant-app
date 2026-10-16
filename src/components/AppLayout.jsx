@@ -23,11 +23,11 @@ const StyledAppLayout = styled.div`
 
 const Body = styled.div`
   width: 100%;
-  padding: 3.6rem 2.4rem;
+  padding: var(--space-9) var(--space-6);
   grid-column: -1 / -2;
 
   @media (max-width: 50em) {
-    padding: 3.6rem 1rem;
+    padding: var(--space-9) var(--space-2-5);
   }
 `;
 

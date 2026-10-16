@@ -9,7 +9,7 @@ import PageContainer from "../components/PageContainer";
 const AccountContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.8rem;
+  gap: var(--space-7);
 `;
 
 function Account() {

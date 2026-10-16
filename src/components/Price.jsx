@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const StyledPrice = styled.span`
-  color: #1f2937;
-  font-weight: 600;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
 `;
 
 function Price({ value, className }) {

@@ -4,7 +4,7 @@ const Footer = styled.footer`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   height: 7.2rem;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--color-surface-subtle);
 `;
 
 const Stat = styled.div`
@@ -12,7 +12,7 @@ const Stat = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1.2rem 2rem;
+  padding: var(--space-3) var(--space-5);
 
   &:first-child {
     border-right: 1px solid #f1f2f4;
@@ -21,11 +21,11 @@ const Stat = styled.div`
 
 const StatTitle = styled.span`
   display: flex;
-  gap: 0.4rem;
+  gap: var(--space-1);
   align-items: center;
-  color: #6b7280;
-  font-size: 1.2rem;
-  font-weight: 500;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 
   svg {
     width: 1.6rem;
@@ -34,9 +34,9 @@ const StatTitle = styled.span`
 `;
 
 const StatValue = styled.strong`
-  color: #111827;
-  font-size: 1.6rem;
-  font-weight: 700;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
 `;
 
 function StatsFooter({ stats }) {

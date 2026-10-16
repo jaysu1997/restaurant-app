@@ -8,9 +8,14 @@ import Button from "../button/Button";
 import StyledOverlay from "../StyledOverlay";
 import { X } from "lucide-react";
 import HeaderActionButton from "../button/HeaderActionButton";
-import { buildSearchParams, hasActiveFilters } from "../../utils/filterHelpers";
+import {
+  buildSearchParams,
+  hasActiveFilters,
+} from "../../utils/queryFilters.js";
 import FilterRenderer from "./FilterRenderer";
-import FilterIcon from "../FilterIcon";
+import FilterIcon from "./FilterIcon.jsx";
+import useRestoreFocus from "../../hooks/ui/useRestoreFocus.js";
+import useFocusTrap from "../../hooks/ui/useFocusTrap.js";
 
 const StyledFilter = styled.div`
   position: relative;
@@ -26,7 +31,7 @@ const Overlay = styled(StyledOverlay)`
   }
 `;
 
-const FilterContainer = styled.div`
+const FilterContainer = styled.form`
   position: absolute;
   top: 5rem;
   right: 0;
@@ -34,11 +39,11 @@ const FilterContainer = styled.div`
   width: 34rem;
   display: ${({ $isFilterOpen }) => ($isFilterOpen ? "flex" : "none")};
   flex-direction: column;
-  background-color: #fff;
-  font-size: 1.4rem;
+  background-color: var(--color-surface);
+  font-size: var(--font-size-sm);
   box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  border: 1px solid #e3e5e7;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
 
   @media (max-width: 30em) {
     display: flex;
@@ -56,8 +61,8 @@ const FilterContainer = styled.div`
 
   label {
     font-size: 1.3rem;
-    color: #374151;
-    font-weight: 500;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
   }
 `;
 
@@ -65,10 +70,10 @@ const FilterHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem;
+  padding: var(--space-5);
 
   h3 {
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
 `;
 
@@ -76,32 +81,36 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: 1rem 2rem;
+  padding: var(--space-2-5) var(--space-5);
   flex: 1;
 `;
 
 const Footer = styled.footer`
   display: flex;
-  gap: 2rem;
-  border-top: 1px solid #f3f4f6;
-  padding: 2rem;
-  background-color: #fff;
+  gap: var(--space-5);
+  border-top: 1px solid var(--color-surface-subtle);
+  padding: var(--space-5);
+  background-color: var(--color-surface);
   & > button {
     width: 100%;
   }
 `;
 
 function Filter({ filtersConfig, filterState }) {
-  const containerRef = useRef(null);
+  const filterRef = useRef(null);
   const { pathname } = useLocation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   // 使用者正在編輯的 filters
   const [draftFilters, setDraftFilters] = useState(filterState);
 
-  const onClose = () => setIsFilterOpen(false);
-  const isMatched = useMediaQuery(30, onClose);
-  useClickOutside(containerRef, isFilterOpen, onClose);
+  const handleCloseModal = useRestoreFocus(
+    () => setIsFilterOpen(false),
+    isFilterOpen,
+  );
+  const isMatched = useMediaQuery(30, handleCloseModal);
+  const containerRef = useFocusTrap(isMatched && isFilterOpen);
+  useClickOutside(filterRef, isFilterOpen, handleCloseModal);
   useScrollLock(isMatched && isFilterOpen);
 
   // 是否有套用filter
@@ -109,7 +118,9 @@ function Filter({ filtersConfig, filterState }) {
   // 是否禁用clear button
   const isClearDisabled = !hasActiveFilters(draftFilters);
 
-  function handleToggle() {
+  function handleToggle(e) {
+    e.stopPropagation();
+
     setIsFilterOpen((prev) => {
       if (!prev) {
         setDraftFilters(filterState);
@@ -135,7 +146,9 @@ function Filter({ filtersConfig, filterState }) {
     );
   }
 
-  function confirmFilters() {
+  function confirmFilters(e) {
+    e.preventDefault();
+
     const newParams = buildSearchParams(draftFilters, searchParams);
     // 訂單列表套用新條件都要回到第一分頁
     if (pathname === "/orders") {
@@ -143,59 +156,60 @@ function Filter({ filtersConfig, filterState }) {
     }
 
     setSearchParams(newParams);
-    onClose();
+    handleCloseModal();
   }
 
   return (
-    <StyledFilter ref={containerRef}>
-      <HeaderActionButton $variant="outline" onClick={handleToggle}>
-        <FilterIcon checked={activeFilters} />
-        <span>篩選</span>
-      </HeaderActionButton>
+    <>
+      {isMatched && (
+        <Overlay $isFilterOpen={isFilterOpen} inert={!isFilterOpen} />
+      )}
 
-      <Overlay
-        $isFilterOpen={isFilterOpen}
-        inert={!isFilterOpen}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            onClose();
-          }
-        }}
-      />
+      <StyledFilter ref={filterRef}>
+        <HeaderActionButton $variant="outline" onClick={handleToggle}>
+          <FilterIcon checked={activeFilters} />
+          <span>篩選</span>
+        </HeaderActionButton>
 
-      <FilterContainer $isFilterOpen={isFilterOpen} inert={!isFilterOpen}>
-        <FilterHeader>
-          <h3>篩選</h3>
+        <FilterContainer
+          ref={containerRef}
+          $isFilterOpen={isFilterOpen}
+          inert={!isFilterOpen}
+          onSubmit={(e) => confirmFilters(e)}
+        >
+          <FilterHeader>
+            <h3>篩選</h3>
 
-          <Button $variant="ghost" onClick={onClose}>
-            <X />
-          </Button>
-        </FilterHeader>
+            <Button $variant="ghost" onClick={handleCloseModal}>
+              <X />
+            </Button>
+          </FilterHeader>
 
-        <Content>
-          {filtersConfig.map((filter) => (
-            <FilterRenderer
-              filter={filter}
-              filterValue={draftFilters[filter.queryKey].value}
-              handleValueChange={handleValueChange}
-              key={filter.queryKey}
-            />
-          ))}
-        </Content>
+          <Content>
+            {filtersConfig.map((filter) => (
+              <FilterRenderer
+                filter={filter}
+                filterValue={draftFilters[filter.queryKey].value}
+                handleValueChange={handleValueChange}
+                key={`${filter.queryKey}-${isFilterOpen}`}
+              />
+            ))}
+          </Content>
 
-        <Footer>
-          <Button
-            $variant="outline"
-            disabled={isClearDisabled}
-            onClick={clearFilters}
-          >
-            清空條件
-          </Button>
+          <Footer>
+            <Button
+              $variant="outline"
+              disabled={isClearDisabled}
+              onClick={clearFilters}
+            >
+              清空條件
+            </Button>
 
-          <Button onClick={confirmFilters}>確認</Button>
-        </Footer>
-      </FilterContainer>
-    </StyledFilter>
+            <Button type="submit">確認</Button>
+          </Footer>
+        </FilterContainer>
+      </StyledFilter>
+    </>
   );
 }
 

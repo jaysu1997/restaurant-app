@@ -6,11 +6,11 @@ const Badge = styled.div`
   cursor: default;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 1.2rem;
-  font-weight: 500;
-  font-size: 1.4rem;
-  border-radius: 999px;
+  gap: var(--space-1-5);
+  padding: var(--space-1) var(--space-3);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-full);
   color: ${({ $color }) => $color};
   background-color: ${({ $bgColor }) => $bgColor};
 `;
@@ -23,8 +23,8 @@ const Indicator = styled.span`
 `;
 
 const Detail = styled.span`
-  font-size: 1.2rem;
-  /* font-weight: 400; */
+  font-size: var(--font-size-xs);
+  /* font-weight: var(--font-weight-regular); */
   opacity: 0.85;
 `;
 
@@ -37,15 +37,15 @@ const storeStatusConfig = {
   },
   break: {
     text: "休息中",
-    indicator: "#9ca3af",
-    bgColor: "#e5e7eb",
-    color: "#6b7280",
+    indicator: "var(--color-text-placeholder)",
+    bgColor: "var(--color-border)",
+    color: "var(--color-text-muted)",
   },
   unknown: {
     text: "未取得",
     indicator: "#fb923c",
-    bgColor: "#e5e7eb",
-    color: "#6b7280",
+    bgColor: "var(--color-border)",
+    color: "var(--color-text-muted)",
   },
 };
 

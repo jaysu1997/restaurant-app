@@ -1,38 +1,29 @@
-import { format, parseISO, isValid } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 
-// 驗證當前的searchParams value是否為合法選項
 export function getValidParam(paramValue, validValues, fallback = "") {
   return validValues.includes(paramValue) ? paramValue : fallback;
 }
 
-// 解析日期篩選條件(searchParams)
-// 這個應該要換位置
 export function parseDateRange(searchParams) {
   const createdTimeParams = searchParams.get("createdAt");
 
-  // 預防無value和錯誤的searchParams url
   if (!createdTimeParams) return null;
 
   const parts = createdTimeParams.split("_");
 
   if (parts.length !== 2) return null;
 
-  const [fromStr, toStr] = parts;
-  const fromDate = parseISO(fromStr);
-  const toDate = parseISO(toStr);
+  const [fromString, toString] = parts;
+  const fromDate = parseISO(fromString);
+  const toDate = parseISO(toString);
 
   if (!isValid(fromDate) || !isValid(toDate)) return null;
 
-  // 回傳日期物件
-  return {
-    from: fromDate,
-    to: toDate,
-  };
+  return { from: fromDate, to: toDate };
 }
 
-// 從url取得searchParams值
 export function parseFilterQuery(searchParams, filtersConfig) {
-  return filtersConfig.reduce((acc, filter) => {
+  return filtersConfig.reduce((filters, filter) => {
     const { queryKey, type, options } = filter;
     let value = "";
 
@@ -47,45 +38,48 @@ export function parseFilterQuery(searchParams, filtersConfig) {
       }
 
       if (type === "datePicker") {
-        const dateRange = parseDateRange(searchParams);
-        value = dateRange;
+        value = parseDateRange(searchParams);
       }
     }
 
-    acc[queryKey] = { type, value };
-    return acc;
+    filters[queryKey] = { type, value };
+    return filters;
   }, {});
 }
 
-// 是否有正在套用中的篩選條件
 export function hasActiveFilters(filterState) {
-  return Object.values(filterState).some((filter) => !!filter.value);
+  return Object.values(filterState).some((filter) => Boolean(filter.value));
 }
 
-// 處理searchParams更新(URL)
 export function buildSearchParams(filters, searchParams) {
   const newParams = new URLSearchParams(searchParams);
 
-  for (const [key, obj] of Object.entries(filters)) {
+  for (const [key, filter] of Object.entries(filters)) {
     let value = "";
 
-    if (obj.type === "textInput" && obj.value) {
-      value = obj.value.trim();
+    if (filter.type === "textInput" && filter.value) {
+      value = filter.value.trim();
     }
 
-    if (obj.type === "numberInput" && obj.value) {
-      value = obj.value.trim().replace(/^#\s*/, "");
+    if (filter.type === "numberInput" && filter.value) {
+      value = filter.value.trim().replace(/^#\s*/, "");
     }
 
-    if (obj.type === "select" && obj.value) {
-      value = obj.value;
+    if (filter.type === "select" && filter.value) {
+      value = filter.value;
     }
 
-    if (obj.type === "datePicker" && obj.value?.from && obj.value?.to) {
-      value = `${format(obj.value.from, "yyyy-MM-dd")}_${format(obj.value.to, "yyyy-MM-dd")}`;
+    if (
+      filter.type === "datePicker" &&
+      filter.value?.from &&
+      filter.value?.to
+    ) {
+      value = `${format(filter.value.from, "yyyy-MM-dd")}_${format(
+        filter.value.to,
+        "yyyy-MM-dd",
+      )}`;
     }
 
-    // 有篩選的項目新增，沒篩選的刪除
     if (value) {
       newParams.set(key, value);
     } else {

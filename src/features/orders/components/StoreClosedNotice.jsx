@@ -4,15 +4,15 @@ import { AlertTriangle } from "lucide-react";
 const StyledNotice = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.2rem 1.4rem;
-  border-radius: 6px;
-  border-left: 6px solid #f59e0b;
-  background: #fff7ed;
-  color: #9a3412;
-  font-size: 1.4rem;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  gap: var(--space-2-5);
+  padding: var(--space-3) var(--space-3-5);
+  border-radius: var(--radius-md);
+  border-left: 6px solid var(--color-warning);
+  background: var(--color-warning-subtle);
+  color: var(--color-warning-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-sm);
 
   svg {
     height: 1.8rem;

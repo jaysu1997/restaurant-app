@@ -6,7 +6,7 @@ import { ClipboardList, Calculator, DollarSign, Utensils } from "lucide-react";
 const StyledStatsCards = styled.section`
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2.8rem;
+  gap: var(--space-7);
 
   @media (max-width: 64em) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -25,7 +25,10 @@ function StatsCards({ analyzedData }) {
     {
       title: "今日訂單",
       value: todayStat.orderCount,
-      iconStyle: { color: "#3b82f6", background: "#eff6ff" },
+      iconStyle: {
+        color: "var(--color-info)",
+        background: "var(--color-brand-subtle)",
+      },
       icon: ClipboardList,
       change: growth.orderCount,
       formatter: (value) => `${value} 筆`,
@@ -33,7 +36,10 @@ function StatsCards({ analyzedData }) {
     {
       title: "今日營收",
       value: todayStat.revenue,
-      iconStyle: { color: "#16a34a", background: "#f0fdf4" },
+      iconStyle: {
+        color: "var(--color-success)",
+        background: "var(--color-success-subtle)",
+      },
       icon: DollarSign,
       change: growth.revenue,
       formatter: (value) => `$${value.toLocaleString("zh-TW")}`,
@@ -41,7 +47,10 @@ function StatsCards({ analyzedData }) {
     {
       title: "內用訂單占比",
       value: todayStat.dineInRate,
-      iconStyle: { color: "#f97316", background: "#fff7ed" },
+      iconStyle: {
+        color: "#f97316",
+        background: "var(--color-warning-subtle)",
+      },
       icon: Utensils,
       change: growth.dineInRate,
       formatter: (value) => `${Number(value.toFixed(1))}%`,

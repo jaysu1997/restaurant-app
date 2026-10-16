@@ -6,7 +6,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const SectionInner = styled.div`
-  padding: 2.4rem;
+  padding: var(--space-6);
 `;
 
 function UpdateUserAvatar({ userData }) {

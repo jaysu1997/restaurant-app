@@ -9,22 +9,22 @@ import SectionForm from "../../components/SectionForm";
 const Fields = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 3.2rem;
-  font-size: 1.4rem;
+  gap: var(--space-8);
+  font-size: var(--font-size-sm);
 
   li {
     display: grid;
     grid-template-columns: 1fr 1fr 2rem;
     grid-template-rows: auto auto auto auto;
-    column-gap: 0.6rem;
-    row-gap: 0.4rem;
+    column-gap: var(--space-1-5);
+    row-gap: var(--space-1);
     align-items: center;
   }
 `;
 
 const EmptyMessage = styled.p`
   color: #b0b0b0;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 `;
 
 function DineInTableSettings({ settings }) {

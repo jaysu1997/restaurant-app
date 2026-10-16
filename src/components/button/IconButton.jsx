@@ -28,12 +28,12 @@ const sizeStyles = {
 const hoverColorStyles = {
   blue: css`
     ${hoverStyles(css`
-      color: #2563eb;
+      color: var(--color-brand);
     `)}
   `,
   red: css`
     ${hoverStyles(css`
-      color: #dc2626;
+      color: var(--color-danger);
     `)}
   `,
 };

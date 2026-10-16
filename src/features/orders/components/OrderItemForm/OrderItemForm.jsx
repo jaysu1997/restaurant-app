@@ -3,39 +3,38 @@ import styled from "styled-components";
 import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { prepareOrderItem } from "../../../../utils/orderHelpers";
+import { prepareOrderItem } from "../../../../utils/orderData.js";
 import showToast from "../../../../utils/showToast";
 import Note from "../../../../components/Note";
 import CustomizationField from "./CustomizationField";
-import Modal, {
-  ModalContainer,
-  ModalContent,
-} from "../../../../components/modal/Modal";
+import Modal, { ModalContent } from "../../../../components/modal/Modal";
 import OrderItemFormHeader from "./OrderItemFormHeader";
 import OrderItemFormFooter from "./OrderItemFormFooter";
+import useRestoreFocus from "../../../../hooks/ui/useRestoreFocus.js";
 
 const NoteGroup = styled.div`
-  padding-top: 2.4rem;
-  border-top: 1px solid #e5e7eb;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--space-1);
 `;
 
 const NoteLabel = styled.label`
   font-size: 1.8rem;
-  font-weight: 600;
-  color: #111827;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-strong);
   width: fit-content;
 `;
 
 const NoteHint = styled.span`
-  margin-bottom: 0.4rem;
+  margin-bottom: var(--space-1);
   font-size: 1.3rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
 `;
 
 function OrderItemForm({ orderDish, onClose, isEdit = false }) {
+  const handleCloseModal = useRestoreFocus(onClose);
   const {
     state: { activeCustomizations, inventoryObj },
     dispatch,
@@ -126,42 +125,41 @@ function OrderItemForm({ orderDish, onClose, isEdit = false }) {
       },
     });
 
-    onClose();
+    handleCloseModal();
   }
 
   return (
     <FormProvider {...methods}>
       <Modal
-        onClose={onClose}
+        onClose={handleCloseModal}
         title={isEdit ? "編輯餐點" : "新增餐點"}
         maxWidth={40}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <ModalContainer as="form" onSubmit={handleSubmit(onSubmit)}>
-          <ModalContent>
-            <OrderItemFormHeader orderDish={orderDish} />
+        <ModalContent>
+          <OrderItemFormHeader orderDish={orderDish} />
 
-            {activeCustomizations.map((customization) => (
-              <CustomizationField
-                customization={customization}
-                submitAttempted={submitAttempted}
-                key={customization.customizationId}
-              />
-            ))}
+          {activeCustomizations.map((customization) => (
+            <CustomizationField
+              customization={customization}
+              submitAttempted={submitAttempted}
+              key={customization.customizationId}
+            />
+          ))}
 
-            <NoteGroup>
-              <NoteLabel htmlFor={`${name}-note`}>餐點備註</NoteLabel>
-              <NoteHint>例如：不要醬料、吐司去邊...</NoteHint>
-              <Note id={`${name}-note`} maxLength={25} />
-            </NoteGroup>
-          </ModalContent>
+          <NoteGroup>
+            <NoteLabel htmlFor={`${name}-note`}>餐點備註</NoteLabel>
+            <NoteHint>例如：不要醬料、吐司去邊...</NoteHint>
+            <Note id={`${name}-note`} maxLength={25} />
+          </NoteGroup>
+        </ModalContent>
 
-          <OrderItemFormFooter
-            isEdit={isEdit}
-            servings={servings}
-            setServings={setServings}
-            disabled={false}
-          />
-        </ModalContainer>
+        <OrderItemFormFooter
+          isEdit={isEdit}
+          servings={servings}
+          setServings={setServings}
+          disabled={false}
+        />
       </Modal>
     </FormProvider>
   );

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const StyledRequiredMark = styled.span`
-  color: #dc2626;
+  color: var(--color-danger);
   font-size: inherit;
   font-weight: inherit;
 `;

@@ -6,7 +6,7 @@ const StyledPageHeader = styled.header`
   justify-content: space-between;
   width: 100%;
   height: 4.8rem;
-  gap: 1rem;
+  gap: var(--space-2-5);
 `;
 
 const PageHeading = styled.h1`
@@ -20,7 +20,7 @@ const PageHeading = styled.h1`
 
 const PageTools = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: var(--space-2-5);
 `;
 
 function PageHeader({ title, children }) {

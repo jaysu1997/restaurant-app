@@ -1,4 +1,3 @@
-// 或許可以移動到filter folder內
 function FilterIcon({ checked, size = 18 }) {
   return (
     <svg

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ModalCloseButton from "../../../components/ModalCloseButton";
+import CloseButton from "../../../components/CloseButton";
 
 const Header = styled.header`
   flex-shrink: 0;
@@ -7,18 +7,18 @@ const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0 var(--space-5);
+  border-bottom: 1px solid var(--color-border);
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.025);
 `;
 
 const CartTitle = styled.h2`
-  color: #111827;
-  font-size: 2rem;
-  font-weight: 700;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 `;
 
-const CartCloseButton = styled(ModalCloseButton)`
+const CartCloseButton = styled(CloseButton)`
   display: none;
 
   @media (max-width: 50em) {

@@ -10,18 +10,18 @@ const StyledDishCard = styled.button`
   height: 11.4rem;
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1.6rem;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  gap: var(--space-2-5);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
 
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 
   ${hoverStyles(css`
-    border-color: #d1d5db;
+    border-color: var(--color-border-strong);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   `)}
 
@@ -35,13 +35,13 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   min-width: 0;
 `;
 
 const DishName = styled.span`
-  color: #1f2937;
-  font-weight: 600;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -51,9 +51,9 @@ const DishName = styled.span`
 
 const DishCategory = styled.span`
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1;
-  color: #6b7280;
+  color: var(--color-text-muted);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -62,7 +62,7 @@ const DishCategory = styled.span`
 `;
 
 const DishPrice = styled(Price)`
-  color: #dc2626;
+  color: var(--color-danger);
   margin-top: auto;
 `;
 
@@ -70,7 +70,7 @@ const Thumbnail = styled.div`
   flex-shrink: 0;
   height: 8rem;
   width: 8rem;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
 `;
 
@@ -81,7 +81,11 @@ function DishCard({ dish, onSelect, canPlaceOrder }) {
 
   return (
     <li>
-      <StyledDishCard onClick={onSelect} disabled={!canPlaceOrder}>
+      <StyledDishCard
+        type="button"
+        onClick={onSelect}
+        disabled={!canPlaceOrder}
+      >
         <Content>
           <DishName>{name}</DishName>
           <DishCategory>{category}</DishCategory>

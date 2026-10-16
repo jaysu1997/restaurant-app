@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import DishServings from "./DishServings";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
-import { summarizeMealChoices } from "../../../utils/orderHelpers";
+import { summarizeMealChoices } from "../../../utils/orderData.js";
 import IconButton from "../../../components/button/IconButton";
 import { Trash2 } from "lucide-react";
 import Price from "../../../components/Price";
@@ -12,12 +12,12 @@ const Container = styled.li`
   position: relative;
   display: grid;
   grid-template-columns: 4rem minmax(0, 1fr);
-  gap: 1.2rem;
-  padding: 1.6rem 0;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
   min-height: 12rem;
 
   & + & {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--color-border);
   }
 `;
 
@@ -38,19 +38,19 @@ const DeleteButton = styled(IconButton)`
 const OrderItemImage = styled.div`
   width: 4rem;
   height: 4rem;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 `;
 
 const OrderItemBody = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  font-size: 1.4rem;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
 `;
 
 const OrderItemName = styled.span`
-  padding-right: 2.4rem;
-  font-weight: 700;
+  padding-right: var(--space-6);
+  font-weight: var(--font-weight-bold);
   line-height: 2.4rem;
   white-space: nowrap;
   overflow: hidden;
@@ -58,14 +58,14 @@ const OrderItemName = styled.span`
 `;
 
 const OrderItemOptions = styled.span`
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: #374151;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
   overflow-wrap: anywhere;
 `;
 
 const OrderItemNote = styled(OrderItemOptions)`
-  color: #6b7280;
+  color: var(--color-text-muted);
 `;
 
 const LineTotal = styled(Price)`
@@ -88,6 +88,7 @@ function OrderItem({ item, canModifyItems, isEdit = true, onEditDish }) {
     <Container>
       {isEdit && canModifyItems && (
         <EditButton
+          type="button"
           disabled={!canModifyItems}
           onClick={() => onEditDish(item)}
           aria-label={`編輯${name}`}

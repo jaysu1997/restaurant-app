@@ -41,7 +41,7 @@ const queryClient = new QueryClient({
 
 // 可能需要一個個檔案檢查aria的使用，聽說建議加上，讓ai檢查就可以。還有附帶title說明，尤其是純icon button
 
-// 可能需要檢查是否features和其他folder中的檔案分類都正確，可能會忘記新增components和utils，檔案也忘記放進去
+// 可能需要檢查是否features和其他folder中的檔案分類都正確，可能會忘記新增components和utils，檔案也忘記放進去。這部分需要後續總整理，utils能拆的、能改分類的，都需要注意。目前還有一些檔案沒有被分類好
 
 // 根據AI建議，餐點可能需要加上圖片?然後需要增加桌台模式?reacme和demo要有、test data要有.........
 
@@ -53,10 +53,6 @@ const queryClient = new QueryClient({
 // 還有form應該可以抽成form layout、form footer、form content...
 
 // FormFieldLayout現在有提供必填props，可以全部進行調整
-
-// 好像很多svg沒有加上寬高class?還是說因為是使用Button元件一系列的通用設計，所以不用?或許可以一律套用class?
-
-// 不同helpers可能需要整理一下，似乎有點混亂了(尤其是settingsHelpers)，或許可以分成日期時間helper、正則helpers...
 
 // SEO、lighthouse檢查
 
@@ -127,26 +123,26 @@ export default function App() {
         gutter={10}
         toastOptions={{
           style: {
-            fontSize: "1.6rem",
+            fontSize: "var(--font-size-base)",
             width: "32rem",
             maxWidth: "95dvw",
           },
           icon: null,
           success: {
             style: {
-              backgroundColor: "#f0fdf4",
+              backgroundColor: "var(--color-success-subtle)",
               borderLeft: "1rem solid #22c55e",
               borderRadius: "5px",
             },
-            duration: 2000,
+            duration: 1000,
           },
           error: {
             style: {
               backgroundColor: "#fff1f2",
-              borderLeft: "1rem solid #e11d48",
+              borderLeft: "1rem solid var(--color-danger-strong)",
               borderRadius: "5px",
             },
-            duration: 3000,
+            duration: 1500,
           },
         }}
       />

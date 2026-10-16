@@ -14,37 +14,15 @@ import DataDisplayCard from "../components/DataDisplayCard.jsx";
 import useDeleteMenu from "../hooks/data/menus/useDeleteMenu.js";
 import ConfirmDelete from "../components/ConfirmDelete.jsx";
 import HeaderActionButton from "../components/button/HeaderActionButton.jsx";
-import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers.js";
+import { hasActiveFilters, parseFilterQuery } from "../utils/queryFilters.js";
+import { filterMenuData } from "../features/menu-manage/utils/menuFilters.js";
 
 const Container = styled.ul`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
-  gap: 2.8rem;
+  gap: var(--space-7);
 `;
-
-// 這個或許可以移動到filter helper中
-function filterData(menusData, filterState) {
-  let displayData = menusData;
-
-  const nameSearchParams = filterState.name.value;
-  const categorySearchParams = filterState.category.value;
-
-  // 關鍵字篩選
-  if (nameSearchParams) {
-    displayData = displayData.filter((menu) =>
-      menu.name.includes(nameSearchParams),
-    );
-  }
-  // 餐點分類篩選
-  if (categorySearchParams) {
-    displayData = displayData.filter(
-      (menu) => menu.category === categorySearchParams,
-    );
-  }
-
-  return displayData;
-}
 
 function MenuManage() {
   const [modal, setModal] = useState({ type: null, data: null });
@@ -73,7 +51,7 @@ function MenuManage() {
   // 從url取得filter並做部分檢查
   const filterState = parseFilterQuery(searchParams, filtersConfig);
   // 要展示的數據
-  const displayMenusData = filterData(menus, filterState);
+  const displayMenusData = filterMenuData(menus, filterState);
   // 是否有套用中的篩選條件
   const hasAppliedFilters = hasActiveFilters(filterState);
 

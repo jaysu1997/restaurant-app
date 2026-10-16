@@ -1,6 +1,6 @@
 // 訂單詳情(編輯)
 import { FormProvider } from "react-hook-form";
-import { buildOrderData } from "../../../utils/orderHelpers";
+import { buildOrderData } from "../../../utils/orderData.js";
 import useUpdateOrder from "../../../hooks/data/orders/useUpdateOrder";
 import QueryStatusFallback from "../../../components/QueryStatusFallback";
 import { Navigate, useNavigate } from "react-router";
@@ -9,6 +9,13 @@ import useOrderInventory from "../hooks/useOrderInventory";
 import useOrderEdit from "../hooks/useOrderEdit";
 import FormActions from "../../../components/FormActions";
 import OrderContent from "./OrderContent";
+import styled from "styled-components";
+
+const StyledOrderEditPage = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+`;
 
 function OrderEditPage({ orderData, canModifyItems }) {
   const navigate = useNavigate();
@@ -35,19 +42,20 @@ function OrderEditPage({ orderData, canModifyItems }) {
   return (
     <QueryStatusFallback queries={[inventoryQuery]}>
       <FormProvider {...methods}>
-        <OrderContent
-          orderData={orderData}
-          orderItems={draftItems}
-          canModifyItems={canModifyItems}
-          isEdit={true}
-        />
+        <StyledOrderEditPage onSubmit={handleSubmit(onSubmit)}>
+          <OrderContent
+            orderData={orderData}
+            orderItems={draftItems}
+            canModifyItems={canModifyItems}
+            isEdit={true}
+          />
 
-        <FormActions
-          onSubmit={handleSubmit(onSubmit)}
-          onCancel={() => navigate(-1)}
-          isProcessing={isUpdatingOrder}
-          submitDisabled={draftItems.length === 0 || isUpdatingOrder}
-        />
+          <FormActions
+            onCancel={() => navigate(-1)}
+            isProcessing={isUpdatingOrder}
+            submitDisabled={draftItems.length === 0 || isUpdatingOrder}
+          />
+        </StyledOrderEditPage>
       </FormProvider>
     </QueryStatusFallback>
   );

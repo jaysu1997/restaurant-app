@@ -8,16 +8,16 @@ const Form = styled.form`
 
 const Content = styled.div`
   width: 100%;
-  padding: 3.6rem 2.4rem;
+  padding: var(--space-9) var(--space-6);
 `;
 
 const AppendButtonContainer = styled.div`
-  margin-top: 2.4rem;
+  margin-top: var(--space-6);
 `;
 
 const Footer = styled.footer`
-  border-top: 1px solid #f3f4f6;
-  padding: 0 2.4rem;
+  border-top: 1px solid var(--color-surface-subtle);
+  padding: 0 var(--space-6);
   height: 7.2rem;
   display: flex;
   align-items: center;

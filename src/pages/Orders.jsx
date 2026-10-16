@@ -6,7 +6,7 @@ import PageHeader from "../components/PageHeader";
 import PageContainer from "../components/PageContainer";
 import QueryStatusFallback from "../components/QueryStatusFallback";
 import OrdersListDesktop from "../features/orders/components/OrdersList/OrdersListDesktop";
-import { hasActiveFilters, parseFilterQuery } from "../utils/filterHelpers";
+import { hasActiveFilters, parseFilterQuery } from "../utils/queryFilters.js";
 import { useSearchParams } from "react-router";
 import OrdersListMobile from "../features/orders/components/OrdersList/OrdersListMobile";
 import Pagination from "../features/orders/components/Pagination";
@@ -15,7 +15,7 @@ const OrdersContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2.8rem;
+  gap: var(--space-7);
 `;
 
 function Orders() {

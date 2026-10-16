@@ -4,14 +4,15 @@ import useUpdateUserProfile from "../../hooks/data/auth/useUpdateUserProfile";
 import SectionContainer from "../../components/SectionContainer";
 import FormInputField from "../../components/FormInputField";
 import { UserRoundPen } from "lucide-react";
-import { trimString, validatePhoneNumber } from "../../utils/helpers";
+import { trimString } from "../../utils/text.js";
+import { validatePhoneNumber } from "../../utils/validation.js";
 import SectionForm from "../../components/SectionForm";
 
 const Fields = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  font-size: 1.4rem;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
 `;
 
 function UserProfileSetting({ userData }) {

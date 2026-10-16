@@ -2,7 +2,7 @@
 // 控制和設定餐點份數的元件
 import styled, { css } from "styled-components";
 import { Minus, Plus } from "lucide-react";
-import { hoverStyles } from "../../../style/helpers";
+import { hoverStyles, insetFocusVisible } from "../../../style/helpers";
 import useOrderDraft from "../../../context/orders/useOrderDraft";
 
 const ServingDisplay = styled.div`
@@ -12,37 +12,47 @@ const ServingDisplay = styled.div`
   z-index: 3;
   flex-shrink: 0;
   height: 3.2rem;
+  width: 9rem;
   display: inline-flex;
   align-items: center;
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   line-height: 3.2rem;
 `;
 
 const ServingStepper = styled(ServingDisplay)`
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--color-surface);
 `;
 
-const AdjustButton = styled.button`
-  width: 2.8rem;
-  height: 3.2rem;
+const AdjustButtonLeft = styled.button`
+  height: 100%;
+  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
-  color: #1f2937;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md) 0px 0px var(--radius-md);
 
   ${hoverStyles(css`
-    background-color: #f9fafb;
+    background-color: var(--color-background);
   `)}
 
   svg {
     width: 1.6rem;
     height: 1.6rem;
   }
+
+  &:focus-visible {
+    ${insetFocusVisible}
+  }
+`;
+
+const AdjustButtonRight = styled(AdjustButtonLeft)`
+  border-radius: 0px var(--radius-md) var(--radius-md) 0px;
 `;
 
 const ServingValue = styled.span`
@@ -51,11 +61,11 @@ const ServingValue = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #1f2937;
-  border-left: 1px solid #e5e7eb;
-  border-right: 1px solid #e5e7eb;
-  font-size: 1.2rem;
-  font-weight: 600;
+  color: var(--color-text-primary);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   cursor: default;
 `;
 
@@ -96,7 +106,7 @@ function DishServings({ item, isEdit, canModifyItems }) {
 
   return (
     <ServingStepper>
-      <AdjustButton
+      <AdjustButtonLeft
         type="button"
         disabled={!canModifyItems}
         aria-label={servings <= 1 ? "刪除餐點" : "減少餐點數量"}
@@ -105,11 +115,11 @@ function DishServings({ item, isEdit, canModifyItems }) {
         }
       >
         <Minus />
-      </AdjustButton>
+      </AdjustButtonLeft>
 
       <ServingValue>{servings}</ServingValue>
 
-      <AdjustButton
+      <AdjustButtonRight
         type="button"
         disabled={!canIncrease || !canModifyItems}
         title={!canIncrease ? "庫存不足，無法再增加份數" : undefined}
@@ -117,7 +127,7 @@ function DishServings({ item, isEdit, canModifyItems }) {
         aria-label="增加餐點數量"
       >
         <Plus />
-      </AdjustButton>
+      </AdjustButtonRight>
     </ServingStepper>
   );
 }

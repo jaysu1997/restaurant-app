@@ -12,34 +12,39 @@ import {
 } from "recharts";
 import { AlarmClock } from "lucide-react";
 import SectionContainer from "../../../components/SectionContainer";
+import { focusRingStyles } from "../../../style/helpers.js";
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding: 5.2rem 2.4rem 2.8rem 1.2rem;
+  padding: 5.2rem var(--space-6) var(--space-7) var(--space-3);
+
+  & [tabindex="0"]:focus-visible {
+    ${focusRingStyles}
+  }
 `;
 
 const TooltipContainer = styled.div`
   min-width: 15rem;
-  padding: 1.2rem 1.4rem;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.8rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: var(--space-3) var(--space-3-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-tooltip);
 `;
 
 const TooltipTime = styled.p`
-  color: #6b7280;
-  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 `;
 
 const TooltipOrders = styled.p`
-  color: #111827;
-  font-size: 1.4rem;
-  font-weight: 600;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 
   span {
-    color: #2563eb;
+    color: var(--color-brand);
   }
 `;
 
@@ -90,7 +95,7 @@ function TodayOrderTimeChart({ hourlyOrders }) {
           <BarChart data={hourlyOrders} barCategoryGap="20%">
             <CartesianGrid
               vertical={false}
-              stroke="#f3f4f6"
+              stroke="var(--color-surface-subtle)"
               strokeDasharray="3 3"
             />
 
@@ -99,7 +104,7 @@ function TodayOrderTimeChart({ hourlyOrders }) {
               interval="equidistantPreserveEnd"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#9ca3af", fontSize: 12 }}
+              tick={{ fill: "var(--color-text-placeholder)", fontSize: 12 }}
               tickMargin={8}
               padding={{ right: 12 }}
             />
@@ -109,7 +114,7 @@ function TodayOrderTimeChart({ hourlyOrders }) {
               axisLine={false}
               tickLine={false}
               width={45}
-              tick={{ fill: "#9ca3af", fontSize: 12 }}
+              tick={{ fill: "var(--color-text-placeholder)", fontSize: 12 }}
               tickFormatter={(value) => {
                 if (value >= 1000000) {
                   return `${(value / 1000000).toFixed(1)}M`;
@@ -138,7 +143,7 @@ function TodayOrderTimeChart({ hourlyOrders }) {
                     {...props}
                     fill={
                       peakHours.hours.includes(props.index)
-                        ? "#2563eb"
+                        ? "var(--color-brand)"
                         : "#93c5fd"
                     }
                   />

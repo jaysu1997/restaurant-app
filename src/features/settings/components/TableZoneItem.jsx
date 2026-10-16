@@ -1,30 +1,31 @@
 import styled from "styled-components";
 import FormInputField from "../../../components/FormInputField";
-import { parsePositiveInt, trimString } from "../../../utils/helpers";
+import { parsePositiveInt } from "../../../utils/numbers.js";
+import { trimString } from "../../../utils/text.js";
 import IconButton from "../../../components/button/IconButton";
 import { Trash2 } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { generateTableNumbers } from "../../../context/settings/settingsHelpers";
+import { generateTableNumbers } from "../utils/tableConfig.js";
 
 const SubTitle = styled.h4`
   grid-column: 1 / -1;
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: #292929;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-5);
 `;
 
 const Preview = styled.div`
   grid-column: 1 / -2;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   width: 100%;
 
   label {
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     font-size: 1.3rem;
-    color: #374151;
+    color: var(--color-text-secondary);
   }
 
   div {
@@ -32,11 +33,11 @@ const Preview = styled.div`
     align-items: center;
     max-width: 100%;
     min-width: 0;
-    padding: 0 0.8rem;
+    padding: 0 var(--space-2);
     color: #808080;
     border: 1px solid #e6e6e6;
     background-color: #f2f2f2;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     height: 3.8rem;
   }
 

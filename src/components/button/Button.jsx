@@ -3,16 +3,16 @@ import { hoverStyles } from "../../style/helpers";
 
 const variant = {
   primary: css`
-    color: #fff;
-    background-color: #2563eb;
+    color: var(--color-surface);
+    background-color: var(--color-brand);
 
     ${hoverStyles(css`
-      background-color: #1d4ed8;
+      background-color: var(--color-brand-hover);
     `)}
   `,
   secondary: css`
-    color: #2563eb;
-    background: #fff;
+    color: var(--color-brand);
+    background: var(--color-surface);
     border: 1px solid #dbe4f0;
 
     ${hoverStyles(css`
@@ -21,30 +21,30 @@ const variant = {
     `)}
   `,
   outline: css`
-    color: #374151;
-    background-color: #fff;
-    border-color: #d1d5db;
+    color: var(--color-text-secondary);
+    background-color: var(--color-surface);
+    border-color: var(--color-border-strong);
 
     ${hoverStyles(css`
-      background-color: #f9fafb;
+      background-color: var(--color-background);
     `)}
 
     &:disabled {
-      background-color: #f9fafb;
+      background-color: var(--color-background);
     }
   `,
   danger: css`
-    color: #fff;
-    background-color: #dc2626;
+    color: var(--color-surface);
+    background-color: var(--color-danger);
 
     ${hoverStyles(css`
-      background-color: #b91c1c;
+      background-color: var(--color-danger-text);
     `)}
   `,
   ghost: css`
-    color: #4b5563;
+    color: var(--color-text-tertiary);
     border: none;
-    padding: 0.6rem;
+    padding: var(--space-1-5);
     height: 2.6rem;
 
     & svg {
@@ -53,11 +53,11 @@ const variant = {
     }
 
     ${hoverStyles(css`
-      background-color: #f3f4f6;
+      background-color: var(--color-surface-subtle);
     `)}
   `,
   plain: css`
-    color: #6b7280;
+    color: var(--color-text-muted);
     border: none;
   `,
 };
@@ -69,12 +69,12 @@ const Button = styled.button.attrs((props) => ({
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  font-size: 1.4rem;
-  font-weight: 500;
+  gap: var(--space-1-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   border: 1px solid transparent;
-  border-radius: 999px;
-  padding: 0.8rem 2rem;
+  border-radius: var(--radius-full);
+  padding: var(--space-2) var(--space-5);
   height: 4rem;
   min-width: max-content;
 

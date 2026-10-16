@@ -11,7 +11,7 @@ const StyledCloseButton = styled.button`
   width: 3.6rem;
   height: 3.6rem;
   border-radius: 50%;
-  color: #64748b;
+  color: var(--color-text-slate-muted);
   background-color: transparent;
   transition: all 0.18s ease;
 
@@ -21,8 +21,8 @@ const StyledCloseButton = styled.button`
   }
 
   ${hoverStyles(css`
-    color: #1e293b;
-    background-color: #f3f4f6;
+    color: var(--color-text-slate-strong);
+    background-color: var(--color-surface-subtle);
   `)}
 
   &:active {
@@ -31,7 +31,7 @@ const StyledCloseButton = styled.button`
 `;
 
 // 可能要考慮到處都需要加上ariaLabel?
-function ModalCloseButton({ className, onClose, ariaLabel = "關閉" }) {
+function CloseButton({ className, onClose, ariaLabel = "關閉" }) {
   return (
     <StyledCloseButton
       className={className}
@@ -44,4 +44,4 @@ function ModalCloseButton({ className, onClose, ariaLabel = "關閉" }) {
   );
 }
 
-export default ModalCloseButton;
+export default CloseButton;

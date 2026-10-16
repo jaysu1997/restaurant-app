@@ -6,25 +6,23 @@ import { Link } from "react-router";
 import { useState } from "react";
 import useDeleteOrder from "../../../hooks/data/orders/useDeleteOrder";
 import ConfirmDelete from "../../../components/ConfirmDelete";
-import {
-  formatDateTime,
-  formatPickupNumber,
-} from "../../../utils/orderHelpers";
+import { formatDateTime } from "../../../utils/dateTime.js";
+import { formatPickupNumber } from "../../../utils/orderFormatting.js";
 
 const StyledOrderActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: var(--space-5);
 `;
 
 const EditButton = styled(Link)`
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: var(--space-1-5);
   height: 3.6rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 
   svg {
     width: 1.6rem;
@@ -32,7 +30,7 @@ const EditButton = styled(Link)`
   }
 
   ${hoverStyles(css`
-    color: #3b82f6;
+    color: var(--color-info);
   `)}
 
   @media (max-width: 50em) {
@@ -46,10 +44,10 @@ const DeleteButton = styled(Button)`
   height: 3.6rem;
   padding: 0;
   font-size: 1.3rem;
-  color: #b91c1c;
+  color: var(--color-danger-text);
 
   ${hoverStyles(css`
-    color: #dc2626;
+    color: var(--color-danger);
   `)}
 
   @media (max-width: 50em) {

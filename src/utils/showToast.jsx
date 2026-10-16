@@ -1,40 +1,45 @@
 import styled from "styled-components";
 import toast from "react-hot-toast";
-import { X, TriangleAlert, Check } from "lucide-react";
+import { X, CircleAlert, Check } from "lucide-react";
 
 const Wrapper = styled.div`
-  padding: 0.8rem 0;
+  padding: var(--space-2) 0;
   width: 100%;
   display: grid;
   grid-template-columns: 2rem 1fr 1.6rem;
   grid-template-rows: 2rem;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
   line-height: 1.6;
 `;
 
-const AlertIocn = styled(TriangleAlert)`
+const AlertIocn = styled(CircleAlert)`
+  width: 2rem;
+  height: 2rem;
   stroke-width: 3;
-  stroke: #fff;
-  fill: #e11d48;
+  stroke: var(--color-surface);
+  fill: var(--color-danger-strong);
 
-  & path:nth-child(1) {
-    stroke: #e11d48;
+  circle {
+    stroke: var(--color-danger-strong);
   }
 `;
 
 const CheckIcon = styled(Check)`
+  width: 2rem;
+  height: 2rem;
   background-color: #22c55e;
   border-radius: 50%;
-  padding: 0.4rem;
+  padding: var(--space-1);
   stroke-width: 3.6;
-  stroke: #fff;
+  stroke: var(--color-surface);
 `;
 
 const Title = styled.h4`
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: ${(props) => (props.type === "error" ? "#be123c" : "#166534")};
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: ${(props) =>
+    props.type === "error" ? "#be123c" : "var(--color-success-text)"};
 `;
 
 const CloseButton = styled.button`
@@ -42,12 +47,17 @@ const CloseButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
 `;
 
 const Content = styled.div`
   grid-column: 2 / 3;
-  font-size: 1.4rem;
-  font-weight: 400;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
   word-break: break-all;
 `;
 
@@ -63,16 +73,12 @@ function showToast({
 
   return toastAlert((t) => (
     <Wrapper>
-      {type === "error" ? (
-        <AlertIocn className="icon-lg" />
-      ) : (
-        <CheckIcon className="icon-lg" />
-      )}
+      {type === "error" ? <AlertIocn /> : <CheckIcon />}
 
       <Title type={type}>{title}</Title>
       {closeButton && (
         <CloseButton onClick={() => toast.dismiss(t.id)}>
-          <X className="icon-md" strokeWidth={2.8} />
+          <X />
         </CloseButton>
       )}
       {content && <Content>{content}</Content>}

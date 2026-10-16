@@ -9,7 +9,6 @@ const StyledFormActions = styled.div`
 `;
 
 function FormActions({
-  onSubmit,
   onCancel,
   isProcessing = false,
   submitDisabled = false,
@@ -26,12 +25,7 @@ function FormActions({
         取消
       </Button>
 
-      <SubmitButton
-        onClick={onSubmit}
-        processing={isProcessing}
-        disabled={submitDisabled}
-        round
-      >
+      <SubmitButton processing={isProcessing} disabled={submitDisabled} round>
         儲存
       </SubmitButton>
     </StyledFormActions>

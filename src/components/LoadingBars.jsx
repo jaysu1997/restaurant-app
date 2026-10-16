@@ -13,14 +13,14 @@ const Wrapper = styled.div`
   align-items: center;
   min-width: 32rem;
   min-height: 10rem;
-  gap: 0.6rem; /* 柱子間距 */
+  gap: var(--space-1-5); /* 柱子間距 */
 `;
 
 const Bar = styled.div`
   width: 8px; /* 柱子寬度，可調整 */
   height: 40px; /* 柱子最大高度 */
-  background-color: #374151; /* 淡藍色 */
-  border-radius: 4px;
+  background-color: var(--color-text-secondary); /* 淡藍色 */
+  border-radius: var(--radius-sm);
   animation: ${wave} 0.6s infinite ease-in-out;
   animation-delay: ${({ $delay }) => $delay};
   transform-origin: bottom;

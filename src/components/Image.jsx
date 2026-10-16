@@ -9,7 +9,7 @@ const Container = styled.div`
   flex-shrink: 0;
   border-radius: ${({ $radius = "50%" }) => $radius};
   overflow: hidden;
-  background-color: ${({ $loading }) => ($loading ? "#f9fafb" : "transparent")};
+  background-color: ${({ $loading }) => ($loading ? "var(--color-background)" : "transparent")};
   transition: background-color 0.18s ease;
 `;
 

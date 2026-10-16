@@ -7,33 +7,33 @@ const Container = styled.section`
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
 `;
 
 const Header = styled.header`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
   height: 6.4rem;
-  padding: 1.6rem 2.4rem;
-  border-bottom: 1px solid #f3f4f6;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-surface-subtle);
 
   & > svg {
     width: 2rem;
     height: 2rem;
-    color: #6b7280;
+    color: var(--color-text-muted);
   }
 `;
 
 const Title = styled.h2`
-  color: #111827;
-  font-size: 1.6rem;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-base);
 `;
 
 const DescriptionWrapper = styled.div`
-  padding: 2.4rem 2.4rem 0;
+  padding: var(--space-6) var(--space-6) 0;
 `;
 
 // 通用 section ui 元件

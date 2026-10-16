@@ -14,8 +14,8 @@ const Sidebar = styled.aside`
   height: calc(100dvh - 6.4rem);
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  box-shadow: inset -1px 0px #e5e7eb;
+  background-color: var(--color-surface);
+  box-shadow: inset -1px 0px var(--color-border);
   transition:
     width 0.25s ease,
     transform 0.25s ease;

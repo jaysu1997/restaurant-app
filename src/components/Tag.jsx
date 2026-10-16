@@ -12,20 +12,20 @@ const tagIcons = {
 
 const tagStyles = {
   準備中: css`
-    color: #4b5563;
-    background-color: #f3f4f6;
+    color: var(--color-text-tertiary);
+    background-color: var(--color-surface-subtle);
   `,
   已完成: css`
-    color: #1d4ed8;
-    background-color: #eff6ff;
+    color: var(--color-brand-hover);
+    background-color: var(--color-brand-subtle);
   `,
   已付款: css`
     color: #15803d;
-    background-color: #f0fdf4;
+    background-color: var(--color-success-subtle);
   `,
   未付款: css`
-    color: #b91c1c;
-    background-color: #fef2f2;
+    color: var(--color-danger-text);
+    background-color: var(--color-danger-subtle);
   `,
   內用: css`
     color: #6d28d9;
@@ -46,11 +46,11 @@ const StyledTag = styled.span`
   justify-content: center;
   width: fit-content;
   height: 2.8rem;
-  padding: 0 1.2rem;
-  border-radius: 999px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  gap: 0.2rem;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  gap: var(--space-0-5);
 
   ${({ $status }) => tagStyles[$status] || tagStyles["準備中"]}
 

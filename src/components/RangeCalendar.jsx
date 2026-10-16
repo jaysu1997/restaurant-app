@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { DayPicker } from "@daypicker/react";
 import { zhTW } from "@daypicker/react/locale";
-import { isDate, isValid, parseISO } from "date-fns";
+import { normalizeCalendarDate } from "../utils/dateTime.js";
+import { focusRingStyles } from "../style/helpers.js";
 
 const StyledDayPicker = styled(DayPicker)`
   --rdp-accent-color: #6366f1;
@@ -10,20 +11,20 @@ const StyledDayPicker = styled(DayPicker)`
   width: 100%;
 
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 
   .rdp-selected {
     font-size: 1em;
   }
 
   .rdp-dropdown:focus-visible ~ .rdp-caption_label {
-    outline: none;
+    ${focusRingStyles}
   }
 
   .rdp-month {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-2-5);
   }
 
   .rdp-dropdown {
@@ -31,7 +32,7 @@ const StyledDayPicker = styled(DayPicker)`
   }
 
   .rdp-chevron {
-    fill: #1d4ed8;
+    fill: var(--color-brand-hover);
     width: 1.8rem;
     height: 1.8rem;
   }
@@ -64,25 +65,6 @@ const StyledDayPicker = styled(DayPicker)`
   }
 `;
 
-function normalizeDate(value) {
-  const fallback = new Date();
-  // 空值
-  if (!value) return fallback;
-
-  // 已經是 Date
-  if (isDate(value)) {
-    return isValid(value) ? value : fallback;
-  }
-
-  // 字串
-  if (typeof value === "string") {
-    const parsed = parseISO(value);
-    return isValid(parsed) ? parsed : fallback;
-  }
-
-  return fallback;
-}
-
 function RangeCalendar({ defaultMonth, selected, ...rest }) {
   return (
     <StyledDayPicker
@@ -92,12 +74,12 @@ function RangeCalendar({ defaultMonth, selected, ...rest }) {
       mode="range"
       weekStartsOn={0}
       locale={zhTW}
-      defaultMonth={normalizeDate(defaultMonth)}
+      defaultMonth={normalizeCalendarDate(defaultMonth)}
       selected={
         selected
           ? {
-              from: normalizeDate(selected.from),
-              to: normalizeDate(selected.to),
+              from: normalizeCalendarDate(selected.from),
+              to: normalizeCalendarDate(selected.to),
             }
           : ""
       }

@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 const Description = styled.p`
-  font-size: 1.4rem;
-  font-weight: 400;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
   overflow-wrap: anywhere;
 `;
 

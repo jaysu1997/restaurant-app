@@ -3,7 +3,7 @@ import StyledOverlay from "../StyledOverlay";
 import { NavLink } from "react-router";
 import BrandImage from "../BrandImage";
 import BrandName from "../BrandName";
-import ModalCloseButton from "../ModalCloseButton";
+import CloseButton from "../CloseButton";
 import NavList from "./NavList";
 
 const Overlay = styled(StyledOverlay)`
@@ -25,8 +25,8 @@ const Drawer = styled.aside`
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  box-shadow: inset -1px 0px #e5e7eb;
+  background-color: var(--color-surface);
+  box-shadow: inset -1px 0px var(--color-border);
 
   transform: ${({ $isOpen }) =>
     $isOpen ? "translateX(0)" : "translateX(-100%)"};
@@ -39,15 +39,15 @@ const MobileHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem 0 2.4rem;
-  box-shadow: inset 0px -1px #e5e7eb;
+  padding: 0 var(--space-2-5) 0 var(--space-6);
+  box-shadow: inset 0px -1px var(--color-border);
 `;
 
 const MobileBrand = styled(NavLink)`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  font-size: 2rem;
+  gap: var(--space-3);
+  font-size: var(--font-size-lg);
 
   & > img {
     height: 3.6rem;
@@ -75,7 +75,7 @@ function NavDrawer({ isManager, isOpen, onClose }) {
             <BrandName />
           </MobileBrand>
 
-          <ModalCloseButton onClose={onClose} />
+          <CloseButton onClose={onClose} />
         </MobileHeader>
 
         <NavList isManager={isManager} onClose={onClose} iconOnly={false} />

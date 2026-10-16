@@ -5,12 +5,12 @@ import { hoverStyles } from "../../style/helpers";
 const StyledDropdownItem = styled(Link)`
   width: 100%;
   color: #000;
-  padding: 1rem 2rem;
-  gap: 1rem;
+  padding: var(--space-2-5) var(--space-5);
+  gap: var(--space-2-5);
   display: flex;
   align-items: center;
-  font-weight: 400;
-  font-size: 1.4rem;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-sm);
 
   svg {
     width: 1.8rem;
@@ -18,7 +18,7 @@ const StyledDropdownItem = styled(Link)`
   }
 
   ${hoverStyles(css`
-    background-color: #f3f4f6;
+    background-color: var(--color-surface-subtle);
   `)}
 `;
 

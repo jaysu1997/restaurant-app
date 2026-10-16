@@ -1,20 +1,20 @@
 import styled, { css } from "styled-components";
-import SectionContainer from "../../components/SectionContainer";
+import SectionContainer from "../../../components/SectionContainer";
 import { UsersRound } from "lucide-react";
-import UserAvatar from "../../components/UserAvatar";
+import UserAvatar from "../../../components/UserAvatar";
 import { UserRoundX } from "lucide-react";
 import { useState } from "react";
-import useUpdateStaff from "../../hooks/data/staff/useUpdateStaff";
-import useUser from "../../hooks/data/auth/useUser";
-import BaseSelect from "../../components/BaseSelect";
-import IconButton from "../../components/button/IconButton";
-import { hoverStyles } from "../../style/helpers";
+import useUpdateStaff from "../../../hooks/data/staff/useUpdateStaff";
+import useUser from "../../../hooks/data/auth/useUser";
+import BaseSelect from "../../../components/BaseSelect";
+import IconButton from "../../../components/button/IconButton";
+import { hoverStyles } from "../../../style/helpers";
 
 const List = styled.ul`
   display: flex;
   flex-direction: column;
-  font-size: 1.4rem;
-  /* padding: 0 2.4rem; */
+  font-size: var(--font-size-sm);
+  /* padding: 0 var(--space-6); */
 `;
 
 const Item = styled.li`
@@ -22,10 +22,10 @@ const Item = styled.li`
   grid-template-columns: auto 3fr minmax(8.6rem, 1fr) 2rem;
   grid-template-rows: 4.5rem;
   align-items: center;
-  gap: 2rem;
-  /* padding: 1rem; */
-  border-top: 1px solid #f3f4f6;
-  padding: 1.2rem 2.4rem;
+  gap: var(--space-5);
+  /* padding: var(--space-2-5); */
+  border-top: 1px solid var(--color-surface-subtle);
+  padding: var(--space-3) var(--space-6);
 
   &:first-child {
     border: none;
@@ -34,21 +34,21 @@ const Item = styled.li`
 
   ${hoverStyles(css`
     background-color: ${({ $isUpdating }) =>
-      $isUpdating ? "#e5e7eb" : "#f9fafb"};
+      $isUpdating ? "var(--color-border)" : "var(--color-background)"};
   `)}
 
   ${({ $isUpdating }) =>
     $isUpdating &&
     css`
-      background-color: #e5e7eb;
+      background-color: var(--color-border);
       opacity: 0.5;
       user-select: none;
       cursor: progress;
     `}
 
   @media (max-width : 25em) {
-    gap: 1.2rem;
-    padding: 1.2rem;
+    gap: var(--space-3);
+    padding: var(--space-3);
   }
 `;
 
@@ -62,13 +62,13 @@ const Profile = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
   }
 
   & > span:last-child {
-    /* font-size: 1.2rem; */
-    font-weight: 400;
-    color: #6b7280;
+    /* font-size: var(--font-size-xs); */
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-muted);
   }
 `;
 

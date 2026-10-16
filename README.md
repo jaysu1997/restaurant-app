@@ -46,7 +46,7 @@ restaurant-app
 │  │  │  ├─ ModalBody.jsx
 │  │  │  ├─ ModalFormCard.jsx
 │  │  │  └─ ModalFormSection.jsx
-│  │  ├─ ModalCloseButton.jsx
+│  │  ├─ CloseButton.jsx
 │  │  ├─ Navbar.jsx
 │  │  ├─ NavItem.jsx
 │  │  ├─ Note.jsx

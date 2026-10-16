@@ -2,10 +2,10 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import useGetSettings from "../../hooks/data/settings/useGetSettings";
 import {
-  generateDineInTableOptions,
   getOpenHoursInfo,
   getOpenStatus,
-} from "./settingsHelpers";
+} from "../../features/settings/utils/openHours.js";
+import { generateDineInTableOptions } from "../../features/settings/utils/tableConfig.js";
 
 const SettingsContext = createContext();
 

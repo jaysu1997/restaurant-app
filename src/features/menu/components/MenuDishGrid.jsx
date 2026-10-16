@@ -1,30 +1,26 @@
 // ok
 import styled from "styled-components";
-import { useSearchParams } from "react-router";
 import DishCard from "../../../components/DishCard";
-import { getValidParam } from "../../../utils/filterHelpers";
 
 const Container = styled.ul`
   grid-column: 1;
   display: grid;
   align-items: start;
   grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
-  gap: 2.8rem;
+  gap: var(--space-7);
   overflow: hidden;
+  padding: var(--space-1);
 `;
 
-function MenuDishGrid({ menus, categories, canPlaceOrder, onCreateDish }) {
-  const [searchParams] = useSearchParams();
-
-  // 篩選要呈現的餐點類別
-  const selectedCategory = getValidParam(
-    searchParams.get("category"),
-    categories,
-    "all",
-  );
+function MenuDishGrid({
+  menus,
+  selectedCategory,
+  canPlaceOrder,
+  onCreateDish,
+}) {
   // 要呈現的餐點
   const filteredDishes =
-    selectedCategory === "all"
+    selectedCategory === "全部"
       ? menus
       : menus.filter((dish) => dish.category === selectedCategory);
 

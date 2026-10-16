@@ -15,9 +15,9 @@ const ScrollFade = styled.div`
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   background: linear-gradient(
     ${({ $direction }) => ($direction === "left" ? "90deg" : "270deg")},
-    rgba(249, 250, 251, 1) 0%,
-    rgba(249, 250, 251, 0.9) 28%,
-    rgba(249, 250, 251, 0) 100%
+    rgba(var(--color-background-rgb), 1) 0%,
+    rgba(var(--color-background-rgb), 0.9) 28%,
+    rgba(var(--color-background-rgb), 0) 100%
   );
 
   @media (pointer: coarse) {
@@ -40,7 +40,7 @@ const StyledScrollNavButton = styled.button`
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 50%;
-  color: #fff;
+  color: var(--color-surface);
   background-color: rgba(38, 38, 38, 0.68);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(8px);

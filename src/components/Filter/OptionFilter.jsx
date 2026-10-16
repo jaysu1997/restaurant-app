@@ -4,21 +4,21 @@ import { hoverStyles } from "../../style/helpers";
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-  gap: 1rem;
+  gap: var(--space-2-5);
 `;
 
 const OptionButton = styled.button`
-  border-radius: 6px;
-  padding: 0.6rem 1rem;
+  border-radius: var(--radius-md);
+  padding: var(--space-1-5) var(--space-2-5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
 
   font-weight: ${({ $isSelected }) => ($isSelected ? "500" : "400")};
-  color: ${({ $isSelected }) => ($isSelected ? "#2563eb" : "#374151")};
+  color: ${({ $isSelected }) => ($isSelected ? "var(--color-brand)" : "var(--color-text-secondary)")};
   background-color: ${({ $isSelected }) =>
-    $isSelected ? "#eff6ff" : "#f3f4f6"};
+    $isSelected ? "var(--color-brand-subtle)" : "var(--color-surface-subtle)"};
   border: 1px solid
     ${({ $isSelected }) => ($isSelected ? "#bfdbfe" : "transparent")};
 
@@ -30,7 +30,7 @@ const OptionButton = styled.button`
 
   ${hoverStyles(css`
     background-color: ${({ $isSelected }) =>
-      $isSelected ? "#dbeafe" : "#e5e7eb"};
+      $isSelected ? "#dbeafe" : "var(--color-border)"};
   `)}
 `;
 

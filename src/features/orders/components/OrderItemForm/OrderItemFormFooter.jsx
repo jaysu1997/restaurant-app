@@ -7,7 +7,7 @@ import SubmitButton from "../../../../components/button/SubmitButton";
 const ServingStepper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: var(--space-2);
 `;
 
 const AdjustButton = styled(Button)`
@@ -24,8 +24,8 @@ const AdjustButton = styled(Button)`
 const ServingValue = styled.div`
   width: 2.8rem;
   text-align: center;
-  font-size: 1.6rem;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
 `;
 
 function OrderFormFooter({ isEdit, servings, setServings }) {

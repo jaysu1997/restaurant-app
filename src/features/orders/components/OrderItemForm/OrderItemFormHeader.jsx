@@ -4,17 +4,17 @@ import DishImage from "../../../../components/DishImage";
 
 const Container = styled.div`
   display: flex;
-  gap: 1.6rem;
-  padding: 1.2rem 0;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
 `;
 
 const ImageWrapper = styled.div`
   flex-shrink: 0;
   width: 8rem;
   height: 8rem;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  background-color: #f3f4f6;
+  background-color: var(--color-surface-subtle);
 `;
 
 const Meta = styled.div`
@@ -25,25 +25,25 @@ const Meta = styled.div`
 
 const Category = styled.span`
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1;
-  color: #6b7280;
+  color: var(--color-text-muted);
 `;
 
 const DishName = styled.h3`
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-strong);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
 const DishPrice = styled(Price)`
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: 1.8rem;
   margin-top: auto;
-  color: #dc2626;
+  color: var(--color-danger);
 `;
 
 function OrderFormHeader({ orderDish }) {

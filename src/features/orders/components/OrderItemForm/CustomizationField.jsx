@@ -8,55 +8,55 @@ import { CircleAlert } from "lucide-react";
 const FIELD_UI = {
   optional: {
     label: "選填",
-    color: "#6b7280",
-    bg: "#f9fafb",
-    border: "#e5e7eb",
+    color: "var(--color-text-muted)",
+    bg: "var(--color-background)",
+    border: "var(--color-border)",
   },
   required: {
     label: "必填",
-    color: "#e11d48",
+    color: "var(--color-danger-strong)",
     bg: "#fff1f2",
     border: "#fecdd3",
   },
   completed: {
     label: "完成",
-    color: "#2563eb",
-    bg: "#eff6ff",
+    color: "var(--color-brand)",
+    bg: "var(--color-brand-subtle)",
     border: "#bfdbfe",
   },
   error: {
     label: "請選擇",
-    color: "#dc2626",
-    bg: "#fef2f2",
-    border: "#fecaca",
+    color: "var(--color-danger)",
+    bg: "var(--color-danger-subtle)",
+    border: "var(--color-danger-border)",
   },
 };
 
 const Container = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
-  border-top: 1px solid #e5e7eb;
-  padding-top: 2.4rem;
+  gap: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-6);
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  gap: 0.4rem;
+  gap: var(--space-1);
 `;
 
 const TitleGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--space-1);
   min-width: 0;
 `;
 
 const Title = styled.h4`
   font-size: 1.8rem;
-  font-weight: 600;
-  color: ${({ $isError }) => ($isError ? "#dc2626" : "#111827")};
+  font-weight: var(--font-weight-semibold);
+  color: ${({ $isError }) => ($isError ? "var(--color-danger)" : "var(--color-text-strong)")};
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -65,19 +65,19 @@ const Title = styled.h4`
 const Hint = styled.span`
   font-size: 1.3rem;
   line-height: 1.6rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
 `;
 
 const Badge = styled.div`
   height: 2.8rem;
   flex-shrink: 0;
-  padding: 0 1rem;
-  border-radius: 999px;
+  padding: 0 var(--space-2-5);
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 1.2rem;
-  font-weight: 600;
+  gap: var(--space-1-5);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   color: ${({ $status }) => $status.color};
   background-color: ${({ $status }) => $status.bg};
   border: 1px solid ${({ $status }) => $status.border};
@@ -91,7 +91,7 @@ const Badge = styled.div`
 const OptionList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--space-1);
 `;
 
 // 根據欄位要求和填寫狀態控制樣式

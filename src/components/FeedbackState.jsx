@@ -22,8 +22,8 @@ const StyledFeedbackState = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 3.2rem;
-  padding: 3.6rem 1rem;
+  gap: var(--space-8);
+  padding: var(--space-9) var(--space-2-5);
   text-align: center;
   animation: ${fadeIn} 0.3s ease forwards;
   overflow: auto;

@@ -1,9 +1,7 @@
 // ok
 import styled from "styled-components";
-import {
-  formatDateTime,
-  formatPickupNumber,
-} from "../../../../utils/orderHelpers";
+import { formatDateTime } from "../../../../utils/dateTime.js";
+import { formatPickupNumber } from "../../../../utils/orderFormatting.js";
 import Tag from "../../../../components/Tag";
 import Price from "../../../../components/Price";
 import { Link } from "react-router";
@@ -15,19 +13,19 @@ const StyledOrderList = styled.div`
   @media (max-width: 50em) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(25.2rem, 1fr));
-    gap: 2.8rem;
+    gap: var(--space-7);
   }
 `;
 
 const OrderCard = styled.div`
   position: relative;
-  background-color: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.6rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: var(--space-3);
 `;
 
 const ViewOrderLink = styled(Link)`
@@ -40,12 +38,12 @@ const ViewOrderLink = styled(Link)`
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
 `;
 
 const PickupNumber = styled.div`
-  font-size: 2.4rem;
-  font-weight: 700;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
 `;
 
 const CardActions = styled.div`
@@ -55,7 +53,7 @@ const CardActions = styled.div`
 `;
 
 const OrderMeta = styled.div`
-  gap: 0.8rem;
+  gap: var(--space-2);
   display: flex;
   flex-wrap: wrap;
 `;
@@ -65,12 +63,12 @@ const CardFooter = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-2-5);
 `;
 
 const CreatedTime = styled.div`
-  font-size: 1.4rem;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 `;
 
 const TotalAmount = styled(Price)`

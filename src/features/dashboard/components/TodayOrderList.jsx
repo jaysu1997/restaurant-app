@@ -1,7 +1,8 @@
 // ok
 import styled, { css } from "styled-components";
 import Tag from "../../../components/Tag";
-import { formatPickupNumber, formatTime } from "../../../utils/orderHelpers";
+import { formatTime } from "../../../utils/dateTime.js";
+import { formatPickupNumber } from "../../../utils/orderFormatting.js";
 import { Link } from "react-router";
 import SectionContainer from "../../../components/SectionContainer";
 import EmptyState from "./EmptyState";
@@ -14,11 +15,12 @@ import {
 } from "lucide-react";
 import StatsFooter from "./StatsFooter";
 import Price from "../../../components/Price";
+import { formatOrderItems } from "../utils/orderDisplay.js";
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 2.4rem;
+  padding: 0 var(--space-6);
   height: 36rem;
   overflow-y: auto;
 `;
@@ -33,8 +35,8 @@ const Item = styled.li`
   flex-direction: column;
   justify-content: space-between;
   height: 7.2rem;
-  padding: 0.8rem 0;
-  border-bottom: 1px solid #f3f4f6;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-surface-subtle);
 
   &:nth-child(n + 5):last-child {
     border-bottom: none;
@@ -45,32 +47,32 @@ const OrderItemHeader = styled.div`
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) repeat(3, auto);
   align-items: center;
-  gap: 0.8rem;
+  gap: var(--space-2);
 `;
 
 const PickupNumber = styled.span`
-  color: #111827;
-  font-weight: 700;
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-bold);
 `;
 
 const OrderCreatedAt = styled.time`
-  color: #9ca3af;
-  font-weight: 500;
-  font-size: 1.2rem;
+  color: var(--color-text-placeholder);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xs);
 `;
 
 const OrderViewLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 0.2rem;
-  color: #2563eb;
-  font-size: 1.2rem;
-  font-weight: 500;
+  gap: var(--space-0-5);
+  color: var(--color-brand);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   transition: color 0.15s ease;
 
   ${hoverStyles(css`
-    color: #1d4ed8;
+    color: var(--color-brand-hover);
   `)}
 
   svg {
@@ -83,22 +85,17 @@ const OrderItemDetails = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
 `;
 
 const OrderItemsSummary = styled.span`
-  color: #6b7280;
-  font-size: 1.4rem;
-  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
-
-// 這個或許也可以搬出去到helpers中
-function formatOrderItems(items) {
-  return items.map((item) => `${item.name} x${item.servings}`).join("、");
-}
 
 // 今日訂單列表
 function TodayOrderList({ todayOrders, orderStatus }) {

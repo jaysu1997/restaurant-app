@@ -15,13 +15,13 @@ const StyledTrigger = styled.button`
     height: 5.2rem;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0 1.6rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #fff;
-    background-color: #2563eb;
-    border-radius: 8px;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-surface);
+    background-color: var(--color-brand);
+    border-radius: var(--radius-lg);
     box-shadow:
       0 6px 16px rgba(15, 23, 42, 0.18),
       0 2px 5px rgba(37, 99, 235, 0.15);
@@ -31,7 +31,7 @@ const StyledTrigger = styled.button`
       transform 0.12s ease;
 
     ${hoverStyles(css`
-      background-color: #1d4ed8;
+      background-color: var(--color-brand-hover);
     `)}
 
     &:active {
@@ -51,17 +51,17 @@ const TotalServings = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem;
-  color: #2563eb;
-  background-color: #fff;
-  border-radius: 999px;
-  font-size: 1.2rem;
-  font-weight: 700;
+  padding: var(--space-1-5);
+  color: var(--color-brand);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
 `;
 
 const TotalAmount = styled(Price)`
-  color: #fff;
-  font-size: 1.6rem;
+  color: var(--color-surface);
+  font-size: var(--font-size-base);
   margin-left: auto;
 `;
 

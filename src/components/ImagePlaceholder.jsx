@@ -8,27 +8,27 @@ const StyledImagePlaceholder = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.2rem;
+  gap: var(--space-3);
 
-  background-color: #f3f4f6;
-  color: #6b7280;
-  border-radius: 8px;
+  background-color: var(--color-surface-subtle);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-lg);
   user-select: none;
 
   svg {
-    color: #9ca3af;
+    color: var(--color-text-placeholder);
     width: clamp(1.2rem, 40%, 3.2rem);
     height: clamp(1.2rem, 40%, 3.2rem);
   }
 `;
 
 const Text = styled.p`
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: #6b7280;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
 
   @media (max-width: 25em) {
-    font-size: 1.2rem;
+    font-size: var(--font-size-xs);
   }
 `;
 

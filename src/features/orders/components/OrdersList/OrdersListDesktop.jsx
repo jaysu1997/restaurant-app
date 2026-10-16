@@ -2,10 +2,8 @@
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import OrderDropdownMenu from "../OrderDropdownMenu";
-import {
-  formatDateTime,
-  formatPickupNumber,
-} from "../../../../utils/orderHelpers";
+import { formatDateTime } from "../../../../utils/dateTime.js";
+import { formatPickupNumber } from "../../../../utils/orderFormatting.js";
 import Tag from "../../../../components/Tag";
 import { hoverStyles } from "../../../../style/helpers";
 import Price from "../../../../components/Price";
@@ -14,9 +12,9 @@ const StyledOrderList = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  font-weight: 600;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  font-weight: var(--font-weight-semibold);
 
   @media (max-width: 50em) {
     display: none;
@@ -30,14 +28,14 @@ const OrderRow = styled.div`
     repeat(3, minmax(7.6rem, 0.5fr)) 3rem;
   align-items: center;
   justify-items: center;
-  gap: 1rem;
-  padding: 1.6rem 2rem;
+  gap: var(--space-2-5);
+  padding: var(--space-4) var(--space-5);
 `;
 
 const OrderHeader = styled(OrderRow)`
   background-color: #525252;
-  color: #fff;
-  border-radius: 8px 8px 0 0;
+  color: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 `;
 
 const OrderBody = styled.div`
@@ -46,22 +44,22 @@ const OrderBody = styled.div`
 `;
 
 const OrderData = styled(OrderRow)`
-  background-color: #fff;
+  background-color: var(--color-surface);
 
   ${hoverStyles(css`
-    background-color: #f9fafb;
+    background-color: var(--color-background);
   `)}
 
   & + & {
-    border-top: 1px solid #f3f4f6;
+    border-top: 1px solid var(--color-surface-subtle);
   }
 
   &:last-child {
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 
   & > span:nth-child(3) {
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
   }
 `;
 

@@ -3,75 +3,32 @@ import {
   addMinutes,
   endOfDay,
   endOfToday,
-  format,
   getDay,
   getTime,
-  isSameDay,
   isWithinInterval,
   max,
-  parse,
   set,
   startOfDay,
 } from "date-fns";
+import {
+  formatPickupStr,
+  minutesToDate,
+  parseYMD,
+} from "../../../utils/dateTime.js";
 
-// 生成單一分區的內用桌號字串陣列
-export function generateTableNumbers(zoneName, tableCount) {
-  if (!tableCount) return [];
-
-  const prefix = zoneName.trim();
-
-  return Array.from(
-    { length: tableCount },
-    (_, i) => `${prefix ? `${prefix} - ` : ""}${i + 1}`,
-  );
-}
-
-// 生成所有內用桌號選項
-export function generateDineInTableOptions(settingsData) {
-  const dineInTableConfig = settingsData?.dineInTableConfig ?? [];
-
-  const options = dineInTableConfig
-    .flatMap(({ zoneName, tableCount }) =>
-      generateTableNumbers(zoneName, tableCount),
-    )
-    .map((table) => ({ label: table, value: table }));
-
-  return options;
-}
-
-// 這個用來轉yyyy-mm-dd變成日期物件
-// 或許可以改放到通用utils
-export function parseYMD(dateStr) {
-  return parse(dateStr, "yyyy-MM-dd", new Date());
-}
-
-// 把分鐘number轉成日期物件
-export function minutesToDate(baseDate, totalMinutes) {
-  return addMinutes(startOfDay(baseDate), totalMinutes);
-}
-
-// 把日期物件轉成字串label(當天只需要顯示時間)
-export function formatPickupStr(date, baseDate = new Date()) {
-  return format(date, isSameDay(date, baseDate) ? "HH:mm" : "MM/dd HH:mm");
-}
-
-// 取得指定日期的營業設定
 export function matchOpenHours(settingsData, date) {
   const { regularOpenHours, specialOpenHours } = settingsData;
 
-  // 特殊營業時間設定優先，沒有的話才使用一般營業時間設定
-  const todayOpenHours =
+  return (
     specialOpenHours.find((special) =>
       isWithinInterval(date, {
         start: startOfDay(parseYMD(special.dateRange.from)),
         end: endOfDay(parseYMD(special.dateRange.to)),
       }),
-    ) || regularOpenHours.at(getDay(date) - 1);
-
-  return todayOpenHours;
+    ) || regularOpenHours.at(getDay(date) - 1)
+  );
 }
 
-// 取得今天的營業資訊
 export function getOpenHoursInfo(settingsData, dateKey) {
   const date = parseYMD(dateKey);
   const today = matchOpenHours(settingsData, date);
@@ -97,7 +54,6 @@ export function getOpenHoursInfo(settingsData, dateKey) {
     }),
   };
 
-  // 今天營業到24:00 + 明天00:00開始營業 = 跨日營業時段
   if (today.isBusinessDay && lastTimeSlot?.closeTime.value === 1440) {
     const tomorrow = matchOpenHours(settingsData, addDays(date, 1));
     const firstTimeSlot = tomorrow.timeSlots?.[0];
@@ -119,14 +75,11 @@ export function getOpenHoursInfo(settingsData, dateKey) {
   return todayOpenInfo;
 }
 
-// 取得當前營業狀態(ui顯示)
 export function getOpenStatus(todayOpenInfo) {
   const nowMs = getTime(new Date());
   const endMs = getTime(endOfToday());
-  // 每天的00:00都需要更新日期，獲取當日的營業狀態
   const midnightUpdateMs = endMs - nowMs + 1000;
 
-  // 未知狀態
   if (!todayOpenInfo) {
     return {
       status: "unknown",
@@ -135,7 +88,6 @@ export function getOpenStatus(todayOpenInfo) {
     };
   }
 
-  // 今日公休
   if (!todayOpenInfo.isBusinessDay) {
     return {
       status: "break",
@@ -146,12 +98,10 @@ export function getOpenStatus(todayOpenInfo) {
 
   const slots = todayOpenInfo.timeSlots || [];
 
-  // 逐段判斷（找到後立即 return）
   for (const slot of slots) {
     const openMs = getTime(slot.openTime.value);
     const closeMs = getTime(slot.closeTime.value);
 
-    // 尚未開始營業（下一個開門點）
     if (nowMs < openMs) {
       return {
         status: "break",
@@ -160,7 +110,6 @@ export function getOpenStatus(todayOpenInfo) {
       };
     }
 
-    // 營業中(如果跨夜，需要先在午夜更新日期，取得新一天的營業時段)
     if (nowMs >= openMs && nowMs <= closeMs) {
       return {
         status: "open",
@@ -170,7 +119,6 @@ export function getOpenStatus(todayOpenInfo) {
     }
   }
 
-  // 全部時段已結束
   return {
     status: "break",
     detail: "今日已打烊",
@@ -178,15 +126,11 @@ export function getOpenStatus(todayOpenInfo) {
   };
 }
 
-// 生成當前可選的取餐時間選項
 export function generatePickupTimeOptions(todayOpenInfo) {
   if (!todayOpenInfo?.isBusinessDay) return [];
 
   const now = new Date();
-
-  // 最快可選的取餐時間
   const earliestPickupTime = getEarliestPickupTime(now);
-
   const pickupTimeOptions = [];
 
   for (const slot of todayOpenInfo.timeSlots) {
@@ -202,7 +146,6 @@ export function generatePickupTimeOptions(todayOpenInfo) {
       current <= closeAt;
       current = addMinutes(current, 5)
     ) {
-      // 轉ISO字串方便react-select可以對照是否相同
       pickupTimeOptions.push({
         label: formatPickupStr(current, now),
         value: current.toISOString(),
@@ -213,7 +156,6 @@ export function generatePickupTimeOptions(todayOpenInfo) {
   return pickupTimeOptions;
 }
 
-// 是否可以建立訂單(打烊的15分鐘之前都可以)
 export function canCreateOrder(todayOpenInfo, now = new Date()) {
   const earliestPickupTime = getEarliestPickupTime(now);
 
@@ -224,7 +166,6 @@ export function canCreateOrder(todayOpenInfo, now = new Date()) {
   );
 }
 
-// 找出最快的取餐時間(準備時間至少15分鐘)
 function getEarliestPickupTime(now = new Date()) {
   const pickupBaseTime = addMinutes(now, 15);
 

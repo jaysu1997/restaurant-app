@@ -3,28 +3,29 @@ import styled, { css } from "styled-components";
 import { useSearchParams } from "react-router";
 import { useRef } from "react";
 import { ChevronRight, ChevronLeft, Dot } from "lucide-react";
-import { parsePositiveInt } from "../../../utils/helpers";
+import { parsePositiveInt } from "../../../utils/numbers.js";
 import { hoverStyles } from "../../../style/helpers";
 import Button from "../../../components/button/Button";
+import { getPaginationItems } from "../utils/pagination.js";
 
 const StyledPagination = styled.nav`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2.4rem;
-  padding: 3.6rem 0;
-  font-size: 1.4rem;
+  gap: var(--space-6);
+  padding: var(--space-9) 0;
+  font-size: var(--font-size-sm);
 `;
 
 const PaginationControls = styled.div`
   display: flex;
   height: 3.6rem;
-  gap: 0.8rem;
+  gap: var(--space-2);
 `;
 
 const PageNumbers = styled.div`
   display: flex;
-  gap: 0.8rem;
+  gap: var(--space-2);
 
   @media (max-width: 30em) {
     display: none;
@@ -32,22 +33,22 @@ const PageNumbers = styled.div`
 `;
 
 const PaginationButton = styled(Button)`
-  padding: 0 0.8rem;
+  padding: 0 var(--space-2);
   min-width: 3.6rem;
   height: 3.6rem;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 
   ${({ $active }) =>
     $active &&
     css`
-      background-color: #2563eb;
-      color: #fff;
-      border-color: #2563eb;
+      background-color: var(--color-brand);
+      color: var(--color-surface);
+      border-color: var(--color-brand);
 
       ${hoverStyles(css`
-        background-color: #2563eb;
-        color: #fff;
-        border-color: #2563eb;
+        background-color: var(--color-brand);
+        color: var(--color-surface);
+        border-color: var(--color-brand);
       `)}
     `}
 
@@ -63,8 +64,8 @@ const PaginationEllipsis = styled.span`
   justify-content: center;
   width: 3.6rem;
   height: 3.6rem;
-  color: #6b7280;
-  font-size: 1.4rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
   user-select: none;
 `;
 
@@ -76,7 +77,7 @@ const MobilePageInfo = styled.div`
     align-items: center;
 
     strong {
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
     }
 
     svg {
@@ -90,54 +91,28 @@ const JumpToPage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: var(--space-2);
 
   input {
     width: 4.8rem;
     height: 3.6rem;
     text-align: center;
-    border: 1px solid #e3e5e7;
-    border-radius: 8px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
 
     ${hoverStyles(css`
-      &:not(:focus) {
-        border-color: #b3b3b3;
+      &:not(:focus-visible) {
+        border-color: var(--color-border-hover);
       }
     `)}
 
-    &:focus {
-      border-color: #2684ff;
-      box-shadow: 0 0 0 3px rgba(38, 132, 255, 0.15);
+    &:focus-visible {
+      outline: none;
+      border-color: var(--color-focus);
+      box-shadow: var(--shadow-focus-control);
     }
   }
 `;
-
-function getPaginationItems(curPage, totalPages) {
-  if (totalPages <= 7)
-    return Array.from({ length: totalPages }, (_, i) => i + 1);
-
-  if (curPage <= 4)
-    return [
-      ...Array.from({ length: 5 }, (_, i) => i + 1),
-      "ellipsis",
-      totalPages,
-    ];
-
-  if (curPage >= totalPages - 3)
-    return [
-      1,
-      "ellipsis",
-      ...Array.from({ length: 5 }, (_, i) => totalPages - 4 + i),
-    ];
-
-  return [
-    1,
-    "ellipsis",
-    ...Array.from({ length: 3 }, (_, i) => curPage - 1 + i),
-    "ellipsis",
-    totalPages,
-  ];
-}
 
 function Pagination({ curPage, totalPages }) {
   const [searchParams, setSearchParams] = useSearchParams();

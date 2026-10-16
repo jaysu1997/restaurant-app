@@ -4,14 +4,14 @@ import { hoverStyles } from "../../style/helpers";
 import { Plus } from "lucide-react";
 
 const StyledTextButton = styled(Button)`
-  color: #2563eb;
-  padding: 0.6rem 0.8rem;
-  border-radius: 4px;
+  color: var(--color-brand);
+  padding: var(--space-1-5) var(--space-2);
+  border-radius: var(--radius-sm);
   height: 3.6rem;
   width: fit-content;
 
   ${hoverStyles(css`
-    background-color: #eff6ff;
+    background-color: var(--color-brand-subtle);
   `)}
 `;
 

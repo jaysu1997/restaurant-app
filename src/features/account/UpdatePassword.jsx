@@ -10,8 +10,8 @@ import SectionForm from "../../components/SectionForm";
 const Fields = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  font-size: 1.4rem;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
 `;
 
 function UpdatePassword({ userData }) {

@@ -2,7 +2,7 @@ import ModalFormSection from "../../../components/modal/ModalFormSection";
 import Image from "../../../components/Image";
 import ImageUploadPanel from "../../../components/ImageUploadPanel";
 import { useFormContext } from "react-hook-form";
-import { cropImage } from "../../../utils/cropImage";
+import { cropImage } from "../../../utils/media/cropImage.js";
 import { useEffect, useState } from "react";
 import ImagePlaceholder from "../../../components/ImagePlaceholder";
 
