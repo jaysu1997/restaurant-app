@@ -1,4 +1,3 @@
-// ok
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import useClickOutside from "../../hooks/ui/useClickOutside";

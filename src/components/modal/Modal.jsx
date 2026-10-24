@@ -77,7 +77,7 @@ export const ModalFooter = styled.footer`
 `;
 
 function Modal({
-  isSuspended,
+  isSuspended = false,
   children,
   onClose,
   onSubmit,
@@ -85,7 +85,7 @@ function Modal({
   titleColor = "var(--color-text-secondary)",
   maxWidth = 40,
 }) {
-  const containerRef = useFocusTrap();
+  const containerRef = useFocusTrap(!isSuspended);
 
   useScrollLock(true);
 

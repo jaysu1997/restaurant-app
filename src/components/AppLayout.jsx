@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import { useState } from "react";
 import Header from "./Header";

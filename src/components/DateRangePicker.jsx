@@ -24,6 +24,7 @@ const DateField = styled.button`
   gap: var(--space-2);
   padding: var(--space-0-5) var(--space-2);
   width: 100%;
+  min-width: max-content;
   border-radius: var(--radius-lg);
   background-color: var(--color-surface);
   cursor: pointer;

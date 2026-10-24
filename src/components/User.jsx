@@ -1,4 +1,3 @@
-// ok
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import useLogout from "../hooks/data/auth/useLogout";

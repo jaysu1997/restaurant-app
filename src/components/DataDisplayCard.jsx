@@ -1,4 +1,3 @@
-// ok
 // 用來展示數據的卡片ui
 import styled, { css } from "styled-components";
 import { Trash2, SquarePen } from "lucide-react";

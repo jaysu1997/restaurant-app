@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import {
   ResponsiveContainer,
@@ -89,7 +88,11 @@ function TodayOrderTimeChart({ hourlyOrders }) {
   );
 
   return (
-    <SectionContainer header="今日熱門時段" icon={<AlarmClock />}>
+    <SectionContainer
+      headerPlacement="inside"
+      title="今日熱門時段"
+      icon={<AlarmClock />}
+    >
       <Wrapper>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={hourlyOrders} barCategoryGap="20%">

@@ -10,7 +10,7 @@ import OrderContent from "../features/orders/components/OrderContent";
 import OrderEditPage from "../features/orders/components/OrderEditPage";
 import { hoverStyles } from "../style/helpers";
 import { OrderProvider } from "../context/orders/OrderContext";
-import { canCreateOrder } from "../features/settings/utils/openHours.js";
+import { canCreateOrder } from "../features/store-settings/utils/openHours.js";
 
 const OrderContainer = styled.div`
   display: flex;

@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import StatCard from "./StatCard";
 import { ClipboardList, Calculator, DollarSign, Utensils } from "lucide-react";

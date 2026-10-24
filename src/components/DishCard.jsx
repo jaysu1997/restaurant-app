@@ -1,4 +1,3 @@
-// ok
 // 餐點品項卡片
 import styled, { css } from "styled-components";
 import Price from "./Price";

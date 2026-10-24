@@ -1,13 +1,13 @@
 import { useState } from "react";
-import Modal, { ModalFooter } from "../../components/modal/Modal";
+import Modal, { ModalFooter } from "../../../components/modal/Modal.jsx";
 import Cropper from "react-easy-crop";
 import styled from "styled-components";
 import Slider from "./Slider";
-import useUpdateUserAvatar from "../../hooks/data/auth/useUpdateUserAvatar";
-import showToast from "../../utils/showToast";
-import FormActions from "../../components/FormActions";
-import { cropImage } from "../../utils/media/cropImage.js";
-import useRestoreFocus from "../../hooks/ui/useRestoreFocus.js";
+import useUpdateUserAvatar from "../../../hooks/data/auth/useUpdateUserAvatar.js";
+import showToast from "../../../utils/showToast.jsx";
+import FormActions from "../../../components/FormActions.jsx";
+import { cropImage } from "../../../utils/media/cropImage.js";
+import useRestoreFocus from "../../../hooks/ui/useRestoreFocus.js";
 
 const CropperWrapper = styled.div`
   height: 32rem;

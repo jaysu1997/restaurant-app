@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import useGetPaginatedOrders from "../hooks/data/orders/useGetPaginatedOrders";
 import Filter from "../components/Filter/Filter";

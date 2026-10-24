@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import VisuallyHiddenInput from "../../components/VisuallyHiddenInput";
+import VisuallyHiddenInput from "../../../components/VisuallyHiddenInput";
 
 const StyledSlider = styled.div`
   flex: 1;

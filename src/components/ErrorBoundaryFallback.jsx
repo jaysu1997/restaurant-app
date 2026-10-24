@@ -1,4 +1,3 @@
-// ok
 import WarningIcon from "../assets/warning.svg?react";
 import FeedbackState from "./FeedbackState";
 

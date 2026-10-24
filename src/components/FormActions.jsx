@@ -14,6 +14,7 @@ function FormActions({
   submitDisabled = false,
   cancelDisabled = false,
   gap = "2.4rem",
+  submitLabel = "儲存",
 }) {
   return (
     <StyledFormActions $gap={gap}>
@@ -26,7 +27,7 @@ function FormActions({
       </Button>
 
       <SubmitButton processing={isProcessing} disabled={submitDisabled} round>
-        儲存
+        {submitLabel}
       </SubmitButton>
     </StyledFormActions>
   );

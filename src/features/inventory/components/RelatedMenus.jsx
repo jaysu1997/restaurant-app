@@ -1,8 +1,12 @@
 import styled, { css, keyframes } from "styled-components";
 import { Fragment, useEffect, useState } from "react";
 import { ChevronRight, AlertCircle } from "lucide-react";
-import useIngredientMenus from "../../hooks/data/menus/useIngredientMenus";
-import { focusRingStyles, hoverStyles } from "../../style/helpers";
+import useIngredientMenus from "../../../hooks/data/menus/useIngredientMenus";
+import {
+  focusRingStyles,
+  hoverStyles,
+  insetFocusVisible,
+} from "../../../style/helpers";
 
 const spin = keyframes`
   to {
@@ -78,7 +82,7 @@ const ReadyTitle = styled(AccordionTitle)`
   &::after {
     content: "";
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
     width: 100%;
     height: 1px;
@@ -92,6 +96,10 @@ const ReadyTitle = styled(AccordionTitle)`
       $isExpanded ? "rotate(0.25turn)" : "rotate(0)"};
 
     transition: transform 0.2s ease;
+  }
+
+  &:focus-visible {
+    ${insetFocusVisible}
   }
 
   ${hoverStyles(css`

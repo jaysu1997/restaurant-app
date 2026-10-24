@@ -9,7 +9,7 @@ import Order from "./pages/Order";
 import Staff from "./pages/Staff";
 import Orders from "./pages/Orders";
 import Account from "./pages/Account";
-import Settings from "./pages/Settings";
+import StoreSettings from "./pages/StoreSettings";
 import Inventory from "./pages/Inventory";
 import Dashboard from "./pages/Dashboard";
 import MenuManage from "./pages/MenuManage";
@@ -18,13 +18,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import { OrderProvider } from "./context/orders/OrderContext";
 import { SettingsProvider } from "./context/settings/SettingsContext";
+import BusinessHours from "./pages/BusinessHours";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 0,
-      // retry: 2,
-      retry: false,
+      retry: 2,
       retryDelay: 3000,
       networkMode: "offlineFirst",
     },
@@ -37,13 +37,11 @@ const queryClient = new QueryClient({
 
 // 可能有不少元件命名有混淆，可能需要調整，以及function helpers也是
 
-// 可能要把餐點圖片的url設計成const.js，因為現在在多個地方使用，或者設計成helper?
-
 // 可能需要一個個檔案檢查aria的使用，聽說建議加上，讓ai檢查就可以。還有附帶title說明，尤其是純icon button
 
 // 可能需要檢查是否features和其他folder中的檔案分類都正確，可能會忘記新增components和utils，檔案也忘記放進去。這部分需要後續總整理，utils能拆的、能改分類的，都需要注意。目前還有一些檔案沒有被分類好
 
-// 根據AI建議，餐點可能需要加上圖片?然後需要增加桌台模式?reacme和demo要有、test data要有.........
+// 然後需要增加桌台模式?readme和demo要有、test data要有.........
 
 // 關於連絡電話的部分，或許可以加入placeholder提示格式，且改變validate處理(主動清除-和())?
 // 取餐編號的部分或許也可以(placeholder) 也有可能全部的input都建議設計placeholder?
@@ -56,8 +54,6 @@ const queryClient = new QueryClient({
 
 // SEO、lighthouse檢查
 
-// 可能有好幾個使用SectionContainer的元件都需要檢查一下欄位之間的距離，或許可以統一設定form的gap為0.4rem，目前好像是個別設定的
-
 // react.lazy 是否需要?
 
 // 清理註解
@@ -68,7 +64,7 @@ const queryClient = new QueryClient({
 
 // 表單padding是否需要統一? input的字體顏色粗細是否需要統一? border顏色是否需要統一? 哪些應該用inset? fooer和header的寬高是否也都需要統一?
 
-// 分頁ui好像建議改成有列出多個數字的風格。
+// submit button或許可以改出一個長條版本
 
 export default function App() {
   return (
@@ -101,7 +97,8 @@ export default function App() {
             </Route>
             <Route path="/menu-manage" element={<MenuManage />} />
             <Route path="/inventory" element={<Inventory />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/business-hours" element={<BusinessHours />} />
+            <Route path="/store-settings" element={<StoreSettings />} />
             <Route path="/account" element={<Account />} />
             <Route
               path="/staff"

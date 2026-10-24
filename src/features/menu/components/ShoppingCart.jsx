@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import { FormProvider, useForm } from "react-hook-form";
 import EmptyCart from "./EmptyCart";

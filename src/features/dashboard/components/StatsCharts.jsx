@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import TodayOrderList from "./TodayOrderList";
 import RevenueTrendChart from "./RevenueTrendChart";

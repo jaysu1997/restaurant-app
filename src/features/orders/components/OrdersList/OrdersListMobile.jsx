@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import { formatDateTime } from "../../../../utils/dateTime.js";
 import { formatPickupNumber } from "../../../../utils/orderFormatting.js";

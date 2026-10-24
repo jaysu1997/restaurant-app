@@ -1,4 +1,3 @@
-// ok
 import { NavLink } from "react-router";
 import styled, { css } from "styled-components";
 import {
@@ -8,6 +7,7 @@ import {
   Refrigerator,
   Settings,
   UsersRound,
+  CalendarClock,
   ShoppingBasket,
 } from "lucide-react";
 
@@ -79,7 +79,8 @@ const navItems = [
   { to: "/orders", icon: ClipboardList, label: "訂單管理" },
   { to: "/menu-manage", icon: BookOpenText, label: "菜單設定" },
   { to: "/inventory", icon: Refrigerator, label: "庫存管理" },
-  { to: "/settings", icon: Settings, label: "店鋪設定" },
+  { to: "/business-hours", icon: CalendarClock, label: "營業時間" },
+  { to: "/store-settings", icon: Settings, label: "店鋪設定" },
 ];
 
 function NavList({ isManager, onClose, iconOnly }) {

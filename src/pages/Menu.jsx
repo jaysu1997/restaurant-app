@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import PageHeader from "../components/PageHeader";
 import QueryStatusFallback from "../components/QueryStatusFallback";
@@ -10,7 +9,7 @@ import ShoppingCart from "../features/menu/components/ShoppingCart";
 import CategoryBar from "../features/menu/components/CategoryBar";
 import useOrderInventory from "../features/orders/hooks/useOrderInventory";
 import StoreClosedNotice from "../features/orders/components/StoreClosedNotice";
-import { canCreateOrder } from "../features/settings/utils/openHours.js";
+import { canCreateOrder } from "../features/store-settings/utils/openHours.js";
 import { useState } from "react";
 import OrderItemForm from "../features/orders/components/OrderItemForm/OrderItemForm";
 

@@ -1,4 +1,3 @@
-// ok
 import { ClipboardX } from "lucide-react";
 import styled from "styled-components";
 
@@ -34,7 +33,7 @@ const EmptyTitle = styled.p`
   font-weight: var(--font-weight-semibold);
 `;
 
-function EmptyState() {
+function DashboardEmptyState() {
   return (
     <StyledEmptyState>
       <EmptyIcon>
@@ -46,4 +45,4 @@ function EmptyState() {
   );
 }
 
-export default EmptyState;
+export default DashboardEmptyState;

@@ -1,4 +1,3 @@
-// ok
 import LoadingBars from "../components/LoadingBars";
 import ErrorSvg from "../assets/error.svg?react";
 import EmptyStateSvg from "../assets/empty-state.svg?react";

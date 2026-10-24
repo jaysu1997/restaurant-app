@@ -5,13 +5,12 @@ import { useFormContext } from "react-hook-form";
 import { cropImage } from "../../../utils/media/cropImage.js";
 import { useEffect, useState } from "react";
 import ImagePlaceholder from "../../../components/ImagePlaceholder";
+import { getStoragePublicUrl } from "../../../services/supabase.js";
 
 function ImageSection() {
   const { setValue, getValues } = useFormContext();
   const image = getValues("image");
-  const imagePath = image
-    ? `https://yaoivzqoyuqdmvxnxvwm.supabase.co/storage/v1/object/public/menu/${image}`
-    : null;
+  const imagePath = image ? getStoragePublicUrl("menu", image) : null;
 
   const [imageURL, setImageURL] = useState(imagePath);
 

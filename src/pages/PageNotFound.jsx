@@ -1,4 +1,3 @@
-// ok
 import { useNavigate } from "react-router";
 import FeedbackState from "../components/FeedbackState";
 import pageNotFoundIcon from "../assets/page-not-found.svg";

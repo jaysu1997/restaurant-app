@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import BrandImage from "./BrandImage";
 import BrandName from "./BrandName";

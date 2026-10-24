@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import {
   ResponsiveContainer,
@@ -74,7 +73,11 @@ function formatDateLabel(dateString) {
 
 function RecentRevenueChart({ dailyRevenue }) {
   return (
-    <SectionContainer header="一週營收變化" icon={<ChartNoAxesCombined />}>
+    <SectionContainer
+      headerPlacement="inside"
+      title="一週營收變化"
+      icon={<ChartNoAxesCombined />}
+    >
       <Wrapper>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={dailyRevenue}>

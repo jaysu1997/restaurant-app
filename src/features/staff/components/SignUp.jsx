@@ -11,7 +11,6 @@ import Modal, {
   ModalFooter,
 } from "../../../components/modal/Modal";
 import ModalFormSection from "../../../components/modal/ModalFormSection";
-import showToast from "../../../utils/showToast";
 import SubmitButton from "../../../components/button/SubmitButton";
 import useRestoreFocus from "../../../hooks/ui/useRestoreFocus.js";
 
@@ -28,7 +27,6 @@ function Signup({ onClose }) {
     handleSubmit,
     setError,
     formState: { errors },
-    reset,
   } = methods;
 
   function onSubmit(data) {
@@ -36,7 +34,6 @@ function Signup({ onClose }) {
       { ...data, role: data.role.value },
       {
         onSuccess: () => {
-          reset();
           handleCloseModal();
         },
         onError: (error) => {
@@ -48,12 +45,6 @@ function Signup({ onClose }) {
             );
             return;
           }
-
-          showToast({
-            type: "error",
-            title: "註冊失敗",
-            content: error.message,
-          });
         },
       },
     );
@@ -80,13 +71,14 @@ function Signup({ onClose }) {
             />
 
             <FormPasswordField
+              hint="密碼長度至少為 8 個字元"
               id="password"
               autoComplete="current-password"
               label="密碼"
               error={errors?.password}
               {...register("password", {
                 required: "此欄位必須填寫",
-                minLength: { value: 8, message: "密碼至少要有8碼" },
+                minLength: { value: 8, message: "密碼長度至少為 8 個字元" },
               })}
             />
           </ModalFormSection>

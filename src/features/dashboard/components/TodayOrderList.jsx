@@ -1,11 +1,10 @@
-// ok
 import styled, { css } from "styled-components";
 import Tag from "../../../components/Tag";
 import { formatTime } from "../../../utils/dateTime.js";
 import { formatPickupNumber } from "../../../utils/orderFormatting.js";
 import { Link } from "react-router";
 import SectionContainer from "../../../components/SectionContainer";
-import EmptyState from "./EmptyState";
+import DashboardEmptyState from "./DashboardEmptyState";
 import { hoverStyles } from "../../../style/helpers";
 import {
   ClipboardList,
@@ -102,9 +101,13 @@ function TodayOrderList({ todayOrders, orderStatus }) {
   const hasOrders = todayOrders.length > 0;
 
   return (
-    <SectionContainer icon={<ClipboardList />} header="今日訂單列表">
+    <SectionContainer
+      headerPlacement="inside"
+      title="今日訂單列表"
+      icon={<ClipboardList />}
+    >
       <Content>
-        {!hasOrders && <EmptyState />}
+        {!hasOrders && <DashboardEmptyState />}
 
         {hasOrders && (
           <List>

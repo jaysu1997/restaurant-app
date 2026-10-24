@@ -10,6 +10,7 @@ import {
 } from "date-fns";
 import { zhTW } from "date-fns/locale";
 
+// 好像還有一些地方有重複使用format(Date, yyyy-MM-dd)，這個或許也可以抽成helpers
 export function formatDateTime(dateTime) {
   return format(new Date(dateTime), "yyyy年MM月dd日 HH:mm", {
     locale: zhTW,

@@ -5,6 +5,8 @@ const ROLE_OPTIONS = [
 
 // 把前端需要用到的數據整理出來
 export function toUser(user) {
+  if (!user) return null;
+
   const { id, email } = user;
   const { avatarFile, name, personalPhone } = user.user_metadata ?? {};
   const { role } = user.app_metadata ?? {};

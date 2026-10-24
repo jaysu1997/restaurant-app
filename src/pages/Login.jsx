@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -188,7 +187,7 @@ function Login() {
               autoComplete="current-password"
               rules={{
                 required: "密碼必須填寫",
-                minLength: { value: 8, message: "密碼至少要有8碼" },
+                minLength: { value: 8, message: "密碼長度至少為 8 個字元" },
               }}
             />
 

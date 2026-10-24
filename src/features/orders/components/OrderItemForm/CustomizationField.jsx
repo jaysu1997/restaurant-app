@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import useOrderDraft from "../../../../context/orders/useOrderDraft";
 import Option from "./Option";
@@ -56,7 +55,8 @@ const TitleGroup = styled.div`
 const Title = styled.h4`
   font-size: 1.8rem;
   font-weight: var(--font-weight-semibold);
-  color: ${({ $isError }) => ($isError ? "var(--color-danger)" : "var(--color-text-strong)")};
+  color: ${({ $isError }) =>
+    $isError ? "var(--color-danger)" : "var(--color-text-strong)"};
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

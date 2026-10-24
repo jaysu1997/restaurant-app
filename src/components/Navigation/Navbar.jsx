@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import useUser from "../../hooks/data/auth/useUser";
 import useScrollLock from "../../hooks/ui/useScrollLock";

@@ -1,8 +1,8 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { generatePickupTimeOptions } from "../../settings/utils/openHours.js";
 import useSettings from "../../../context/settings/useSettings";
 import FormSelectField from "../../../components/FormSelectField";
 import { ensureOptionExists } from "../utils/diningInfo.js";
+import { generatePickupTimeOptions } from "../../store-settings/utils/openHours.js";
 
 function DiningInfoField({ disabled }) {
   const { todayOpenInfo, dineInTableOptions } = useSettings();

@@ -1,8 +1,7 @@
-// ok
 import styled from "styled-components";
 import SectionContainer from "../../../components/SectionContainer";
 import { Tags, PaperBag, Trophy } from "lucide-react";
-import EmptyState from "./EmptyState";
+import DashboardEmptyState from "./DashboardEmptyState";
 import StatsFooter from "./StatsFooter";
 import DishImage from "../../../components/DishImage";
 
@@ -95,9 +94,13 @@ function TopDishesChart({ todayTopDishes }) {
   const hasSalesData = topDishes.length > 0;
 
   return (
-    <SectionContainer icon={<Trophy />} header="今日熱門商品">
+    <SectionContainer
+      headerPlacement="inside"
+      title="今日熱門商品"
+      icon={<Trophy />}
+    >
       <Content>
-        {!hasSalesData && <EmptyState />}
+        {!hasSalesData && <DashboardEmptyState />}
 
         {hasSalesData && (
           <List>

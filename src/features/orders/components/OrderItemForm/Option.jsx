@@ -1,4 +1,3 @@
-// ok
 import styled, { css } from "styled-components";
 import { Check, Square } from "lucide-react";
 import { focusRingStyles, hoverStyles } from "../../../../style/helpers";

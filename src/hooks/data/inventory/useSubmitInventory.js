@@ -12,6 +12,11 @@ function useSubmitInventory() {
       queryClient.invalidateQueries({
         queryKey: ["inventory"],
       });
+
+      showToast({
+        type: "success",
+        title: "庫存食材設定成功",
+      });
     },
     onError: (error) => {
       showToast({

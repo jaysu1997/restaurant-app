@@ -1,7 +1,7 @@
 // 食材備料頁面
 import styled from "styled-components";
 import { useState } from "react";
-import InventoryForm from "../features/inventory/InventoryForm";
+import InventoryForm from "../features/inventory/components/InventoryForm";
 import { useSearchParams } from "react-router";
 import PageHeader from "../components/PageHeader";
 import useGetInventory from "../hooks/data/inventory/useGetInventory";
@@ -9,7 +9,7 @@ import Filter from "../components/Filter/Filter";
 import QueryStatusFallback from "../components/QueryStatusFallback";
 import { FilePlus } from "lucide-react";
 import PageContainer from "../components/PageContainer";
-import RelatedMenus from "../features/inventory/RelatedMenus";
+import RelatedMenus from "../features/inventory/components/RelatedMenus";
 import useDeleteInventory from "../hooks/data/inventory/useDeleteInventory";
 import ConfirmDelete from "../components/ConfirmDelete";
 import MenuForm from "../features/menu-manage/components/MenuForm";

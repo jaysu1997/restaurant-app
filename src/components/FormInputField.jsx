@@ -2,7 +2,7 @@ import BaseInput from "./BaseInput";
 import FormFieldLayout from "./FormFieldLayout";
 import { get, useFormContext } from "react-hook-form";
 
-function FormInputField({ label, name, rules = {}, ...rest }) {
+function FormInputField({ label, name, rules = {}, hint, ...rest }) {
   const {
     register,
     formState: { errors },
@@ -11,7 +11,7 @@ function FormInputField({ label, name, rules = {}, ...rest }) {
   const error = get(errors, name);
 
   return (
-    <FormFieldLayout id={name} label={label} error={error}>
+    <FormFieldLayout id={name} label={label} error={error} hint={hint}>
       <BaseInput
         id={name}
         error={error}

@@ -4,8 +4,8 @@ import useGetSettings from "../../hooks/data/settings/useGetSettings";
 import {
   getOpenHoursInfo,
   getOpenStatus,
-} from "../../features/settings/utils/openHours.js";
-import { generateDineInTableOptions } from "../../features/settings/utils/tableConfig.js";
+} from "../../features/store-settings/utils/openHours.js";
+import { generateDineInTableOptions } from "../../features/store-settings/utils/tableConfig.js";
 
 const SettingsContext = createContext();
 

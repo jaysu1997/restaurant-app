@@ -1,14 +1,16 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
-import showToast from "../../utils/showToast";
-import Modal, { ModalContent, ModalFooter } from "../../components/modal/Modal";
-import useSubmitInventory from "../../hooks/data/inventory/useSubmitInventory";
-import { parsePositiveInt } from "../../utils/numbers.js";
-import { trimString } from "../../utils/text.js";
-import FormActions from "../../components/FormActions";
-import FormInputField from "../../components/FormInputField";
-import ModalFormSection from "../../components/modal/ModalFormSection";
-import useRestoreFocus from "../../hooks/ui/useRestoreFocus.js";
+import Modal, {
+  ModalContent,
+  ModalFooter,
+} from "../../../components/modal/Modal.jsx";
+import useSubmitInventory from "../../../hooks/data/inventory/useSubmitInventory.js";
+import { parsePositiveInt } from "../../../utils/numbers.js";
+import { trimString } from "../../../utils/text.js";
+import FormActions from "../../../components/FormActions.jsx";
+import FormInputField from "../../../components/FormInputField.jsx";
+import ModalFormSection from "../../../components/modal/ModalFormSection.jsx";
+import useRestoreFocus from "../../../hooks/ui/useRestoreFocus.js";
 
 function InventoryForm({ inventory, onClose }) {
   const handleCloseModal = useRestoreFocus(onClose);
@@ -25,11 +27,6 @@ function InventoryForm({ inventory, onClose }) {
   function onSubmit(data) {
     submitInventory(data, {
       onSuccess: () => {
-        showToast({
-          type: "success",
-          title: `庫存食材設定${isEdit ? "更新" : "新增"}成功`,
-        });
-
         handleCloseModal?.();
         searchParams.delete("quantity");
         searchParams.delete("name");

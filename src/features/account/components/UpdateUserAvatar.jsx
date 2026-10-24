@@ -1,19 +1,19 @@
 import AvatarCropper from "./AvatarCropper";
-import UserAvatar from "../../components/UserAvatar";
-import SectionContainer from "../../components/SectionContainer";
-import ImageUploadPanel from "../../components/ImageUploadPanel";
+import UserAvatar from "../../../components/UserAvatar";
+import SectionContainer from "../../../components/SectionContainer";
+import ImageUploadPanel from "../../../components/ImageUploadPanel";
 import { useState } from "react";
 import styled from "styled-components";
 
 const SectionInner = styled.div`
-  padding: var(--space-6);
+  padding: 3.2rem var(--space-6);
 `;
 
 function UpdateUserAvatar({ userData }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   // 頭像圖檔來源
-  const avatarFile = userData.avatarFile;
+  const avatarFile = userData?.avatarFile;
 
   function handleFileChange(e) {
     const file = e.target.files?.[0];
@@ -41,7 +41,7 @@ function UpdateUserAvatar({ userData }) {
 
   return (
     <>
-      <SectionContainer>
+      <SectionContainer title="個人頭像" headerPlacement="outside">
         <SectionInner>
           <ImageUploadPanel
             avatarFile={avatarFile}

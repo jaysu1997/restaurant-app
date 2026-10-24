@@ -1,4 +1,3 @@
-// ok
 // 空購物車ui
 import styled from "styled-components";
 import emptyCartSvg from "../../../assets/empty-cart.svg";

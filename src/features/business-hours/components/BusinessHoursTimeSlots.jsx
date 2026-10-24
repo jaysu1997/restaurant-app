@@ -6,22 +6,23 @@ import {
 } from "react-hook-form";
 import styled from "styled-components";
 import { Trash2, Plus, Minus } from "lucide-react";
-import IconButton from "../../components/button/IconButton";
-import BaseSelect from "../../components/BaseSelect";
-import { generateTimeOptions } from "./utils/timeOptions.js";
+import IconButton from "../../../components/button/IconButton.jsx";
+import BaseSelect from "../../../components/BaseSelect.jsx";
+import { generateTimeOptions } from "../utils/timeOptions.js";
 
 const StyledTimeRange = styled.ul`
   display: flex;
   flex-direction: column;
-  /* row-gap: 0.3rem; */
-  row-gap: var(--space-2-5);
+  /* row-gap: var(--space-2-5); */
+  row-gap: 1.2rem;
 
   li {
     display: grid;
     grid-template-columns: minmax(7.8rem, 1fr) 1.4rem minmax(7.8rem, 1fr) 2rem;
     /* grid-template-rows: 3.8rem; */
     align-items: center;
-    column-gap: var(--space-1-5);
+    /* column-gap: var(--space-1-5); */
+    gap: 0.8rem;
   }
 `;
 
@@ -32,7 +33,7 @@ const StyledMinusIcon = styled(Minus)`
 
 const times = generateTimeOptions();
 
-function ControlledTimeRange({ dayIndex, fieldArrayName }) {
+function BusinessHoursTimeSlots({ dayIndex, fieldArrayName }) {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -48,6 +49,11 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
 
   const baseName = `${fieldArrayName}.${dayIndex}.timeSlots`;
 
+  const timeSlots = useWatch({
+    control,
+    name: baseName,
+  });
+
   return (
     <StyledTimeRange>
       {fields.map((field, slotIndex) => (
@@ -61,6 +67,9 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
                 options={times}
                 isDisabled={!isBusinessDay}
                 placeholder="開始時間"
+                isOptionDisabled={(option) =>
+                  option.value === timeSlots?.[slotIndex]?.closeTime?.value
+                }
               />
             )}
           />
@@ -76,6 +85,9 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
                 options={times}
                 isDisabled={!isBusinessDay}
                 placeholder="休息時間"
+                isOptionDisabled={(option) =>
+                  option.value === timeSlots?.[slotIndex]?.openTime?.value
+                }
               />
             )}
           />
@@ -109,4 +121,4 @@ function ControlledTimeRange({ dayIndex, fieldArrayName }) {
   );
 }
 
-export default ControlledTimeRange;
+export default BusinessHoursTimeSlots;

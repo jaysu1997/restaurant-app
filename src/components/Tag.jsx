@@ -1,4 +1,3 @@
-// ok
 // 表格的狀態標籤ui
 import { ClipboardClock, ClipboardCheck, Check, X } from "lucide-react";
 import styled, { css } from "styled-components";

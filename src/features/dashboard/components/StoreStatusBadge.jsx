@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import useSettings from "../../../context/settings/useSettings";
 

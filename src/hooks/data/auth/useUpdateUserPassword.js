@@ -13,6 +13,13 @@ function useUpdateUserPassword() {
       showToast({ type: "success", title: "密碼已更新，請重新登入。" });
       setTimeout(() => logout(), 2000);
     },
+    onError: (error) => {
+      showToast({
+        type: "error",
+        title: "密碼變更失敗",
+        content: error?.message,
+      });
+    },
   });
 
   return { updateUserPassword: mutate, isUpdatingUserPassword: isPending };

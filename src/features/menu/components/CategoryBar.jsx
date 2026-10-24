@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import ScrollNavButton from "./ScrollNavButton";

@@ -2,13 +2,15 @@ import styled from "styled-components";
 import TextButton from "./button/TextButton";
 import FormActions from "./FormActions";
 
+// 可能把這個拆了，放到SectionContainer內就可以
 const Form = styled.form`
   width: 100%;
 `;
 
 const Content = styled.div`
   width: 100%;
-  padding: var(--space-9) var(--space-6);
+  /* padding: var(--space-9) var(--space-6); */
+  /* padding: 2.4rem; */
 `;
 
 const AppendButtonContainer = styled.div`

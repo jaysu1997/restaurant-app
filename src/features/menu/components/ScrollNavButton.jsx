@@ -1,4 +1,3 @@
-// ok
 import styled, { css } from "styled-components";
 import { hoverStyles } from "../../../style/helpers";
 import { ArrowLeft, ArrowRight } from "lucide-react";

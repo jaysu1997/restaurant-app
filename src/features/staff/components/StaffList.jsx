@@ -102,7 +102,11 @@ function StaffList({ staffList, onRequestDelete }) {
   }
 
   return (
-    <SectionContainer header="人員列表" icon={<UsersRound />}>
+    <SectionContainer
+      title="人員列表"
+      icon={<UsersRound />}
+      headerPlacement="inside"
+    >
       <List>
         {sortedList.map((item) => (
           <Item key={item.id} $isUpdating={!!updatingById[item.id]}>

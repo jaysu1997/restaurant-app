@@ -1,4 +1,3 @@
-// ok
 import styled from "styled-components";
 import DishServings from "./DishServings";
 import useOrderDraft from "../../../context/orders/useOrderDraft";

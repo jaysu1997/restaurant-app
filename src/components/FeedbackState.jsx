@@ -1,4 +1,3 @@
-// ok
 import styled, { keyframes } from "styled-components";
 import Button from "./button/Button";
 import Description from "./Description";

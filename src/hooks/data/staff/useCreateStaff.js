@@ -12,6 +12,13 @@ function useCreateStaff() {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
       showToast({ type: "success", title: "註冊成功" });
     },
+    onError: (error) => {
+      showToast({
+        type: "error",
+        title: "註冊失敗",
+        content: error.message,
+      });
+    },
   });
 
   return { createStaff: mutate, isCreatingStaff: isPending };

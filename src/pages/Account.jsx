@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import PageHeader from "../components/PageHeader";
-import UserProfileSetting from "../features/account/UserProfileSetting";
-import UpdatePassword from "../features/account/UpdatePassword";
+import UserProfileSetting from "../features/account/components/UserProfileSetting";
+import PasswordSetting from "../features/account/components/PasswordSetting";
 import useUser from "../hooks/data/auth/useUser";
-import UpdateUserAvatar from "../features/account/UpdateUserAvatar";
+import UpdateUserAvatar from "../features/account/components/UpdateUserAvatar";
 import PageContainer from "../components/PageContainer";
 
 const AccountContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--space-7);
+  gap: 4rem;
 `;
 
 function Account() {
@@ -21,7 +21,7 @@ function Account() {
       <AccountContainer>
         <UpdateUserAvatar userData={user} />
         <UserProfileSetting userData={user} />
-        <UpdatePassword userData={user} />
+        <PasswordSetting userData={user} />
       </AccountContainer>
     </PageContainer>
   );
